@@ -44,14 +44,14 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     return specificArchetypes[archetypeId];
   }
   
-  // Otherwise use base type mapping
+  // Otherwise use base type mapping (divine angel no longer used for celestial base)
   const imageMap = {
     humanoid: wizardPortrait,
     beast: werewolfPortrait,
     construct: golemPortrait,
     undead: necromancerPortrait,
     elemental: elementalPortrait,
-    celestial: angelPortrait,
+    celestial: wizardPortrait, // Use wizard instead of angel since angel is now the logo
     alien: alienPortrait,
     arcane: sorcererPortrait
   };

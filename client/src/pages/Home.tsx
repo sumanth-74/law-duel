@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import type { User, AvatarData } from '@shared/schema';
+import angelLogo from '@assets/generated_images/Photorealistic_divine_angel_portrait_94c3a62d.png';
 
 interface GameState {
   currentView: 'dashboard' | 'duel';
@@ -186,9 +187,13 @@ export default function Home() {
           <div className="flex items-center justify-between h-16">
             {/* Logo & Brand */}
             <div className="flex items-center space-x-3" data-testid="brand-logo">
-              {/* Atticus the Cat Mascot */}
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-mystic-gold to-yellow-600 flex items-center justify-center">
-                <i className="fas fa-cat text-dark-bg text-lg"></i>
+              {/* Bar Duel Logo - Divine Angel Character */}
+              <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-mystic-gold/50">
+                <img 
+                  src={angelLogo} 
+                  alt="Bar Duel Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h1 className="font-cinzel font-bold text-xl">Bar Duel</h1>
