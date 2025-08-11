@@ -39,16 +39,21 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
     props: []
   });
   const [loading, setLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
-      loadArchetypes().then(setArchetypes);
+      setDataLoading(true);
+      loadArchetypes().then((data) => {
+        setArchetypes(data);
+        setDataLoading(false);
+      });
     }
   }, [isOpen]);
 
   const handleArchetypeSelect = (archetypeId: string) => {
-    const archetype = archetypes.archetypes.find(a => a.id === archetypeId);
+    const archetype = archetypes.archetypes?.find(a => a.id === archetypeId);
     if (archetype) {
       setSelectedArchetype(archetypeId);
       setDisplayName(archetype.label);
@@ -61,7 +66,7 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
       return customAvatarData;
     }
     
-    const archetype = archetypes.archetypes.find(a => a.id === selectedArchetype);
+    const archetype = archetypes.archetypes?.find(a => a.id === selectedArchetype);
     if (archetype) {
       return {
         archetypeId: archetype.id,
@@ -112,6 +117,7 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
   };
 
   const rollRandom = () => {
+    if (!archetypes.archetypes || archetypes.archetypes.length === 0) return;
     const randomArchetype = archetypes.archetypes[Math.floor(Math.random() * archetypes.archetypes.length)];
     if (randomArchetype) {
       handleArchetypeSelect(randomArchetype.id);
@@ -140,8 +146,14 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
           </div>
           
           {/* Archetype Selection */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-h-96 overflow-y-auto">
-            {archetypes.archetypes.map((archetype) => (
+          {dataLoading ? (
+            <div className="text-center py-12">
+              <div className="w-8 h-8 border-2 border-arcane border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-muted">Loading archetypes...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-h-96 overflow-y-auto">
+              {archetypes.archetypes?.map((archetype) => (
               <div
                 key={archetype.id}
                 className={`archetype-card panel rounded-xl p-4 cursor-pointer transition-all duration-200 ${
@@ -171,8 +183,9 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+              )) || []}
+            </div>
+          )}
 
           {/* Name Inputs */}
           <div className="space-y-4 mb-6">

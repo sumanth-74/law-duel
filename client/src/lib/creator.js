@@ -10,6 +10,8 @@ export async function loadArchetypes() {
 
 export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props = [] }, scale = 1) {
   const size = 120 * scale;
+  const gradientId = "a_" + Math.random().toString(36).slice(2);
+  
   const core = {
     humanoid: "M60,10 a30,30 0 1,0 1,0 Z M35,60 h50 v50 h-50 Z",
     beast: "M60,14 a24,24 0 1,0 1,0 Z M28,58 h64 v54 h-64 Z", 
@@ -19,7 +21,7 @@ export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props 
     celestial: "M60,12 a28,28 0 1,0 1,0 Z M32,58 h56 v54 h-56 Z",
     alien: "M60,8 A30,24 0 1,0 60,56 A30,24 0 1,0 60,8 Z M34,60 h52 v52 h-52 Z",
     arcane: "M60,14 a28,28 0 1,0 1,0 Z M28,58 h64 v54 h-64 Z"
-  }[base] || "";
+  }[base] || "M60,10 a30,30 0 1,0 1,0 Z M35,60 h50 v50 h-50 Z";
   
   const propMap = {
     gavel: "<rect x='78' y='70' width='20' height='6' rx='3' fill='#d4b057'/><rect x='94' y='66' width='6' height='14' rx='2' fill='#8a6a1d'/>",
@@ -42,12 +44,12 @@ export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props 
   return `
   <svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <radialGradient id="a_${Math.random().toString(36).slice(2)}" cx="50%" cy="35%">
+      <radialGradient id="${gradientId}" cx="50%" cy="35%">
         <stop offset="0%" stop-color="${palette}" stop-opacity="0.95"/>
         <stop offset="100%" stop-color="${palette}" stop-opacity="0.25"/>
       </radialGradient>
     </defs>
-    <rect x="0" y="0" width="120" height="120" rx="20" fill="url(#a_${Math.random().toString(36).slice(2)})"/>
+    <rect x="0" y="0" width="120" height="120" rx="20" fill="url(#${gradientId})"/>
     <path d="${core}" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.25)"/>
     ${extras}
   </svg>`;

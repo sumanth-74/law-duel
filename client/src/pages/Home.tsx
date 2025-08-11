@@ -40,10 +40,8 @@ export default function Home() {
         setGameState(prev => ({ ...prev, showCharacterCreation: true }));
       }
     } else {
-      // Show character creation after a brief delay
-      setTimeout(() => {
-        setGameState(prev => ({ ...prev, showCharacterCreation: true }));
-      }, 1000);
+      // Show character creation immediately for new users
+      setGameState(prev => ({ ...prev, showCharacterCreation: true }));
     }
 
     // Apply motion reduction styles
