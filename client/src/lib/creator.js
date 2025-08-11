@@ -32,9 +32,9 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     'stare-drake': dragonPortrait,
     'dragon-solicitor': dragonPortrait,
     'voir-dire-viper': serpentPortrait,
-    'pd-phoenix': hawkPortrait,
-    'dissenter-crow': hawkPortrait,
-    'prosecutor-minotaur': werewolfPortrait, // Beast-like with horns
+    'pd-phoenix': elementalPortrait, // Phoenix = fire bird
+    'dissenter-crow': necromancerPortrait, // Dark crow = dark necromancer
+    'prosecutor-minotaur': golemPortrait, // Bull-like humanoid = stone creature
     'kraken-of-remand': alienPortrait, // Tentacled sea creature
     'remand-kraken': alienPortrait // Tentacled sea creature
   };
@@ -47,7 +47,7 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
   // Otherwise use base type mapping (divine angel no longer used for celestial base)
   const imageMap = {
     humanoid: wizardPortrait,
-    beast: werewolfPortrait,
+    beast: alienPortrait, // Default beast creatures get alien look for variety
     construct: golemPortrait,
     undead: necromancerPortrait,
     elemental: elementalPortrait,
