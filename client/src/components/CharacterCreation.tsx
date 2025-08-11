@@ -165,6 +165,7 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
                 <div className="text-center">
                   <AvatarRenderer
                     avatarData={{
+                      archetypeId: archetype.id,
                       base: archetype.base,
                       palette: archetypes.palettes[archetype.palette] || archetype.palette,
                       props: archetype.props
