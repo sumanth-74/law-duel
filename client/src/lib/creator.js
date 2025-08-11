@@ -22,6 +22,9 @@ import sphinxPortrait from '@assets/generated_images/Photorealistic_sphinx_portr
 import hawkPortrait from '@assets/generated_images/Photorealistic_hawk_portrait_5834a384.png';
 import dragonPortrait from '@assets/generated_images/Photorealistic_dragon_portrait_05f5ff29.png';
 import serpentPortrait from '@assets/generated_images/Photorealistic_serpent_portrait_a322fcab.png';
+import crowPortrait from '@assets/generated_images/crow_lawyer_portrait_962cc1e7.png';
+import minotaurPortrait from '@assets/generated_images/minotaur_lawyer_portrait_b796d7ac.png';
+import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a2834bd.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
   // Specific archetype mappings for better visual accuracy
@@ -32,9 +35,9 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     'stare-drake': dragonPortrait,
     'dragon-solicitor': dragonPortrait,
     'voir-dire-viper': serpentPortrait,
-    'pd-phoenix': elementalPortrait, // Phoenix = fire bird
-    'dissenter-crow': necromancerPortrait, // Dark crow = dark necromancer
-    'prosecutor-minotaur': golemPortrait, // Bull-like humanoid = stone creature
+    'pd-phoenix': phoenixPortrait, // Proper phoenix portrait
+    'dissenter-crow': crowPortrait, // Proper crow portrait
+    'prosecutor-minotaur': minotaurPortrait, // Proper minotaur portrait
     'kraken-of-remand': alienPortrait, // Tentacled sea creature
     'remand-kraken': alienPortrait // Tentacled sea creature
   };
