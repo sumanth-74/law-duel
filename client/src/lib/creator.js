@@ -17,8 +17,31 @@ import elementalPortrait from '@assets/generated_images/Photorealistic_fire_elem
 import angelPortrait from '@assets/generated_images/Photorealistic_divine_angel_portrait_94c3a62d.png';
 import alienPortrait from '@assets/generated_images/Photorealistic_alien_scholar_portrait_3e37dc62.png';
 import sorcererPortrait from '@assets/generated_images/Photorealistic_dark_sorcerer_portrait_8eaaf1ab.png';
+// Specific archetype portraits
+import sphinxPortrait from '@assets/generated_images/Photorealistic_sphinx_portrait_7d9c1f15.png';
+import hawkPortrait from '@assets/generated_images/Photorealistic_hawk_portrait_5834a384.png';
+import dragonPortrait from '@assets/generated_images/Photorealistic_dragon_portrait_05f5ff29.png';
+import serpentPortrait from '@assets/generated_images/Photorealistic_serpent_portrait_a322fcab.png';
 
-export function getCharacterImage(base = "humanoid") {
+export function getCharacterImage(base = "humanoid", archetypeId = null) {
+  // Specific archetype mappings for better visual accuracy
+  const specificArchetypes = {
+    'res-ipsa-sphinx': sphinxPortrait,
+    'issue-preclusion-sphinx': sphinxPortrait,
+    'trial-hawk': hawkPortrait,
+    'stare-drake': dragonPortrait,
+    'dragon-solicitor': dragonPortrait,
+    'voir-dire-viper': serpentPortrait,
+    'pd-phoenix': hawkPortrait,
+    'dissenter-crow': hawkPortrait
+  };
+  
+  // If specific archetype mapping exists, use it
+  if (archetypeId && specificArchetypes[archetypeId]) {
+    return specificArchetypes[archetypeId];
+  }
+  
+  // Otherwise use base type mapping
   const imageMap = {
     humanoid: wizardPortrait,
     beast: werewolfPortrait,
@@ -33,9 +56,9 @@ export function getCharacterImage(base = "humanoid") {
   return imageMap[base] || wizardPortrait;
 }
 
-export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props = [] }, scale = 1) {
+export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props = [], archetypeId = null }, scale = 1) {
   const size = 120 * scale;
-  const characterImage = getCharacterImage(base);
+  const characterImage = getCharacterImage(base, archetypeId);
   
   return `
     <svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">

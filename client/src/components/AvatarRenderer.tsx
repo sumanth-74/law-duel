@@ -26,7 +26,10 @@ export function AvatarRenderer({
     const scale = Math.min(1 + 0.08 * (level - 1), 1.8);
     const scaledSize = size * scale;
     
-    const svgString = renderAvatarSVG(avatarData, scale);
+    const svgString = renderAvatarSVG({
+      ...avatarData,
+      archetypeId: avatarData.archetypeId || null
+    }, scale);
     containerRef.current.innerHTML = svgString;
     
     // Apply container size
