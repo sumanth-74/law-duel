@@ -42,8 +42,13 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     'remand-kraken': alienPortrait // Tentacled sea creature
   };
   
+  // Debug logging to see what's being passed
+  console.log('getCharacterImage called with:', { base, archetypeId });
+  console.log('Available specific archetypes:', Object.keys(specificArchetypes));
+  
   // If specific archetype mapping exists, use it
   if (archetypeId && specificArchetypes[archetypeId]) {
+    console.log('Using specific archetype image for:', archetypeId);
     return specificArchetypes[archetypeId];
   }
   
