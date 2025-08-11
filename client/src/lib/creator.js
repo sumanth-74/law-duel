@@ -10,311 +10,243 @@ export async function loadArchetypes() {
 
 export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props = [] }, scale = 1) {
   const size = 120 * scale;
-  const gradientId = "grad_" + Math.random().toString(36).slice(2);
-  const shadowId = "shadow_" + Math.random().toString(36).slice(2);
-  const skinGradientId = "skin_" + Math.random().toString(36).slice(2);
-  const robeGradientId = "robe_" + Math.random().toString(36).slice(2);
   
-  // Realistic fantasy character bases like Harry Potter
-  const core = {
+  // Create a stylized portrait-style avatar using modern illustration techniques
+  const avatarStyle = `
+    <style>
+      .character-portrait { 
+        filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4)) drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+      }
+      .face { 
+        fill: #f4c2a1; 
+        stroke: #d49464; 
+        stroke-width: 1.5;
+      }
+      .hair { 
+        fill: #8b4513; 
+        stroke: #654321; 
+        stroke-width: 1;
+      }
+      .eyes { 
+        fill: #2d5aa0; 
+      }
+      .robes { 
+        fill: ${palette}; 
+        stroke: rgba(0,0,0,0.3); 
+        stroke-width: 2; 
+        opacity: 0.9;
+      }
+      .accent { 
+        fill: #ffd700; 
+        stroke: #b8860b; 
+        stroke-width: 1;
+      }
+      .shadow { 
+        fill: rgba(0,0,0,0.15); 
+      }
+    </style>
+  `;
+  
+  // Clean, professional character designs
+  const characterDesigns = {
     humanoid: `
-      <!-- Realistic Human Wizard -->
-      <!-- Face structure -->
-      <ellipse cx="60" cy="22" rx="16" ry="18" fill="url(#${skinGradientId})" stroke="rgba(139,69,19,0.4)" stroke-width="0.5"/>
-      <!-- Hair -->
-      <path d="M44,15 Q50,8 60,10 Q70,8 76,15 Q75,20 70,18 Q60,16 50,18 Q45,20 44,15" fill="#654321" stroke="#4a2c17" stroke-width="0.5"/>
-      <!-- Eyes with depth -->
-      <ellipse cx="54" cy="19" rx="3" ry="2" fill="#ffffff" stroke="rgba(0,0,0,0.3)" stroke-width="0.3"/>
-      <ellipse cx="66" cy="19" rx="3" ry="2" fill="#ffffff" stroke="rgba(0,0,0,0.3)" stroke-width="0.3"/>
-      <circle cx="54" cy="19" r="1.5" fill="#4a5568"/>
-      <circle cx="66" cy="19" r="1.5" fill="#4a5568"/>
-      <circle cx="54.5" cy="18.5" r="0.5" fill="#ffffff"/>
-      <circle cx="66.5" cy="18.5" r="0.5" fill="#ffffff"/>
-      <!-- Eyebrows -->
-      <path d="M50,16 Q54,15 57,16" stroke="#4a2c17" stroke-width="1" fill="none"/>
-      <path d="M63,16 Q66,15 70,16" stroke="#4a2c17" stroke-width="1" fill="none"/>
-      <!-- Nose -->
-      <path d="M60,21 L60,25 M58,25 L62,25" stroke="rgba(139,69,19,0.6)" stroke-width="0.8" fill="none"/>
-      <!-- Mouth -->
-      <path d="M57,28 Q60,30 63,28" stroke="rgba(139,69,19,0.7)" stroke-width="1" fill="none"/>
-      <!-- Wizard robes -->
-      <path d="M44,40 Q60,35 76,40 L80,85 Q70,95 60,95 Q50,95 40,85 Z" fill="url(#${robeGradientId})" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
-      <!-- Robe details -->
-      <path d="M50,45 Q60,42 70,45" stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none"/>
-      <circle cx="60" cy="50" r="2" fill="rgba(212,175,55,0.8)" stroke="rgba(138,106,29,0.8)" stroke-width="0.5"/>
+      <g class="character-portrait">
+        <!-- Background shadow -->
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        
+        <!-- Character silhouette -->
+        <path d="M35,45 Q60,35 85,45 L90,95 Q60,110 30,95 Z" class="robes"/>
+        
+        <!-- Head and face -->
+        <ellipse cx="60" cy="28" rx="20" ry="22" class="face"/>
+        
+        <!-- Hair -->
+        <path d="M40,20 Q60,5 80,20 Q75,30 60,25 Q45,30 40,20" class="hair"/>
+        
+        <!-- Eyes -->
+        <ellipse cx="52" cy="25" rx="4" ry="3" fill="white"/>
+        <ellipse cx="68" cy="25" rx="4" ry="3" fill="white"/>
+        <circle cx="52" cy="25" r="2" class="eyes"/>
+        <circle cx="68" cy="25" r="2" class="eyes"/>
+        <circle cx="53" cy="24" r="0.8" fill="white" opacity="0.8"/>
+        <circle cx="69" cy="24" r="0.8" fill="white" opacity="0.8"/>
+        
+        <!-- Facial features -->
+        <path d="M48,21 Q52,20 56,21" class="hair" stroke-width="1.5"/>
+        <path d="M64,21 Q68,20 72,21" class="hair" stroke-width="1.5"/>
+        <path d="M59,29 L61,29 L60,32 Z" fill="#d49464"/>
+        <path d="M56,35 Q60,37 64,35" stroke="#d49464" stroke-width="1.2" fill="none"/>
+        
+        <!-- Robe details -->
+        <path d="M45,60 Q60,55 75,60" class="accent" stroke-width="3" fill="none"/>
+        <circle cx="60" cy="70" r="4" class="accent"/>
+      </g>
     `,
     beast: `
-      <!-- Werewolf/Animagus Beast -->
-      <!-- Lupine head structure -->
-      <ellipse cx="60" cy="25" rx="20" ry="16" fill="url(#${skinGradientId})" stroke="rgba(101,67,33,0.6)" stroke-width="1"/>
-      <!-- Fur texture -->
-      <path d="M40,18 Q45,12 50,16 Q55,10 60,14 Q65,10 70,16 Q75,12 80,18" stroke="#8b4513" stroke-width="1.5" fill="none"/>
-      <path d="M42,22 Q47,16 52,20 Q57,14 62,18 Q67,14 72,20 Q77,16 78,22" stroke="#a0522d" stroke-width="1" fill="none"/>
-      <!-- Fierce yellow wolf eyes -->
-      <ellipse cx="52" cy="22" rx="4" ry="3" fill="#ffd700" stroke="rgba(0,0,0,0.5)" stroke-width="0.5"/>
-      <ellipse cx="68" cy="22" rx="4" ry="3" fill="#ffd700" stroke="rgba(0,0,0,0.5)" stroke-width="0.5"/>
-      <ellipse cx="52" cy="22" rx="2" ry="2" fill="#000000"/>
-      <ellipse cx="68" cy="22" rx="2" ry="2" fill="#000000"/>
-      <!-- Snout -->
-      <ellipse cx="60" cy="30" rx="8" ry="6" fill="url(#${skinGradientId})" stroke="rgba(101,67,33,0.4)" stroke-width="0.5"/>
-      <circle cx="60" cy="28" r="1.5" fill="#000000"/>
-      <!-- Sharp teeth -->
-      <path d="M55,32 L57,35 L59,32 L61,35 L63,32 L65,35" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-      <!-- Beast body in torn robes -->
-      <path d="M35,45 Q60,38 85,45 L88,90 Q75,100 60,98 Q45,100 32,90 Z" fill="url(#${robeGradientId})" stroke="rgba(101,67,33,0.6)" stroke-width="1"/>
-      <!-- Claw marks on robes -->
-      <path d="M40,55 L70,65 M45,70 L75,80 M38,85 L68,95" stroke="rgba(139,69,19,0.4)" stroke-width="2"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <path d="M30,50 Q60,40 90,50 L95,95 Q60,110 25,95 Z" class="robes"/>
+        <ellipse cx="60" cy="28" rx="22" ry="18" fill="#cd853f" stroke="#8b4513" stroke-width="2"/>
+        <path d="M38,18 Q60,8 82,18 Q80,28 70,25 Q60,22 50,25 Q40,28 38,18" fill="#8b4513"/>
+        <ellipse cx="50" cy="24" rx="5" ry="4" fill="#ffd700"/>
+        <ellipse cx="70" cy="24" rx="5" ry="4" fill="#ffd700"/>
+        <circle cx="50" cy="24" r="2" fill="#000"/>
+        <circle cx="70" cy="24" r="2" fill="#000"/>
+        <ellipse cx="60" cy="32" rx="6" ry="4" fill="#cd853f"/>
+        <circle cx="60" cy="30" r="1" fill="#000"/>
+        <path d="M56,35 L58,38 L60,35 L62,38 L64,35" stroke="#fff" stroke-width="1.5" fill="none"/>
+        <path d="M45,65 Q60,60 75,65" class="accent" stroke-width="2" fill="none"/>
+      </g>
     `,
     construct: `
-      <!-- Ancient Magical Golem -->
-      <!-- Stone head with carved features -->
-      <path d="M42,12 L78,12 L80,35 L78,38 L42,38 L40,35 Z" fill="#708090" stroke="#2f4f4f" stroke-width="2"/>
-      <!-- Carved facial features -->
-      <path d="M45,15 L75,15 L73,32 L47,32 Z" fill="#778899" stroke="#2f4f4f" stroke-width="1"/>
-      <!-- Glowing magical runes for eyes -->
-      <rect x="50" y="20" width="6" height="8" rx="2" fill="#00bfff" stroke="#0080ff" stroke-width="1"/>
-      <rect x="64" y="20" width="6" height="8" rx="2" fill="#00bfff" stroke="#0080ff" stroke-width="1"/>
-      <circle cx="53" cy="24" r="1" fill="#ffffff" opacity="0.9"/>
-      <circle cx="67" cy="24" r="1" fill="#ffffff" opacity="0.9"/>
-      <!-- Carved mouth -->
-      <path d="M55,30 L65,30 L63,33 L57,33 Z" fill="#2f4f4f" stroke="#1c3333" stroke-width="1"/>
-      <!-- Massive stone body -->
-      <path d="M35,40 L85,40 L88,95 L82,100 L38,100 L32,95 Z" fill="#708090" stroke="#2f4f4f" stroke-width="2"/>
-      <!-- Stone block details -->
-      <path d="M40,50 L80,50 M40,70 L80,70 M50,40 L50,100 M70,40 L70,100" stroke="#556b70" stroke-width="1"/>
-      <!-- Magical core -->
-      <circle cx="60" cy="65" r="8" fill="#00bfff" stroke="#0080ff" stroke-width="2" opacity="0.7"/>
-      <circle cx="60" cy="65" r="4" fill="#ffffff" opacity="0.5"/>
-      <!-- Energy lines -->
-      <path d="M52,65 L40,55 M68,65 L80,55 M52,65 L40,75 M68,65 L80,75" stroke="#00bfff" stroke-width="2" opacity="0.6"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <path d="M30,45 Q60,40 90,45 L95,95 Q60,110 25,95 Z" fill="#708090" stroke="#2f4f4f" stroke-width="3"/>
+        <path d="M40,15 L80,15 L82,40 L80,42 L40,42 L38,40 Z" fill="#708090" stroke="#2f4f4f" stroke-width="2"/>
+        <rect x="48" y="22" width="8" height="10" rx="2" fill="#00bfff" stroke="#0080ff" stroke-width="1"/>
+        <rect x="64" y="22" width="8" height="10" rx="2" fill="#00bfff" stroke="#0080ff" stroke-width="1"/>
+        <circle cx="52" cy="27" r="1.5" fill="#fff" opacity="0.9"/>
+        <circle cx="68" cy="27" r="1.5" fill="#fff" opacity="0.9"/>
+        <rect x="54" y="34" width="12" height="4" rx="1" fill="#2f4f4f"/>
+        <circle cx="60" cy="70" r="6" fill="#00bfff" opacity="0.8"/>
+        <circle cx="60" cy="70" r="3" fill="#fff" opacity="0.6"/>
+      </g>
     `,
     undead: `
-      <!-- Death Eater / Necromancer -->
-      <!-- Pale, gaunt skull-like face -->
-      <ellipse cx="60" cy="25" rx="17" ry="20" fill="#e6e6fa" stroke="rgba(75,0,130,0.6)" stroke-width="1"/>
-      <!-- Sunken cheeks -->
-      <path d="M45,28 Q50,32 55,28" fill="rgba(139,69,19,0.3)" stroke="rgba(75,0,130,0.4)" stroke-width="0.5"/>
-      <path d="M65,28 Q70,32 75,28" fill="rgba(139,69,19,0.3)" stroke="rgba(75,0,130,0.4)" stroke-width="0.5"/>
-      <!-- Glowing red eyes of the damned -->
-      <ellipse cx="53" cy="20" rx="3.5" ry="4" fill="#000000" stroke="rgba(139,0,0,0.8)" stroke-width="1"/>
-      <ellipse cx="67" cy="20" rx="3.5" ry="4" fill="#000000" stroke="rgba(139,0,0,0.8)" stroke-width="1"/>
-      <circle cx="53" cy="20" r="2" fill="#ff0000"/>
-      <circle cx="67" cy="20" r="2" fill="#ff0000"/>
-      <circle cx="53.5" cy="19" r="0.5" fill="#ffffff"/>
-      <circle cx="67.5" cy="19" r="0.5" fill="#ffffff"/>
-      <!-- Skeletal nose -->
-      <path d="M58,23 L62,23 L60,27 Z" fill="rgba(139,69,19,0.4)" stroke="rgba(75,0,130,0.6)" stroke-width="0.5"/>
-      <!-- Thin, cruel mouth -->
-      <path d="M56,30 Q60,32 64,30" stroke="rgba(75,0,130,0.8)" stroke-width="1.5" fill="none"/>
-      <!-- Dark necromancer robes -->
-      <path d="M38,45 Q60,40 82,45 L85,95 Q75,105 60,105 Q45,105 35,95 Z" fill="#2e2e2e" stroke="rgba(75,0,130,0.8)" stroke-width="1"/>
-      <!-- Death magic aura -->
-      <path d="M40,50 Q45,45 50,50 Q55,45 60,50 Q65,45 70,50 Q75,45 80,50" stroke="#8a2be2" stroke-width="1.5" fill="none" opacity="0.8"/>
-      <circle cx="45" cy="70" r="2" fill="#8a2be2" opacity="0.6"/>
-      <circle cx="75" cy="75" r="2" fill="#8a2be2" opacity="0.6"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <path d="M35,45 Q60,35 85,45 L90,95 Q60,110 30,95 Z" fill="#2e2e2e" stroke="#4b0082" stroke-width="2"/>
+        <ellipse cx="60" cy="28" rx="18" ry="20" fill="#e6e6fa" stroke="#9370db" stroke-width="1.5"/>
+        <path d="M42,20 Q60,10 78,20 Q75,28 60,25 Q45,28 42,20" fill="#2e2e2e"/>
+        <ellipse cx="52" cy="25" rx="4" ry="3" fill="#ff0000"/>
+        <ellipse cx="68" cy="25" rx="4" ry="3" fill="#ff0000"/>
+        <circle cx="52" cy="25" r="2" fill="#000"/>
+        <circle cx="68" cy="25" r="2" fill="#000"/>
+        <circle cx="53" cy="24" r="0.8" fill="#fff" opacity="0.8"/>
+        <circle cx="69" cy="24" r="0.8" fill="#fff" opacity="0.8"/>
+        <path d="M56,35 Q60,37 64,35" stroke="#9370db" stroke-width="1.2" fill="none"/>
+        <circle cx="60" cy="70" r="4" fill="#8a2be2" opacity="0.8"/>
+        <circle cx="45" cy="75" r="2" fill="#8a2be2" opacity="0.6"/>
+        <circle cx="75" cy="80" r="2" fill="#8a2be2" opacity="0.6"/>
+      </g>
     `,
     elemental: `
-      <!-- Phoenix Fire Elemental -->
-      <!-- Flame-wreathed head -->
-      <ellipse cx="60" cy="25" rx="18" ry="18" fill="url(#${skinGradientId})" stroke="rgba(255,69,0,0.8)" stroke-width="2"/>
-      <!-- Fire hair flowing upward -->
-      <path d="M42,15 Q45,5 50,8 Q55,2 60,6 Q65,2 70,8 Q75,5 78,15" fill="#ff4500" stroke="#ff6347" stroke-width="1"/>
-      <path d="M44,12 Q48,3 52,7 Q58,1 62,5 Q68,1 72,7 Q76,3 76,12" fill="#ffa500" stroke="#ff8c00" stroke-width="0.5"/>
-      <!-- Blazing eyes -->
-      <ellipse cx="53" cy="22" rx="4" ry="3" fill="#ffff00" stroke="rgba(255,0,0,0.8)" stroke-width="1"/>
-      <ellipse cx="67" cy="22" rx="4" ry="3" fill="#ffff00" stroke="rgba(255,0,0,0.8)" stroke-width="1"/>
-      <circle cx="53" cy="22" r="1.5" fill="#ffffff"/>
-      <circle cx="67" cy="22" r="1.5" fill="#ffffff"/>
-      <!-- Fire emanating from mouth -->
-      <path d="M57,28 Q60,32 63,28 Q60,35 57,32" fill="#ff4500" stroke="#ff0000" stroke-width="1"/>
-      <!-- Elemental body wreathed in flames -->
-      <path d="M35,45 Q60,40 85,45 L88,90 Q75,100 60,95 Q45,100 32,90 Z" fill="url(#${robeGradientId})" stroke="rgba(255,69,0,0.8)" stroke-width="1"/>
-      <!-- Flame patterns -->
-      <path d="M40,55 Q45,50 50,55 Q55,50 60,55 Q65,50 70,55 Q75,50 80,55" stroke="#ff4500" stroke-width="2" fill="none"/>
-      <path d="M42,75 Q48,70 54,75 Q60,70 66,75 Q72,70 78,75" stroke="#ffa500" stroke-width="1.5" fill="none"/>
-      <!-- Fire orbs -->
-      <circle cx="45" cy="65" r="3" fill="#ff4500" opacity="0.8"/>
-      <circle cx="75" cy="70" r="3" fill="#ff4500" opacity="0.8"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <path d="M30,45 Q60,35 90,45 L95,95 Q60,110 25,95 Z" class="robes"/>
+        <ellipse cx="60" cy="28" rx="20" ry="20" fill="#ff6347" stroke="#ff4500" stroke-width="2"/>
+        <path d="M40,15 Q50,3 60,8 Q70,3 80,15 Q75,25 60,22 Q45,25 40,15" fill="#ff4500"/>
+        <path d="M45,12 Q55,5 65,12" fill="#ffa500"/>
+        <ellipse cx="52" cy="25" rx="4" ry="3" fill="#ffff00"/>
+        <ellipse cx="68" cy="25" rx="4" ry="3" fill="#ffff00"/>
+        <circle cx="52" cy="25" r="1.5" fill="#fff"/>
+        <circle cx="68" cy="25" r="1.5" fill="#fff"/>
+        <path d="M56,32 Q60,35 64,32" fill="#ff4500"/>
+        <path d="M45,65 Q60,60 75,65" stroke="#ff4500" stroke-width="3" fill="none"/>
+        <circle cx="45" cy="75" r="3" fill="#ff4500" opacity="0.8"/>
+        <circle cx="75" cy="80" r="3" fill="#ffa500" opacity="0.8"/>
+      </g>
     `,
     celestial: `
-      <!-- Divine Angel/Patronus -->
-      <!-- Radiant divine face -->
-      <ellipse cx="60" cy="24" rx="16" ry="18" fill="url(#${skinGradientId})" stroke="rgba(255,215,0,0.9)" stroke-width="2"/>
-      <!-- Golden hair with divine light -->
-      <path d="M44,12 Q50,5 60,8 Q70,5 76,12 Q78,18 75,20 Q60,15 45,20 Q42,18 44,12" fill="#ffd700" stroke="#ffb347" stroke-width="1"/>
-      <!-- Divine radiance lines -->
-      <path d="M35,15 L45,20 M85,15 L75,20 M60,2 L60,12 M48,8 L52,18 M72,8 L68,18" stroke="#ffd700" stroke-width="2" opacity="0.7"/>
-      <!-- Pure white glowing eyes -->
-      <ellipse cx="53" cy="21" rx="3" ry="2.5" fill="#ffffff" stroke="rgba(255,215,0,0.8)" stroke-width="1"/>
-      <ellipse cx="67" cy="21" rx="3" ry="2.5" fill="#ffffff" stroke="rgba(255,215,0,0.8)" stroke-width="1"/>
-      <circle cx="53" cy="21" r="1" fill="#87ceeb"/>
-      <circle cx="67" cy="21" r="1" fill="#87ceeb"/>
-      <!-- Serene expression -->
-      <path d="M57,28 Q60,30 63,28" stroke="rgba(255,215,0,0.8)" stroke-width="1.5" fill="none"/>
-      <!-- Divine robes -->
-      <path d="M40,45 Q60,40 80,45 L85,95 Q70,105 60,100 Q50,105 35,95 Z" fill="#f0f8ff" stroke="rgba(255,215,0,0.8)" stroke-width="1"/>
-      <!-- Golden trim and patterns -->
-      <path d="M45,50 Q60,45 75,50" stroke="#ffd700" stroke-width="3" fill="none"/>
-      <path d="M42,70 Q60,65 78,70" stroke="#ffd700" stroke-width="2" fill="none"/>
-      <!-- Halo -->
-      <ellipse cx="60" cy="8" rx="20" ry="5" fill="none" stroke="#ffd700" stroke-width="3" opacity="0.9"/>
-      <circle cx="45" cy="8" r="1.5" fill="#ffd700" opacity="0.8"/>
-      <circle cx="75" cy="8" r="1.5" fill="#ffd700" opacity="0.8"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <ellipse cx="60" cy="10" rx="25" ry="6" fill="none" stroke="#ffd700" stroke-width="3" opacity="0.9"/>
+        <path d="M35,45 Q60,35 85,45 L90,95 Q60,110 30,95 Z" fill="#f0f8ff" stroke="#ffd700" stroke-width="2"/>
+        <ellipse cx="60" cy="28" rx="18" ry="20" class="face"/>
+        <path d="M42,18 Q60,8 78,18 Q75,28 60,25 Q45,28 42,18" class="accent"/>
+        <ellipse cx="52" cy="25" rx="4" ry="3" fill="white"/>
+        <ellipse cx="68" cy="25" rx="4" ry="3" fill="white"/>
+        <circle cx="52" cy="25" r="1.5" fill="#87ceeb"/>
+        <circle cx="68" cy="25" r="1.5" fill="#87ceeb"/>
+        <circle cx="53" cy="24" r="0.8" fill="white" opacity="0.8"/>
+        <circle cx="69" cy="24" r="0.8" fill="white" opacity="0.8"/>
+        <path d="M56,35 Q60,37 64,35" stroke="#ffd700" stroke-width="1.2" fill="none"/>
+        <path d="M45,65 Q60,60 75,65" class="accent" stroke-width="3" fill="none"/>
+        <circle cx="60" cy="75" r="4" class="accent"/>
+        <circle cx="45" cy="10" r="2" class="accent" opacity="0.8"/>
+        <circle cx="75" cy="10" r="2" class="accent" opacity="0.8"/>
+      </g>
     `,
     alien: `
-      <!-- Otherworldly Eldritch Scholar -->
-      <!-- Elongated alien skull -->
-      <ellipse cx="60" cy="28" rx="22" ry="22" fill="#e6f3e6" stroke="rgba(0,128,128,0.6)" stroke-width="1"/>
-      <!-- Large alien brain ridges -->
-      <path d="M38,20 Q50,10 62,15 Q70,10 82,20" stroke="rgba(0,100,100,0.8)" stroke-width="2" fill="none"/>
-      <path d="M42,25 Q55,18 68,25" stroke="rgba(0,100,100,0.6)" stroke-width="1.5" fill="none"/>
-      <!-- Large, hypnotic alien eyes -->
-      <ellipse cx="50" cy="25" rx="8" ry="10" fill="#000000" stroke="rgba(0,255,255,0.8)" stroke-width="2"/>
-      <ellipse cx="70" cy="25" rx="8" ry="10" fill="#000000" stroke="rgba(0,255,255,0.8)" stroke-width="2"/>
-      <ellipse cx="50" cy="25" rx="5" ry="7" fill="#00ffff"/>
-      <ellipse cx="70" cy="25" rx="5" ry="7" fill="#00ffff"/>
-      <circle cx="50" cy="23" r="2" fill="#ffffff" opacity="0.9"/>
-      <circle cx="70" cy="23" r="2" fill="#ffffff" opacity="0.9"/>
-      <!-- Small mouth -->
-      <ellipse cx="60" cy="38" rx="3" ry="2" fill="rgba(0,100,100,0.4)" stroke="rgba(0,128,128,0.6)" stroke-width="0.5"/>
-      <!-- Scholar robes with alien patterns -->
-      <path d="M32,50 Q60,45 88,50 L90,95 Q75,105 60,105 Q45,105 30,95 Z" fill="url(#${robeGradientId})" stroke="rgba(0,128,128,0.8)" stroke-width="1"/>
-      <!-- Alien script/runes -->
-      <path d="M40,65 Q45,60 50,65 M70,65 Q75,60 80,65" stroke="#00ffff" stroke-width="1.5" fill="none"/>
-      <circle cx="42" cy="75" r="2" fill="#00ffff" opacity="0.6"/>
-      <circle cx="78" cy="80" r="2" fill="#00ffff" opacity="0.6"/>
-      <!-- Tentacle-like appendages -->
-      <path d="M35,85 Q25,90 30,95" stroke="rgba(0,128,128,0.7)" stroke-width="3" fill="none"/>
-      <path d="M85,85 Q95,90 90,95" stroke="rgba(0,128,128,0.7)" stroke-width="3" fill="none"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <path d="M25,50 Q60,40 95,50 L100,95 Q60,110 20,95 Z" class="robes"/>
+        <ellipse cx="60" cy="32" rx="25" ry="24" fill="#e6f3e6" stroke="#008080" stroke-width="2"/>
+        <path d="M35,22 Q60,8 85,22" stroke="#006666" stroke-width="2" fill="none"/>
+        <ellipse cx="48" cy="28" rx="10" ry="12" fill="#00ffff" stroke="#008080" stroke-width="2"/>
+        <ellipse cx="72" cy="28" rx="10" ry="12" fill="#00ffff" stroke="#008080" stroke-width="2"/>
+        <ellipse cx="48" cy="28" rx="6" ry="8" fill="#000"/>
+        <ellipse cx="72" cy="28" rx="6" ry="8" fill="#000"/>
+        <circle cx="48" cy="26" r="2" fill="#fff" opacity="0.9"/>
+        <circle cx="72" cy="26" r="2" fill="#fff" opacity="0.9"/>
+        <ellipse cx="60" cy="42" rx="4" ry="2" fill="#006666"/>
+        <path d="M45,70 Q60,65 75,70" stroke="#00ffff" stroke-width="2" fill="none"/>
+        <circle cx="45" cy="80" r="2" fill="#00ffff" opacity="0.6"/>
+        <circle cx="75" cy="85" r="2" fill="#00ffff" opacity="0.6"/>
+      </g>
     `,
     arcane: `
-      <!-- Dark Arts Sorcerer -->
-      <!-- Mysterious hooded face -->
-      <ellipse cx="60" cy="25" rx="18" ry="19" fill="url(#${skinGradientId})" stroke="rgba(128,0,128,0.8)" stroke-width="1"/>
-      <!-- Dark hair with mystical energy -->
-      <path d="M42,12 Q50,6 60,8 Q70,6 78,12 Q80,18 75,22 Q60,18 45,22 Q40,18 42,12" fill="#2e2e2e" stroke="#4b0082" stroke-width="1"/>
-      <!-- Glowing purple arcane eyes -->
-      <ellipse cx="53" cy="22" rx="3.5" ry="3" fill="#000000" stroke="rgba(138,43,226,0.8)" stroke-width="1"/>
-      <ellipse cx="67" cy="22" rx="3.5" ry="3" fill="#000000" stroke="rgba(138,43,226,0.8)" stroke-width="1"/>
-      <circle cx="53" cy="22" r="2" fill="#8a2be2"/>
-      <circle cx="67" cy="22" r="2" fill="#8a2be2"/>
-      <circle cx="53.5" cy="21" r="0.5" fill="#ffffff"/>
-      <circle cx="67.5" cy="21" r="0.5" fill="#ffffff"/>
-      <!-- Mystical markings on face -->
-      <path d="M48,18 Q53,16 58,18" stroke="#8a2be2" stroke-width="1" fill="none" opacity="0.7"/>
-      <path d="M62,18 Q67,16 72,18" stroke="#8a2be2" stroke-width="1" fill="none" opacity="0.7"/>
-      <!-- Arcane mouth with spell incantations -->
-      <path d="M57,30 Q60,32 63,30" stroke="rgba(128,0,128,0.8)" stroke-width="1.5" fill="none"/>
-      <!-- Dark sorcerer robes -->
-      <path d="M35,45 Q60,40 85,45 L88,95 Q70,105 60,105 Q50,105 32,95 Z" fill="#191970" stroke="rgba(128,0,128,0.8)" stroke-width="1"/>
-      <!-- Arcane symbols embroidered -->
-      <path d="M45,55 Q50,50 55,55 Q60,50 65,55 Q70,50 75,55" stroke="#8a2be2" stroke-width="2" fill="none"/>
-      <circle cx="60" cy="65" r="4" fill="#8a2be2" opacity="0.8" stroke="#4b0082" stroke-width="1"/>
-      <path d="M56,61 L64,61 L64,69 L56,69 Z" stroke="#9370db" stroke-width="1" fill="none"/>
-      <!-- Floating mystical orbs -->
-      <circle cx="40" cy="75" r="2.5" fill="#8a2be2" opacity="0.7"/>
-      <circle cx="80" cy="80" r="2.5" fill="#8a2be2" opacity="0.7"/>
-      <!-- Dark energy wisps -->
-      <path d="M38,85 Q42,80 46,85" stroke="#4b0082" stroke-width="2" fill="none" opacity="0.8"/>
-      <path d="M74,85 Q78,80 82,85" stroke="#4b0082" stroke-width="2" fill="none" opacity="0.8"/>
+      <g class="character-portrait">
+        <ellipse cx="60" cy="85" rx="35" ry="12" class="shadow"/>
+        <path d="M30,45 Q60,35 90,45 L95,95 Q60,110 25,95 Z" fill="#191970" stroke="#8a2be2" stroke-width="2"/>
+        <ellipse cx="60" cy="28" rx="20" ry="22" class="face"/>
+        <path d="M40,18 Q60,8 80,18 Q75,28 60,25 Q45,28 40,18" fill="#2e2e2e"/>
+        <ellipse cx="52" cy="25" rx="4" ry="3" fill="#8a2be2"/>
+        <ellipse cx="68" cy="25" rx="4" ry="3" fill="#8a2be2"/>
+        <circle cx="52" cy="25" r="2" fill="#000"/>
+        <circle cx="68" cy="25" r="2" fill="#000"/>
+        <circle cx="53" cy="24" r="0.8" fill="#fff" opacity="0.8"/>
+        <circle cx="69" cy="24" r="0.8" fill="#fff" opacity="0.8"/>
+        <path d="M48,21 Q60,19 72,21" stroke="#8a2be2" stroke-width="1" fill="none"/>
+        <path d="M56,35 Q60,37 64,35" stroke="#8a2be2" stroke-width="1.2" fill="none"/>
+        <path d="M45,65 Q60,60 75,65" stroke="#8a2be2" stroke-width="2" fill="none"/>
+        <circle cx="60" cy="75" r="4" fill="#8a2be2" opacity="0.8"/>
+        <circle cx="40" cy="80" r="2" fill="#8a2be2" opacity="0.7"/>
+        <circle cx="80" cy="85" r="2" fill="#8a2be2" opacity="0.7"/>
+      </g>
     `
-  }[base] || core.humanoid;
+  }[base] || characterDesigns.humanoid;
 
-  // Detailed Harry Potter-style magical props
+  // Clean, modern magical props
   const propMap = {
     gavel: `
-      <!-- Enchanted Judge's Gavel -->
-      <g transform="translate(72,60)">
-        <!-- Wooden handle with carved grip -->
-        <rect x="18" y="0" width="6" height="24" rx="2" fill="#8b4513" stroke="#654321" stroke-width="0.5"/>
-        <path d="M18,8 L24,8 M18,12 L24,12 M18,16 L24,16" stroke="#a0522d" stroke-width="0.3"/>
-        <!-- Heavy bronze gavel head -->
-        <ellipse cx="12" cy="10" rx="12" ry="6" fill="#cd7f32" stroke="#8b6914" stroke-width="1"/>
-        <ellipse cx="12" cy="10" rx="8" ry="4" fill="#daa520" stroke="#b8860b" stroke-width="0.5"/>
-        <!-- Magical runes etched into metal -->
-        <path d="M6,8 L10,12 L6,16 M14,8 L18,12 L14,16" stroke="#2f4f4f" stroke-width="1" fill="none"/>
-        <!-- Glowing enchantment -->
-        <circle cx="12" cy="10" r="2" fill="#ffd700" opacity="0.6"/>
+      <g transform="translate(75,70)">
+        <rect x="15" y="2" width="4" height="18" rx="2" class="hair"/>
+        <ellipse cx="12" cy="8" rx="8" ry="5" class="accent"/>
+        <circle cx="12" cy="8" r="2" fill="#fff" opacity="0.8"/>
       </g>
     `,
     scales: `
-      <!-- Scales of Justice (Magical) -->
       <g>
-        <!-- Central pillar -->
-        <rect x="58" y="55" width="4" height="25" rx="1" fill="#b8860b" stroke="#8b6914" stroke-width="1"/>
-        <!-- Balance beam -->
-        <rect x="30" y="67" width="60" height="3" rx="1" fill="#daa520" stroke="#b8860b" stroke-width="1"/>
-        <!-- Left scale pan -->
-        <ellipse cx="35" cy="73" rx="10" ry="4" fill="#cd7f32" stroke="#8b6914" stroke-width="1"/>
-        <path d="M25,77 Q35,80 45,77" stroke="#8b6914" stroke-width="1" fill="none"/>
-        <!-- Right scale pan -->
-        <ellipse cx="85" cy="73" rx="10" ry="4" fill="#cd7f32" stroke="#8b6914" stroke-width="1"/>
-        <path d="M75,77 Q85,80 95,77" stroke="#8b6914" stroke-width="1" fill="none"/>
-        <!-- Suspension chains -->
-        <path d="M35,62 L35,73 M85,62 L85,73" stroke="#696969" stroke-width="1.5"/>
-        <path d="M35,62 L42,68 M85,62 L78,68" stroke="#696969" stroke-width="1"/>
-        <!-- Magical glow -->
-        <circle cx="60" cy="68" r="3" fill="#ffd700" opacity="0.5"/>
+        <rect x="58" y="55" width="4" height="20" rx="2" class="accent"/>
+        <rect x="35" y="67" width="50" height="2" rx="1" class="accent"/>
+        <circle cx="40" cy="75" r="6" fill="none" stroke="#b8860b" stroke-width="2"/>
+        <circle cx="80" cy="75" r="6" fill="none" stroke="#b8860b" stroke-width="2"/>
+        <path d="M40,62 L40,75 M80,62 L80,75" stroke="#666" stroke-width="1.5"/>
       </g>
     `,
     codex: `
-      <!-- Ancient Spellbook/Legal Tome -->
-      <g transform="translate(8,70)">
-        <!-- Leather cover with aged texture -->
-        <rect x="0" y="0" width="30" height="22" rx="2" fill="#8b4513" stroke="#654321" stroke-width="1"/>
-        <rect x="1" y="1" width="28" height="20" rx="1" fill="#a0522d" stroke="#8b4513" stroke-width="0.5"/>
-        <!-- Binding with metal clasps -->
-        <rect x="28" y="6" width="4" height="3" rx="1" fill="#cd7f32" stroke="#8b6914" stroke-width="0.5"/>
-        <rect x="28" y="13" width="4" height="3" rx="1" fill="#cd7f32" stroke="#8b6914" stroke-width="0.5"/>
-        <!-- Embossed title and decorations -->
-        <rect x="4" y="3" width="20" height="2" rx="0.5" fill="#daa520" opacity="0.8"/>
-        <rect x="6" y="7" width="16" height="1" rx="0.3" fill="#daa520" opacity="0.6"/>
-        <rect x="5" y="10" width="18" height="1" rx="0.3" fill="#daa520" opacity="0.6"/>
-        <rect x="7" y="13" width="14" height="1" rx="0.3" fill="#daa520" opacity="0.6"/>
-        <rect x="4" y="16" width="20" height="2" rx="0.5" fill="#daa520" opacity="0.8"/>
-        <!-- Magical sigil on cover -->
-        <circle cx="15" cy="11" r="3" stroke="#ffd700" stroke-width="1" fill="none" opacity="0.8"/>
-        <path d="M12,11 L18,11 M15,8 L15,14" stroke="#ffd700" stroke-width="1" opacity="0.8"/>
+      <g transform="translate(10,75)">
+        <rect x="0" y="0" width="24" height="18" rx="2" class="hair"/>
+        <rect x="2" y="2" width="20" height="14" fill="#a0522d"/>
+        <path d="M4,5 L20,5 M4,8 L18,8 M4,11 L19,11 M4,14 L17,14" stroke="#daa520" stroke-width="0.8"/>
+        <circle cx="12" cy="9" r="2.5" fill="none" stroke="#ffd700" stroke-width="1"/>
       </g>
     `,
     quill: `
-      <!-- Enchanted Phoenix Feather Quill -->
-      <g transform="translate(12,60)">
-        <!-- Ornate quill shaft -->
-        <path d="M20,12 L28,18" stroke="#8b4513" stroke-width="2"/>
-        <!-- Detailed feather with magical shimmer -->
-        <path d="M0,8 Q6,2 15,6 Q20,10 15,14 Q8,18 2,14 Q0,12 0,8" fill="#f5f5dc" stroke="#daa520" stroke-width="1"/>
-        <path d="M2,10 Q8,6 14,10" stroke="#ffd700" stroke-width="0.5" opacity="0.8"/>
-        <path d="M3,12 Q9,8 13,12" stroke="#ffd700" stroke-width="0.3" opacity="0.6"/>
-        <!-- Individual barbs -->
-        <path d="M4,8 L6,10 M8,7 L10,9 M12,8 L14,10" stroke="#e6e6fa" stroke-width="0.5"/>
-        <!-- Magical ink reservoir -->
-        <ellipse cx="22" cy="15" rx="3" ry="2" fill="#4b0082" stroke="#2e2e2e" stroke-width="0.5"/>
-        <!-- Golden nib -->
-        <path d="M18,12 L22,15 L20,16 L16,13 Z" fill="#ffd700" stroke="#daa520" stroke-width="0.3"/>
-        <!-- Magical sparkles -->
-        <circle cx="8" cy="6" r="0.5" fill="#ffd700" opacity="0.8"/>
-        <circle cx="12" cy="16" r="0.5" fill="#ffd700" opacity="0.8"/>
+      <g transform="translate(15,70)">
+        <path d="M0,8 Q8,2 16,8 Q12,12 8,16 Q4,12 0,8" fill="#f5f5dc" stroke="#daa520" stroke-width="1"/>
+        <path d="M16,8 L22,12" class="hair" stroke-width="2"/>
+        <ellipse cx="20" cy="11" rx="2" ry="1.5" fill="#4b0082"/>
+        <circle cx="8" cy="6" r="0.5" class="accent"/>
       </g>
     `,
     runes: `
-      <!-- Ancient Nordic Runes (Magical Law) -->
       <g>
-        <!-- Runic circle -->
-        <circle cx="60" cy="90" r="12" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.8"/>
-        <!-- Elder Futhark runes -->
-        <text x="60" y="95" text-anchor="middle" fill="#9370db" font-size="16" font-family="serif" font-weight="bold">ᚠᛞᛊ</text>
-        <!-- Smaller supporting runes -->
-        <text x="45" y="88" text-anchor="middle" fill="#8b5cf6" font-size="8" font-family="serif">ᚱ</text>
-        <text x="75" y="88" text-anchor="middle" fill="#8b5cf6" font-size="8" font-family="serif">ᛏ</text>
-        <text x="45" y="98" text-anchor="middle" fill="#8b5cf6" font-size="8" font-family="serif">ᚾ</text>
-        <text x="75" y="98" text-anchor="middle" fill="#8b5cf6" font-size="8" font-family="serif">ᛗ</text>
-        <!-- Connecting energy lines -->
-        <path d="M48,90 L72,90 M60,78 L60,102" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.6"/>
-        <!-- Glowing power sources -->
-        <circle cx="40" cy="85" r="2" fill="#8b5cf6" opacity="0.7"/>
-        <circle cx="80" cy="95" r="2" fill="#8b5cf6" opacity="0.7"/>
-        <circle cx="60" cy="75" r="1.5" fill="#9370db" opacity="0.9"/>
+        <circle cx="60" cy="90" r="10" stroke="#8b5cf6" stroke-width="2" fill="none"/>
+        <text x="60" y="95" text-anchor="middle" fill="#9370db" font-size="12" font-family="serif">ᚠᛞ</text>
+        <circle cx="45" cy="85" r="1.5" fill="#8b5cf6" opacity="0.7"/>
+        <circle cx="75" cy="95" r="1.5" fill="#8b5cf6" opacity="0.7"/>
       </g>
     `,
     circuit: `
@@ -394,31 +326,10 @@ export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props 
   
   return `
   <svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="${gradientId}" cx="50%" cy="30%">
-        <stop offset="0%" stop-color="${palette}" stop-opacity="0.9"/>
-        <stop offset="70%" stop-color="${palette}" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="${palette}" stop-opacity="0.1"/>
-      </radialGradient>
-      <radialGradient id="${skinGradientId}" cx="40%" cy="30%">
-        <stop offset="0%" stop-color="#f4c2a1" stop-opacity="1"/>
-        <stop offset="60%" stop-color="#e8a882" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#d49464" stop-opacity="1"/>
-      </radialGradient>
-      <linearGradient id="${robeGradientId}" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="${palette}" stop-opacity="0.9"/>
-        <stop offset="50%" stop-color="${palette}" stop-opacity="0.7"/>
-        <stop offset="100%" stop-color="${palette}" stop-opacity="0.5"/>
-      </linearGradient>
-      <filter id="${shadowId}">
-        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.4)"/>
-      </filter>
-    </defs>
-    <rect x="0" y="0" width="120" height="120" rx="16" fill="url(#${gradientId})" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-    <g filter="url(#${shadowId})">
-      ${core}
-      ${extras}
-    </g>
+    ${avatarStyle}
+    <rect x="0" y="0" width="120" height="120" rx="20" fill="linear-gradient(135deg, ${palette}22, ${palette}11)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    ${characterDesigns[base] || characterDesigns.humanoid}
+    ${extras}
   </svg>`;
 }
 
