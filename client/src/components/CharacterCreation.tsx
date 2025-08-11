@@ -18,17 +18,24 @@ interface ArchetypeData {
   bases: string[];
   palettes: Record<string, string>;
   props: string[];
+  categories: Record<string, {
+    name: string;
+    description: string;
+    icon: string;
+  }>;
   archetypes: Array<{
     id: string;
     label: string;
     base: string;
     palette: string;
     props: string[];
+    category: string;
   }>;
 }
 
 export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: CharacterCreationProps) {
-  const [archetypes, setArchetypes] = useState<ArchetypeData>({ bases: [], palettes: {}, props: [], archetypes: [] });
+  const [archetypes, setArchetypes] = useState<ArchetypeData>({ bases: [], palettes: {}, props: [], categories: {}, archetypes: [] });
+  const [selectedCategory, setSelectedCategory] = useState<string>('corporate');
   const [selectedArchetype, setSelectedArchetype] = useState<string>('');
   const [customMode, setCustomMode] = useState(false);
   const [username, setUsername] = useState('');
@@ -131,8 +138,8 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
       <Card className="panel max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <CardContent className="p-6">
           <div className="text-center mb-8">
-            <h2 className="font-cinzel text-3xl font-bold mb-2">Choose Your Legal Avatar</h2>
-            <p className="text-muted">Select an archetype that matches your jurisprudential spirit</p>
+            <h2 className="font-cinzel text-3xl font-bold mb-2">Choose Your Legal Career Path</h2>
+            <p className="text-muted">Select a specialization that matches your legal ambitions</p>
           </div>
           
           {/* Preview */}
@@ -145,46 +152,78 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
             />
           </div>
           
-          {/* Archetype Selection */}
+          {/* Career Category Selection */}
           {dataLoading ? (
             <div className="text-center py-12">
               <div className="w-8 h-8 border-2 border-arcane border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-muted">Loading archetypes...</p>
+              <p className="text-muted">Loading career paths...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-h-96 overflow-y-auto">
-              {archetypes.archetypes?.map((archetype) => (
-              <div
-                key={archetype.id}
-                className={`archetype-card panel rounded-xl p-4 cursor-pointer transition-all duration-200 ${
-                  selectedArchetype === archetype.id ? 'ring-2 ring-arcane' : ''
-                }`}
-                onClick={() => handleArchetypeSelect(archetype.id)}
-                data-testid={`archetype-${archetype.id}`}
-              >
-                <div className="text-center">
-                  <AvatarRenderer
-                    avatarData={{
-                      archetypeId: archetype.id,
-                      base: archetype.base,
-                      palette: archetypes.palettes[archetype.palette] || archetype.palette,
-                      props: archetype.props
+            <div className="space-y-6 mb-8">
+              {/* Category Tabs */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {Object.entries(archetypes.categories || {}).map(([categoryId, category]) => (
+                  <button
+                    key={categoryId}
+                    onClick={() => {
+                      setSelectedCategory(categoryId);
+                      setSelectedArchetype('');
                     }}
-                    size={64}
-                    className="mx-auto mb-3"
-                  />
-                  <h3 className="font-semibold mb-1">{archetype.label}</h3>
-                  <p className="text-xs text-muted mb-2">{archetype.base} • {archetype.palette}</p>
-                  <div className="flex flex-wrap justify-center gap-1">
-                    {archetype.props.map((prop) => (
-                      <Badge key={prop} variant="secondary" className="text-xs">
-                        {prop}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
+                    className={`p-4 rounded-xl border-2 transition-all duration-200 text-center ${
+                      selectedCategory === categoryId 
+                        ? 'border-arcane bg-arcane/10 text-arcane' 
+                        : 'border-white/10 bg-panel hover:border-white/20'
+                    }`}
+                    data-testid={`category-${categoryId}`}
+                  >
+                    <div className="text-2xl mb-2">
+                      {category.icon === 'gavel' && '⚖️'}
+                      {category.icon === 'scales' && '🛡️'}
+                      {category.icon === 'wings' && '⚔️'}
+                      {category.icon === 'codex' && '📚'}
+                    </div>
+                    <h3 className="font-semibold text-sm mb-1">{category.name}</h3>
+                    <p className="text-xs text-muted">{category.description}</p>
+                  </button>
+                ))}
               </div>
-              )) || []}
+
+              {/* Characters in Selected Category */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-80 overflow-y-auto">
+                {archetypes.archetypes
+                  ?.filter(archetype => archetype.category === selectedCategory)
+                  ?.map((archetype) => (
+                  <div
+                    key={archetype.id}
+                    className={`archetype-card panel rounded-xl p-4 cursor-pointer transition-all duration-200 ${
+                      selectedArchetype === archetype.id ? 'ring-2 ring-arcane' : ''
+                    }`}
+                    onClick={() => handleArchetypeSelect(archetype.id)}
+                    data-testid={`archetype-${archetype.id}`}
+                  >
+                    <div className="text-center">
+                      <AvatarRenderer
+                        avatarData={{
+                          archetypeId: archetype.id,
+                          base: archetype.base,
+                          palette: archetypes.palettes[archetype.palette] || archetype.palette,
+                          props: archetype.props
+                        }}
+                        size={64}
+                        className="mx-auto mb-3"
+                      />
+                      <h3 className="font-semibold mb-1">{archetype.label}</h3>
+                      <div className="flex flex-wrap justify-center gap-1">
+                        {archetype.props.map((prop) => (
+                          <Badge key={prop} variant="secondary" className="text-xs">
+                            {prop}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )) || []}
+              </div>
             </div>
           )}
 

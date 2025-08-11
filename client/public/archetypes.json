@@ -5,40 +5,65 @@
     "gold":"#d4b057","slate":"#64748b","obsidian":"#111827","teal":"#14b8a6"
   },
   "props": ["gavel","scales","codex","quill","runes","circuit","chains","flame","halo","tentacle","horns","wings","cloak"],
+  "categories": {
+    "corporate": {
+      "name": "Corporate & Business Law",
+      "description": "Big firms, mergers, contracts, and corporate legal work",
+      "icon": "gavel"
+    },
+    "public-interest": {
+      "name": "Public Interest & Defense",
+      "description": "Public defenders, prosecutors, advocacy, and justice work",
+      "icon": "scales"
+    },
+    "litigation": {
+      "name": "Trial & Litigation",
+      "description": "Courtroom warriors, trial advocates, and dispute resolution",
+      "icon": "wings"
+    },
+    "academic": {
+      "name": "Academic & Judicial",
+      "description": "Scholars, judges, clerks, and legal theory experts",
+      "icon": "codex"
+    }
+  },
   "archetypes": [
-    {"id":"textualist-wizard","label":"Textualist Wizard","base":"arcane","palette":"indigo","props":["gavel","codex"]},
-    {"id":"pragmatist-knight","label":"Pragmatist Knight","base":"humanoid","palette":"slate","props":["scales","cloak"]},
-    {"id":"dissenter-crow","label":"Dissenter Crow","base":"beast","palette":"violet","props":["quill","cloak"]},
-    {"id":"equity-angel","label":"Angel of Equity","base":"celestial","palette":"gold","props":["halo","scales"]},
-    {"id":"hearsay-hexer","label":"Hearsay Hexer","base":"arcane","palette":"violet","props":["runes","cloak"]},
-    {"id":"eriedemon","label":"Erie Demon","base":"undead","palette":"crimson","props":["chains","codex"]},
-    {"id":"rap-barbarian","label":"RAP Barbarian","base":"humanoid","palette":"emerald","props":["gavel","horns"]},
-    {"id":"civpro-clockwork","label":"Clockwork Clerk","base":"construct","palette":"slate","props":["circuit","scales"]},
-    {"id":"stare-drake","label":"Stare Draco","base":"beast","palette":"gold","props":["wings","runes"]},
-    {"id":"voir-dire-viper","label":"Voir Dire Viper","base":"beast","palette":"teal","props":["runes"]},
-    {"id":"res-ipsa-sphinx","label":"Sphinx of Res Ipsa","base":"beast","palette":"gold","props":["scales"]},
-    {"id":"summary-judgment-siren","label":"Siren of Summary Judgment","base":"alien","palette":"indigo","props":["runes"]},
-    {"id":"torts-titan","label":"Titan of Torts","base":"elemental","palette":"crimson","props":["flame","gavel"]},
-    {"id":"evidence-lich","label":"Lich of Evidence","base":"undead","palette":"violet","props":["codex","runes"]},
-    {"id":"contract-merc","label":"Mercenary of Contracts","base":"humanoid","palette":"teal","props":["quill","scales"]},
-    {"id":"conlaw-colossus","label":"Marble Colossus","base":"construct","palette":"gold","props":["scales"]},
-    {"id":"pd-phoenix","label":"Public Defender Phoenix","base":"beast","palette":"emerald","props":["wings","codex"]},
-    {"id":"prosecutor-minotaur","label":"Prosecutor Minotaur","base":"beast","palette":"crimson","props":["gavel","horns"]},
-    {"id":"outline-golem","label":"Outline Golem","base":"construct","palette":"indigo","props":["codex"]},
-    {"id":"moot-court-magus","label":"Moot Court Magus","base":"arcane","palette":"gold","props":["cloak","quill"]},
-    {"id":"nebula-barrister","label":"Nebula Barrister","base":"alien","palette":"violet","props":["circuit","cloak"]},
-    {"id":"originalist-paladin","label":"Originalist Paladin","base":"humanoid","palette":"gold","props":["scales","gavel"]},
-    {"id":"realist-ranger","label":"Legal Realist Ranger","base":"humanoid","palette":"emerald","props":["quill"]},
-    {"id":"daemon-of-12b6","label":"Daemon of 12(b)(6)","base":"undead","palette":"obsidian","props":["chains","runes"]},
-    {"id":"issue-preclusion-sphinx","label":"Sphinx of Issue Preclusion","base":"beast","palette":"indigo","props":["scales"]},
-    {"id":"privilege-vampyre","label":"Vampyre of Privilege","base":"undead","palette":"violet","props":["cloak"]},
-    {"id":"uccoath-merchant","label":"UCC Oath-Merchant","base":"humanoid","palette":"teal","props":["codex"]},
-    {"id":"remand-kraken","label":"Kraken of Remand","base":"alien","palette":"slate","props":["tentacle"]},
-    {"id":"chancery-druid","label":"Druid of Chancery","base":"elemental","palette":"emerald","props":["scales"]},
-    {"id":"trial-hawk","label":"Trial Hawk","base":"beast","palette":"gold","props":["wings"]},
-    {"id":"dragon-solicitor","label":"Dragon Solicitor","base":"beast","palette":"indigo","props":["runes"]},
-    {"id":"shadow-goblin-advocate","label":"Shadow Goblin Advocate","base":"arcane","palette":"obsidian","props":["cloak"]},
-    {"id":"stone-titan-of-equity","label":"Stone Titan of Equity","base":"construct","palette":"gold","props":["scales"]},
-    {"id":"spectral-knight","label":"Spectral Knight","base":"undead","palette":"indigo","props":["gavel"]}
+    {"id":"contract-merc","label":"Mercenary of Contracts","base":"humanoid","palette":"teal","props":["quill","scales"],"category":"corporate"},
+    {"id":"uccoath-merchant","label":"UCC Oath-Merchant","base":"humanoid","palette":"teal","props":["codex"],"category":"corporate"},
+    {"id":"dragon-solicitor","label":"Dragon Solicitor","base":"beast","palette":"indigo","props":["runes"],"category":"corporate"},
+    {"id":"nebula-barrister","label":"Nebula Barrister","base":"alien","palette":"violet","props":["circuit","cloak"],"category":"corporate"},
+    {"id":"chancery-druid","label":"Druid of Chancery","base":"elemental","palette":"emerald","props":["scales"],"category":"corporate"},
+    {"id":"stone-titan-of-equity","label":"Stone Titan of Equity","base":"construct","palette":"gold","props":["scales"],"category":"corporate"},
+
+    {"id":"pd-phoenix","label":"Public Defender Phoenix","base":"beast","palette":"emerald","props":["wings","codex"],"category":"public-interest"},
+    {"id":"prosecutor-minotaur","label":"Prosecutor Minotaur","base":"beast","palette":"crimson","props":["gavel","horns"],"category":"public-interest"},
+    {"id":"shadow-goblin-advocate","label":"Shadow Goblin Advocate","base":"arcane","palette":"obsidian","props":["cloak"],"category":"public-interest"},
+    {"id":"equity-angel","label":"Angel of Equity","base":"celestial","palette":"gold","props":["halo","scales"],"category":"public-interest"},
+    {"id":"rap-barbarian","label":"RAP Barbarian","base":"humanoid","palette":"emerald","props":["gavel","horns"],"category":"public-interest"},
+    {"id":"realist-ranger","label":"Legal Realist Ranger","base":"humanoid","palette":"emerald","props":["quill"],"category":"public-interest"},
+
+    {"id":"trial-hawk","label":"Trial Hawk","base":"beast","palette":"gold","props":["wings"],"category":"litigation"},
+    {"id":"voir-dire-viper","label":"Voir Dire Viper","base":"beast","palette":"teal","props":["runes"],"category":"litigation"},
+    {"id":"torts-titan","label":"Titan of Torts","base":"elemental","palette":"crimson","props":["flame","gavel"],"category":"litigation"},
+    {"id":"summary-judgment-siren","label":"Siren of Summary Judgment","base":"alien","palette":"indigo","props":["runes"],"category":"litigation"},
+    {"id":"res-ipsa-sphinx","label":"Sphinx of Res Ipsa","base":"beast","palette":"gold","props":["scales"],"category":"litigation"},
+    {"id":"issue-preclusion-sphinx","label":"Sphinx of Issue Preclusion","base":"beast","palette":"indigo","props":["scales"],"category":"litigation"},
+    {"id":"daemon-of-12b6","label":"Daemon of 12(b)(6)","base":"undead","palette":"obsidian","props":["chains","runes"],"category":"litigation"},
+    {"id":"spectral-knight","label":"Spectral Knight","base":"undead","palette":"indigo","props":["gavel"],"category":"litigation"},
+
+    {"id":"textualist-wizard","label":"Textualist Wizard","base":"arcane","palette":"indigo","props":["gavel","codex"],"category":"academic"},
+    {"id":"originalist-paladin","label":"Originalist Paladin","base":"humanoid","palette":"gold","props":["scales","gavel"],"category":"academic"},
+    {"id":"dissenter-crow","label":"Dissenter Crow","base":"beast","palette":"violet","props":["quill","cloak"],"category":"academic"},
+    {"id":"conlaw-colossus","label":"Marble Colossus","base":"construct","palette":"gold","props":["scales"],"category":"academic"},
+    {"id":"civpro-clockwork","label":"Clockwork Clerk","base":"construct","palette":"slate","props":["circuit","scales"],"category":"academic"},
+    {"id":"evidence-lich","label":"Lich of Evidence","base":"undead","palette":"violet","props":["codex","runes"],"category":"academic"},
+    {"id":"hearsay-hexer","label":"Hearsay Hexer","base":"arcane","palette":"violet","props":["runes","cloak"],"category":"academic"},
+    {"id":"moot-court-magus","label":"Moot Court Magus","base":"arcane","palette":"gold","props":["cloak","quill"],"category":"academic"},
+    {"id":"outline-golem","label":"Outline Golem","base":"construct","palette":"indigo","props":["codex"],"category":"academic"},
+    {"id":"pragmatist-knight","label":"Pragmatist Knight","base":"humanoid","palette":"slate","props":["scales","cloak"],"category":"academic"},
+    {"id":"privilege-vampyre","label":"Vampyre of Privilege","base":"undead","palette":"violet","props":["cloak"],"category":"academic"},
+    {"id":"stare-drake","label":"Stare Draco","base":"beast","palette":"gold","props":["wings","runes"],"category":"academic"},
+    {"id":"remand-kraken","label":"Kraken of Remand","base":"alien","palette":"slate","props":["tentacle"],"category":"academic"},
+    {"id":"eriedemon","label":"Erie Demon","base":"undead","palette":"crimson","props":["chains","codex"],"category":"academic"}
   ]
 }
