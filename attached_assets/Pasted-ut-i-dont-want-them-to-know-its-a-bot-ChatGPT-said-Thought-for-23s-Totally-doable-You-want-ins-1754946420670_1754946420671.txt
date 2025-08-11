@@ -1,0 +1,357 @@
+ut i dont want them to know its a bot.
+
+
+ChatGPT said:
+
+Thought for 23s
+Totally doable. You want instant Quick Match, and if no human is around, we quietly drop in a stealth bot that looks/feels like a real opponent. Here’s exactly how to add it without tipping your hand.
+
+What we’ll add (clean + small)
+Quick Match queue per subject.
+
+If no human in ~6–8s → spawn a StealthBot:
+
+Gets a human-looking username, avatar/species, and plausible rank/level near the player’s.
+
+Human-like timing (answers in 2–10s), human-like accuracy (tuned to your rank).
+
+Counts for your ladder (+25/−25), but never appears on global leaderboards and can’t be friended.
+
+Shows up in history as a normal opponent name; id is ephemeral.
+
+Drop-in patch (server)
+1) Matchmaker with stealth fallback
+
+js
+Copy
+Edit
+// server/matchmaker.js
+import { makeStealthBot } from './stealthbot.js';
+
+export const presence = new Map();            // username -> { socketId, profile }
+const queues = Object.create(null);
+const SUBJECTS = ["Evidence","Contracts","Torts","Property","Civil Procedure","Constitutional Law","Criminal Law/Procedure"];
+SUBJECTS.forEach(s => queues[s] = []);
+
+export function registerPresence(io, socket) {
+  socket.on('presence:hello', ({ username, profile }) => {
+    if (!username) return;
+    presence.set(username.toLowerCase(), { socketId: socket.id, profile });
+    socket.data.username = username;
+    socket.data.profile = profile;
+  });
+
+  socket.on('disconnect', () => {
+    if (socket.data?.username) presence.delete(socket.data.username.toLowerCase());
+    // remove from any queue
+    for (const q of Object.values(queues)) {
+      const i = q.findIndex(e => e.sid === socket.id);
+      if (i >= 0) { clearTimeout(q[i].t); q.splice(i,1); }
+    }
+  });
+
+  socket.on('queue:join', ({ subject }) => {
+    const q = queues[subject]; if (!q) return;
+    // try pair immediately
+    const other = q.shift();
+    if (other && other.sid !== socket.id) {
+      return startRoom(io, subject, other.sid, socket.id, { ranked:false, stake:0 });
+    }
+    // else enqueue + stealth fallback
+    const entry = { sid: socket.id, t: null };
+    q.push(entry);
+    entry.t = setTimeout(() => {
+      const idx = q.indexOf(entry);
+      if (idx >= 0) q.splice(idx,1);
+      // spawn stealth bot tuned to player's level/points
+      const player = socket.data?.profile || { level:1, points:0, species:'shadow_goblin' };
+      const bot = makeStealthBot({ subject, targetLevel: player.level, targetPoints: player.points });
+      startRoomWithBot(io, subject, socket.id, bot);
+    }, 8000); // 8s grace
+  });
+
+  socket.on('queue:leave', () => {
+    for (const q of Object.values(queues)) {
+      const i = q.findIndex(e => e.sid === socket.id);
+      if (i >= 0) { clearTimeout(q[i].t); q.splice(i,1); }
+    }
+  });
+}
+
+function startRoom(io, subject, aId, bId, cfg) {
+  const room = `r_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;
+  io.to(aId).socketsJoin(room);
+  io.to(bId).socketsJoin(room);
+  io.to(room).emit('duel:start', { roomCode: room, subject, bestOf:7, ...cfg });
+  // your existing round loop continues…
+}
+
+function startRoomWithBot(io, subject, humanId, bot) {
+  const room = `r_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;
+  io.to(humanId).socketsJoin(room);
+  // Tell client it's matched—use bot’s public-facing profile (no isBot flag).
+  io.to(room).emit('duel:start', {
+    roomCode: room, subject, bestOf:7, ranked:false, stake:0,
+    opponent: { username: bot.username, species: bot.species, level: bot.level, points: bot.points }
+  });
+  // In your question loop, when you emit a question, also schedule bot's answer:
+  bot.bind(io, room);
+}
+2) The stealth bot brain (human-ish accuracy + timing)
+
+js
+Copy
+Edit
+// server/stealthbot.js
+import { randomUUID } from 'node:crypto';
+
+const NAMES = ["CaseCutter","RuleRunner","VoirDireViper","MotionFalcon","DictaDagger","StareDraco","PrimaFacie","ResIpsa","VerdictVandal","EquityShade"];
+const SPECIES = ["werewolf","dragonling","shadow_goblin","arcane_simian","stone_titan","spectral_knight"];
+
+// Map player strength → bot skill band
+function bandFor(points=0){
+  if (points < 400) return { acc:.52, t:[6,10] };
+  if (points < 900) return { acc:.62, t:[5,9]  };
+  if (points < 1500) return { acc:.70, t:[4,8] };
+  return { acc:.78, t:[3,7] };
+}
+
+function pickName(){ return NAMES[Math.floor(Math.random()*NAMES.length)] + Math.floor(100+Math.random()*900); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)] }
+function tri(min, max, mode){ // triangular distribution
+  const u=Math.random(); const c=(mode-min)/(max-min);
+  return u<c ? min+Math.sqrt(u*(max-min)*(mode-min)) : max-Math.sqrt((1-u)*(max-min)*(max-mode));
+}
+
+export function makeStealthBot({ subject, targetLevel=1, targetPoints=0 }){
+  const band = bandFor(targetPoints);
+  const username = pickName();
+  const species = pick(SPECIES);
+  const level = Math.max(1, Math.round(targetLevel + (Math.random()*2-1))); // +/-1 level
+  const points = Math.max(0, targetPoints + Math.round((Math.random()*100-50)));
+
+  const id = `sb_${randomUUID().slice(0,8)}`; // internal only
+
+  function decide(round, correctIndex){
+    const willBeCorrect = Math.random() < band.acc + (Math.random()*0.06-0.03); // jitter ±3%
+    const [a,b] = band.t; const mode = (a+b)/2 + (Math.random()*0.8-0.4);
+    const ansMs = Math.round(tri(a*1000, b*1000, mode*1000));
+    const idx = willBeCorrect ? correctIndex : pick([0,1,2,3].filter(i=>i!==correctIndex));
+    return { idx, ansMs: Math.max(1200, ansMs) };
+  }
+
+  // Hook into your duel loop: call this per-round when you send a question
+  function bind(io, room){
+    // listen for server's per-round 'server:round' you already emit, or patch your loop:
+    io.of('/').adapter.on('duel:question-sent', ({ roomCode, qid, correctIndex }) => {
+      if (roomCode !== room) return;
+      const { idx, ansMs } = decide(/*round?*/0, correctIndex);
+      setTimeout(() => {
+        io.to(room).emit('duel:botAnswer', { qid, idx, ms: ansMs, opponentId: id }); // your loop should treat this like a normal player answer
+      }, ansMs + Math.round(Math.random()*120)); // tiny network jitter
+    });
+  }
+
+  return { id, username, species, level, points, bind };
+}
+Important UI/logic choices to make it indistinguishable
+
+Use normal avatar/species + name for the bot (no “bot” tag).
+
+Do not list bot accounts on the global leaderboard; mark isSynthetic=true server-side only.
+
+If the user tries to friend the opponent, respond: “This player’s privacy settings block friend requests.”
+
+Don’t allow rematch option when the opponent was synthetic; show “Opponent left the arena.”
+
+Vary answer latency and correctness; occasionally miss by a close margin so it feels human.
+
+Keep post-match breakdown exactly the same.
+
+Client changes (tiny)
+Add a Quick Match button:
+
+socket.emit('queue:join', { subject })
+
+Show a spinner “Finding opponent… (8s)” + Cancel (emit queue:leave).
+
+Treat duel:start the same whether human or not. If it includes opponent fields, render them as usual.
+
+Acceptance (how you know it’s right)
+Click Quick Match → you’re paired immediately if someone’s waiting; otherwise within ~8s a match starts with a normal-looking opponent.
+
+Round timing & reveals feel natural; you win/lose some by speed or one question swing.
+
+Your +25/−25 ladder changes persist.
+
+The “opponent” never appears in global Top 20 and can’t be friended/rematched.
+
+If you want, I’ll wire this directly into the sockets/events you already have—paste me your server.js/socket.js event names and I’ll tailor the exact lines.
+
+
+
+
+
+
+
+You said:
+i also dont just want the six characters. i want you to be able to be anything sort of nerdy that bar students would love
+
+
+ChatGPT said:
+
+Thought for 38s
+100%. We can keep your super-simple loop and make the character creator feel infinite without blowing up code.
+
+Here’s how to upgrade it:
+
+What to tell Replit (copy–paste)
+Upgrade Character Creator → “Anything Nerdy”
+
+Don’t change duel logic or leveling. Keep XP→Level and growth scale.
+
+Replace the 6 fixed choices with a data-driven avatar system + a Custom path.
+
+Add /public/archetypes.json (lots of presets) and a tiny SVG builder so every preset is just a recipe (no heavy art).
+
+Store only { archetypeId | customLabel, speciesBase, palette, props[] } in localStorage.profile. Server only needs username, displayName, archetypeLabel, level.
+
+Add profanity filter for names/labels.
+
+Files to add
+1) /public/archetypes.json
+(Presets bar students will love; mix law puns + myth/fantasy/sci-fi. Add more later—this is just a seed.)
+
+json
+Copy
+Edit
+{
+  "bases": ["humanoid","beast","construct","undead","elemental","celestial","alien","arcane"],
+  "palettes": {
+    "indigo":"#5865f2","violet":"#8b5cf6","emerald":"#10b981","crimson":"#ef4444",
+    "gold":"#d4b057","slate":"#64748b","obsidian":"#111827","teal":"#14b8a6"
+  },
+  "props": ["gavel","scales","codex","quill","runes","circuit","chains","flame","halo","tentacle","horns","wings","cloak"],
+  "archetypes": [
+    {"id":"textualist-wizard","label":"Textualist Wizard","base":"arcane","palette":"indigo","props":["gavel","codex"]},
+    {"id":"pragmatist-knight","label":"Pragmatist Knight","base":"humanoid","palette":"slate","props":["scales","cloak"]},
+    {"id":"dissenter-crow","label":"Dissenter Crow","base":"beast","palette":"violet","props":["quill","cloak"]},
+    {"id":"equity-angel","label":"Angel of Equity","base":"celestial","palette":"gold","props":["halo","scales"]},
+    {"id":"hearsay-hexer","label":"Hearsay Hexer","base":"arcane","palette":"violet","props":["runes","cloak"]},
+    {"id":"eriedemon","label":"Erie Demon","base":"undead","palette":"crimson","props":["chains","codex"]},
+    {"id":"rap-barbarian","label":"RAP Barbarian","base":"humanoid","palette":"emerald","props":["gavel","horns"]},
+    {"id":"civpro-clockwork","label":"Clockwork Clerk","base":"construct","palette":"slate","props":["circuit","scales"]},
+    {"id":"stare-drake","label":"Stare Draco","base":"beast","palette":"gold","props":["wings","runes"]},
+    {"id":"voir-dire-viper","label":"Voir Dire Viper","base":"beast","palette":"teal","props":["runes"]},
+    {"id":"res-ipsa-sphinx","label":"Sphinx of Res Ipsa","base":"beast","palette":"gold","props":["scales"]},
+    {"id":"summary-judgment-siren","label":"Siren of Summary Judgment","base":"alien","palette":"indigo","props":["runes"]},
+    {"id":"torts-titan","label":"Titan of Torts","base":"elemental","palette":"crimson","props":["flame","gavel"]},
+    {"id":"evidence-lich","label":"Lich of Evidence","base":"undead","palette":"violet","props":["codex","runes"]},
+    {"id":"contract-merc","label":"Mercenary of Contracts","base":"humanoid","palette":"teal","props":["quill","scales"]},
+    {"id":"conlaw-colossus","label":"Marble Colossus","base":"construct","palette":"gold","props":["scales"]},
+    {"id":"pd-phoenix","label":"Public Defender Phoenix","base":"beast","palette":"emerald","props":["wings","codex"]},
+    {"id":"prosecutor-minotaur","label":"Prosecutor Minotaur","base":"beast","palette":"crimson","props":["gavel","horns"]},
+    {"id":"outline-golem","label":"Outline Golem","base":"construct","palette":"indigo","props":["codex"]},
+    {"id":"moot-court-magus","label":"Moot Court Magus","base":"arcane","palette":"gold","props":["cloak","quill"]},
+    {"id":"nebula-barrister","label":"Nebula Barrister","base":"alien","palette":"violet","props":["circuit","cloak"]},
+    {"id":"originalist-paladin","label":"Originalist Paladin","base":"humanoid","palette":"gold","props":["scales","gavel"]},
+    {"id":"realist-ranger","label":"Legal Realist Ranger","base":"humanoid","palette":"emerald","props":["quill"]},
+    {"id":"daemon-of-12b6","label":"Daemon of 12(b)(6)","base":"undead","palette":"obsidian","props":["chains","runes"]},
+    {"id":"issue-preclusion-sphinx","label":"Sphinx of Issue Preclusion","base":"beast","palette":"indigo","props":["scales"]},
+    {"id":"privilege-vampyre","label":"Vampyre of Privilege","base":"undead","palette":"violet","props":["cloak"]},
+    {"id":"uccoath-merchant","label":"UCC Oath-Merchant","base":"humanoid","palette":"teal","props":["codex"]},
+    {"id":"remand-kraken","label":"Kraken of Remand","base":"alien","palette":"slate","props":["tentacle"]},
+    {"id":"chancery-druid","label":"Druid of Chancery","base":"elemental","palette":"emerald","props":["scales"]},
+    {"id":"trial-hawk","label":"Trial Hawk","base":"beast","palette":"gold","props":["wings"]},
+    {"id":"dragon-solicitor","label":"Dragon Solicitor","base":"beast","palette":"indigo","props":["runes"]},
+    {"id":"shadow-goblin-advocate","label":"Shadow Goblin Advocate","base":"arcane","palette":"obsidian","props":["cloak"]},
+    {"id":"stone-titan-of-equity","label":"Stone Titan of Equity","base":"construct","palette":"gold","props":["scales"]},
+    {"id":"spectral-knight","label":"Spectral Knight","base":"undead","palette":"indigo","props":["gavel"]}
+  ]
+}
+2) /public/creator.js (tiny builder hook)
+js
+Copy
+Edit
+export async function loadArchetypes(){
+  const data = await fetch('/archetypes.json').then(r=>r.json());
+  return data;
+}
+
+// Build a simple SVG from a recipe (no external art)
+export function renderAvatarSVG({ base="humanoid", palette="#5865f2", props=[] }, scale=1){
+  const p = palette;
+  const size = 120*scale;
+  const core = {
+    humanoid:  "M60,10 a30,30 0 1,0 1,0 Z M35,60 h50 v50 h-50 Z",
+    beast:     "M60,14 a24,24 0 1,0 1,0 Z M28,58 h64 v54 h-64 Z",
+    construct: "M30,20 h60 v40 h-60 Z M38,64 h44 v46 h-44 Z",
+    undead:    "M60,12 a26,26 0 1,0 1,0 Z M30,60 h60 v52 h-60 Z",
+    elemental: "M60,16 a22,22 0 1,0 1,0 Z M26,56 h68 v58 h-68 Z",
+    celestial: "M60,12 a28,28 0 1,0 1,0 Z M32,58 h56 v54 h-56 Z",
+    alien:     "M60,8  A30,24 0 1,0 60,56 A30,24 0 1,0 60,8 Z M34,60 h52 v52 h-52 Z",
+    arcane:    "M60,14 a28,28 0 1,0 1,0 Z M28,58 h64 v54 h-64 Z"
+  }[base] || "";
+  const propMap = {
+    gavel:    "<rect x='78' y='70' width='20' height='6' rx='3' fill='#d4b057'/><rect x='94' y='66' width='6' height='14' rx='2' fill='#8a6a1d'/>",
+    scales:   "<circle cx='40' cy='74' r='6' stroke='#d4b057' fill='none'/><circle cx='80' cy='74' r='6' stroke='#d4b057' fill='none'/>",
+    codex:    "<rect x='18' y='80' width='20' height='14' rx='2' fill='#2b2f3a' stroke='#cbd5e1'/>",
+    quill:    "<path d='M18,70 q10,-16 22,-4' stroke='#cbd5e1' fill='none'/>",
+    runes:    "<text x='60' y='96' text-anchor='middle' fill='#8b5cf6' font-size='10'>ᚠᛞᛊ</text>",
+    circuit:  "<path d='M44,68 h32 v20 h-32 Z' stroke='#14b8a6' fill='none'/>",
+    chains:   "<path d='M30,70 q10,10 20,0 q10,-10 20,0' stroke='#94a3b8' fill='none'/>",
+    flame:    "<path d='M60,102 q-8,-10 0,-20 q10,8 8,18 q-2,10 -8,12' fill='#ef4444'/>",
+    halo:     "<ellipse cx='60' cy='8' rx='22' ry='6' fill='none' stroke='#facc15'/>",
+    tentacle: "<path d='M92,106 q12,-18 -4,-28' stroke='#94a3b8' fill='none'/>",
+    horns:    "<path d='M42,14 q-10,-10 0,-18' stroke='#cbd5e1'/> <path d='M78,14 q10,-10 0,-18' stroke='#cbd5e1'/>",
+    wings:    "<path d='M14,84 q18,-18 26,0' stroke='#cbd5e1'/> <path d='M106,84 q-18,-18 -26,0' stroke='#cbd5e1'/>",
+    cloak:    "<path d='M30,60 q30,40 60,0 v46 h-60 Z' fill='rgba(0,0,0,.35)'/>"
+  };
+  const extras = props.map(k=>propMap[k]||"").join("");
+  return `
+  <svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="a" cx="50%" cy="35%">
+        <stop offset="0%" stop-color="${p}" stop-opacity="0.95"/>
+        <stop offset="100%" stop-color="${p}" stop-opacity="0.25"/>
+      </radialGradient>
+    </defs>
+    <rect x="0" y="0" width="120" height="120" rx="20" fill="url(#a)"/>
+    <path d="${core}" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.25)"/>
+    ${extras}
+  </svg>`;
+}
+3) Wire it (2 small changes)
+Character screen:
+
+Load presets: const atlas = await loadArchetypes();
+
+Show a searchable grid of archetypes + a Custom card.
+
+Custom path: user picks base, palette, toggles props[], enters a label.
+
+Save to localStorage.profile.avatar = { archetypeId | customLabel, base, palette, props }.
+
+Render preview with renderAvatarSVG(...).
+
+Keep your growth: scale the SVG container using your existing 1 + 0.08*level factor.
+
+Server payload: continue sending only displayName, avatarLabel (archetype label or custom), and level. No new backend tables required.
+
+Guardrails (important)
+IP-safe: these are archetypes; do not include brand names or real people.
+
+Moderation: sanitize customLabel (length 2–20, alnum + spaces + hyphen; profanity filter).
+
+Performance: SVGs are tiny strings; no extra images needed.
+
+Randomize: add “Roll” button → pick random archetype + palette + props for instant fun.
+
+Acceptance
+I can search and pick from dozens of nerdy presets or build a custom one.
+
+Avatar renders instantly as an SVG; grows with level just like before.
+
+My chosen label (e.g., “Sphinx of Res Ipsa”) shows up in the duel and on the leaderboard.
+
+No server changes beyond passing the label/spec through.

@@ -1,0 +1,72 @@
+A) Question coordinator
+
+Add /server/qcoordinator.js exporting getRoundQuestion({room, subject}):
+
+If room has currentQ, return it; else call OpenAI once, validate schema, store {qid, stem, choices, correctIndex, explanation} in memory + /data/cache.json (10 min).
+
+On parse fail: retry once → use fallback from /data/fallbackQuestions.json.
+
+Server emits duel:question { qid, stem, choices, timeLimit:20, sentAt, deadlineTs }. Reveal later with correctIndex.
+
+B) Strict validator (server)
+
+js
+Copy
+Edit
+function parseStrict(txt){
+  const s=txt.indexOf('{'), e=txt.lastIndexOf('}');
+  if(s<0||e<0) throw Error('nojson');
+  const q=JSON.parse(txt.slice(s,e+1));
+  if(!q.stem||!Array.isArray(q.choices)||q.choices.length!==4) throw Error('schema');
+  if(![0,1,2,3].includes(q.correctIndex)) throw Error('index');
+  if(q.stem.length<80||q.stem.length>120) throw Error('len');
+  return q;
+}
+C) Server-authoritative timer
+
+When sending a question, set deadlineTs=Date.now()+20000 and store it.
+
+Reject answers after deadline; only then emit duel:reveal.
+
+D) Queue & stealth bot
+
+Queue entry TTL = 8s; queue:leave removes & clears timeout.
+
+Stealth bot: human-like username/species/level; accuracy & latency per player band; never write bot to Top 20, no rematch/friend options.
+
+E) Disconnect/AFK
+
+If a socket disconnects >10s mid-match or misses 2 rounds, emit opponent:left and end with forfeit; apply ±25 ladder.
+
+F) Leaderboard integrity
+
+Sanitize & de-dupe usernames; reserved list: ['admin','system','atticus','bot'].
+
+Atomic write: write to leaderboard.tmp then fs.rename to leaderboard.json.
+
+Clamp ladder [0, …], update {wins, losses}.
+
+Keep .bak every 20 writes.
+
+G) Atticus limits
+
+/api/atticus: 1 request/min per user, max 3 hints per match; cache 10 min by hash(stem) or topic.
+
+Hint mode never includes a letter/string matching any choice.
+
+H) Mobile & a11y
+
+Ensure 44px+ tap targets; add keyboard shortcuts 1–4 for choices; add aria-live="polite" on result banner; implement Reduce Motion toggle that disables scale tween.
+
+Acceptance
+
+Two tabs always receive the same question per round; timer is server-side; reveals only after both answer/timeout.
+
+Queue never hangs; after 8s you’re matched (human or stealth bot) with no “bot tells.”
+
+Ladder writes are durable and sane (clamped, atomic); names are clean & unique.
+
+Atticus hint never leaks the answer; rate limits work.
+
+Works on mobile; keyboard 1–4 selects choices on desktop.
+

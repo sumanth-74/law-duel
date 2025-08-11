@@ -1,0 +1,68 @@
+Patch the current plan with the following must-haves—do not rename/delete my files.
+
+A) OpenAI & caching
+
+Server keeps OPENAI_API_KEY; add 10-minute in-memory + /data/cache.json cache keyed by {subject}.
+
+Add fallbackQuestions.json (1–2 items per subject) and use it when parsing fails after one retry.
+
+B) Strict JSON validator
+
+js
+Copy
+Edit
+function parseQuestion(text){
+  const s = text.indexOf('{'); const e = text.lastIndexOf('}');
+  if(s<0||e<0) throw new Error('no json');
+  const q = JSON.parse(text.slice(s, e+1));
+  if(!q.stem || !Array.isArray(q.choices) || q.choices.length!==4) throw new Error('schema');
+  if(![0,1,2,3].includes(q.correctIndex)) throw new Error('index');
+  return q;
+}
+If invalid: retry once; else use fallback from the chosen subject.
+
+C) Server-authoritative timer
+
+When emitting duel:question, include serverSentAt and deadlineTs = Date.now()+20000.
+
+Reject answers after deadlineTs; only reveal correctIndex on duel:reveal.
+
+D) Disconnect/AFK
+
+Track per-round presence. If a socket disconnects >10s during a match or a player times out twice consecutively, auto-forfeit match. Emit opponent:left.
+
+E) Room & readiness
+
+Add duel:ready handshake; start only when both sent ready.
+
+Add UI buttons: Copy Code, Leave Room.
+
+F) Leaderboard safe writes
+
+Names: 2–18 chars, alnum + spaces, profanity filter.
+
+Atomic write: write to leaderboard.tmp then rename to leaderboard.json.
+
+Clamp ladder at ≥0; update {wins, losses}.
+
+G) Character growth & accessibility
+
+On correct: xp+=10; level=Math.floor(xp/50); scaleTween to 1+0.08*level (max 1.8).
+
+Settings toggle: Reduce Motion → lock scale at 1.0, disable tween.
+
+H) Mobile layout
+
+Ensure 44px+ buttons; responsive grid; add viewport-fit=cover and safe-area padding.
+
+Acceptance:
+
+Two tabs can duel first-to-4 with identical questions, 20s server timer, reveal after both answer/timeout.
+
+Disconnect/AFK causes clean forfeit.
+
+Ladder updates ±25, persists; names sanitized; leaderboard shows Top 20.
+
+Avatar visibly grows; reduce-motion toggle works.
+
+OpenAI key never reaches client; fallback works when API fails.

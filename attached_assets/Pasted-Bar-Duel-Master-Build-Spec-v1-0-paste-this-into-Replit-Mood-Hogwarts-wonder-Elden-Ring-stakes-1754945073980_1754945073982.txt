@@ -1,0 +1,156 @@
+Bar Duel — Master Build Spec v1.0 (paste this into Replit)
+Mood: Hogwarts wonder × Elden Ring stakes × Hack The Bar mastery.
+Core fantasy: You duel friends with MBE questions; win to grow your avatar, steal energy, climb ranks, and carry your House/Guild to the weekly Cup.
+
+0) Stack & Security
+Server: Node + Express + Socket.IO, OpenAI (server-side only), dotenv.
+
+Client: Vanilla JS/CSS for lobby/guilds, Phaser 3 for the duel arena.
+
+Persistence (MVP): JSON files on server (/data/*.json) + browser localStorage. No DB yet.
+
+Secret: OPENAI_API_KEY (Replit Secrets). Never expose to client.
+
+1) Game Modes
+Practice (HTB-style): 5/10/30 question sets; instant explanations; Mastery Grid by subtopic; SRS queue (misses resurface 8h→24h→72h→7d).
+
+Duels (ranked 1v1): Best-of-7; 30s per Q; same question for both; correct = 1; tie → faster wins round; reveal correct + 4 explanations each round.
+
+Daily Duel (solo): 7-Q time-attack; one run/day; daily leaderboard.
+
+2) Character, Growth, Spells
+Species (choose at create): werewolf, arcane_simian, shadow_goblin, caped_vigilante, clockwork_clerk, marble_colossus. (Archetypes; no real likenesses.)
+
+Growth: Gain Growth XP (gxp) on correct: 10 + speedBonus(0–5) + streakBonus(0–5). Evolve at cumulative gxp: [0,100,300,700,1500]; scale + aura increases per stage.
+
+Spells (tag-gated): Unlock after 3 consecutive correct on the tag. Example Evidence set:
+
+FRE403 → Objection Bolt (+10 dmg)
+
+FRE901 → Foundation Flame (streak +1 x2 turns)
+
+FRE803(2) → Excited Utterance Surge (+8 dmg)
+
+FRE1002 → Best Evidence Beam (double streak bonus 2 turns)
+
+FRE607-609 → Impeachment Inferno (+15 on win)
+
+801(d)(1)(C) → Prior ID Phantasm (extra turn on hit)
+
+Mentor Owl (Amicus): After every Q, show two concise lines: the rule + the why. Tone: Off / Concise / Spicy.
+
+3) Competition, Stakes, Status
+Ratings: ELO (skill) + Rank Points (RP) (ladder).
+
+Energy = in-game stake (no real money). Pre-match slider 1–25 (both must consent; placements <10 matches can’t stake).
+
+RP formula:
+
+makefile
+Copy
+Edit
+RP_base = +15 (win) / -12 (loss)
+marginBonus = 2 * (yourCorrect − theirCorrect)   // best-of-7 → ±8
+speedBonus  = 5 if median<5s, 2 if <10s, else 0
+Daily cap: ±150 RP per player
+Energy result: winner +stake + marginBonus(0..8) + speedBonus(0..5), loser mirror negative; tie refunds.
+
+Houses/Guilds: join/create with banner emoji; House Cup = weekly sum of members’ RP gains + ranked wins (light weight for energy net).
+
+4) Subjects (Arenas) & Tags
+Arenas: Evidence, Contracts/UCC, Torts, Property, Civil Procedure, Constitutional Law, Criminal Law/Procedure.
+
+Use canonical tags for mastery/spells (e.g., Evidence includes FRE403, FRE901, FRE803(2), FRE1002, FRE607-609, PRIV-ACP, 801(d)(1)(C), 803(6)).
+
+5) OpenAI Question Generation (server-side)
+System prompt (strict JSON only):
+
+json
+Copy
+Edit
+{
+  "subject": "Evidence|Contracts|Torts|Property|Civil Procedure|Constitutional Law|Criminal Law/Procedure",
+  "subtopic": "canonical tag (e.g., FRE403, FRE901, FRE803(2), FRE1002, FRE607-609, PRIV-ACP, UCC-2-207, ...)",
+  "stem": "80–120 word MBE-style fact pattern with exactly ONE determinative fact.",
+  "choices": ["A","B","C","D"],
+  "correctIndex": 0..3,
+  "explanations": ["why A is correct","why B is wrong","why C is wrong","why D is wrong"],
+  "tags": ["canonical tags"]
+}
+Cache prompt→question 10 minutes in /data/cache.json. On parse fail, retry once; else use local fallback question.
+
+Never send correctIndex to clients until both answered or timer expires.
+
+6) Files & Layout
+bash
+Copy
+Edit
+/server/index.js           # Express + static + Socket.IO
+/server/socket.js          # rooms, timers, scoring, reveal, stakes
+/server/ai.js              # OpenAI gen + cache + JSON guard
+/server/elo.js             # ELO (K=24)
+/server/rp.js              # RP/energy calculator + daily cap
+/server/data/players.json  # { id, name, elo, rp, energy, wins, losses, guildId, dailyRp, lastRpReset }
+/server/data/guilds.json   # { id, name, banner, members[], elo }
+/server/data/matchHistory.json
+/server/data/cache.json
+/public/index.html         # lobby (Practice, Duels, Daily, Guilds, Character)
+/public/app.css
+/public/lobby.js
+/public/practice.js        # HTB flow + mastery grid + SRS
+/public/duel.html
+/public/duel.js            # connects sockets; renders arena UI
+/public/guilds.html
+/public/guilds.js
+/public/character.html
+/public/character.js
+/public/arena.js           # Phaser scene: avatars, spells, auras
+/public/assets/*           # banners, icons, placeholder sprites
+/shared/topics.js          # subject→subtopic tags (for mastery & AI)
+/shared/spells.json        # spell definitions keyed by tag
+7) Endpoints & Socket Contract
+REST:
+
+POST /api/createRoom → { roomCode }
+
+GET /api/leaderboards → { players[], guilds[], daily[] } (cache 30s)
+
+Socket:
+
+duel:join { roomCode, profile }
+
+duel:start { subject, bestOf:7, ranked:boolean, stake:number }
+
+duel:question { qid, stem, choices, tags, round, timeLimit:30 } (no correctIndex)
+
+duel:answer { qid, idx, elapsedMs }
+
+duel:reveal { qid, correctIndex, explanations, p1:{idx,ms}, p2:{idx,ms}, roundScore }
+
+duel:over { winnerId, breakdown, eloDelta, rpDelta, energyDelta, newTotals:{p1:{elo,rp,energy},p2:{...}} }
+
+8) Anti-cheat & Safety
+Server authoritative time; reject answers >30s.
+
+Limit ranked rematches vs same opponent to ≤3/day; block stakes if same IP; placements (<10 matches) = no stakes.
+
+Legal/IP: use archetype skins (no real justice names/images). No real-money betting.
+
+9) UI/Feel (cheap but cohesive)
+Realm color tokens (Evidence indigo/silver; Contracts gold/teal; Torts crimson/amber; Property moss/stone; Civ Pro slate/steel; Con Law marble/royal; Crim obsidian/violet).
+
+Character maker with species + colors; growth visibly scales avatar; spell ribbons on tag hits; hex vignette on misses.
+
+Rank badges by RP: Novice → Clerk → Barrister → Counselor → Advocate → Magus → Archon.
+
+10) Acceptance (must work before styling spree)
+Two browser tabs can duel best-of-7 with identical AI questions, 30s timers, speed tie-break, round reveals, and a winner.
+
+Ranked toggle + stake slider works; ELO/RP/Energy persist; daily RP cap enforced; House/Guild totals update.
+
+Practice runs 10-Q Evidence set, shows explanations, updates Mastery Grid + SRS.
+
+Character species chosen at create; correct answers grow avatar; Amicus shows two concise lines after each Q.
+
+OpenAI key stays server-side; clients never see it.
+

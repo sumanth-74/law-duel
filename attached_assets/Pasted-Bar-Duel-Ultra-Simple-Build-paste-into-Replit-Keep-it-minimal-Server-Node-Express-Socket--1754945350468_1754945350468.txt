@@ -1,0 +1,121 @@
+Bar Duel — Ultra-Simple Build (paste into Replit)
+Keep it minimal.
+
+Server: Node + Express + Socket.IO, OpenAI (server-side), dotenv
+
+Client: Vanilla HTML/CSS/JS (no React, no Phaser)
+
+Persistence: JSON files on server (leaderboard + users) + localStorage for character
+
+Secrets: OPENAI_API_KEY
+
+Core loop (must ship)
+Character Create (one screen)
+
+Pick a species from a short list: werewolf, dragonling, shadow_goblin, arcane_simian, stone titan, spectral knight.
+
+Pick color + enter name. Save to localStorage.profile.
+
+Growth
+
+Every correct answer = +10 XP.
+
+Level = floor(XP / 50).
+
+Avatar scale = 1 + 0.08 * Level (cap at 1.8).
+
+Show a tiny “+XP” pop when you answer right, and scale up smoothly.
+
+Duels (1v1)
+
+Room code matchmaking (Create / Join).
+
+First to 4 correct wins (best-of-7). 20s timer per question.
+
+Both players receive the same question.
+
+After lock-in or timeout, reveal correctIndex + short explanation.
+
+Leaderboard (simple ladder, not ELO)
+
+Winner: +25 ladder points. Loser: −25 (floor at 0).
+
+Update /data/leaderboard.json with {id, name, species, level, points, wins, losses}.
+
+Show Top 20 on the home screen.
+
+Files
+bash
+Copy
+Edit
+/server.js               # express static + socket.io + routes
+/ai.js                   # OpenAI question generator + 10-min cache + JSON guard
+/data/leaderboard.json   # [{ id, name, species, level, points, wins, losses }]
+/data/cache.json         # prompt->question cache
+/public/index.html       # character create + home + leaderboard + duel UI
+/public/styles.css
+/public/app.js           # character, lobby, sockets, duel logic
+Endpoints & sockets
+GET /api/leaderboard → top 20 (read leaderboard.json)
+
+POST /api/resetTestData (dev only)
+
+Socket events:
+
+room:create → { roomCode }
+
+room:join { roomCode, profile }
+
+duel:start { subject: "Evidence|Contracts|Torts|Property|Civ Pro|Con Law|Crim" }
+
+duel:question { qid, stem, choices, timeLimit:20 } (no correctIndex yet)
+
+duel:answer { qid, idx, ms }
+
+duel:reveal { qid, correctIndex, explanation, p1:{idx,ms}, p2:{idx,ms}, score:{p1,p2} }
+
+duel:over { winnerId, loserId, ladderDelta:{+25,-25}, levels:{p1,p2} }
+
+OpenAI (server-side only)
+Model: gpt-4o-mini
+
+System prompt (use verbatim):
+
+pgsql
+Copy
+Edit
+Return ONLY strict JSON:
+{
+  "subject": "Evidence|Contracts|Torts|Property|Civil Procedure|Constitutional Law|Criminal Law/Procedure",
+  "stem": "80–110 word MBE-style fact pattern with exactly ONE determinative fact.",
+  "choices": ["A","B","C","D"],
+  "correctIndex": 0,
+  "explanation": "One short rule-based paragraph explaining the correct answer."
+}
+Rules: Exactly 4 choices; exactly one correctIndex in 0..3; no extra text.
+Cache identical prompts 10 minutes in /data/cache.json.
+
+On parse fail: retry once, then serve one local fallback question.
+
+Minimal UI requirements
+Home: “Create/Join Duel,” subject picker, Leaderboard Top 20.
+
+Character bar at top: species emoji/silhouette, name, Level, XP bar; avatar preview scales with level.
+
+Duel screen: timer, question, four big buttons; lock-in state; reveal state; score chips (first to 4).
+
+Win/Lose toast: “You grew to Level X (+10 XP). Opponent −25.”
+
+Safety & simplicity
+Server is authoritative: sends correctIndex only on reveal; rejects answers after 20s.
+
+No money, no items, no guilds, no spells, no SRS, no daily modes. Keep this build tiny.
+
+Acceptance checklist
+Two browser tabs can create/join, play first-to-4, and see identical questions with a 20s timer.
+
+Winning adds +25 to your leaderboard points; losing subtracts 25; JSON persists while Replit runs.
+
+Avatar visibly grows as XP/Level increase from correct answers.
+
+OpenAI key stays server-side; client never sees it.
