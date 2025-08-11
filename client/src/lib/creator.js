@@ -33,7 +33,10 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     'dragon-solicitor': dragonPortrait,
     'voir-dire-viper': serpentPortrait,
     'pd-phoenix': hawkPortrait,
-    'dissenter-crow': hawkPortrait
+    'dissenter-crow': hawkPortrait,
+    'prosecutor-minotaur': werewolfPortrait, // Beast-like with horns
+    'kraken-of-remand': alienPortrait, // Tentacled sea creature
+    'remand-kraken': alienPortrait // Tentacled sea creature
   };
   
   // If specific archetype mapping exists, use it
