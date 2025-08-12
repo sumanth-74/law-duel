@@ -82,11 +82,13 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Connection Management**: Disconnect handling with forfeit logic for abandoned matches
 - **Data Validation**: Strict schema validation for all user inputs and API responses
 - **Quality Monitoring**: Daily spot-checking of question accuracy and explanation tightness
+- **Leaderboard System**: Fixed "users2" initialization error caused by variable shadowing in statsService - both overall and real-time leaderboards now functional
 
 ## External Dependencies
 
 ### Third-Party Services
-- **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **ACTIVE AND WORKING** (Updated 2025-01-12)
+- **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **ACTIVE AND WORKING** (Updated 2025-08-12)
+- **Question Generation**: Answer randomization fixed - correct answers now properly distributed across A, B, C, D options instead of defaulting to 'A'
 - **Neon Database**: PostgreSQL hosting service for production data storage
 
 ### UI and Styling Libraries

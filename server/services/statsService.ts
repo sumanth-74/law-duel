@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { users, playerSubjectStats, questionAttempts } from '../../shared/schema';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, desc } from 'drizzle-orm';
 import { progressionService } from './progressionService';
 import type { User, PlayerSubjectStats, QuestionAttempt, MBESubject } from '@shared/schema';
 
@@ -288,7 +288,7 @@ export class StatsService {
     const usersList = await db
       .select()
       .from(users)
-      .orderBy(sql`${users.overallElo} DESC`)
+      .orderBy(desc(users.overallElo))
       .limit(limit);
 
     return usersList.map((user, index) => {
@@ -315,17 +315,17 @@ export class StatsService {
   }>> {
     const results = await db
       .select({
-        user: users,
+        userData: users,
         stats: playerSubjectStats
       })
       .from(playerSubjectStats)
       .innerJoin(users, eq(users.id, playerSubjectStats.userId))
       .where(eq(playerSubjectStats.subject, subject))
-      .orderBy(sql`${playerSubjectStats.subjectRating} DESC`)
+      .orderBy(desc(playerSubjectStats.masteryPoints))
       .limit(limit);
 
     return results.map((result, index) => {
-      const { password, email, ...publicUser } = result.user;
+      const { password, email, ...publicUser } = result.userData;
       const accuracy = result.stats.questionsAnswered > 0
         ? (result.stats.correctAnswers / result.stats.questionsAnswered) * 100
         : 0;
