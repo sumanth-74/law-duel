@@ -2,10 +2,8 @@ import { db } from '../db';
 import { dailyQuestions, userDailyAttempts, users, playerSubjectStats } from '../../shared/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { progressionService } from './progressionService';
-import OpenAI from 'openai';
+import { generateMBEItem, getDailyTopic, type MBEItem } from './mbeGenerator';
 import type { DailyQuestion, UserDailyAttempt, MBESubject } from '../../shared/schema';
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export class DailyCasefileService {
   
@@ -83,66 +81,25 @@ export class DailyCasefileService {
     };
   }
 
-  // Generate today's question using OpenAI
+  // Generate today's question using structured OpenAI
   private async generateTodaysQuestion(date: string): Promise<DailyQuestion> {
-    const subjects = [
-      "Civil Procedure", "Constitutional Law", "Contracts", 
-      "Criminal Law/Procedure", "Evidence", "Real Property", "Torts"
-    ];
-    
-    // Rotate subject based on day of year
-    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    const subject = subjects[dayOfYear % subjects.length];
-    
-    const prompt = `Generate a single HARD difficulty MBE practice question for ${subject}.
-
-    Requirements:
-    - Professional bar exam quality (Themis/BarBri/Kaplan style)
-    - Hard difficulty level
-    - Detailed fact pattern with multiple legal issues
-    - 4 answer choices (A, B, C, D)
-    - Comprehensive explanation covering why the correct answer is right and others are wrong
-    - Focus on complex legal analysis and application
-    
-    Return in JSON format:
-    {
-      "subject": "${subject}",
-      "topic": "specific topic within subject",
-      "stem": "the question stem with fact pattern",
-      "choices": ["A. choice text", "B. choice text", "C. choice text", "D. choice text"],
-      "correctIndex": 0,
-      "explanationLong": "detailed explanation with rule analysis",
-      "ruleRefs": ["relevant rule or case citations"]
-    }`;
-
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert legal educator creating high-quality MBE questions. Generate professional, challenging questions with detailed explanations."
-          },
-          {
-            role: "user", 
-            content: prompt
-          }
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.7,
-      });
-
-      const questionData = JSON.parse(response.choices[0].message.content || '{}');
+      // Get daily topic based on day of year for rotation
+      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (24 * 60 * 60 * 1000));
+      const topicConfig = getDailyTopic(dayOfYear);
+      
+      // Generate MBE item using structured outputs
+      const mbeItem: MBEItem = await generateMBEItem(topicConfig);
       
       // Shuffle choices and adjust correct index
-      const shuffledData = this.shuffleChoices(questionData);
+      const shuffledData = this.shuffleChoices(mbeItem);
       
       // Insert into database
       const [insertedQuestion] = await db
         .insert(dailyQuestions)
         .values({
           dateUtc: date,
-          subject: shuffledData.subject,
+          subject: shuffledData.subject as MBESubject,
           topic: shuffledData.topic,
           difficulty: "hard",
           stem: shuffledData.stem,
