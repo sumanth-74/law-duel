@@ -21,23 +21,23 @@ export const LAW_ARCHETYPES = {
   
   categories: {
     corporate: {
-      name: "Corporate Law",
-      description: "Business law specialists and corporate counsel",
+      name: "Corporate",
+      description: "Master of mergers, acquisitions, and shareholder disputes",
       icon: "briefcase"
     },
-    criminal: {
-      name: "Criminal Law", 
-      description: "Prosecutors, defenders, and justice seekers",
+    whitecollarcriminal: {
+      name: "White Collar Criminal", 
+      description: "Defending executives and prosecuting financial crimes",
       icon: "gavel"
     },
     constitutional: {
-      name: "Constitutional Law",
-      description: "Guardians of constitutional rights and freedoms",
+      name: "Constitutional Scholar",
+      description: "Protector of rights and interpreter of founding principles",
       icon: "scales"
     },
-    academic: {
-      name: "Legal Academia",
-      description: "Scholarly legal minds and law professors",
+    publicdefender: {
+      name: "Public Defenders",
+      description: "Champion of the underrepresented and guardian of justice",
       icon: "codex"
     }
   },
@@ -70,30 +70,30 @@ export const LAW_ARCHETYPES = {
       category: "corporate"
     },
     
-    // Criminal Law Category
+    // White Collar Criminal Category
     {
       id: "trial_hawk",
       label: "Trial Hawk",
       base: "beast",
       palette: "verdict_red", 
       props: ["gavel", "scales", "codex"],
-      category: "criminal"
+      category: "whitecollarcriminal"
     },
     {
       id: "prosecutor_phoenix",
-      label: "Prosecutor Phoenix",
+      label: "Fraud Falcon",
       base: "elemental",
       palette: "judicial_gold",
       props: ["gavel", "law_diploma", "scales"],
-      category: "criminal"
+      category: "whitecollarcriminal"
     },
     {
       id: "defense_dragon", 
-      label: "Defense Dragon",
+      label: "Executive Eagle",
       base: "arcane",
       palette: "constitutional_purple",
       props: ["codex", "briefcase", "scales"],
-      category: "criminal"
+      category: "whitecollarcriminal"
     },
     
     // Constitutional Law Category
@@ -122,30 +122,30 @@ export const LAW_ARCHETYPES = {
       category: "constitutional"
     },
     
-    // Legal Academia Category  
+    // Public Defenders Category  
     {
       id: "jurisprudence_owl",
-      label: "Jurisprudence Owl",
+      label: "Justice Owl",
       base: "beast",
       palette: "precedent_bronze",
       props: ["codex", "quill", "law_library"],
-      category: "academic"
+      category: "publicdefender"
     },
     {
       id: "law_professor",
-      label: "Law Professor", 
+      label: "People's Champion", 
       base: "humanoid",
       palette: "constitutional_purple",
       props: ["codex", "law_diploma", "legal_pad"],
-      category: "academic"
+      category: "publicdefender"
     },
     {
       id: "research_wraith",
-      label: "Research Wraith",
+      label: "Court Crusader",
       base: "undead", 
       palette: "statute_silver",
       props: ["codex", "quill", "law_library"],
-      category: "academic"
+      category: "publicdefender"
     }
   ]
 };
