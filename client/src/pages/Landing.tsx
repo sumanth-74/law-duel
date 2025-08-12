@@ -91,9 +91,7 @@ export default function Landing() {
                     {isSigningUp ? 'Creating Account...' : 'Create Account & Avatar'}
                   </Button>
                 </form>
-                <p className="text-purple-300/60 text-sm text-center mt-3">
-                  Free to start • No email required
-                </p>
+
               </CardContent>
             </Card>
           </div>
@@ -143,9 +141,7 @@ export default function Landing() {
       <footer className="border-t border-purple-500/20 bg-black/20">
         <div className="container mx-auto px-4 py-8 text-center">
           <LawDuelLogo size="sm" showText={true} className="justify-center mb-4" />
-          <p className="text-purple-400/60">
-            Study law through competitive gameplay. Simple, effective, focused.
-          </p>
+
         </div>
       </footer>
     </div>
