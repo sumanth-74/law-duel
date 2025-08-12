@@ -2,7 +2,7 @@ import { db } from '../db';
 import { dailyQuestions, userDailyAttempts, users, playerSubjectStats } from '../../shared/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { progressionService } from './progressionService';
-import { generateMBEItem, getDailyTopic, type MBEItem } from './mbeGenerator';
+import { generateMBEItem, getDailyTopic } from './mbeGenerator.js';
 import type { DailyQuestion, UserDailyAttempt, MBESubject } from '../../shared/schema';
 
 export class DailyCasefileService {
@@ -89,7 +89,7 @@ export class DailyCasefileService {
       const topicConfig = getDailyTopic(dayOfYear);
       
       // Generate MBE item using structured outputs
-      const mbeItem: MBEItem = await generateMBEItem(topicConfig);
+      const mbeItem = await generateMBEItem(topicConfig);
       
       // Shuffle choices and adjust correct index
       const shuffledData = this.shuffleChoices(mbeItem);

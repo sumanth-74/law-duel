@@ -62,8 +62,9 @@ The application uses a monorepo structure with shared types and schemas between 
 
 ### Game Logic Architecture
 - **Real-time Duels**: Server-authoritative timer system with 20-second question timeouts, 10 questions per match
-- **Question Quality**: Professional bar exam quality questions (Themis/BarBri/Kaplan style) with verified explanations, batch-generated and cached for cost optimization
-- **Cost Optimization**: Shared server calls between players, 10-minute question cache, pregenerated question banks maintaining COGS near $0.00x per match
+- **Question Quality**: Professional bar exam quality questions using structured OpenAI generation with JSON schema validation, comprehensive explanations and rule references
+- **Structured Generation**: MBE generator service using OpenAI's structured outputs for both dueling questions and Daily Casefile, ensuring consistent format and quality
+- **Cost Optimization**: Shared server calls between players, 10-minute question cache, structured generation reducing API costs while maintaining quality
 - **Retention Loop**: Fast matchmaking (<8s target) → immediate win/lose feedback → ladder progression → rematch incentives, targeting D7 retention ≥ 20%
 - **Competitive Points System**: Winners earn 5 points per correct answer + 25 bonus points, losers forfeit 25 points, creating high-stakes competition
 - **Level Progression**: Levels determined by total points earned (every 100 points = 1 level), with points preventing from going below 0

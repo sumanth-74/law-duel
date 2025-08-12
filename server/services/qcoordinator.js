@@ -1,10 +1,5 @@
-import OpenAI from "openai";
+import { generateMBEItem, getDailyTopic } from './mbeGenerator.js';
 import { storage } from "../storage.js";
-
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || "default_key"
-});
 
 const SUBJECTS = [
   "Evidence", "Contracts", "Torts", "Property", 
@@ -55,53 +50,30 @@ async function generateQuestion(subject) {
   }
 
   try {
-    const prompt = `Generate a law school question for ${subject}. 
-Requirements:
-- Stem must be 80-120 characters
-- 4 multiple choice options (A, B, C, D)
-- Exactly one correct answer
-- Brief explanation for the correct answer
-- Appropriate difficulty for bar exam preparation
+    // Create topic configuration for the subject
+    const topicConfig = {
+      subject,
+      topic: getTopicForSubject(subject),
+      subtopic: undefined,
+      rule: undefined
+    };
 
-Respond with valid JSON in this exact format:
-{
-  "stem": "question text here...",
-  "choices": ["A option", "B option", "C option", "D option"],
-  "correctIndex": 0,
-  "explanation": "explanation text"
-}`;
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are a law professor creating high-quality bar exam questions. Always respond with valid JSON."
-        },
-        {
-          role: "user", 
-          content: prompt
-        }
-      ],
-      response_format: { type: "json_object" },
-      max_tokens: 800
-    });
-
-    const result = JSON.parse(response.choices[0].message.content);
+    // Generate using structured MBE generator
+    const mbeItem = await generateMBEItem(topicConfig);
     
+    const question = {
+      subject: mbeItem.subject,
+      stem: mbeItem.stem,
+      choices: mbeItem.choices,
+      correctIndex: mbeItem.correctIndex,
+      explanation: mbeItem.explanationLong,
+      difficulty: mbeItem.difficultySeed
+    };
+
     // Validate the result
-    if (!validateQuestion(result)) {
+    if (!validateQuestion(question)) {
       throw new Error("Generated question failed validation");
     }
-
-    const question = {
-      subject,
-      stem: result.stem,
-      choices: result.choices,
-      correctIndex: result.correctIndex,
-      explanation: result.explanation,
-      difficulty: "medium"
-    };
 
     // Cache for a short time
     questionCache.set(cacheKey, question);
@@ -109,9 +81,23 @@ Respond with valid JSON in this exact format:
 
     return question;
   } catch (error) {
-    console.error('OpenAI question generation failed:', error);
+    console.error('MBE question generation failed:', error);
     return null;
   }
+}
+
+// Helper function to get appropriate topics for each subject
+function getTopicForSubject(subject) {
+  const topicMap = {
+    "Evidence": "Hearsay",
+    "Contracts": "Formation",
+    "Torts": "Negligence", 
+    "Property": "Estates",
+    "Civil Procedure": "Jurisdiction",
+    "Constitutional Law": "Due Process",
+    "Criminal Law/Procedure": "Fourth Amendment"
+  };
+  return topicMap[subject] || "General Principles";
 }
 
 function validateQuestion(question) {
