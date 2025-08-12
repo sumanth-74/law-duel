@@ -344,7 +344,7 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
             <div className="bg-panel-2 border border-white/10 rounded-xl p-6">
               <div className="flex items-start justify-between mb-4">
                 <h4 className="font-semibold text-lg" data-testid="question-header">
-                  {duelState.subject} • Round {duelState.round}/7
+                  {duelState.subject} • Round {duelState.round}/10
                 </h4>
                 <div className="flex items-center space-x-2">
                   <button 

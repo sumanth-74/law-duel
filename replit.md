@@ -49,13 +49,15 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Username Validation**: 2-18 character limit with alphanumeric and space restrictions
 
 ### Game Logic Architecture
-- **Real-time Duels**: Server-authoritative timer system with 20-second question timeouts
-- **Question Generation**: OpenAI integration with 10-minute caching, 1200ms rate limiting, and training question fallbacks
-- **Stealth Bot System**: Human-appearing bots with realistic names, avatars, and skill-based difficulty levels (Novice to Expert)
+- **Real-time Duels**: Server-authoritative timer system with 20-second question timeouts, 10 questions per match
+- **Question Generation**: Professional bar exam quality questions (Themis/BarBri/Kaplan style) covering Evidence, Contracts, Torts, Property, Constitutional Law, and Criminal Law
+- **Competitive Points System**: Winners earn 5 points per correct answer + 25 bonus points, losers forfeit 25 points, creating high-stakes competition
+- **Level Progression**: Levels determined by total points earned (every 100 points = 1 level), with points preventing from going below 0
+- **Stealth Bot System**: Human-appearing bots with realistic names, avatars, and skill-based difficulty levels (70% accuracy)
 - **Streamlined Matchmaking**: Two clear modes - Quick Match (stealth bots) and Friend Challenge (username-based)
 - **Subject Flexibility**: Specific legal subjects or mixed question pools
 - **XP and Leveling**: Growth system with visual scaling based on character level (1 + 0.08 * level, capped at 1.8)
-- **Leaderboard System**: ELO-style ranking with atomic updates and backup mechanisms
+- **Leaderboard System**: Points-based ranking with real-time stat updates and database synchronization
 
 ### Error Handling and Resilience
 - **Graceful Degradation**: Fallback questions when OpenAI fails or returns invalid data
