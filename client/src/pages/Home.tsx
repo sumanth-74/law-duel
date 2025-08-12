@@ -615,7 +615,7 @@ export default function Home() {
                 <Card className="bg-black/40 border-purple-500/20">
                   <CardHeader>
                     <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
-                      👥 Play with Friend
+                      👥 Play with a Friend
                       <Badge variant="default" className="bg-purple-600/30 text-purple-200 border-purple-500/50">Ranked</Badge>
                     </CardTitle>
                   </CardHeader>
