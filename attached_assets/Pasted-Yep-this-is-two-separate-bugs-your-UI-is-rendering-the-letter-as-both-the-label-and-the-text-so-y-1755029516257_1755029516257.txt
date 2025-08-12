@@ -1,0 +1,120 @@
+Yep—this is two separate bugs:
+
+your UI is rendering the letter as both the label and the text (so you see “A A / B B”), and
+
+your generator occasionally returns junk choices (like “A”, “B”…).
+
+Fix both with these drop-in patches.
+
+A) Server: never accept junk choices (and strip “A) …” prefixes)
+Add this guard right after you parse the OpenAI JSON—before saving/serving:
+
+js
+Copy
+Edit
+// put near your other validators
+function normalizeChoices(raw) {
+  if (!Array.isArray(raw) || raw.length !== 4) throw new Error("Need exactly 4 choices");
+  // strip leading A) / B. / C: etc.
+  const cleaned = raw.map((s) => String(s || "").replace(/^\s*[A-D][\)\].:\-]\s*/i, "").trim());
+  // reject single-letter/empty/dupe choices
+  if (cleaned.some((c) => c.length < 6)) throw new Error("Choices too short");
+  const set = new Set(cleaned.map((c) => c.toLowerCase()));
+  if (set.size < 4) throw new Error("Duplicate/identical choices");
+  return cleaned;
+}
+Use it in your generator route:
+
+js
+Copy
+Edit
+// after const item = JSON.parse(resp.output_text);
+try {
+  item.choices = normalizeChoices(item.choices);
+} catch (e) {
+  // force a retry with a new nonce so you don't ship junk
+  err = e.message; continue; // inside your retry loop
+}
+And keep this quick lint (you likely have it already):
+
+js
+Copy
+Edit
+if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3)
+  { err = "Bad correctIndex"; continue; }
+item.timeLimitSec = 60; // enforce 60s
+Result: you’ll only ever serve four distinct, sentence-like options. If the model sends “A/B/C/D,” the request is retried automatically.
+
+B) Client: render the text; don’t echo the letter twice
+Right now your option component is probably using the same field for label and text. Render like this:
+
+ts
+Copy
+Edit
+// Question shape coming from /question
+type Question = {
+  id: string;
+  subject: string;
+  stem: string;
+  choices: string[];      // ["It is admissible ...", "It is inadmissible ...", ...]
+  timeLimitSec: number;   // 60
+};
+
+const LETTERS = ["A", "B", "C", "D"];
+
+return (
+  <div>
+    <div className="stem">{q.stem}</div>
+    <div className="choices">
+      {q.choices.map((txt, i) => (
+        <button
+          key={i}
+          onClick={() => submitAnswer(i)}
+          className="choice"
+        >
+          <span className="label">{LETTERS[i]}</span>
+          <span className="text">{txt}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+);
+Common mistake I’ve seen in bar-prep UIs:
+
+tsx
+Copy
+Edit
+{/* WRONG: renders "A A" because choiceText is literally "A" */}
+<span>{LETTERS[i]} {choiceText}</span>
+With the server normalization above, choiceText will be the full sentence, not “A”.
+
+C) Make sure you’re actually getting a fresh item each call
+Add a no-cache query param and “no-store” headers to your fetch:
+
+ts
+Copy
+Edit
+const url = `/question${subject ? `?subject=${encodeURIComponent(subject)}` : ""}&ts=${Date.now()}`;
+const res = await fetch(url, { cache: "no-store", headers: { "Cache-Control": "no-cache" } });
+const { item } = await res.json();
+setQuestion(item);
+If you run a service worker, bypass cache for /question:
+
+js
+Copy
+Edit
+// service-worker.js
+self.addEventListener("fetch", (e) => {
+  const p = new URL(e.request.url).pathname;
+  if (p.startsWith("/question")) {
+    e.respondWith(fetch(e.request)); // network-only
+    return;
+  }
+  // ...your normal caching
+});
+D) Quick smoke test (takes 60 seconds)
+Open your /question endpoint directly twice → you should see two different stems with timeLimitSec: 60.
+
+In the duel screen, options should read like “A Admissible as a business record”, not “A A”.
+
+If you ever see short/duplicate options again, check server logs—you should see “Choices too short” or “Duplicate choices” followed by an automatic retry.

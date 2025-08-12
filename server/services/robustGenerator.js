@@ -121,9 +121,15 @@ export async function generateFreshQuestion(subject) {
       item.subject = canonicalSubject;
       item.topic = item.topic || topic;
       
-      // Basic validation
+      // Basic validation - check structure and correctIndex range
       if (!item.stem || !item.choices || item.choices.length !== 4 || typeof item.correctIndex !== 'number') {
         err = "Invalid structure";
+        continue;
+      }
+      
+      // Validate correctIndex is in range 0-3
+      if (item.correctIndex < 0 || item.correctIndex > 3) {
+        err = `Invalid correctIndex: ${item.correctIndex} (must be 0-3)`;
         continue;
       }
       
@@ -165,6 +171,8 @@ export async function generateFreshQuestion(subject) {
     
     console.log(`✅ Generated fresh OpenAI question: ${qid} for ${canonicalSubject}`);
     console.log(`📝 Question preview: "${item.stem.substring(0, 60)}..."`);
+    console.log(`🎯 Correct answer: ${item.correctIndex} (${item.choices?.[item.correctIndex]?.substring(0, 30) || 'N/A'}...)`);
+    console.log(`🔍 Full question validation: correctIndex=${formattedQuestion.correctIndex}, choices.length=${formattedQuestion.choices?.length}`);
     return formattedQuestion;
     
   } catch (error) {

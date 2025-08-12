@@ -74,7 +74,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { generateFreshQuestion } = await import("./services/robustGenerator.js");
       const question = await generateFreshQuestion(subject);
       
-      // Don't leak the answer to client
+      // Log the generated question details for debugging
+      console.log(`🔍 Generated question correctIndex: ${question.correctIndex}`);
+      console.log(`🔍 Generated question choices count: ${question.choices.length}`);
+      
+      // Don't leak the answer to client - keep correctIndex on server for validation
       const { correctIndex, ...safeQuestion } = question;
       const item = {
         ...safeQuestion,
@@ -82,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: question.qid
       };
       
-      console.log(`📤 Serving fresh question: ${item.id} for ${subject}`);
+      console.log(`📤 Serving fresh question: ${item.id} for ${subject} (answer: ${correctIndex})`);
       return res.json({ item });
       
     } catch (error) {
