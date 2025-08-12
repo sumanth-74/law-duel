@@ -14,6 +14,8 @@ Preferred communication style: Simple, everyday language.
 - Clear game modes: "Quick Match" (vs stealth bots) and "Play with Friend" (enter username)
 - Subject selection: Specific subjects or "Mixed Questions" option
 - Rematch functionality: Allow rematches after game completion
+- Persistent gamer tag: Username always visible like gaming platforms
+- Purple theme: Mature, professional purple styling throughout platform
 
 ## System Architecture
 

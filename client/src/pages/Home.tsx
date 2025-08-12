@@ -60,7 +60,7 @@ export default function Home() {
   // Show character creation for new users or when manually requested
   if (showCharacterCreation || needsCharacterCreation) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <CharacterCreation 
           isOpen={true} 
           onClose={() => {
@@ -193,7 +193,14 @@ export default function Home() {
 
   if (gameMode === 'duel' && opponent && duelData) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* Persistent Gamer Tag - Top Right */}
+        <div className="fixed top-4 right-4 z-50">
+          <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
+            @{character.username}
+          </Badge>
+        </div>
+        
         <DuelArena
           user={character}
           opponent={opponent}
@@ -201,10 +208,10 @@ export default function Home() {
           onDuelEnd={handleDuelEnd}
         />
         <div className="fixed bottom-4 right-4 space-x-2">
-          <Button onClick={handleRematch} variant="outline" size="sm">
+          <Button onClick={handleRematch} variant="outline" size="sm" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20">
             Rematch
           </Button>
-          <Button onClick={handleDuelEnd} variant="outline" size="sm">
+          <Button onClick={handleDuelEnd} variant="outline" size="sm" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20">
             Main Menu
           </Button>
         </div>
@@ -214,13 +221,20 @@ export default function Home() {
 
   if (gameMode === 'searching') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="panel max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        {/* Persistent Gamer Tag - Top Right */}
+        <div className="fixed top-4 right-4 z-50">
+          <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
+            @{character.username}
+          </Badge>
+        </div>
+        
+        <Card className="bg-black/40 border-purple-500/20 max-w-md">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 border-4 border-arcane border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="font-cinzel text-xl font-bold mb-2">Searching for {gameSettings.friendUsername}</h3>
-            <p className="text-muted mb-4">Sending duel invitation...</p>
-            <Button onClick={() => setGameMode('menu')} variant="outline">
+            <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 className="font-cinzel text-xl font-bold mb-2 text-purple-200">Searching for {gameSettings.friendUsername}</h3>
+            <p className="text-purple-400 mb-4">Sending duel invitation...</p>
+            <Button onClick={() => setGameMode('menu')} variant="outline" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20">
               Cancel
             </Button>
           </CardContent>
@@ -232,7 +246,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container max-w-4xl mx-auto py-8 px-4">
-        {/* Header */}
+        {/* Header with Persistent Gamer Tag */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <AvatarRenderer
@@ -241,7 +255,12 @@ export default function Home() {
               size={64}
             />
             <div>
-              <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
+                <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/20">
+                  @{character.username}
+                </Badge>
+              </div>
               <p className="text-purple-400">Level {character.level} • {character.points} Points</p>
             </div>
           </div>
