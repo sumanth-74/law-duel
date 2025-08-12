@@ -4,10 +4,15 @@ import { Input } from '@/components/ui/input';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { BookOpen, Scale, Users, GraduationCap } from 'lucide-react';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Landing() {
+  const { toast } = useToast();
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +32,58 @@ export default function Landing() {
         window.location.href = `/signup?username=${encodeURIComponent(username.trim())}`;
       } else {
         const error = await checkResponse.json();
-        alert(error.message || 'Username not available');
+        toast({
+          title: "Username not available",
+          description: error.message || 'Please try a different username',
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      alert('Failed to check username. Please try again.');
+      toast({
+        title: "Error",
+        description: 'Failed to check username. Please try again.',
+        variant: "destructive"
+      });
     } finally {
       setIsSigningUp(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username.trim() || !password.trim()) return;
+    
+    setIsLoggingIn(true);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ 
+          username: username.trim(), 
+          password: password.trim() 
+        })
+      });
+      
+      if (response.ok) {
+        // Successful login - reload to go to home page
+        window.location.href = '/';
+      } else {
+        const error = await response.json();
+        toast({
+          title: "Login failed",
+          description: error.message || 'Invalid username or password',
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: 'Failed to login. Please try again.',
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -42,12 +93,15 @@ export default function Landing() {
       <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-sm border-b border-purple-500/20">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <LawDuelLogo size="md" showText={true} />
-          <Button 
-            onClick={() => window.location.href = '/api/login'} 
-            className="bg-purple-600 hover:bg-purple-700 text-white"
-          >
-            Sign In
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => setShowLoginForm(!showLoginForm)} 
+              variant="outline"
+              className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
+            >
+              {showLoginForm ? 'Sign Up' : 'Sign In'}
+            </Button>
+          </div>
         </div>
       </nav>
 
@@ -69,28 +123,82 @@ export default function Landing() {
             Master law school exams and bar review through competitive duels. Test your knowledge, track progress, and play with friends.
           </p>
 
-          {/* Signup Form */}
+          {/* Login/Signup Form */}
           <div className="max-w-md mx-auto mb-12">
             <Card className="bg-black/40 border-purple-500/30">
               <CardContent className="p-6">
-                <h2 className="font-cinzel text-xl text-purple-200 mb-4 text-center">Get Started</h2>
-                <form onSubmit={handleSignup} className="space-y-4">
-                  <Input
-                    type="text"
-                    placeholder="Choose your username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="bg-slate-800 border-purple-500/30 text-slate-200"
-                    disabled={isSigningUp}
-                  />
-                  <Button 
-                    type="submit"
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                    disabled={!username.trim() || isSigningUp}
-                  >
-                    {isSigningUp ? 'Creating Account...' : 'Create Account & Avatar'}
-                  </Button>
-                </form>
+                <h2 className="font-cinzel text-xl text-purple-200 mb-4 text-center">
+                  {showLoginForm ? 'Welcome Back' : 'Get Started'}
+                </h2>
+                
+                {showLoginForm ? (
+                  <form onSubmit={handleLogin} className="space-y-4">
+                    <Input
+                      type="text"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="bg-slate-800 border-purple-500/30 text-slate-200"
+                      disabled={isLoggingIn}
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="bg-slate-800 border-purple-500/30 text-slate-200"
+                      disabled={isLoggingIn}
+                    />
+                    <Button 
+                      type="submit"
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                      disabled={!username.trim() || !password.trim() || isLoggingIn}
+                    >
+                      {isLoggingIn ? 'Signing In...' : 'Sign In'}
+                    </Button>
+                    <p className="text-center text-sm text-purple-300">
+                      Don't have an account? 
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowLoginForm(false);
+                          setPassword('');
+                        }}
+                        className="text-purple-400 hover:text-purple-300 ml-1 underline"
+                      >
+                        Sign up
+                      </button>
+                    </p>
+                  </form>
+                ) : (
+                  <form onSubmit={handleSignup} className="space-y-4">
+                    <Input
+                      type="text"
+                      placeholder="Choose your username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="bg-slate-800 border-purple-500/30 text-slate-200"
+                      disabled={isSigningUp}
+                    />
+                    <Button 
+                      type="submit"
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                      disabled={!username.trim() || isSigningUp}
+                    >
+                      {isSigningUp ? 'Creating Account...' : 'Create Account & Avatar'}
+                    </Button>
+                    <p className="text-center text-sm text-purple-300">
+                      Already have an account? 
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginForm(true)}
+                        className="text-purple-400 hover:text-purple-300 ml-1 underline"
+                      >
+                        Sign in
+                      </button>
+                    </p>
+                  </form>
+                )}
 
               </CardContent>
             </Card>
