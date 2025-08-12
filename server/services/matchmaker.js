@@ -22,23 +22,41 @@ export function registerPresence(ws, payload) {
 }
 
 export function startMatchmaking(wss, ws, payload) {
+  console.log('Matchmaking started for:', payload);
   const { subject } = payload;
   const queue = queues[subject];
-  if (!queue) return;
+  if (!queue) {
+    console.log('Invalid subject:', subject);
+    return;
+  }
+
+  console.log(`Queue for ${subject} has ${queue.length} players`);
 
   // Try to match immediately
   const waitingPlayer = queue.shift();
   if (waitingPlayer && waitingPlayer.ws !== ws && waitingPlayer.ws.readyState === 1) {
+    console.log('Found immediate match, starting duel');
     return startDuel(wss, subject, waitingPlayer.ws, ws, { ranked: false, stake: 0 });
   }
 
   // Add to queue with timeout for stealth bot
   const entry = { ws, timeout: null };
   queue.push(entry);
+  console.log(`Player added to ${subject} queue. Queue size: ${queue.length}`);
+  
+  // Send queue confirmation to player
+  if (ws.readyState === 1) {
+    ws.send(JSON.stringify({ 
+      type: 'queue:joined', 
+      payload: { subject, position: queue.length } 
+    }));
+  }
   
   entry.timeout = setTimeout(() => {
     const idx = queue.indexOf(entry);
     if (idx >= 0) queue.splice(idx, 1);
+    
+    console.log(`Starting bot match for player in ${subject}`);
     
     // Spawn stealth bot
     const player = ws.profile || { level: 1, points: 0, avatarData: { base: 'shadow_goblin', palette: '#5865f2', props: [] } };

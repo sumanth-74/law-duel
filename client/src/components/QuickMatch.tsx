@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface QuickMatchProps {
-  onStartMatch: (subject: string) => void;
+  onStartMatch: (subject: string, matchData?: any) => void;
 }
 
 interface QueueState {
@@ -17,6 +17,15 @@ export function QuickMatch({ onStartMatch }: QuickMatchProps) {
     isQueuing: false,
     timeElapsed: 0
   });
+  const [ws, setWs] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, [ws]);
 
   const startQuickMatch = () => {
     // For demo, we'll use Evidence as default subject
@@ -28,7 +37,13 @@ export function QuickMatch({ onStartMatch }: QuickMatchProps) {
       subject
     });
 
-    // Simulate queue timer
+    // Connect to WebSocket and join queue
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const websocket = new WebSocket(wsUrl);
+    setWs(websocket);
+
+    // Queue timer
     const interval = setInterval(() => {
       setQueueState(prev => ({
         ...prev,
@@ -36,17 +51,62 @@ export function QuickMatch({ onStartMatch }: QuickMatchProps) {
       }));
     }, 1000);
 
-    // Simulate finding match after 3-8 seconds
-    const matchTime = Math.random() * 5000 + 3000;
-    
-    setTimeout(() => {
+    websocket.onopen = () => {
+      console.log('Connected to matchmaking server');
+      
+      // Register presence first
+      const savedCharacter = localStorage.getItem('bar-duel-character');
+      if (savedCharacter) {
+        const profile = JSON.parse(savedCharacter);
+        websocket.send(JSON.stringify({
+          type: 'presence:hello',
+          payload: { username: profile.username, profile }
+        }));
+      }
+      
+      // Join the queue
+      websocket.send(JSON.stringify({
+        type: 'queue:join',
+        payload: { subject }
+      }));
+    };
+
+    websocket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        console.log('Matchmaking message:', message);
+
+        if (message.type === 'queue:joined') {
+          console.log('Successfully joined queue');
+        } else if (message.type === 'duel:start') {
+          console.log('Duel starting!', message.payload);
+          clearInterval(interval);
+          setQueueState({ isQueuing: false, timeElapsed: 0 });
+          websocket.close();
+          onStartMatch(subject, message.payload);
+        }
+      } catch (error) {
+        console.error('Failed to parse matchmaking message:', error);
+      }
+    };
+
+    websocket.onclose = () => {
+      console.log('Disconnected from matchmaking server');
+      clearInterval(interval);
+    };
+
+    websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
       clearInterval(interval);
       setQueueState({ isQueuing: false, timeElapsed: 0 });
-      onStartMatch(subject);
-    }, matchTime);
+    };
   };
 
   const cancelQueue = () => {
+    if (ws) {
+      ws.close();
+      setWs(null);
+    }
     setQueueState({ isQueuing: false, timeElapsed: 0 });
   };
 
