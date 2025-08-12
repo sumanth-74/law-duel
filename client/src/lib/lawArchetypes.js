@@ -42,7 +42,7 @@ export const LAW_ARCHETYPES = {
     }
   },
   
-  // Law-themed character archetypes
+  // Law-themed character archetypes - using existing character portraits
   archetypes: [
     // Corporate Law Category
     {
@@ -54,17 +54,17 @@ export const LAW_ARCHETYPES = {
       category: "corporate"
     },
     {
-      id: "merger_maven",
-      label: "M&A Maven", 
-      base: "construct",
+      id: "stare-drake",
+      label: "Stare Drake", 
+      base: "arcane",
       palette: "statute_silver",
       props: ["briefcase", "codex", "scales"],
       category: "corporate"
     },
     {
-      id: "securities_serpent",
-      label: "Securities Serpent",
-      base: "beast", 
+      id: "dragon-solicitor",
+      label: "Dragon Solicitor",
+      base: "arcane", 
       palette: "evidence_green",
       props: ["scales", "legal_pad", "briefcase"],
       category: "corporate"
@@ -72,7 +72,7 @@ export const LAW_ARCHETYPES = {
     
     // White Collar Criminal Category
     {
-      id: "trial_hawk",
+      id: "trial-hawk",
       label: "Trial Hawk",
       base: "beast",
       palette: "verdict_red", 
@@ -80,42 +80,42 @@ export const LAW_ARCHETYPES = {
       category: "whitecollarcriminal"
     },
     {
-      id: "prosecutor_phoenix",
-      label: "Fraud Falcon",
+      id: "pd-phoenix",
+      label: "Prosecutor Phoenix",
       base: "elemental",
       palette: "judicial_gold",
       props: ["gavel", "law_diploma", "scales"],
       category: "whitecollarcriminal"
     },
     {
-      id: "defense_dragon", 
-      label: "Executive Eagle",
-      base: "arcane",
+      id: "prosecutor-minotaur", 
+      label: "Prosecutor Minotaur",
+      base: "beast",
       palette: "constitutional_purple",
       props: ["codex", "briefcase", "scales"],
       category: "whitecollarcriminal"
     },
     
-    // Constitutional Law Category
+    // Constitutional Scholar Category
     {
-      id: "constitutional_scholar",
-      label: "Constitutional Scholar",
+      id: "res-ipsa-sphinx",
+      label: "Res Ipsa Sphinx",
       base: "celestial",
       palette: "constitutional_purple",
       props: ["codex", "scales", "law_diploma"], 
       category: "constitutional"
     },
     {
-      id: "rights_guardian",
-      label: "Rights Guardian",
+      id: "issue-preclusion-sphinx",
+      label: "Issue Preclusion Sphinx",
       base: "celestial",
       palette: "judicial_gold",
       props: ["scales", "constitution", "gavel"],
       category: "constitutional"
     },
     {
-      id: "liberty_lioness",
-      label: "Liberty Lioness", 
+      id: "voir-dire-viper",
+      label: "Voir Dire Viper", 
       base: "beast",
       palette: "brief_blue",
       props: ["scales", "codex", "law_diploma"],
@@ -124,25 +124,25 @@ export const LAW_ARCHETYPES = {
     
     // Public Defenders Category  
     {
-      id: "jurisprudence_owl",
-      label: "Justice Owl",
+      id: "dissenter-crow",
+      label: "Dissenter Crow",
       base: "beast",
       palette: "precedent_bronze",
       props: ["codex", "quill", "law_library"],
       category: "publicdefender"
     },
     {
-      id: "law_professor",
-      label: "People's Champion", 
-      base: "humanoid",
+      id: "kraken-of-remand",
+      label: "Kraken of Remand", 
+      base: "alien",
       palette: "constitutional_purple",
       props: ["codex", "law_diploma", "legal_pad"],
       category: "publicdefender"
     },
     {
-      id: "research_wraith",
-      label: "Court Crusader",
-      base: "undead", 
+      id: "remand-kraken",
+      label: "Remand Kraken",
+      base: "alien", 
       palette: "statute_silver",
       props: ["codex", "quill", "law_library"],
       category: "publicdefender"
