@@ -1,0 +1,83 @@
+Yes. Ship this as Daily Casefile (one hard Q/day). Here’s a tight, copy-pasteable spec for your Replit agent.
+
+What it is
+A single, hard MBE question available to every user once per day. Answer → instant explanation, XP, and subject-mastery change. Resets daily with a countdown.
+
+Rules
+One attempt/day/user. First submit is final.
+
+Time limit: 75–90s.
+
+Difficulty: hard-tagged items only.
+
+Reset: midnight local time (store user.timezone; fallback UTC).
+
+Visibility: Home banner + badge on nav; lock after attempt.
+
+Rewards (tunable)
+Correct: +150 XP, +2× mastery points for that subject, +1 “Daily Streak”.
+
+Incorrect: +30 XP, normal mastery change, streak breaks (unless shield).
+
+Streak milestones: 3/7/14/30 → cosmetic + tiny bonus XP (50/100/200/400).
+
+Data model (tables/fields)
+daily_questions
+id, date_utc, subject, topic, difficulty, stem, choices[4], correct_index, explanation_long, rule_refs[]
+
+user_daily_attempts
+user_id, question_id, answered_at, is_correct, choice_index, xp_awarded
+
+users (add): timezone, daily_streak, last_daily_date
+
+(Optional) daily_schedule if you want to pre-queue dates → question_ids.
+
+API
+GET /daily-question
+
+Returns today’s question without correct_index if user not attempted.
+
+If attempted, return result summary (correct?, choice, explanation, next reset).
+
+POST /daily-answer { questionId, choiceIndex }
+
+Server validates “first attempt today”, checks correctness, writes attempt, computes XP + mastery deltas, updates streak, returns payload:
+
+arduino
+Copy
+Edit
+{ correct: true/false, xpDelta, masteryDelta, newLevel?, newStreak, explanationLong }
+GET /daily-streak (optional)
+
+Returns current streak + best streak and milestone progress.
+
+UI (quick)
+Home card: “Daily Casefile — Hard • [Subject] • Resets in 12:34:56” → CTA “Answer”.
+
+Question view: timer pill, stem, choices A–D. Disable other nav.
+
+Result: big ✅/❌, explanation, “+150 XP • Evidence Mastery +18 (II→III)”, buttons: “Rematch a friend in [Subject]” + “Share streak”.
+
+Locked state: after attempt, show summary + next reset countdown.
+
+Anti-cheat
+Enforce one attempt on server; sign attempt with user_id + date key.
+
+Shuffle choices server-side; don’t send correct index until after submit.
+
+Rate-limit POST; ignore repeat submits for that day.
+
+Scheduling (content)
+Simple v1: if daily_questions has a row for today, serve it; else pick a random hard question with subject rotation (e.g., Evidence → Torts → …).
+
+Admin script to seed next 30 days.
+
+Analytics (log events)
+daily_view, daily_start, daily_submit, daily_correct, daily_xp_award, daily_streak_continue/break. Dashboard: % users who attempt, correctness rate, streak distribution.
+
+Acceptance checks
+New user sees banner; after answering correctly, XP and subject mastery update; streak = 1.
+
+Second submit same day is rejected; UI shows locked state + countdown.
+
+At local midnight, new question appears; streak increments if answered on consecutive days.

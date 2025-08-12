@@ -26,8 +26,21 @@ export const users = pgTable("users", {
     xpEarned: number;
   }>(),
   
-  // Player Stats
+  // Ranking System (ELO)
   overallElo: integer("overall_elo").notNull().default(1200),
+  placementMatches: integer("placement_matches").notNull().default(0), // 0-5
+  isRanked: boolean("is_ranked").notNull().default(false), // true after 5 placements
+  
+  // Leveling System (XP)
+  totalXp: integer("total_xp").notNull().default(0),
+  levelTitle: text("level_title").notNull().default("Novice Scribe"),
+  
+  // Daily/Weekly Progress
+  dailyXpEarned: integer("daily_xp_earned").notNull().default(0),
+  lastDailyReset: timestamp("last_daily_reset").defaultNow(),
+  firstDuelOfDay: boolean("first_duel_of_day").notNull().default(true),
+  
+  // Overall Stats
   totalQuestionsAnswered: integer("total_questions_answered").notNull().default(0),
   totalCorrectAnswers: integer("total_correct_answers").notNull().default(0),
   currentOverallStreak: integer("current_overall_streak").notNull().default(0),
@@ -77,7 +90,11 @@ export const playerSubjectStats = pgTable("player_subject_stats", {
   correctAnswers: integer("correct_answers").notNull().default(0),
   currentStreak: integer("current_streak").notNull().default(0),
   isProvisional: boolean("is_provisional").notNull().default(true), // true until 20+ attempts
-  subjectRating: integer("subject_rating").notNull().default(1200), // ELO-like per subject
+  
+  // Subject Mastery System (0-1250 points, Mastery I-X)
+  masteryPoints: integer("mastery_points").notNull().default(0),
+  masteryLevel: integer("mastery_level").notNull().default(0), // 0-10 (I-X)
+  lastDecayDate: timestamp("last_decay_date").defaultNow(),
   recentAttempts: jsonb("recent_attempts").$type<Array<{
     timestamp: string;
     correct: boolean;
@@ -153,6 +170,34 @@ export const MBE_SUBJECTS = [
 ] as const;
 
 export type MBESubject = typeof MBE_SUBJECTS[number];
+
+// Ranking System Constants
+export const RANK_TIERS = [
+  { name: "Paralegal", minElo: 0, maxElo: 1049 },
+  { name: "1L", minElo: 1050, maxElo: 1149 },
+  { name: "2L", minElo: 1150, maxElo: 1249 },
+  { name: "3L", minElo: 1250, maxElo: 1349 },
+  { name: "Associate", minElo: 1350, maxElo: 1449 },
+  { name: "Senior Associate", minElo: 1450, maxElo: 1549 },
+  { name: "Counsel", minElo: 1550, maxElo: 1649 },
+  { name: "Partner", minElo: 1650, maxElo: 1799 },
+  { name: "Trialmaster", minElo: 1800, maxElo: 1949 },
+  { name: "Supreme Advocate", minElo: 1950, maxElo: 9999 }
+] as const;
+
+// Level Titles (1-30+)
+export const LEVEL_TITLES = [
+  "Novice Scribe", "Lawling", "Case Brief Cadet", "1L Initiate", "Apprentice Litigator",
+  "Motion Drafter", "Rule 12(b)(6) Raider", "Discovery Adept", "Deposition Tactician", "Junior Advocate",
+  "Hearsay Hunter", "Objection Specialist", "Summary-Judgment Seeker", "Voir Dire Virtuoso", "Trial Architect",
+  "Precedent Bender", "Appellate Alchemist", "Counsel of Shadows", "Courtroom Conjurer", "Senior Advocate",
+  "Partner Apparent", "Rainmaker", "Master of the Record", "Trialmaster", "Supreme Advocate",
+  "Archon of Evidence", "Chancellor of Claims", "Warden of Writs", "Keeper of Precedent", "Legend of the Bar"
+] as const;
+
+// Mastery Thresholds (0-1250 points for Mastery 0-X)
+export const MASTERY_THRESHOLDS = [0, 80, 170, 270, 380, 500, 630, 770, 920, 1080, 1250] as const;
+export const MASTERY_NUMERALS = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] as const;
 
 // Avatar system types
 export const avatarDataSchema = z.object({

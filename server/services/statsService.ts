@@ -1,6 +1,7 @@
 import { db } from '../db';
 import { users, playerSubjectStats, questionAttempts } from '../../shared/schema';
 import { eq, and, sql } from 'drizzle-orm';
+import { progressionService } from './progressionService';
 import type { User, PlayerSubjectStats, QuestionAttempt, MBESubject } from '@shared/schema';
 
 export class StatsService {
@@ -24,7 +25,8 @@ export class StatsService {
       correctAnswers: 0,
       currentStreak: 0,
       isProvisional: true,
-      subjectRating: 1200,
+      masteryPoints: 0,
+      masteryLevel: 0,
       recentAttempts: []
     }));
 
@@ -42,7 +44,16 @@ export class StatsService {
     timeSpent: number,
     difficulty: string,
     matchId?: string
-  ): Promise<void> {
+  ): Promise<{
+    xpGained: number;
+    masteryGained: number;
+    levelUp: boolean;
+    masteryUp: boolean;
+    newLevel?: number;
+    newTitle?: string;
+    newMasteryLevel?: number;
+    newMasteryNumeral?: string;
+  }> {
     // Record the individual attempt
     await db.insert(questionAttempts).values({
       userId,
@@ -55,15 +66,41 @@ export class StatsService {
       difficulty,
     });
 
-    // Update subject stats
-    await this.updateSubjectStats(userId, subject, isCorrect);
+    // Update subject stats and mastery
+    const masteryResult = await this.updateSubjectStats(userId, subject, isCorrect, difficulty);
     
     // Update overall user stats
     await this.updateOverallStats(userId, subject, isCorrect);
+    
+    // Calculate and apply XP gain
+    const [user] = await db.select().from(users).where(eq(users.id, userId));
+    const streakBonus = user?.currentOverallStreak || 0;
+    const xpGained = progressionService.calculateQuestionXp(isCorrect, difficulty, streakBonus);
+    
+    let levelResult = { levelUp: false, newLevel: 0, newTitle: "" };
+    if (xpGained > 0) {
+      levelResult = await progressionService.updateUserXp(userId, xpGained);
+    }
+    
+    return {
+      xpGained,
+      masteryGained: masteryResult.masteryGained,
+      levelUp: levelResult.levelUp,
+      masteryUp: masteryResult.masteryUp,
+      newLevel: levelResult.newLevel,
+      newTitle: levelResult.newTitle,
+      newMasteryLevel: masteryResult.newLevel,
+      newMasteryNumeral: masteryResult.newNumeral
+    };
   }
 
   // Update subject-specific stats
-  private async updateSubjectStats(userId: string, subject: MBESubject, isCorrect: boolean): Promise<void> {
+  private async updateSubjectStats(userId: string, subject: MBESubject, isCorrect: boolean, difficulty: string = 'medium'): Promise<{
+    masteryGained: number;
+    masteryUp: boolean;
+    newLevel: number;
+    newNumeral: string;
+  }> {
     // Get current subject stats
     const [currentStats] = await db
       .select()
@@ -95,11 +132,13 @@ export class StatsService {
     const newStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
     const isProvisional = newQuestionsAnswered < 20;
 
-    // Simple ELO-like rating update
-    const expected = 0.5; // Can be adjusted based on difficulty
-    const K = 12;
-    const actual = isCorrect ? 1 : 0;
-    const newRating = Math.round(currentStats.subjectRating + K * (actual - expected));
+    // Calculate mastery point gain/loss
+    const masteryGained = progressionService.calculateMasteryPoints(isCorrect, difficulty);
+    const newMasteryPoints = Math.max(0, currentStats.masteryPoints + masteryGained);
+    const oldMasteryLevel = progressionService.getMasteryLevel(currentStats.masteryPoints);
+    const newMasteryLevel = progressionService.getMasteryLevel(newMasteryPoints);
+    const masteryUp = newMasteryLevel > oldMasteryLevel;
+    const newNumeral = progressionService.getMasteryProgress(newMasteryPoints).numeral;
 
     await db
       .update(playerSubjectStats)
@@ -108,7 +147,8 @@ export class StatsService {
         correctAnswers: newCorrectAnswers,
         currentStreak: newStreak,
         isProvisional,
-        subjectRating: newRating,
+        masteryPoints: newMasteryPoints,
+        masteryLevel: newMasteryLevel,
         recentAttempts,
         updatedAt: new Date(),
       })
@@ -116,6 +156,13 @@ export class StatsService {
         eq(playerSubjectStats.userId, userId),
         eq(playerSubjectStats.subject, subject)
       ));
+      
+    return {
+      masteryGained,
+      masteryUp,
+      newLevel: newMasteryLevel,
+      newNumeral
+    };
   }
 
   // Update overall user stats
@@ -163,6 +210,8 @@ export class StatsService {
     subjectStats: PlayerSubjectStats[];
     overallAccuracy: number;
     rankTier: string;
+    levelProgress: any;
+    rankProgress: any;
   }> {
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     if (!user) throw new Error('User not found');
@@ -212,23 +261,21 @@ export class StatsService {
       : 0;
 
     const rankTier = this.calculateRankTier(user.overallElo);
+    const levelProgress = progressionService.getLevelProgress(user.totalXp);
+    const rankProgress = progressionService.getRankProgress(user.overallElo);
 
     return {
       user,
       subjectStats: subjectStats.sort((a, b) => a.subject.localeCompare(b.subject)),
       overallAccuracy: Math.round(overallAccuracy * 10) / 10, // Round to 1 decimal
-      rankTier
+      rankTier,
+      levelProgress,
+      rankProgress
     };
   }
 
   private calculateRankTier(elo: number): string {
-    if (elo >= 2000) return 'Archon';
-    if (elo >= 1800) return 'Supreme';
-    if (elo >= 1600) return 'Champion';
-    if (elo >= 1400) return 'Expert';
-    if (elo >= 1200) return 'Skilled';
-    if (elo >= 1000) return 'Apprentice';
-    return 'Novice';
+    return progressionService.getRankTier(elo).name;
   }
 
   // Get leaderboard data

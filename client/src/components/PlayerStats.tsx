@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AvatarRenderer } from './AvatarRenderer';
-import { Trophy, Target, TrendingUp, BookOpen, User as UserIcon } from 'lucide-react';
-import type { User, PlayerSubjectStats, MBESubject } from '@shared/schema';
+import { Trophy, Target, TrendingUp, BookOpen, User as UserIcon, Award, Star, Zap } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import type { User, PlayerSubjectStats, MBESubject, MASTERY_NUMERALS } from '@shared/schema';
 
 interface PlayerStatsProps {
   userId: string;
@@ -17,6 +18,18 @@ interface StatsResponse {
   subjectStats: PlayerSubjectStats[];
   overallAccuracy: number;
   rankTier: string;
+  levelProgress: {
+    currentLevel: number;
+    currentLevelXp: number;
+    xpToNext: number;
+    title: string;
+  };
+  rankProgress: {
+    currentTier: string;
+    progress: number;
+    maxProgress: number;
+    nextTier: string | null;
+  };
 }
 
 export function PlayerStats({ userId, isOwnProfile = false }: PlayerStatsProps) {
@@ -51,7 +64,7 @@ export function PlayerStats({ userId, isOwnProfile = false }: PlayerStatsProps) 
     );
   }
 
-  const { user, subjectStats, overallAccuracy, rankTier } = stats;
+  const { user, subjectStats, overallAccuracy, rankTier, levelProgress, rankProgress } = stats;
 
   // Recent form calculation (last 10 attempts)
   const recentAttempts = user.recentAttempts?.slice(-10) || [];
@@ -114,10 +127,13 @@ export function PlayerStats({ userId, isOwnProfile = false }: PlayerStatsProps) 
                 <div className="text-sm text-purple-400">Current Streak</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-200">
-                  {subjectData.subjectRating}
+                <div className="text-lg font-bold text-purple-200">
+                  {subjectData.masteryLevel > 0 ? 
+                    `Mastery ${['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][subjectData.masteryLevel]}` : 
+                    'No Mastery'
+                  }
                 </div>
-                <div className="text-sm text-purple-400">Rating</div>
+                <div className="text-sm text-purple-400">Mastery</div>
               </div>
             </div>
 
@@ -183,11 +199,17 @@ export function PlayerStats({ userId, isOwnProfile = false }: PlayerStatsProps) 
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
-                  <div className="text-xl font-bold text-purple-200">{user.overallElo}</div>
-                  <div className="text-sm text-purple-400">ELO Rating</div>
+                  <div className="text-xl font-bold text-purple-200">
+                    {user.isRanked ? user.overallElo : "Unranked"}
+                  </div>
+                  <div className="text-sm text-purple-400">
+                    {user.isRanked ? "ELO Rating" : `Placements ${user.placementMatches}/5`}
+                  </div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-purple-200">{rankTier}</div>
+                  <div className="text-xl font-bold text-purple-200">
+                    {user.isRanked ? rankTier : "Unranked"}
+                  </div>
                   <div className="text-sm text-purple-400">Rank Tier</div>
                 </div>
                 <div>
@@ -195,14 +217,57 @@ export function PlayerStats({ userId, isOwnProfile = false }: PlayerStatsProps) 
                   <div className="text-sm text-purple-400">Overall Accuracy</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-purple-200">{user.currentOverallStreak}</div>
-                  <div className="text-sm text-purple-400">Current Streak</div>
+                  <div className="text-xl font-bold text-purple-200">
+                    Level {levelProgress.currentLevel}
+                  </div>
+                  <div className="text-sm text-purple-400">{levelProgress.title}</div>
                 </div>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Level Progress */}
+      {isOwnProfile && (
+        <Card className="bg-black/40 border-purple-500/20 mb-6">
+          <CardHeader>
+            <CardTitle className="font-cinzel text-xl text-purple-200 flex items-center gap-2">
+              <Star className="w-5 h-5" />
+              Experience Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between text-sm text-purple-300 mb-2">
+                  <span>{levelProgress.title}</span>
+                  <span>{levelProgress.currentLevelXp}/{levelProgress.xpToNext} XP</span>
+                </div>
+                <Progress 
+                  value={(levelProgress.currentLevelXp / levelProgress.xpToNext) * 100} 
+                  className="h-3 bg-slate-700"
+                />
+              </div>
+              
+              {user.isRanked && (
+                <div>
+                  <div className="flex justify-between text-sm text-purple-300 mb-2">
+                    <span>{rankProgress.currentTier}</span>
+                    <span>{rankProgress.nextTier ? `→ ${rankProgress.nextTier}` : 'Max Rank'}</span>
+                  </div>
+                  {rankProgress.nextTier && (
+                    <Progress 
+                      value={(rankProgress.progress / rankProgress.maxProgress) * 100} 
+                      className="h-3 bg-slate-700"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Recent Form */}
       <Card className="bg-black/40 border-purple-500/20 mb-6">
@@ -276,8 +341,14 @@ export function PlayerStats({ userId, isOwnProfile = false }: PlayerStatsProps) 
                         </span>
                       </div>
                       
-                      <div className="text-sm text-purple-400">
-                        Streak: {subject.currentStreak}
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-purple-400">Streak: {subject.currentStreak}</span>
+                        <Badge variant="outline" className="border-yellow-400/50 text-yellow-300 text-xs">
+                          {subject.masteryLevel > 0 ? 
+                            `Mastery ${['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][subject.masteryLevel]}` : 
+                            'No Mastery'
+                          }
+                        </Badge>
                       </div>
 
                       {/* Mini recent performance bar */}
