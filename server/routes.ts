@@ -737,6 +737,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const { type, payload } = message;
 
         switch (type) {
+          case 'queue:join':
+            console.log('🎯 Queue join request:', payload?.subject);
+            // Import matchmaker and start matchmaking
+            const { startMatchmaking } = await import('./services/matchmaker.js');
+            startMatchmaking(wss, ws, payload);
+            break;
+            
           case 'duel:answer':
             handleDuelAnswer(ws, payload);
             break;

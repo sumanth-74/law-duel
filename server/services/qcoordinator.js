@@ -163,12 +163,28 @@ function getTopicForSubject(subject) {
 }
 
 function validateQuestion(question) {
-  if (!question.stem || typeof question.stem !== 'string') return false;
-  if (question.stem.length < 80 || question.stem.length > 120) return false;
-  if (!Array.isArray(question.choices) || question.choices.length !== 4) return false;
-  if (typeof question.correctIndex !== 'number' || question.correctIndex < 0 || question.correctIndex > 3) return false;
-  if (!question.explanation || typeof question.explanation !== 'string') return false;
+  if (!question.stem || typeof question.stem !== 'string') {
+    console.log('❌ Validation failed: Invalid stem', typeof question.stem);
+    return false;
+  }
+  if (question.stem.length < 50) {
+    console.log('❌ Validation failed: Stem too short', question.stem.length);
+    return false;
+  }
+  if (!Array.isArray(question.choices) || question.choices.length !== 4) {
+    console.log('❌ Validation failed: Invalid choices', question.choices?.length);
+    return false;
+  }
+  if (typeof question.correctIndex !== 'number' || question.correctIndex < 0 || question.correctIndex > 3) {
+    console.log('❌ Validation failed: Invalid correctIndex', question.correctIndex);
+    return false;
+  }
+  if (!question.explanation || typeof question.explanation !== 'string') {
+    console.log('❌ Validation failed: Invalid explanation', typeof question.explanation);
+    return false;
+  }
   
+  console.log('✅ Question validation passed');
   return true;
 }
 

@@ -50,6 +50,16 @@
     "lastActive": "2025-08-12T04:14:02.161Z"
   },
   {
+    "id": "bot_carlos_mendez",
+    "username": "CarlosMendez",
+    "displayName": "Carlos Mendez",
+    "level": 13,
+    "points": 2410,
+    "totalWins": 37,
+    "totalLosses": 13,
+    "lastActive": "2025-08-12T18:33:21.459Z"
+  },
+  {
     "id": "bot_marcus_wong",
     "username": "MarcusWong",
     "displayName": "Marcus Wong",
@@ -58,16 +68,6 @@
     "totalWins": 38,
     "totalLosses": 12,
     "lastActive": "2025-08-11T17:56:53.452Z"
-  },
-  {
-    "id": "bot_carlos_mendez",
-    "username": "CarlosMendez",
-    "displayName": "Carlos Mendez",
-    "level": 12,
-    "points": 2356,
-    "totalWins": 36,
-    "totalLosses": 13,
-    "lastActive": "2025-08-12T18:04:38.456Z"
   },
   {
     "id": "bot_james_richardson",

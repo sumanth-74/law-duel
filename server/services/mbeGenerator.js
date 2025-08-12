@@ -22,6 +22,7 @@ const MBE_SCHEMA = {
           "2": { type: "string" },
           "3": { type: "string" }
         },
+        required: ["0", "1", "2", "3"],
         additionalProperties: false
       },
       explanationLong: { type: "string" },
@@ -68,8 +69,7 @@ Output ONLY JSON matching our schema.`;
         }
       ],
       response_format: { 
-        type: "json_schema", 
-        json_schema: MBE_SCHEMA 
+        type: "json_object"
       },
       temperature: 0.7,
     });

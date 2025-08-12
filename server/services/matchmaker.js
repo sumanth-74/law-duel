@@ -1,6 +1,7 @@
 import { makeStealthBot } from './stealthbot.js';
 import { generateQuestion } from '../ai.js';
 import { storage } from '../storage.js';
+import { getQuestion } from './qcoordinator.js';
 
 const presence = new Map();
 const queues = Object.create(null);
