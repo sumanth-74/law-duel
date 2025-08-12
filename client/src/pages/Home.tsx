@@ -64,6 +64,7 @@ export default function Home() {
   });
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
+  const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
 
   // WebSocket connection for real-time features
   useEffect(() => {
@@ -272,45 +273,60 @@ export default function Home() {
   }
 
   const handleStartBotGame = () => {
-    // Create a stealth bot opponent that appears human
-    const humanNames = [
-      'LegalEagle47', 'JuristJoe', 'BarExamAce', 'LawScholar99', 'AttorneyAtLaw',
-      'CounselorCat', 'LegalBeagle', 'JudgeJudy42', 'BarPasser', 'LawStudent2024'
-    ];
+    // Create WebSocket connection for the full match flow
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const matchWebSocket = new WebSocket(wsUrl);
     
-    const botOpponent: User = {
-      id: `player_${Date.now()}`,
-      username: humanNames[Math.floor(Math.random() * humanNames.length)],
-      displayName: humanNames[Math.floor(Math.random() * humanNames.length)],
-      password: '', // Not used for bots
-      email: null,
-      level: gameSettings.botDifficulty === 'easy' ? Math.floor(Math.random() * 3) + 1 : 
-             gameSettings.botDifficulty === 'medium' ? Math.floor(Math.random() * 3) + 3 :
-             gameSettings.botDifficulty === 'hard' ? Math.floor(Math.random() * 3) + 6 : 
-             Math.floor(Math.random() * 2) + 9,
-      xp: 0,
-      points: Math.floor(Math.random() * 2000) + 100,
-      totalWins: Math.floor(Math.random() * 50),
-      totalLosses: Math.floor(Math.random() * 30),
-      createdAt: new Date(),
-      lastLoginAt: null,
-      avatarData: {
-        base: 'human',
-        palette: ['#8b5cf6', '#ef4444', '#10b981', '#f59e0b', '#06b6d4'][Math.floor(Math.random() * 5)],
-        props: [['hood', 'staff'], ['armor', 'sword'], ['cloak', 'dagger'], ['runes', 'crystal']][Math.floor(Math.random() * 4)]
+    matchWebSocket.onopen = () => {
+      console.log('Connected to matchmaking server for bot game');
+      
+      // Register presence first
+      const savedCharacter = localStorage.getItem('bar-duel-character');
+      if (savedCharacter) {
+        const profile = JSON.parse(savedCharacter);
+        matchWebSocket.send(JSON.stringify({
+          type: 'presence:hello',
+          payload: { username: profile.username, profile }
+        }));
+      }
+      
+      // Join queue for bot match
+      matchWebSocket.send(JSON.stringify({
+        type: 'queue:join',
+        payload: { 
+          subject: gameSettings.subject,
+          botDifficulty: gameSettings.botDifficulty
+        }
+      }));
+    };
+
+    matchWebSocket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        console.log('Bot match websocket message:', message.type);
+
+        if (message.type === 'duel:start') {
+          console.log('Bot match starting with persistent connection');
+          
+          // Create opponent from match data
+          const matchData = message.payload;
+          setOpponent(matchData.opponent);
+          setDuelData(matchData);
+          setDuelWebSocket(matchWebSocket); // Pass the SAME WebSocket to duel
+          setGameMode('duel');
+        }
+      } catch (error) {
+        console.error('Error parsing bot match WebSocket message:', error);
       }
     };
-    
-    setOpponent(botOpponent);
-    setDuelData({
-      roomCode: `bot_${Date.now()}`,
-      subject: gameSettings.subject,
-      bestOf: 10,
-      ranked: false,
-      stake: 0,
-      botDifficulty: gameSettings.botDifficulty
-    });
-    setGameMode('duel');
+
+    matchWebSocket.onerror = (error) => {
+      console.error('Bot match WebSocket error:', error);
+    };
+
+    // Set searching mode while waiting for match
+    setGameMode('searching');
   };
 
   const handleStartFriendGame = () => {
@@ -353,6 +369,11 @@ export default function Home() {
   };
 
   const handleDuelEnd = () => {
+    // Clean up the WebSocket connection when duel ends
+    if (duelWebSocket) {
+      duelWebSocket.close();
+      setDuelWebSocket(null);
+    }
     setGameMode('menu');
     setOpponent(null);
     setDuelData(null);
@@ -383,6 +404,7 @@ export default function Home() {
           user={character}
           opponent={opponent}
           isVisible={true}
+          websocket={duelWebSocket}
           onDuelEnd={handleDuelEnd}
         />
         <div className="fixed bottom-4 right-4 space-x-2">

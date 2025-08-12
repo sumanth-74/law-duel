@@ -9,6 +9,7 @@ interface DuelArenaProps {
   user: User;
   opponent: User;
   isVisible: boolean;
+  websocket?: WebSocket; // Accept the persistent WebSocket from QuickMatch
   onDuelEnd: () => void;
 }
 
@@ -31,7 +32,7 @@ interface DuelState {
   showTrainingBanner: boolean;
 }
 
-export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaProps) {
+export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: DuelArenaProps) {
   const [duelState, setDuelState] = useState<DuelState>({
     round: 0,
     scores: [0, 0],
@@ -50,36 +51,56 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
   useEffect(() => {
     if (!isVisible) return;
 
-    // Initialize WebSocket connection
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
+    // Use the existing WebSocket connection from QuickMatch instead of creating a new one
+    if (websocket) {
+      console.log('Using persistent WebSocket connection for duel');
+      wsRef.current = websocket;
+      
+      // Set up message handler for the existing connection
+      websocket.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          handleWebSocketMessage(message);
+        } catch (error) {
+          console.error('Failed to parse WebSocket message:', error);
+        }
+      };
+    } else {
+      // Fallback: create new connection if none provided
+      console.log('No WebSocket provided - creating new connection');
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${protocol}//${window.location.host}/ws`;
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
 
-    ws.onopen = () => {
-      console.log('Connected to duel server');
-    };
+      ws.onopen = () => {
+        console.log('Connected to duel server');
+      };
 
-    ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        handleWebSocketMessage(message);
-      } catch (error) {
-        console.error('Failed to parse WebSocket message:', error);
-      }
-    };
+      ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          handleWebSocketMessage(message);
+        } catch (error) {
+          console.error('Failed to parse WebSocket message:', error);
+        }
+      };
 
-    ws.onclose = () => {
-      console.log('Disconnected from duel server');
-    };
+      ws.onclose = () => {
+        console.log('Disconnected from duel server');
+      };
+    }
 
     return () => {
-      ws.close();
+      // Only close the WebSocket if we created it (fallback case)
+      if (!websocket && wsRef.current) {
+        wsRef.current.close();
+      }
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
-  }, [isVisible]);
+  }, [isVisible, websocket]);
 
   const handleWebSocketMessage = (message: any) => {
     const { type, payload } = message;
