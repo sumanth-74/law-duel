@@ -157,8 +157,85 @@ export class DailyCasefileService {
       
     } catch (error) {
       console.error('Failed to generate daily question:', error);
-      throw new Error('Failed to generate daily question');
+      // Fallback to pre-generated questions if OpenAI fails
+      return this.getFallbackQuestion();
     }
+  }
+
+  // Fallback pre-generated questions for when OpenAI is unavailable
+  private async getFallbackQuestion(): Promise<any> {
+    const date = this.getTodayDateUtc();
+    
+    // High-quality fallback questions rotating by day
+    const fallbackQuestions = [
+      {
+        subject: "Evidence",
+        topic: "Hearsay Exceptions",
+        stem: "During a personal injury trial, the plaintiff seeks to introduce testimony from a nurse who overheard the defendant's doctor say to the defendant immediately after examining him, 'Your injuries are minimal and appear to be self-inflicted to exaggerate your condition.' The defendant objects. The trial court should:",
+        choices: [
+          "Sustain the objection because the statement is hearsay and no exception applies.",
+          "Overrule the objection because the statement qualifies as a present sense impression.",
+          "Overrule the objection because the statement is an admission by a party opponent.",
+          "Sustain the objection because the statement violates the physician-patient privilege."
+        ],
+        correctIndex: 0,
+        explanationLong: "This statement is hearsay - an out-of-court statement offered to prove the truth of the matter asserted. The doctor's statement about the plaintiff's injuries is being offered to prove that the injuries were indeed minimal and self-inflicted. While the statement might seem like a present sense impression, it fails this exception because it describes the doctor's medical conclusion rather than a contemporaneous observation of an event. The statement cannot be an admission by a party opponent because the doctor is not a party to the lawsuit. Physician-patient privilege protects confidential communications, but this was an overhead statement to the patient, not a confidential consultation.",
+        ruleRefs: ["Fed. R. Evid. 801", "Fed. R. Evid. 803(1)", "Fed. R. Evid. 801(d)(2)"]
+      },
+      {
+        subject: "Constitutional Law",
+        topic: "Due Process",
+        stem: "A state legislature passed a law requiring all public school teachers to take a loyalty oath affirming they have never been members of any organization advocating the violent overthrow of the government and will not become members of such organizations during their employment. A teacher who refuses to sign the oath is subject to immediate dismissal. This law is:",
+        choices: [
+          "Constitutional because the state has a compelling interest in ensuring loyalty among public employees.",
+          "Constitutional because public employment is a privilege, not a right.",
+          "Unconstitutional because it violates substantive due process by being vague and overbroad.",
+          "Unconstitutional because it violates equal protection by treating teachers differently from other public employees."
+        ],
+        correctIndex: 2,
+        explanationLong: "This loyalty oath is unconstitutional because it violates substantive due process. The oath is both vague and overbroad. It's vague because 'advocating violent overthrow' is unclear - it could include academic discussions, historical analysis, or theoretical political discourse. It's overbroad because it sweeps in protected speech and association under the First Amendment. The oath also punishes past lawful associations, which violates due process. While the state has legitimate interests in employee loyalty, the means chosen here are not narrowly tailored and chill protected First Amendment activities.",
+        ruleRefs: ["U.S. Const. Amend. XIV", "U.S. Const. Amend. I", "Elfbrandt v. Russell (1966)"]
+      },
+      {
+        subject: "Contracts",
+        topic: "Statute of Frauds",
+        stem: "A homeowner orally agreed to sell his house to a buyer for $450,000. The buyer immediately moved in, began making monthly payments of $2,000, and spent $15,000 on improvements with the seller's knowledge and approval. After six months, the seller refused to complete the sale, claiming the contract was unenforceable under the statute of frauds. The buyer's best argument for enforcement is:",
+        choices: [
+          "The doctrine of promissory estoppel prevents the seller from asserting the statute of frauds.",
+          "The buyer's part performance satisfies the statute of frauds requirements.",
+          "The monthly payments constitute sufficient written memoranda under the statute of frauds.",
+          "The contract is for the sale of goods and falls under UCC Article 2, not the statute of frauds."
+        ],
+        correctIndex: 1,
+        explanationLong: "The buyer's best argument is part performance. Under the part performance doctrine, an oral contract for the sale of land may be enforceable despite the statute of frauds if the buyer's conduct is unequivocally referable to the alleged oral agreement. Here, the buyer's taking possession, making payments, and making improvements with the seller's approval constitute sufficient part performance. These acts are clearly referable to a land sale contract and would make it inequitable to allow the statute of frauds defense. Promissory estoppel is less likely to apply in land sale contexts. The payments alone don't constitute a sufficient writing, and real estate sales are not governed by the UCC.",
+        ruleRefs: ["Statute of Frauds", "Restatement (Second) of Contracts § 129", "Part Performance Doctrine"]
+      }
+    ];
+    
+    // Select question based on day of year to ensure rotation
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (24 * 60 * 60 * 1000));
+    const selectedQuestion = fallbackQuestions[dayOfYear % fallbackQuestions.length];
+    
+    // Shuffle choices
+    const shuffledData = this.shuffleChoices(selectedQuestion);
+    
+    // Insert into database
+    const [insertedQuestion] = await db
+      .insert(dailyQuestions)
+      .values({
+        dateUtc: date,
+        subject: shuffledData.subject,
+        topic: shuffledData.topic,
+        difficulty: "hard",
+        stem: shuffledData.stem,
+        choices: shuffledData.choices,
+        correctIndex: shuffledData.correctIndex,
+        explanationLong: shuffledData.explanationLong,
+        ruleRefs: shuffledData.ruleRefs || [],
+      })
+      .returning();
+      
+    return insertedQuestion;
   }
 
   // Shuffle answer choices and update correct index
