@@ -50,20 +50,25 @@ The application uses a monorepo structure with shared types and schemas between 
 
 ### Game Logic Architecture
 - **Real-time Duels**: Server-authoritative timer system with 20-second question timeouts, 10 questions per match
-- **Question Generation**: Professional bar exam quality questions (Themis/BarBri/Kaplan style) covering Evidence, Contracts, Torts, Property, Constitutional Law, and Criminal Law
+- **Question Quality**: Professional bar exam quality questions (Themis/BarBri/Kaplan style) with verified explanations, batch-generated and cached for cost optimization
+- **Cost Optimization**: Shared server calls between players, 10-minute question cache, pregenerated question banks maintaining COGS near $0.00x per match
+- **Retention Loop**: Fast matchmaking (<8s target) → immediate win/lose feedback → ladder progression → rematch incentives, targeting D7 retention ≥ 20%
 - **Competitive Points System**: Winners earn 5 points per correct answer + 25 bonus points, losers forfeit 25 points, creating high-stakes competition
 - **Level Progression**: Levels determined by total points earned (every 100 points = 1 level), with points preventing from going below 0
-- **Stealth Bot System**: Human-appearing bots with realistic names, avatars, and skill-based difficulty levels (70% accuracy)
+- **Stealth Bot System**: Human-appearing bots with adaptive difficulty (70% base accuracy, adjusted for player retention optimization)
 - **Streamlined Matchmaking**: Two clear modes - Quick Match (stealth bots) and Friend Challenge (username-based)
 - **Subject Flexibility**: Specific legal subjects or mixed question pools
 - **XP and Leveling**: Growth system with visual scaling based on character level (1 + 0.08 * level, capped at 1.8)
 - **Leaderboard System**: Points-based ranking with real-time stat updates and database synchronization
 
 ### Error Handling and Resilience
-- **Graceful Degradation**: Fallback questions when OpenAI fails or returns invalid data
-- **Retry Logic**: Single retry for failed operations before falling back to cached content
+- **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control
+- **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
+- **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
+- **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal
 - **Connection Management**: Disconnect handling with forfeit logic for abandoned matches
 - **Data Validation**: Strict schema validation for all user inputs and API responses
+- **Quality Monitoring**: Daily spot-checking of question accuracy and explanation tightness
 
 ## External Dependencies
 

@@ -9,6 +9,8 @@ import { registerSchema, loginSchema } from "@shared/schema";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard } from "./services/leaderboard.js";
+import { questionBank, type CachedQuestion } from './questionBank';
+import { retentionOptimizer } from './retentionOptimizer';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -180,6 +182,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Question bank stats for monitoring
+  app.get('/api/admin/question-stats', requireAuth, async (req, res) => {
+    try {
+      const stats = questionBank.getStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get question stats" });
+    }
+  });
+
+  // Retention metrics for optimization
+  app.get('/api/admin/retention-metrics', requireAuth, async (req, res) => {
+    try {
+      const metrics = retentionOptimizer.getRetentionMetrics();
+      const suggestions = retentionOptimizer.getOptimizationSuggestions();
+      res.json({ metrics, suggestions });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get retention metrics" });
+    }
+  });
+
   // Get user matches
   app.get("/api/users/:id/matches", async (req, res) => {
     try {
@@ -299,6 +322,31 @@ function sendNextQuestion(ws: WebSocket) {
 
   duelState.currentRound++;
   
+  // Use cost-optimized question bank for fast delivery
+  const cachedQuestion = questionBank.getSharedQuestion(duelState.subject || 'Mixed');
+  
+  if (cachedQuestion) {
+    // Use cached question for cost optimization
+    const questionData = {
+      qid: cachedQuestion.id,
+      stem: cachedQuestion.stem,
+      choices: cachedQuestion.choices,
+      round: duelState.currentRound,
+      timeLeft: 20,
+      deadlineTs: Date.now() + 20000
+    };
+
+    ws.send(JSON.stringify({
+      type: 'duel:question',
+      payload: questionData
+    }));
+    
+    // Store for answer checking
+    duelState.currentQuestion = cachedQuestion;
+    return;
+  }
+  
+  // Fallback to embedded questions if bank is empty
   const questions = [
     {
       stem: "A witness testified that she saw the defendant hit the victim with a baseball bat. On cross-examination, defense counsel asked the witness, 'Isn't it true that you told the police officer immediately after the incident that you weren't sure what the defendant hit the victim with?' The witness denied making this statement. Defense counsel then called the police officer to testify about the witness's prior statement. The officer's testimony is:",
@@ -436,9 +484,16 @@ function handleDuelAnswer(ws: WebSocket, payload: any) {
   const duelState = activeDuels.get(ws);
   if (!duelState) return;
   
-  // Extract correct answer from the question (simplified - in real app would lookup by qid)
-  const correctAnswers = [1, 1, 2, 2, 0, 3, 2, 3, 2, 2]; // Correct answers for our 10 rotating questions
-  const correctIndex = correctAnswers[(duelState.currentRound - 1) % correctAnswers.length];
+  // Check cached question first for cost optimization
+  let correctIndex = 0;
+  
+  if (duelState.currentQuestion && 'correctIndex' in duelState.currentQuestion) {
+    correctIndex = duelState.currentQuestion.correctIndex;
+  } else {
+    // Fallback to embedded answers
+    const correctAnswers = [1, 1, 2, 2, 0, 3, 2, 3, 2, 2];
+    correctIndex = correctAnswers[(duelState.currentRound - 1) % correctAnswers.length];
+  }
   
   // Generate bot answer (bot has ~70% accuracy)
   const botAnswer = Math.random() < 0.7 ? correctIndex : Math.floor(Math.random() * 4);
