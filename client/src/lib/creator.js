@@ -27,47 +27,47 @@ import minotaurPortrait from '@assets/generated_images/minotaur_lawyer_portrait_
 import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a2834bd.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
-  // Specific archetype mappings for better visual accuracy
+  // Specific archetype mappings for better visual accuracy - no duplicates
   const specificArchetypes = {
-    // Corporate characters
+    // Corporate characters - 8 unique portraits
     'due-diligence-dragon': dragonPortrait,
     'covenant-golem': golemPortrait,
     'prospectus-paladin': angelPortrait,
     'disclosure-djinn': elementalPortrait,
-    'antitrust-automaton': golemPortrait,
-    'fiduciary-seraph': angelPortrait,
-    'takeover-titan': golemPortrait,
+    'antitrust-automaton': wizardPortrait,
+    'fiduciary-seraph': sphinxPortrait,
+    'takeover-titan': sorcererPortrait,
     'compliance-chimera': werewolfPortrait,
     
-    // White Collar Criminal characters
+    // White Collar Criminal characters - 8 unique portraits
     'insider-trading-hawk': hawkPortrait,
     'subpoena-phoenix': phoenixPortrait,
     'obstruction-minotaur': minotaurPortrait,
     'wiretap-wraith': necromancerPortrait,
     'forensic-basilisk': serpentPortrait,
-    'rico-revenant': necromancerPortrait,
-    'whistleblower-wyvern': dragonPortrait,
-    'fraudulent-scheme-specter': necromancerPortrait,
+    'rico-revenant': alienPortrait,
+    'whistleblower-wyvern': crowPortrait,
+    'fraudulent-scheme-specter': golemPortrait,
     
-    // Constitutional Scholar characters
+    // Constitutional Scholar characters - 8 unique portraits
     'strict-scrutiny-sphinx': sphinxPortrait,
     'viewpoint-viper': serpentPortrait,
     'incorporation-oracle': angelPortrait,
-    'nondelegation-naga': serpentPortrait,
-    'takings-titan': golemPortrait,
+    'nondelegation-naga': dragonPortrait,
+    'takings-titan': elementalPortrait,
     'prior-restraint-sorcerer': sorcererPortrait,
-    'equal-protection-paladin': angelPortrait,
-    'dormant-commerce-gargoyle': golemPortrait,
+    'equal-protection-paladin': wizardPortrait,
+    'dormant-commerce-gargoyle': werewolfPortrait,
     
-    // Public Defender characters
+    // Public Defender characters - 8 unique portraits
     'gideon-crow': crowPortrait,
-    'miranda-crow': crowPortrait,
+    'miranda-crow': hawkPortrait,
     'suppression-wraith': necromancerPortrait,
     'probable-cause-kraken': alienPortrait,
     'speedy-trial-sprite': elementalPortrait,
-    'reasonable-doubt-revenant': necromancerPortrait,
-    'brady-banshee': necromancerPortrait,
-    'ineffective-assistance-shade': necromancerPortrait
+    'reasonable-doubt-revenant': phoenixPortrait,
+    'brady-banshee': minotaurPortrait,
+    'ineffective-assistance-shade': golemPortrait
   };
   
   // Debug logging to see what's being passed
