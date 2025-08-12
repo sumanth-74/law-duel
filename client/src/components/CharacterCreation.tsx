@@ -242,13 +242,6 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated, editMod
                         className="mx-auto mb-3"
                       />
                       <h3 className="font-semibold mb-1">{archetype.label}</h3>
-                      <div className="flex flex-wrap justify-center gap-1">
-                        {archetype.props.map((prop) => (
-                          <Badge key={prop} variant="secondary" className="text-xs">
-                            {prop}
-                          </Badge>
-                        ))}
-                      </div>
                     </div>
                   </div>
                 )) || []}
