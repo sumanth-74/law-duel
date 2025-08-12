@@ -27,7 +27,9 @@ export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
     return (
       <Card className="panel">
         <CardContent className="p-6">
-          <h3 className="font-cinzel text-2xl font-bold mb-6">Leaderboard</h3>
+          <div className="flex items-center justify-center mb-6">
+            <h3 className="font-cinzel text-2xl font-bold">Leaderboard</h3>
+          </div>
           <div className="text-center text-muted py-8" data-testid="leaderboard-error">
             Failed to load leaderboard. Please try again later.
           </div>

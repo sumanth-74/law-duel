@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import Landing from "@/pages/Landing";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 
@@ -24,7 +25,7 @@ function Router() {
   }
 
   if (!isAuthenticated) {
-    return <Login />;
+    return <Landing />;
   }
 
   return (

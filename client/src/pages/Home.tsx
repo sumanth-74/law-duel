@@ -12,6 +12,7 @@ import { Leaderboard } from '@/components/Leaderboard';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
 import AsyncInbox from '@/components/AsyncInbox';
 import AsyncMatch from '@/components/AsyncMatch';
+import LawDuelLogo from '@/components/LawDuelLogo';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -361,8 +362,9 @@ export default function Home() {
   if (gameMode === 'duel' && opponent && duelData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        {/* Persistent Gamer Tag - Top Right */}
-        <div className="fixed top-4 right-4 z-50">
+        {/* Persistent Logo and Gamer Tag - Top Bar */}
+        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between">
+          <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
           <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
             @{character.username}
           </Badge>
@@ -389,8 +391,9 @@ export default function Home() {
   if (gameMode === 'searching') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        {/* Persistent Gamer Tag - Top Right */}
-        <div className="fixed top-4 right-4 z-50">
+        {/* Persistent Logo and Gamer Tag - Top Bar */}
+        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between">
+          <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
           <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
             @{character.username}
           </Badge>
@@ -413,22 +416,25 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container max-w-4xl mx-auto py-8 px-4">
-        {/* Header with Persistent Gamer Tag */}
+        {/* Header with Logo and Persistent Gamer Tag */}
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <AvatarRenderer
-              avatarData={character.avatarData as any}
-              level={character.level}
-              size={64}
-            />
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
-                <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/20">
-                  @{character.username}
-                </Badge>
+          <div className="flex items-center space-x-6">
+            <LawDuelLogo size="lg" showText={true} />
+            <div className="flex items-center space-x-4">
+              <AvatarRenderer
+                avatarData={character.avatarData as any}
+                level={character.level}
+                size={64}
+              />
+              <div>
+                <div className="flex items-center gap-3">
+                  <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
+                  <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/20">
+                    @{character.username}
+                  </Badge>
+                </div>
+                <p className="text-purple-400">Level {character.level} • {character.points} Points</p>
               </div>
-              <p className="text-purple-400">Level {character.level} • {character.points} Points</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
