@@ -1,0 +1,181 @@
+progress! since it’s generating, let’s lock in the last 3 things you asked for:
+
+60-second timer (hard-enforced)
+
+correct/incorrect counter updates
+
+guaranteed explanation + clean choices every round
+
+Below are small, surgical patches. Drop them in and you’re done.
+
+1) Generator: never accept junk; always include an explanation
+In your OpenAI generator (where you already normalize choices), add these guards before returning the item:
+
+js
+Copy
+Edit
+// after item = JSON.parse(data.output_text) and normalizeChoices(...)
+item.timeLimitSec = 60;
+
+// require a real explanation
+if (!item.explanationLong || item.explanationLong.trim().length < 80) {
+  throw new Error("Missing/short explanation"); // triggers a retry
+}
+
+// require sensible choices
+const joined = item.choices.join(" ").toLowerCase();
+if (joined.includes("all of the above") || joined.includes("none of the above")) {
+  throw new Error("Banned phrases in choices"); // retry
+}
+if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3) {
+  throw new Error("Bad correctIndex"); // retry
+}
+That makes the model retry until it gives you a full stem, real choices, and a non-empty explanation.
+
+2) Answer endpoint: update scores + return everything the UI needs
+Patch your /duel/answer handler to compute the running scores and return them with the explanation. (This also fixes “amount correct needs to update.”)
+
+js
+Copy
+Edit
+// inside /duel/answer after you record this player's answer
+const r = duel.round;
+const q = duel.q[r];
+const now = Date.now();
+const timedOut = now > q.endsAt;
+const correctIndex = q.item.correctIndex;
+const correct = !timedOut && Number(choiceIndex) === Number(correctIndex);
+
+duel.answers[playerId] ||= {};
+duel.answers[playerId][r] = { choiceIndex, correct, timeMs: Math.max(0, now - q.startAt) };
+
+// bot simulate if duel.bot === true (unchanged)
+
+// check round finished
+const hostDone = !!duel.answers[duel.hostId]?.[r];
+const guestDone = duel.bot ? true : !!duel.guestId && !!duel.answers[duel.guestId]?.[r];
+const finishedRound = timedOut || (hostDone && guestDone);
+if (finishedRound) duel.round += 1;
+
+// compute scores
+const hostScore = Object.values(duel.answers[duel.hostId] || {}).filter(a => a.correct).length;
+const guestScore = duel.bot ? null : Object.values(duel.answers[duel.guestId] || {}).filter(a => a.correct).length;
+
+return res.json({
+  correct,
+  correctIndex,
+  explanationLong: q.item.explanationLong,   // always present due to guard in #1
+  finishedRound,
+  nextRound: duel.round + 1,
+  totalRounds: duel.rounds,
+  hostScore,
+  guestScore
+});
+3) Client: increment “amount correct” and show the explanation
+Minimal React handler that updates the score and explanation reliably:
+
+tsx
+Copy
+Edit
+const [question, setQuestion] = useState(null);
+const [result, setResult] = useState<null | { correct: boolean; correctIndex: number; explanationLong: string }>(null);
+const [hostScore, setHostScore] = useState(0);
+const [guestScore, setGuestScore] = useState<number | null>(null);
+
+async function fetchNext() {
+  const res = await fetch("/v2/duel/next", {
+    method: "POST",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" },
+    body: JSON.stringify({ token: playerToken, subjects: selectedSubjects /* omit for Mixed */ })
+  });
+  const { question: q } = await res.json();
+  setQuestion(q);
+  setResult(null);
+}
+
+async function submitAnswer(choiceIndex: number) {
+  const res = await fetch("/v2/duel/answer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token: playerToken, choiceIndex })
+  });
+  const data = await res.json();
+  setResult({ correct: data.correct, correctIndex: data.correctIndex, explanationLong: data.explanationLong });
+  setHostScore(data.hostScore);
+  if (data.guestScore !== undefined) setGuestScore(data.guestScore);
+  if (data.finishedRound) {
+    // enable “Next” button; don’t auto-pull to let user read explanation
+  }
+}
+Render (no “A A” bug; the server only sends texts):
+
+tsx
+Copy
+Edit
+const letters = ["A","B","C","D"];
+
+<h3>{question.subject} • Round {question.round}/{question.totalRounds}</h3>
+<p className="stem">{question.stem}</p>
+
+<div className="choices">
+  {question.choices.map((txt, i) => (
+    <button key={i} onClick={() => submitAnswer(i)} disabled={!!result}>
+      <span className="label">{letters[i]}</span>
+      <span className="text">{txt}</span>
+    </button>
+  ))}
+</div>
+
+{result && (
+  <div className="explanation">
+    <div>{result.correct ? "✅ Correct" : "❌ Incorrect"} (Answer {letters[result.correctIndex]})</div>
+    <p>{result.explanationLong}</p>
+    <button onClick={fetchNext}>Next</button>
+  </div>
+)}
+
+<div className="score">You: {hostScore}{guestScore !== null && <> • Opponent: {guestScore}</>}</div>
+4) Timer: UI + server in sync (prevents late answers)
+Server already enforces endsAt.
+
+On the client, show a countdown from question.timeRemainingSec, and disable buttons at 0; if the user still clicks, the server will mark it incorrect due to timeout.
+
+tsx
+Copy
+Edit
+useEffect(() => {
+  if (!question) return;
+  const t0 = Date.now();
+  const tick = setInterval(() => {
+    const left = Math.max(0, question.timeLimitSec - Math.floor((Date.now()-t0)/1000));
+    setTimeLeft(left);
+    if (left === 0) clearInterval(tick);
+  }, 250);
+  return () => clearInterval(tick);
+}, [question]);
+5) Final smoke-tests (takes 2 minutes)
+New duel vs bot → press Start → you get a fresh stem, 60s on the clock.
+
+Pick an answer → “You: x” increments when correct; explanation shows; “Next” fetches a different stem for Round 2.
+
+Mixed subjects → you see different question.subject values across rounds; choosing a list (e.g., Evidence+Torts) constrains it.
+
+Timeout without answering → server returns correct: false, round advances, score unchanged.
+
+If anything still glitches, tell me exactly which of the four transitions breaks:
+
+next question fetch, 2) answer submission, 3) score update, or 4) explanation render. I’ll give you the focused diff for that spot.
+
+
+
+
+
+
+
+
+
+
+Sources
+
+Ask ChatGPT

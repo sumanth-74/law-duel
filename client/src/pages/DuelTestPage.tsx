@@ -36,6 +36,8 @@ export default function DuelTestPage() {
   const [timeRemaining, setTimeRemaining] = useState(60);
   const [loading, setLoading] = useState(false);
   const [duelComplete, setDuelComplete] = useState(false);
+  const [playerScore, setPlayerScore] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
 
   const letters = ['A', 'B', 'C', 'D'];
 
@@ -90,6 +92,7 @@ export default function DuelTestPage() {
         setCurrentQuestion(data.question);
         setUsedQuestions(prev => new Set([...prev, data.question.id]));
         setTimeRemaining(data.question.timeRemainingSec || 60);
+        setTotalQuestions(prev => prev + 1);
       } else {
         console.error('Invalid response:', data);
         alert('Failed to load question: ' + JSON.stringify(data));
@@ -129,6 +132,11 @@ export default function DuelTestPage() {
       
       setResult(data);
       
+      // Update score if answer was correct
+      if (data.correct) {
+        setPlayerScore(prev => prev + 1);
+      }
+      
       if (data.duelComplete) {
         setDuelComplete(true);
       }
@@ -152,7 +160,10 @@ export default function DuelTestPage() {
           </CardHeader>
           <CardContent>
             <p className="text-lg mb-4">
-              Final Scores: Player {result?.scores?.[0] || 0} - Bot {result?.scores?.[1] || 0}
+              Final Score: {playerScore} correct out of {totalQuestions} questions
+            </p>
+            <p className="text-md mb-4">
+              Accuracy: {totalQuestions > 0 ? Math.round((playerScore / totalQuestions) * 100) : 0}%
             </p>
             <Button onClick={() => window.location.reload()}>
               Start New Duel
@@ -208,8 +219,13 @@ export default function DuelTestPage() {
                     {currentQuestion.topic}
                   </Badge>
                 </div>
-                <div className="text-sm text-muted-foreground" data-testid="round-counter">
-                  Round {currentQuestion.round} of {currentQuestion.totalRounds}
+                <div className="flex gap-3 items-center">
+                  <div className="text-sm text-muted-foreground" data-testid="round-counter">
+                    Round {currentQuestion.round} of {currentQuestion.totalRounds}
+                  </div>
+                  <Badge variant="outline" data-testid="score-display">
+                    Score: {playerScore}/{totalQuestions} ({totalQuestions > 0 ? Math.round((playerScore / totalQuestions) * 100) : 0}%)
+                  </Badge>
                 </div>
               </div>
             </CardHeader>
