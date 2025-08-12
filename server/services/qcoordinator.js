@@ -134,30 +134,53 @@ function formatQuestion(storedQuestion) {
 function getFallbackQuestion(subject) {
   const fallbacks = {
     "Evidence": {
-      stem: "Under FRE 403, evidence may be excluded if its probative value is substantially outweighed by what?",
+      stem: "Under Federal Rule of Evidence 403, evidence may be excluded if its probative value is substantially outweighed by what?",
       choices: [
         "Any prejudicial effect",
-        "The danger of unfair prejudice",
-        "Confusion of the issues", 
+        "The danger of unfair prejudice", 
+        "Confusion of the issues",
         "Misleading the jury"
       ],
       correctIndex: 1,
-      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by unfair prejudice."
+      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice."
     },
     "Contracts": {
-      stem: "What is required for a valid offer under common law?",
+      stem: "What is required for a valid offer under common law contract formation?",
       choices: [
         "Present intent to contract",
         "Definite and certain terms",
-        "Communication to offeree",
+        "Communication to offeree", 
         "All of the above"
       ],
       correctIndex: 3,
       explanation: "A valid offer requires present intent, definite terms, and communication to the offeree."
+    },
+    "Torts": {
+      stem: "What are the elements required to establish a negligence claim?",
+      choices: [
+        "Duty, breach, causation, damages",
+        "Intent, act, harm",
+        "Duty, intent, damages",
+        "Breach, harm, intent"
+      ],
+      correctIndex: 0,
+      explanation: "Negligence requires duty, breach of duty, causation, and damages."
+    },
+    "Constitutional Law": {
+      stem: "Under the Commerce Clause, Congress may regulate activities that have what effect on interstate commerce?",
+      choices: [
+        "Any effect whatsoever",
+        "A substantial effect",
+        "A direct effect only",
+        "No effect required"
+      ],
+      correctIndex: 1,
+      explanation: "Congress may regulate activities that substantially affect interstate commerce."
     }
   };
 
   const fallback = fallbacks[subject] || fallbacks["Evidence"];
+  console.log(`Using fallback question for ${subject}:`, fallback.stem);
   
   return {
     qid: `fallback_${subject}_${Date.now()}`,
