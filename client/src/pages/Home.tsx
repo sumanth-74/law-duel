@@ -10,6 +10,8 @@ import { QuickMatch } from '@/components/QuickMatch';
 import { DuelArena } from '@/components/DuelArena';
 import { Leaderboard } from '@/components/Leaderboard';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
+import AsyncInbox from '@/components/AsyncInbox';
+import AsyncMatch from '@/components/AsyncMatch';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -42,6 +44,8 @@ export default function Home() {
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [realTimeLeaderboard, setRealTimeLeaderboard] = useState<any[]>([]);
   const [challengeNotification, setChallengeNotification] = useState<ChallengeNotification | null>(null);
+  const [showAsyncInbox, setShowAsyncInbox] = useState(false);
+  const [showAsyncMatch, setShowAsyncMatch] = useState<string | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   
   // Check if new user needs character creation
@@ -517,9 +521,41 @@ export default function Home() {
                       </Select>
                     </div>
                     
-                    <Button onClick={handleStartBotGame} className="w-full bg-purple-600 hover:bg-purple-700 border-purple-500" size="lg">
-                      Find Match
-                    </Button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button onClick={handleStartBotGame} className="bg-purple-600 hover:bg-purple-700 text-white" size="lg">
+                        Live Match
+                      </Button>
+                      <Button 
+                        onClick={async () => {
+                          try {
+                            const response = await fetch('/api/async/create', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              credentials: 'include',
+                              body: JSON.stringify({
+                                subject: gameSettings.subject
+                              })
+                            });
+                            const data = await response.json();
+                            toast({
+                              title: "Async Match Created!",
+                              description: "Check your inbox to play",
+                            });
+                            setShowAsyncInbox(true);
+                          } catch (error) {
+                            toast({
+                              title: "Failed to create match",
+                              description: "Please try again",
+                              variant: "destructive"
+                            });
+                          }
+                        }} 
+                        className="bg-green-600 hover:bg-green-700 text-white" 
+                        size="lg"
+                      >
+                        Async Match
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -558,14 +594,23 @@ export default function Home() {
                       />
                     </div>
                     
-                    <Button 
-                      onClick={handleStartFriendGame} 
-                      className="w-full bg-purple-600 hover:bg-purple-700 border-purple-500" 
-                      size="lg"
-                      disabled={!gameSettings.friendUsername.trim()}
-                    >
-                      Challenge Friend
-                    </Button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button 
+                        onClick={handleStartFriendGame} 
+                        className="bg-purple-600 hover:bg-purple-700 text-white" 
+                        size="lg"
+                        disabled={!gameSettings.friendUsername.trim()}
+                      >
+                        Live Challenge
+                      </Button>
+                      <Button 
+                        onClick={() => setShowAsyncInbox(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white" 
+                        size="lg"
+                      >
+                        Async Inbox
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </>
@@ -577,6 +622,28 @@ export default function Home() {
             <Leaderboard />
           </div>
         </div>
+
+        {/* Async Inbox */}
+        <AsyncInbox
+          isOpen={showAsyncInbox}
+          onClose={() => setShowAsyncInbox(false)}
+          onPlayMatch={(matchId) => {
+            setShowAsyncMatch(matchId);
+            setShowAsyncInbox(false);
+          }}
+        />
+
+        {/* Async Match */}
+        {showAsyncMatch && (
+          <AsyncMatch
+            matchId={showAsyncMatch}
+            isOpen={!!showAsyncMatch}
+            onClose={() => {
+              setShowAsyncMatch(null);
+              setShowAsyncInbox(true); // Return to inbox
+            }}
+          />
+        )}
       </div>
     </div>
   );

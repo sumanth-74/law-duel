@@ -13,6 +13,7 @@ import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';
 import streakManager from './services/streakManager.js';
+import asyncDuels from './services/async.js';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -228,6 +229,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error getting tier info:", error);
       res.status(500).json({ message: "Failed to get tier info" });
+    }
+  });
+
+  // === ASYNC DUELS ROUTES ===
+
+  // Create async match
+  app.post('/api/async/create', requireAuth, async (req: any, res) => {
+    try {
+      const { subject, opponentUsername } = req.body;
+      const userId = req.session.userId;
+      
+      const result = await asyncDuels.createMatch(userId, subject, opponentUsername);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Error creating async match:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Get user's async inbox
+  app.get('/api/async/inbox', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const inbox = asyncDuels.getUserInbox(userId);
+      const unreadCount = asyncDuels.getUnreadCount(userId);
+      
+      res.json({ matches: inbox, unreadCount });
+    } catch (error) {
+      console.error('Error getting inbox:', error);
+      res.status(500).json({ message: 'Failed to get inbox' });
+    }
+  });
+
+  // Get specific async match
+  app.get('/api/async/match/:id', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const matchId = req.params.id;
+      
+      const match = asyncDuels.getMatchForUser(matchId, userId);
+      if (!match) {
+        return res.status(404).json({ message: 'Match not found' });
+      }
+      
+      res.json(match);
+    } catch (error) {
+      console.error('Error getting match:', error);
+      res.status(500).json({ message: 'Failed to get match' });
+    }
+  });
+
+  // Submit answer to async match
+  app.post('/api/async/answer', requireAuth, async (req: any, res) => {
+    try {
+      const { matchId, answerIndex, responseTime } = req.body;
+      const userId = req.session.userId;
+      
+      const match = await asyncDuels.submitAnswer(matchId, userId, answerIndex, responseTime);
+      res.json({ success: true, match });
+    } catch (error: any) {
+      console.error('Error submitting answer:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Resign from async match
+  app.post('/api/async/resign', requireAuth, async (req: any, res) => {
+    try {
+      const { matchId } = req.body;
+      const userId = req.session.userId;
+      
+      const match = await asyncDuels.resignMatch(matchId, userId);
+      res.json({ success: true, match });
+    } catch (error: any) {
+      console.error('Error resigning match:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Clear notifications
+  app.post('/api/async/notifications/clear', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      asyncDuels.clearNotifications(userId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error clearing notifications:', error);
+      res.status(500).json({ message: 'Failed to clear notifications' });
     }
   });
 
