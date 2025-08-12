@@ -125,7 +125,7 @@ export default function Landing() {
           </h1>
           
           <p className="text-lg md:text-xl text-purple-200 mb-8 max-w-3xl mx-auto">
-            Master law school exams and bar review through competitive duels. Test your knowledge, track progress, and play with friends.
+            Master law school exams and bar review through competitive duels and daily challenges. Test your knowledge, track progress, and play with friends.
           </p>
 
           {/* Login/Signup Form */}
