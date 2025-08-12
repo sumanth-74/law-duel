@@ -80,6 +80,7 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Question Delivery**: Server successfully delivers OpenAI questions when clients maintain persistent WebSocket connections throughout the generation process (Updated 2025-08-12)
 - **Answer Choice Validation**: Implemented robust choice normalization to prevent junk answers (e.g., "A", "B") and strip prefixes like "A)" from OpenAI responses (Updated 2025-08-12)
 - **UI Choice Display**: Fixed double-letter rendering issue - choices now display clean text without duplicating the letter labels (Updated 2025-08-12)
+- **Critical Fixes Deployed**: Fixed OpenAI prompt to require exactly 4 choices, added server-side choice normalization, and eliminated stale question caching - fresh questions now generated consistently (Updated 2025-08-12)
 - **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
 - **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
 - **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal

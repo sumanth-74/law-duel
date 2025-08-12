@@ -309,13 +309,20 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       const question = await getQuestion(subject, match.usedQuestions, true);
       match.usedQuestions.push(question.qid);
 
+      // Normalize choices to ensure proper display (no "A A" rendering)
+      const normalizedChoices = Array.isArray(question.choices) 
+        ? question.choices.map(choice => String(choice).replace(/^\s*[A-D][\)\].:\-]\s*/i, "").trim())
+        : [];
+
       const questionData = {
         qid: question.qid,
+        subject: question.subject, // Include subject from question, not user selection
         round,
         stem: question.stem,
-        choices: question.choices,
-        timeLimit: question.timeLimit || 60000,
-        deadlineTs: question.deadlineTs || (Date.now() + 60000)
+        choices: normalizedChoices,
+        timeLimit: 60000, // Always 60 seconds for duels
+        timeLimitSec: 60, // Enforce 60s
+        deadlineTs: Date.now() + 60000
       };
 
       if (humanWs.readyState === 1) {

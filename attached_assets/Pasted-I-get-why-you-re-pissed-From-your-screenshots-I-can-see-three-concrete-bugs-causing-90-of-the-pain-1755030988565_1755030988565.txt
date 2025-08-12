@@ -1,0 +1,142 @@
+I get why you’re pissed. From your screenshots I can see three concrete bugs causing 90% of the pain:
+
+UI header uses the requested subject, not the item’s subject.
+That’s why a hearsay (Evidence) stem shows under “Contracts.”
+
+Choices renderer is using the letter as the text when the server returns a string[] (so you get “A A / B B”).
+
+You’re reusing stale duel/question state (or cached JSON), so the same stem keeps coming back.
+
+Here’s a surgical fix kit you can paste in now.
+
+1) Always display the subject from the question, not the user selection
+ts
+Copy
+Edit
+// DuelQuestion.tsx (or wherever you render the header)
+<h3>{question.subject} • Round {round}/{totalRounds}</h3>
+
+// DO NOT do: <h3>{selectedSubject} • ...</h3>
+2) Render letters as labels and the real choice text as content
+ts
+Copy
+Edit
+const LETTERS = ["A","B","C","D"];
+
+// server sends: choices: string[]
+return (
+  <div className="choices">
+    {question.choices.map((txt, i) => (
+      <button key={i} onClick={() => submitAnswer(i)} className="choice">
+        <span className="label">{LETTERS[i]}</span>
+        <span className="text">{txt}</span>
+      </button>
+    ))}
+  </div>
+);
+If your component expected { label, text }, adapt at fetch time:
+
+ts
+Copy
+Edit
+const options = question.choices.map((txt,i)=>({ label: LETTERS[i], text: txt, value: i }));
+3) Kill caching + stale state (this is why you see the same stem)
+ts
+Copy
+Edit
+async function fetchQuestion({ subjectPool }: { subjectPool?: string[] }) {
+  const qs = new URLSearchParams();
+  if (subjectPool?.length) qs.set("subjects", subjectPool.join(","));
+  qs.set("ts", String(Date.now())); // cache-buster
+
+  const res = await fetch(`/duel/next?${qs}`, {
+    method: "POST",
+    cache: "no-store",
+    headers: { "Cache-Control": "no-cache", "Content-Type": "application/json" },
+    body: JSON.stringify({ token: playerToken })
+  });
+  const { question } = await res.json();
+
+  // extra guard: if identical id as last time, refetch once
+  if (lastQuestionId === question.id) {
+    const res2 = await fetch(`/duel/next?${qs}&retry=${Math.random()}`, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ token: playerToken })});
+    return (await res2.json()).question;
+  }
+  lastQuestionId = question.id;
+  return question;
+}
+If you registered a service worker, bypass it for questions or unregister:
+
+js
+Copy
+Edit
+// service-worker.js
+self.addEventListener('fetch', e => {
+  if (new URL(e.request.url).pathname.startsWith('/duel')) {
+    e.respondWith(fetch(e.request)); return;
+  }
+});
+
+// or during dev:
+navigator.serviceWorker?.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
+4) Server enforces 60s and creates a new round (bot OR friend)
+Make sure your /duel/answer advances the round in bot mode even if only you answered:
+
+js
+Copy
+Edit
+// after recording the host answer
+const haveHost = duel.answers[duel.hostId]?.[r];
+const haveGuest = duel.bot
+  ? true // treat bot as answered; you can simulate it or mark false -> auto-timeout
+  : (duel.guestId && duel.answers[duel.guestId]?.[r]);
+
+const timeout = Date.now() > q.endsAt;
+const finished = timeout || (haveHost && haveGuest);
+if (finished) duel.round += 1;
+And always send 60s to the client:
+
+js
+Copy
+Edit
+safe.timeLimitSec = 60;
+safe.timeRemainingSec = Math.max(0, Math.floor((q.endsAt - Date.now())/1000));
+5) Generation sanity (so you never get “A / B / C / D” again)
+On the server, normalize/validate choices before serving:
+
+js
+Copy
+Edit
+function normalizeChoices(raw){
+  const cleaned = raw.map((s)=>String(s||"").replace(/^\s*[A-D][\)\].:\-]\s*/i,"").trim());
+  if (cleaned.some(c=>c.length<6)) throw new Error("Choices too short");
+  if (new Set(cleaned.map(c=>c.toLowerCase())).size < 4) throw new Error("Duplicate choices");
+  return cleaned;
+}
+
+// after parsing OpenAI JSON:
+item.choices = normalizeChoices(item.choices);
+if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3) throw new Error("Bad correctIndex");
+item.timeLimitSec = 60;
+6) Subject selection that matches your vision
+When the player picks:
+
+Mixed: don’t send subject; or send subjects=Civ Pro,Con Law,...
+
+One or several subjects: send subjects=Evidence,Torts
+Your server’s /duel/next should pick a random subject from that pool each round:
+
+js
+Copy
+Edit
+const pool = (req.query.subjects?.split(",").filter(Boolean)) ?? SUBJECT_ENUM;
+const subjectForThisRound = pool[Math.floor(Math.random()*pool.length)];
+// pass to your generator
+7) 30-second truth test
+Open DevTools → Network. Hit your /duel/next twice. You should see two different id values and timeLimitSec: 60.
+
+Header should show the server’s question.subject, not the UI selection.
+
+Choices must read like sentences; no more “A A.”
+
+If anything fails those checks, paste just the question fetch function and the render block here and I’ll rewrite them line-for-line so it behaves exactly like you want: 60-second timer, bot/friend duels, subject/mix toggle, and fresh AI questions every round.

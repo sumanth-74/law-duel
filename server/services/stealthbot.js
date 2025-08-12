@@ -75,6 +75,10 @@ export function makeStealthBot({ subject, targetLevel = 1, targetPoints = 0 }) {
       archetypeId: `${archetype.base}_${Math.floor(Math.random() * 1000)}`
     },
     decide,
-    isBot: true // Internal flag, never sent to client
+    isBot: true, // Internal flag, never sent to client
+    
+    // Auto-advance rounds for smooth bot duels
+    autoAdvance: true,
+    timeoutBehavior: 'submit_random' // Bot submits random answer on timeout
   };
 }

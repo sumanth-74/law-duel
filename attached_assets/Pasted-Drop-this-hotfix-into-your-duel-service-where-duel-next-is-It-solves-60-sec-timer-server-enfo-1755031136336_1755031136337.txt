@@ -1,0 +1,188 @@
+Drop this hotfix into your duel service (where /duel/next is). It solves:
+
+60-sec timer (server enforced)
+
+Mixed or chosen subjects each round
+
+New AI item every round (no repeats within a duel)
+
+Never falls back to the “hospital record/hearsay” zombie
+
+1) Add these helpers at the top of your server
+js
+Copy
+Edit
+// ---- de-dupe inside a duel ----
+import crypto from "crypto";
+
+function fingerprintStem(stem) {
+  return crypto.createHash("sha1")
+    .update(String(stem).toLowerCase().replace(/\s+/g," "))
+    .digest("hex");
+}
+
+function normalizeChoices(raw) {
+  if (!Array.isArray(raw) || raw.length !== 4) throw new Error("Need exactly 4 choices");
+  const cleaned = raw.map(s => String(s||"").replace(/^\s*[A-D][\)\].:\-]\s*/i,"").trim());
+  if (cleaned.some(c => c.length < 6)) throw new Error("Choices too short");
+  if (new Set(cleaned.map(c => c.toLowerCase())).size < 4) throw new Error("Duplicate choices");
+  return cleaned;
+}
+Make sure each duel has a set to track what’s already been used:
+
+js
+Copy
+Edit
+// when you create the duel object:
+duel.seen = new Set(); // fingerprints of stems served in THIS duel
+2) Replace your /duel/next handler with this robust version
+js
+Copy
+Edit
+app.post("/duel/next", async (req, res) => {
+  try {
+    const { token, subjects } = req.body || {};
+    const p = players.get(token);
+    if (!p) return res.status(401).json({ error: "Bad token" });
+
+    const duel = duels.get(p.duelId);
+    if (!duel) return res.status(404).json({ error: "No duel" });
+
+    // build/override the round’s subject pool (mixed or specific list)
+    const subjectPool = Array.isArray(subjects) && subjects.length
+      ? subjects
+      : (duel.subjectPool || Object.keys(SUBJECTS));
+
+    // done?
+    if (duel.round >= duel.rounds) return res.json({ done: true });
+
+    // already generated this round?
+    if (!duel.q[duel.round]) {
+      // try up to 4 times to get a fresh, valid, unseen item
+      let item, err;
+      for (let tries = 0; tries < 4; tries++) {
+        item = await generateItem({ subjectPool }); // your OpenAI-backed function
+        try {
+          // harden/normalize
+          item.choices = normalizeChoices(item.choices);
+          if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3) {
+            throw new Error("Bad correctIndex");
+          }
+          item.timeLimitSec = 60;
+
+          // de-dupe inside this duel
+          const fp = fingerprintStem(item.stem);
+          if (duel.seen.has(fp)) { err = "Seen in this duel"; continue; }
+
+          // accept & remember
+          duel.seen.add(fp);
+          const startAt = Date.now();
+          const endsAt = startAt + 60 * 1000;
+          duel.q[duel.round] = { item, startAt, endsAt, source: "ai" };
+          break;
+        } catch (e) {
+          err = e.message;
+          // retry on junk; tiny jitter
+          await new Promise(r => setTimeout(r, 120 + Math.random() * 180));
+          item = null;
+        }
+      }
+      if (!duel.q[duel.round]) {
+        // last-resort: generate one more time and **force** a different subject
+        const forced = await generateItem({
+          subjectPool: [subjectPool[Math.floor(Math.random() * subjectPool.length)]]
+        });
+        forced.choices = normalizeChoices(forced.choices);
+        forced.timeLimitSec = 60;
+        const fp2 = fingerprintStem(forced.stem);
+        if (duel.seen.has(fp2)) return res.status(502).json({ error: "Could not get a fresh question" });
+        duel.seen.add(fp2);
+        const startAt = Date.now();
+        const endsAt = startAt + 60 * 1000;
+        duel.q[duel.round] = { item: forced, startAt, endsAt, source: "ai-forced" };
+      }
+    }
+
+    const q = duel.q[duel.round];
+    const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
+
+    // never send the answer key
+    const safe = {
+      id: q.item.id,
+      subject: q.item.subject,
+      topic: q.item.topic,
+      stem: q.item.stem,
+      choices: q.item.choices,
+      ruleRefs: q.item.ruleRefs,
+      timeLimitSec: 60,
+      timeRemainingSec: remaining,
+      round: duel.round + 1,
+      totalRounds: duel.rounds
+    };
+    res.json({ question: safe });
+
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+Key differences:
+
+Generates once per round, with 4 attempts to get a valid, unseen item.
+
+Tracks duel.seen fingerprints so no stem repeats inside a duel.
+
+Never falls back to the old seed/bank row that kept haunting round 2.
+
+Always returns timeLimitSec: 60.
+
+3) Make sure the round actually advances
+In /duel/answer, increment the round when the round is done (bot or friend) and clear nothing else:
+
+js
+Copy
+Edit
+const r = duel.round;
+const q = duel.q[r];
+const tNow = Date.now();
+const timedOut = tNow > q.endsAt;
+const correct = !timedOut && Number(choiceIndex) === Number(q.item.correctIndex);
+
+// record player answer ...
+// if bot duel, synthesize bot’s answer; if friend, wait for both
+
+const hostDone = Boolean(duel.answers[duel.hostId]?.[r]);
+const guestDone = duel.bot ? true : Boolean(duel.answers[duel.guestId]?.[r]);
+const roundFinished = timedOut || (hostDone && guestDone);
+
+if (roundFinished) {
+  duel.round += 1;           // move to next round
+  // do NOT overwrite duel.q[r]; leave it as the record of round r
+}
+4) Client: never reuse the previous round’s question
+When you fetch the next question, add a cache-buster and replace local state:
+
+ts
+Copy
+Edit
+const res = await fetch("/duel/next", {
+  method: "POST",
+  cache: "no-store",
+  headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" },
+  body: JSON.stringify({ token: playerToken, subjects: currentSubjectPool })
+});
+const { question } = await res.json();
+setQuestion(question);   // overwrite; don’t merge with old
+And render the header from the question, not the selection:
+
+tsx
+Copy
+Edit
+<h3>{question.subject} • Round {question.round}/{question.totalRounds}</h3>
+5) 20-second verification
+Hit /duel/next three times in a fresh duel; you should get three different id values and subject may vary if “mixed”.
+
+Play a bot duel: round increments every answer (or timeout), and round 2 shows a different stem.
+
+The UI should never show “Contracts” when the item is Evidence—because you bind to question.subject.
+
+If you paste this and you still see the zombie stem, it means there’s a hardcoded “dev question” left somewhere (e.g., DEFAULT_QUESTION or a “seed” returned on error). Grep your repo for a distinctive phrase from that hospital/hearsay prompt and delete any fallback returns that send it.
