@@ -30,6 +30,7 @@ interface DuelState {
   hintText?: string;
   showHint: boolean;
   showTrainingBanner: boolean;
+  generatingQuestion: boolean; // Add loading state for OpenAI generation
 }
 
 export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: DuelArenaProps) {
@@ -42,7 +43,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     waitingForOpponent: false,
     hintsUsed: 0,
     showHint: false,
-    showTrainingBanner: false
+    showTrainingBanner: false,
+    generatingQuestion: true // Start with loading state for initial question
   });
 
   const timerRef = useRef<NodeJS.Timeout>();
@@ -113,7 +115,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           subject: payload.subject,
           round: 0,
           scores: [0, 0],
-          isFinished: false
+          isFinished: false,
+          generatingQuestion: true // Show loading while waiting for first question
         }));
         break;
 
@@ -155,7 +158,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
       showResult: false,
       waitingForOpponent: false,
       showHint: false,
-      showTrainingBanner: false
+      showTrainingBanner: false,
+      generatingQuestion: false // Clear loading state when question arrives
     }));
 
     startTimer(questionData.deadlineTs);
@@ -387,8 +391,24 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           </div>
         )}
         
+        {/* Loading State - Generating Question */}
+        {duelState.generatingQuestion && !duelState.currentQuestion && (
+          <div className="flex flex-col items-center justify-center py-16 mb-8">
+            <div className="relative mb-6">
+              <div className="w-16 h-16 border-4 border-arcane/20 border-t-arcane rounded-full animate-spin"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <i className="fas fa-magic text-arcane text-xl"></i>
+              </div>
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="text-xl font-semibold text-arcane">Generating Question</h3>
+              <p className="text-muted text-sm">Atticus is crafting a fresh {duelState.subject} question...</p>
+            </div>
+          </div>
+        )}
+
         {/* Question */}
-        {duelState.currentQuestion && (
+        {duelState.currentQuestion && !duelState.generatingQuestion && (
           <div className="question-reveal mb-8">
             <div className="bg-panel-2 border border-white/10 rounded-xl p-6">
               <div className="flex items-start justify-between mb-4">
@@ -416,7 +436,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         )}
         
         {/* Answer Choices */}
-        {duelState.currentQuestion && !duelState.showResult && (
+        {duelState.currentQuestion && !duelState.showResult && !duelState.generatingQuestion && (
           <div className="grid grid-cols-1 gap-3 mb-6">
             {duelState.currentQuestion.choices.map((choice, index) => (
               <Button
