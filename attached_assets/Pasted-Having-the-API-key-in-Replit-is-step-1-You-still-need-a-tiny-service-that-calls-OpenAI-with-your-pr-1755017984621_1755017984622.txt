@@ -1,0 +1,335 @@
+Having the API key in Replit is step 1. You still need a tiny service that calls OpenAI with your prompt + JSON schema, then saves the result into your bank.
+
+Here’s exactly what to tell Replit (and a minimal code snippet).
+
+1) Add the key (you did)
+
+Put it in Replit Secrets as OPENAI_API_KEY (Replit exposes it as process.env.OPENAI_API_KEY). 
+Replit Docs
+
+2) Install the SDK
+
+bash
+Copy
+Edit
+npm i openai
+(Official SDK + Responses API.) 
+OpenAI Platform
++1
+
+3) Create a generator function (Node/JS)
+
+js
+Copy
+Edit
+// generator.js
+import OpenAI from "openai";
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const MBE_SCHEMA = {
+  name: "MBEItem",
+  schema: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      subject: { type: "string" },
+      topic: { type: "string" },
+      subtopic: { type: "string" },
+      stem: { type: "string" },
+      choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+      correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+      optionRationales: { type: "object" },
+      explanationLong: { type: "string" },
+      ruleRefs: { type: "array", items: { type: "string" } },
+      difficultySeed: { type: "string" },
+      timeLimitSec: { type: "integer" },
+      tags: { type: "array", items: { type: "string" } },
+      license: { type: "string" },
+      status: { type: "string" },
+      authorNote: { type: "string" }
+    },
+    required: ["subject","topic","stem","choices","correctIndex","optionRationales",
+               "explanationLong","ruleRefs","difficultySeed","license","status"],
+    additionalProperties: false
+  },
+  strict: true
+};
+
+export async function generateMBEItem({ subject, topic, subtopic, rule }) {
+  const prompt = `
+Write an original MBE-style multiple-choice question for ${subject} on ${topic}/${subtopic}.
+Single best answer, exactly 4 options (A–D). 120–180 word fact pattern.
+Test: ${rule} under national law (FRE/FRCP/UCC Art. 2/federal con law as relevant).
+Include rationales for each option and a 3–6 sentence explanation. No “all/none of the above.”
+Label difficultySeed = easy|medium|hard. Output ONLY JSON for our schema.`;
+
+  const resp = await openai.responses.create({
+    model: "gpt-4o-mini",
+    input: prompt,
+    response_format: { type: "json_schema", json_schema: MBE_SCHEMA } // structured outputs
+  });
+
+  // Responses API convenience: get the model’s JSON text then parse
+  const json = JSON.parse(resp.output_text);
+  return json;
+}
+(Using the Responses API and Structured Outputs/JSON schema so items always come back valid JSON.) 
+OpenAI Platform
++1
+
+4) Wire it to an admin endpoint
+
+js
+Copy
+Edit
+// routes/admin.js
+import express from "express";
+import { generateMBEItem } from "../generator.js";
+import { saveItem } from "../db.js"; // your insert into items table
+
+const r = express.Router();
+r.post("/bank/generate", async (req, res) => {
+  const payload = req.body; // {subject, topic, subtopic, rule}
+  const item = await generateMBEItem(payload);
+  await saveItem({ ...item, status: "draft" });
+  res.json({ ok: true, itemId: item.id });
+});
+export default r;
+5) Basic acceptance check
+
+Hit POST /bank/generate with { "subject":"Evidence", "topic":"Hearsay", "subtopic":"801(d)(1)(C)", "rule":"prior identification non-hearsay" }.
+
+You get back a JSON item that matches your schema; you can insert it, review it, and push it to calibrating.
+
+That’s it: the app “knows” to go to OpenAI because you (a) installed the SDK, (b) read the key from Secrets, and (c) call the Responses API with your prompt + schema. If you want, I’ll add retry/backoff and a small validator to reject drafts with banned phrases before saving. 
+OpenAI Platform
+
+
+
+
+
+
+
+
+
+
+
+Sources
+You said:
+how do i allow for the API to be used to create questions
+
+
+ChatGPT said:
+
+Thought for 33s
+If you want other clients (or your own admin UI) to create questions through your app, expose a small Authoring API that sits in front of OpenAI. Clients call your API; your server calls OpenAI with your key, validates, and saves to the bank.
+
+Here’s the tight plan + code you can paste into Replit.
+
+What to expose
+POST /v1/items – create a question manually (must match your schema).
+
+POST /v1/items/generate – generate a question via OpenAI from {subject, topic, subtopic, rule}.
+
+POST /v1/items/import – bulk import (array of items).
+
+(Optional) GET /v1/items/:id – fetch one; GET /v1/items – list w/ filters.
+
+Secure it (don’t leak your OpenAI key)
+Issue your own API keys to trusted clients (table api_keys(key, label, role, quota_month, enabled, created_at)).
+
+Require header X-Api-Key: <key>; reject if missing/invalid.
+
+Add rate limiting + quota checks so nobody can burn your credits.
+
+Log every call (who, what, cost).
+
+Validate payloads
+Use the same JSON schema you use internally. Reject anything that fails. (ajv is fine.)
+
+Minimal Express setup (Node/JS)
+auth + rate limit
+
+js
+Copy
+Edit
+// auth.js
+import rateLimit from "express-rate-limit";
+import { getApiKey } from "./db.js";
+
+export async function auth(req, res, next) {
+  const key = req.header("X-Api-Key");
+  if (!key) return res.status(401).json({ error: "Missing API key" });
+  const rec = await getApiKey(key);
+  if (!rec?.enabled) return res.status(403).json({ error: "Invalid API key" });
+  req.apiUser = rec; // attach for quota logging
+  next();
+}
+
+export const limiter = rateLimit({ windowMs: 60_000, max: 60 }); // 60 req/min
+schema validation (ajv)
+
+js
+Copy
+Edit
+// validate.js
+import Ajv from "ajv";
+const ajv = new Ajv({ allErrors: true, strict: true });
+
+export const mbeItemSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    subject: { type: "string" },
+    topic: { type: "string" },
+    subtopic: { type: "string" },
+    stem: { type: "string" },
+    choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+    correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+    optionRationales: { type: "object" },
+    explanationLong: { type: "string" },
+    ruleRefs: { type: "array", items: { type: "string" } },
+    difficultySeed: { type: "string", enum: ["easy","medium","hard"] },
+    timeLimitSec: { type: "integer" },
+    tags: { type: "array", items: { type: "string" } },
+    license: { type: "string" },
+    status: { type: "string", enum: ["draft","approved","calibrating","live","retired"] },
+    authorNote: { type: "string" }
+  },
+  required: ["subject","topic","stem","choices","correctIndex","optionRationales","explanationLong","ruleRefs","difficultySeed","license","status"],
+  additionalProperties: false
+};
+export const validateItem = ajv.compile(mbeItemSchema);
+OpenAI-backed generator endpoint
+
+js
+Copy
+Edit
+// routes/items.js
+import express from "express";
+import { auth, limiter } from "../auth.js";
+import { validateItem } from "../validate.js";
+import { saveItem } from "../db.js";
+import { generateMBEItem } from "../generator.js"; // the OpenAI code you already have
+
+const r = express.Router();
+
+// Manual create
+r.post("/v1/items", auth, limiter, async (req, res) => {
+  const ok = validateItem(req.body);
+  if (!ok) return res.status(400).json({ error: "Invalid item", details: validateItem.errors });
+  await saveItem({ ...req.body, status: req.body.status || "draft" });
+  res.status(201).json({ ok: true, id: req.body.id });
+});
+
+// Generate via OpenAI
+r.post("/v1/items/generate", auth, limiter, async (req, res) => {
+  const { subject, topic, subtopic, rule } = req.body || {};
+  if (!subject || !topic || !rule) return res.status(400).json({ error: "subject, topic, rule required" });
+
+  // Call your generator (uses OPENAI_API_KEY server-side)
+  const draft = await generateMBEItem({ subject, topic, subtopic, rule });
+
+  // Optional: post-generation validators (ban “All/None of the above”, length checks, similarity, etc.)
+  if (!validateItem(draft)) return res.status(422).json({ error: "Generator returned invalid item", details: validateItem.errors });
+
+  // Save as draft (or approved if you trust the pipeline)
+  await saveItem({ ...draft, status: "draft" });
+  res.status(201).json({ ok: true, id: draft.id, status: "draft" });
+});
+
+export default r;
+Mount routes
+
+js
+Copy
+Edit
+// server.js
+import express from "express";
+import items from "./routes/items.js";
+const app = express();
+app.use(express.json());
+app.use(items);
+app.listen(process.env.PORT || 3000);
+cURL examples your partners can use
+Generate via API
+
+bash
+Copy
+Edit
+curl -X POST https://your-app.repl.co/v1/items/generate \
+  -H "X-Api-Key: <their-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"subject":"Evidence","topic":"Hearsay","subtopic":"801(d)(1)(C)","rule":"Prior identification is non-hearsay"}'
+Create manually
+
+bash
+Copy
+Edit
+curl -X POST https://your-app.repl.co/v1/items \
+  -H "X-Api-Key: <their-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{ "...full item JSON matching your schema..." }'
+Optional but smart
+Async jobs for bulk gen: accept {batch: 50, subject:"Torts"} → return 202 + jobId; process in queue (BullMQ), then let clients GET /v1/jobs/:id or receive a webhook.
+
+Idempotency: honor Idempotency-Key header to avoid dupes on retries.
+
+Quotas by key: deny once monthly_generations exceeds quota_month.
+
+Scopes/roles: role in ('author','admin') to use /generate; read-only keys can only fetch.
+
+OpenAPI spec: publish a tiny swagger so others can integrate quickly (see below).
+
+OpenAPI (tiny stub)
+
+yaml
+Copy
+Edit
+openapi: 3.0.3
+info: { title: Law Duel Authoring API, version: 1.0.0 }
+servers: [{ url: https://your-app.repl.co }]
+components:
+  securitySchemes:
+    apiKey: { type: apiKey, in: header, name: X-Api-Key }
+  schemas:
+    MBEItem: # (use the schema in code)
+      type: object
+      required: [subject, topic, stem, choices, correctIndex, optionRationales, explanationLong, ruleRefs, difficultySeed, license, status]
+paths:
+  /v1/items/generate:
+    post:
+      security: [ { apiKey: [] } ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subject, topic, rule]
+              properties:
+                subject: { type: string }
+                topic: { type: string }
+                subtopic: { type: string }
+                rule: { type: string }
+      responses:
+        "201": { description: Created }
+  /v1/items:
+    post:
+      security: [ { apiKey: [] } ]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MBEItem" }
+      responses:
+        "201": { description: Created }
+Acceptance checklist
+Calls without X-Api-Key are rejected (401/403).
+
+Valid /v1/items/generate request returns 201 with an id and the saved item is in your DB with status="draft".
+
+Invalid payloads return 400/422 with clear reasons.
+
+Rate limiting works (try >60/min → 429).
+
+Your OpenAI key never leaves the server; third parties only use your API.
+

@@ -7,6 +7,7 @@ const MBE_SCHEMA = {
   schema: {
     type: "object",
     properties: {
+      id: { type: "string" },
       subject: { type: "string" },
       topic: { type: "string" },
       subtopic: { type: "string" },
@@ -28,7 +29,8 @@ const MBE_SCHEMA = {
       timeLimitSec: { type: "integer" },
       tags: { type: "array", items: { type: "string" } },
       license: { type: "string" },
-      status: { type: "string" }
+      status: { type: "string" },
+      authorNote: { type: "string" }
     },
     required: ["subject", "topic", "stem", "choices", "correctIndex", "optionRationales",
                "explanationLong", "ruleRefs", "difficultySeed", "license", "status"],
@@ -48,7 +50,7 @@ Test: ${rule || topic} under national law (FRE/FRCP/UCC Art. 2/federal constitut
 Include rationales for each option (why each is right/wrong) and a 3–6 sentence explanation. 
 No "all/none of the above."
 Make this INCREDIBLY DIFFICULT - upper 10% difficulty for bar exam takers.
-Set difficultySeed = "hard", timeLimitSec = 90, license = "educational", status = "active".
+Set id = unique string, difficultySeed = "hard", timeLimitSec = 90, license = "educational", status = "active", authorNote = "Generated for Law Duel competitive play".
 Output ONLY JSON matching our schema.`;
 
   try {
@@ -87,6 +89,16 @@ Output ONLY JSON matching our schema.`;
     
   } catch (error) {
     console.error('Failed to generate MBE item:', error);
+    
+    // Handle specific OpenAI errors
+    if (error.status === 429 || error.message.includes('quota')) {
+      throw new Error('QUOTA_EXCEEDED');
+    }
+    
+    if (error.status === 401) {
+      throw new Error('INVALID_API_KEY');
+    }
+    
     throw new Error('Failed to generate MBE question');
   }
 }

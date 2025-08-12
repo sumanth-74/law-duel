@@ -10,6 +10,7 @@ import { statsService } from "./services/statsService";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard, updateBotActivity } from "./services/leaderboard.js";
+import { generateMBEItem } from "./services/mbeGenerator.js";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';
@@ -516,6 +517,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error clearing notifications:', error);
       res.status(500).json({ message: 'Failed to clear notifications' });
+    }
+  });
+
+  // Admin endpoint to test question generation
+  app.post("/api/admin/generate-question", async (req, res) => {
+    try {
+      const { subject, topic, subtopic, rule } = req.body;
+      
+      if (!subject || !topic) {
+        return res.status(400).json({ error: "subject and topic are required" });
+      }
+
+      const topicConfig = {
+        subject: subject || "Evidence",
+        topic: topic || "Hearsay",
+        subtopic: subtopic || undefined,
+        rule: rule || "prior identification non-hearsay"
+      };
+
+      const item = await generateMBEItem(topicConfig);
+      res.json({ success: true, item });
+      
+    } catch (error: any) {
+      console.error("Admin question generation failed:", error);
+      
+      if (error.message === 'QUOTA_EXCEEDED') {
+        return res.status(429).json({ 
+          error: "OpenAI API quota exceeded", 
+          message: "Please add credits to your OpenAI account or update the API key"
+        });
+      }
+      
+      if (error.message === 'INVALID_API_KEY') {
+        return res.status(401).json({ 
+          error: "Invalid OpenAI API key", 
+          message: "Please check your API key configuration"
+        });
+      }
+      
+      res.status(500).json({ 
+        error: "Question generation failed", 
+        message: error.message 
+      });
     }
   });
 
