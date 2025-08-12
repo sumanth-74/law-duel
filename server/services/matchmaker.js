@@ -201,7 +201,7 @@ async function runDuel(wss, roomCode, players, subject) {
     match.round = round;
     
     try {
-      const question = await getQuestion(subject, match.usedQuestions);
+      const question = await getQuestion(subject, match.usedQuestions, true); // Force new OpenAI questions for duels
       match.usedQuestions.push(question.qid);
 
       // Send question to all players
@@ -326,23 +326,13 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     match.round = round;
     
     try {
-      console.log(`Generating question for round ${round} in ${subject}`);
+      console.log(`Generating fresh OpenAI question for round ${round} in ${subject}`);
       
-      let question;
+      // Use coordinated question system to ensure fresh OpenAI questions
+      const question = await getQuestion(subject, match.usedQuestions, true); // Force new OpenAI questions for bot duels
+      console.log(`Fresh question generated: "${question.stem.substring(0, 50)}..."`);
+      
       let useTrainingBanner = false;
-      
-      try {
-        question = await generateQuestion(subject);
-        console.log(`OpenAI question generated: "${question.stem.substring(0, 50)}..."`);
-      } catch (aiError) {
-        if (aiError.message === 'QUOTA_EXCEEDED') {
-          console.log('Using training questions - quota exceeded');
-          useTrainingBanner = true;
-        } else {
-          console.log('OpenAI failed, using fallback question');
-        }
-        question = getFallbackQuestion(subject);
-      }
       
       match.usedQuestions.push(question.qid);
 

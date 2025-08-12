@@ -13,16 +13,36 @@ export async function initializeQuestionCoordinator() {
   console.log("Question coordinator initialized");
 }
 
-export async function getQuestion(subject, excludeIds = []) {
+export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   try {
-    // Try to get from storage first
+    // For competitive duels, always generate fresh questions from OpenAI
+    if (forceNew) {
+      console.log(`Generating fresh OpenAI question for duel in ${subject}`);
+      try {
+        const newQuestion = await generateQuestion(subject);
+        if (newQuestion) {
+          // Store the generated question for future reference but don't rely on storage
+          try {
+            await storage.createQuestion(newQuestion);
+          } catch (storageError) {
+            console.log('Storage failed but continuing with fresh question');
+          }
+          return formatQuestion(newQuestion);
+        }
+      } catch (openaiError) {
+        console.error(`OpenAI generation failed for duel ${subject}:`, openaiError);
+        // Fall back to stored question only if OpenAI fails
+      }
+    }
+
+    // Try to get from storage for non-competitive scenarios
     const storedQuestion = await storage.getRandomQuestion(subject, excludeIds);
     if (storedQuestion) {
       await storage.incrementQuestionUsage(storedQuestion.id);
       return formatQuestion(storedQuestion);
     }
 
-    // Try to generate new question via OpenAI, but fallback immediately on error
+    // Generate new question via OpenAI if no stored questions
     try {
       const newQuestion = await generateQuestion(subject);
       if (newQuestion) {
@@ -33,7 +53,7 @@ export async function getQuestion(subject, excludeIds = []) {
       console.log(`OpenAI generation failed for ${subject}, using fallback question`);
     }
 
-    // Use fallback question
+    // Use fallback question as last resort
     console.log(`Using fallback question for ${subject}`);
     return getFallbackQuestion(subject);
   } catch (error) {
@@ -62,6 +82,7 @@ async function generateQuestion(subject) {
     const mbeItem = await generateMBEItem(topicConfig);
     
     const question = {
+      id: `generated_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       subject: mbeItem.subject,
       stem: mbeItem.stem,
       choices: mbeItem.choices,
@@ -110,13 +131,13 @@ function validateQuestion(question) {
   return true;
 }
 
-function formatQuestion(storedQuestion) {
+function formatQuestion(question) {
   return {
-    qid: storedQuestion.id,
-    stem: storedQuestion.stem,
-    choices: storedQuestion.choices,
-    correctIndex: storedQuestion.correctIndex,
-    explanation: storedQuestion.explanation,
+    qid: question.id,
+    stem: question.stem,
+    choices: question.choices,
+    correctIndex: question.correctIndex,
+    explanation: question.explanation,
     timeLimit: 20000, // 20 seconds
     deadlineTs: Date.now() + 20000
   };
