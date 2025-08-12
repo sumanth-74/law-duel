@@ -146,17 +146,17 @@ export function startMatchmaking(wss, ws, payload) {
       return;
     }
     
-    console.log(`Starting bot match for player in ${subject}`);
+    console.log(`Starting bot match for player in ${normalizedSubject}`);
     
     // Spawn stealth bot
     const player = ws.profile || { level: 1, points: 0, avatarData: { base: 'shadow_goblin', palette: '#5865f2', props: [] } };
     const bot = makeStealthBot({ 
-      subject, 
+      subject: normalizedSubject, 
       targetLevel: player.level, 
       targetPoints: player.points 
     });
     
-    startDuelWithBot(wss, subject, ws, bot);
+    startDuelWithBot(wss, normalizedSubject, ws, bot);
   }, 8000); // 8 second grace period
 }
 

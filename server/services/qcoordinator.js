@@ -17,6 +17,7 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
     if (forceNew) {
       console.log(`🔥 FORCE NEW = TRUE - Generating COMPLETELY FRESH OpenAI question for duel in ${subject}`);
       try {
+        const { generateFreshQuestion } = await import('./robustGenerator.js');
         const freshQuestion = await generateFreshQuestion(subject);
         if (freshQuestion && validateQuestion(freshQuestion)) {
           console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);

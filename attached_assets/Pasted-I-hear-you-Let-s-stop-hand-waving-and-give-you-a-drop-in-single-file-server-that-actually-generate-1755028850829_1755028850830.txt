@@ -1,0 +1,287 @@
+I hear you. Let’s stop hand-waving and give you a drop-in, single-file server that actually generates new, subject-correct MBE questions via your OpenAI key, with retries, de-dupe, and a clean API.
+
+What you’ll paste into Replit (two files)
+1) package.json
+
+json
+Copy
+Edit
+{
+  "name": "law-duel",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "ajv": "^8.17.1"
+  },
+  "scripts": { "start": "node server.js" }
+}
+2) server.js
+
+js
+Copy
+Edit
+import express from "express";
+import cors from "cors";
+import crypto from "crypto";
+import Ajv from "ajv";
+
+// ---------- CONFIG ----------
+const PORT = process.env.PORT || 3000;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) console.error("⚠️ Set OPENAI_API_KEY in Replit Secrets.");
+
+// ---------- TAXONOMY ----------
+const SUBJECTS = {
+  "Civ Pro": ["SMJ", "PJ", "Venue", "Erie", "Joinder/Impleader", "Discovery", "Preclusion", "Rule 56"],
+  "Con Law": ["Speech", "Equal Protection", "Due Process", "Commerce Clause", "State Action", "Standing", "Takings"],
+  "Contracts": ["Offer/Acceptance", "Consideration", "Defenses", "Parol Evidence", "UCC §2—Formation", "UCC §2—Risk of Loss", "Warranties/Remedies"],
+  "Crim": ["Homicide", "Accomplice/Pinkerton", "Felony Murder", "Fourth Amendment", "Fifth/Miranda", "Sixth/Confrontation"],
+  "Evidence": ["Relevance 401/403", "Character 404/405", "Impeachment 607/613", "Hearsay 801–807", "Privileges", "Authentication/Best Evidence", "Experts 702–705"],
+  "Property": ["Estates/Future Interests", "RAP", "Recording Acts", "Adverse Possession", "Easements/Covenants", "Landlord–Tenant", "Mortgages"],
+  "Torts": ["Negligence", "Strict Liability", "Products Liability", "Defamation", "Privacy/IIED/NIED", "Vicarious Liability"]
+};
+const SUBJECT_ENUM = Object.keys(SUBJECTS);
+
+// ---------- SCHEMA + VALIDATORS ----------
+const ajv = new Ajv({ allErrors: true, strict: true });
+const itemSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    subject: { type: "string", enum: SUBJECT_ENUM },
+    topic: { type: "string" },
+    subtopic: { type: "string" },
+    stem: { type: "string" },
+    choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+    correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+    optionRationales: { type: "object" },
+    explanationLong: { type: "string" },
+    ruleRefs: { type: "array", items: { type: "string" } },
+    difficultySeed: { type: "string", enum: ["easy","medium","hard"] },
+    timeLimitSec: { type: "integer" },
+    tags: { type: "array", items: { type: "string" } },
+    license: { type: "string" },
+    status: { type: "string", enum: ["draft","approved","calibrating","live","retired"] },
+    authorNote: { type: "string" }
+  },
+  required: ["subject","topic","stem","choices","correctIndex","optionRationales","explanationLong","ruleRefs","difficultySeed","license","status"],
+  additionalProperties: false
+};
+const validateItem = ajv.compile(itemSchema);
+
+function topicBelongs(item){
+  const list = SUBJECTS[item.subject] || [];
+  return list.some(t => item.topic?.toLowerCase().includes(t.toLowerCase().split("—")[0])) ?
+    null : `Topic '${item.topic}' not allowed for subject '${item.subject}'`;
+}
+function basicContentChecks(item){
+  const joined = [...(item.choices||[])].join(" ").toLowerCase();
+  if (joined.includes("all of the above") || joined.includes("none of the above")) return "Banned phrasing";
+  const words = (item.stem||"").split(/\s+/).filter(Boolean).length;
+  if (words < 110 || words > 220) return "Stem should be ~120–180 words";
+  return null;
+}
+
+// ---------- IN-MEMORY BANK + DE-DUPE ----------
+const BANK = [];                   // { id, subject, topic, ... }
+const FINGERPRINTS = new Set();    // sha1(stem)
+const seen = s => FINGERPRINTS.has(s);
+const remember = s => FINGERPRINTS.add(s);
+const fp = text => crypto.createHash("sha1").update(String(text).toLowerCase().replace(/\s+/g," ")).digest("hex");
+
+// ---------- OPENAI CALL (Responses API via fetch) ----------
+async function callOpenAI(prompt, schema){
+  const res = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      input: prompt,
+      temperature: 0.6,
+      max_output_tokens: 1200,
+      response_format: { type: "json_schema", json_schema: { name: "MBEItem", schema, strict: true } }
+    })
+  });
+  if (!res.ok) {
+    const t = await res.text().catch(()=>"(no body)");
+    const err = new Error(`OpenAI ${res.status}: ${t}`);
+    err.status = res.status; throw err;
+  }
+  const data = await res.json();
+  return JSON.parse(data.output_text);
+}
+
+async function generateMBE({ subject, topic, rule }){
+  const token = crypto.randomBytes(6).toString("hex"); // pushes novelty
+  const prompt = `
+Write an original **MBE-style** multiple-choice question.
+Subject: ${subject}. Topic: ${topic}. Rule to test: ${rule}.
+- Single best answer with exactly 4 options (A–D).
+- Fact pattern length: 120–180 words.
+- National law only (FRE/FRCP/UCC Art.2/federal con law as relevant to ${subject}).
+- Include rationales for each option and a 3–6 sentence explanation.
+- No “all/none of the above”. Output ONLY JSON matching our schema.
+Freshness token: ${token} (do not mention it).`;
+
+  // Retry with exponential backoff on 429/5xx
+  let lastErr;
+  for (let i=0;i<4;i++){
+    try {
+      const item = await callOpenAI(prompt, itemSchema);
+      item.id = item.id || `${subject.slice(0,2).toUpperCase()}-${Date.now()}-${token}`;
+      item.subject = subject;
+      item.topic = item.topic || topic;
+      item.license = "© Law Duel, original";
+      item.status = "draft";
+      return item;
+    } catch (e) {
+      lastErr = e;
+      if (e.status === 429 || (e.status >= 500 && e.status <= 599))
+        await new Promise(r=>setTimeout(r, 500*Math.pow(2,i) + Math.random()*200));
+      else throw e;
+    }
+  }
+  throw lastErr || new Error("Generation failed");
+}
+
+// ---------- SUBJECT PICK / RULE HINTS ----------
+function randomTopic(subject){
+  const list = SUBJECTS[subject]; return list[Math.floor(Math.random()*list.length)];
+}
+function ruleHint(subject, topic){
+  const map = {
+    "Evidence:Hearsay 801–807": "FRE 801(d)(1)(C): prior identification is non-hearsay",
+    "Contracts:UCC §2—Risk of Loss": "UCC §2-510: buyer breach & identified goods",
+    "Property:Recording Acts": "Race-notice: BFP without notice who records first",
+    "Crim:Fifth/Miranda": "Unwarned but voluntary statements usable for impeachment",
+    "Civ Pro:Rule 56": "Summary judgment standard: no genuine dispute of material fact",
+    "Torts:Products Liability": "Manufacturing defect vs. design defect (risk-utility)"
+  };
+  return map[`${subject}:${topic}`] || `${topic} — test the controlling rule`;
+}
+
+// ---------- EXPRESS APP ----------
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use((req,res,next)=>{
+  res.setHeader("Cache-Control","no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma","no-cache"); res.setHeader("Expires","0"); next();
+});
+
+// health: verifies connectivity to OpenAI quickly
+app.get("/health/openai", async (req,res)=>{
+  try {
+    if (!OPENAI_API_KEY) return res.status(500).json({ ok:false, error:"Missing OPENAI_API_KEY" });
+    const ok = await fetch("https://api.openai.com/v1/models", { headers: { Authorization: `Bearer ${OPENAI_API_KEY}` }});
+    return res.status(ok.ok?200:ok.status).json({ ok: ok.ok });
+  } catch(e){ return res.status(500).json({ ok:false, error:e.message }); }
+});
+
+// Generate a NEW item (subject optional; if provided, it will be enforced)
+app.post("/v1/items/generate", async (req,res)=>{
+  try{
+    const subj = req.body.subject && SUBJECT_ENUM.includes(req.body.subject) ? req.body.subject
+                : SUBJECT_ENUM[Math.floor(Math.random()*SUBJECT_ENUM.length)];
+    const topic = req.body.topic || randomTopic(subj);
+    const rule = req.body.rule || ruleHint(subj, topic);
+
+    // up to 4 tries to ensure it's fresh + valid
+    let item, err;
+    for (let i=0;i<4;i++){
+      item = await generateMBE({ subject: subj, topic, rule });
+      if (!validateItem(item)) { err = "Schema invalid"; continue; }
+      const tErr = topicBelongs(item); if (tErr){ err = tErr; continue; }
+      const cErr = basicContentChecks(item); if (cErr){ err = cErr; continue; }
+      const hash = fp(item.stem); if (seen(hash)){ err = "Duplicate stem"; continue; }
+      remember(hash);
+      BANK.push(item);
+      const { correctIndex, ...safe } = item;
+      return res.status(201).json({ ok:true, id:item.id, item:safe });
+    }
+    return res.status(502).json({ ok:false, error: err || "Could not get a fresh valid item" });
+  }catch(e){ return res.status(500).json({ ok:false, error: e.message }); }
+});
+
+// Serve an item (from bank). If none for subject, auto-generate one on the fly.
+app.get("/bank/serve", async (req,res)=>{
+  try{
+    const requested = req.query.subject;
+    const subjects = requested ? [requested] : SUBJECT_ENUM;
+    if (requested && !SUBJECT_ENUM.includes(requested))
+      return res.status(400).json({ error:`Unknown subject '${requested}'` });
+
+    // try to find unused item in bank first
+    const pool = BANK.filter(it => subjects.includes(it.subject));
+    if (pool.length){
+      const pick = pool[Math.floor(Math.random()*pool.length)];
+      const { correctIndex, ...safe } = pick;
+      return res.json({ item: safe });
+    }
+
+    // bank empty for that subject → generate one now
+    const subj = requested || SUBJECT_ENUM[Math.floor(Math.random()*SUBJECT_ENUM.length)];
+    const topic = randomTopic(subj);
+    const rule = ruleHint(subj, topic);
+    const item = await generateMBE({ subject: subj, topic, rule });
+
+    if (!validateItem(item)) return res.status(502).json({ error: "Generated item schema invalid" });
+    const tErr = topicBelongs(item); if (tErr) return res.status(502).json({ error: tErr });
+    const cErr = basicContentChecks(item); if (cErr) return res.status(502).json({ error: cErr });
+
+    const hash = fp(item.stem);
+    if (!seen(hash)){ remember(hash); BANK.push(item); }
+    const { correctIndex, ...safe } = item;
+    res.json({ item: safe });
+  }catch(e){ return res.status(500).json({ error: e.message }); }
+});
+
+app.listen(PORT, ()=> console.log(`✅ Law Duel generator running on :${PORT}`));
+How to run
+In Replit, add your OPENAI_API_KEY in Secrets.
+
+Create those two files.
+
+npm install → Run → open the webview.
+
+Test:
+
+bash
+Copy
+Edit
+# Quick health
+curl https://<your-repl-url>/health/openai
+
+# Generate a brand-new Evidence item
+curl -X POST https://<your-repl-url>/v1/items/generate \
+  -H "Content-Type: application/json" \
+  -d '{"subject":"Evidence"}'
+
+# Serve one (auto-generates if bank empty)
+curl https://<your-repl-url>/bank/serve?subject=Contracts
+Why this fixes your blockers
+“It keeps mixing subjects.”
+Subject is enum-locked; topic is validated to belong to that subject; we reject off-subject drafts before saving/serving.
+
+“It repeats the same question.”
+We hash each stem (SHA-1) and store fingerprints; duplicates are retried up to 4×.
+
+“It returns nothing.”
+Health endpoint verifies the key; generator has retry/backoff on 429/5xx; serving will auto-generate if the bank is empty for a subject.
+
+“I need random questions or by subject on request.”
+/v1/items/generate accepts subject (optional). /bank/serve serves by ?subject=... or random if omitted.
+
+If this still “fails to implement your vision,” the issue is almost always one of:
+
+Bad/missing key or wrong project (health endpoint will show 401/403).
+
+Quota/rate limit (429 in server logs; lower concurrency or raise limits).
+
+Blocked outbound HTTP in your environment (rare on Replit).
+
+If you want, I can also give you a front-end fetch snippet for your game client and a SQLite/Postgres version of this (instead of in-memory) so state persists across restarts.
