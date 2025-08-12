@@ -1,43 +1,21 @@
-import { makeStealthBot } from './stealthbot.js';
-import { generateQuestion } from '../ai.js';
-import { storage } from '../storage.js';
-import { getQuestion } from './qcoordinator.js';
+import { WebSocket } from "ws";
+import { makeStealthBot } from "./stealthbot.js";
+import { getQuestion } from "./qcoordinator.js";
+import { storage } from "../storage.js";
 
-const presence = new Map();
-const queues = Object.create(null);
+const queues = {
+  'Civil Procedure': [],
+  'Constitutional Law': [],
+  'Contracts': [],
+  'Criminal Law': [],
+  'Evidence': [],
+  'Property': [],
+  'Torts': []
+};
+
 const activeMatches = new Map();
-const playerAnswers = new Map(); // Track player answers by match ID
-
-const SUBJECTS = ["Evidence","Contracts","Torts","Property","Civil Procedure","Constitutional Law","Criminal Law/Procedure"];
-SUBJECTS.forEach(s => queues[s] = []);
-
-// Fallback question function
-function getFallbackQuestion(subject) {
-  const fallbacks = {
-    "Evidence": {
-      stem: "Under Federal Rule of Evidence 403, evidence may be excluded if its probative value is substantially outweighed by what?",
-      choices: ["Any prejudicial effect", "The danger of unfair prejudice", "Confusion of the issues", "Misleading the jury"],
-      correctIndex: 1,
-      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice."
-    },
-    "Contracts": {
-      stem: "What is required for a valid offer under common law contract formation?",
-      choices: ["Present intent to contract", "Definite and certain terms", "Communication to offeree", "All of the above"],
-      correctIndex: 3,
-      explanation: "A valid offer requires present intent, definite terms, and communication to the offeree."
-    }
-  };
-  const fallback = fallbacks[subject] || fallbacks["Evidence"];
-  return {
-    qid: `fallback_${subject}_${Date.now()}`,
-    stem: fallback.stem,
-    choices: fallback.choices,
-    correctIndex: fallback.correctIndex,
-    explanation: fallback.explanation,
-    timeLimit: 60000,
-    deadlineTs: Date.now() + 60000
-  };
-}
+const playerAnswers = new Map();
+const presence = new Map();
 
 export function registerPresence(ws, payload) {
   const { username, profile } = payload;
@@ -87,52 +65,6 @@ export function startMatchmaking(wss, ws, payload) {
     ws.send(JSON.stringify({ 
       type: 'queue:joined', 
       payload: { subject: normalizedSubject, position: queue.length } 
-    }));
-  }
-  
-  entry.timeout = setTimeout(() => {
-    const idx = queue.indexOf(entry);
-    if (idx >= 0) queue.splice(idx, 1);
-    
-    // Check if client is still connected before starting duel
-    if (ws.readyState !== 1) {
-      console.log('❌ Client disconnected during queue wait - aborting match');
-      return;
-    }
-    
-    console.log(`Starting bot match for player in ${normalizedSubject}`);
-    
-    // Spawn stealth bot
-    const player = ws.profile || { level: 1, points: 0, avatarData: { base: 'shadow_goblin', palette: '#5865f2', props: [] } };
-    const bot = makeStealthBot({ 
-      subject: normalizedSubject, 
-      targetLevel: player.level, 
-      targetPoints: player.points 
-    });
-    
-    startDuelWithBot(wss, normalizedSubject, ws, bot);
-  }, 8000); // 8 second grace period
-}
-
-  console.log(`Queue for ${subject} has ${queue.length} players`);
-
-  // Try to match immediately
-  const waitingPlayer = queue.shift();
-  if (waitingPlayer && waitingPlayer.ws !== ws && waitingPlayer.ws.readyState === 1) {
-    console.log('Found immediate match, starting duel');
-    return startDuel(wss, subject, waitingPlayer.ws, ws, { ranked: false, stake: 0 });
-  }
-
-  // Add to queue with timeout for stealth bot
-  const entry = { ws, timeout: null };
-  queue.push(entry);
-  console.log(`Player added to ${subject} queue. Queue size: ${queue.length}`);
-  
-  // Send queue confirmation to player
-  if (ws.readyState === 1) {
-    ws.send(JSON.stringify({ 
-      type: 'queue:joined', 
-      payload: { subject, position: queue.length } 
     }));
   }
   
@@ -263,21 +195,17 @@ async function runDuel(wss, roomCode, players, subject) {
     match.round = round;
     
     try {
-      const question = await getQuestion(subject, match.usedQuestions, true); // Force new OpenAI questions for duels
+      const question = await getQuestion(subject, match.usedQuestions, true);
       match.usedQuestions.push(question.qid);
 
-      // Send question to all players
       const questionData = {
         qid: question.qid,
         round,
         stem: question.stem,
         choices: question.choices,
-        timeLimit: question.timeLimit || 60000, // Ensure 60 seconds
-        deadlineTs: question.deadlineTs || (Date.now() + 60000),
-        showTrainingBanner: useTrainingBanner
+        timeLimit: question.timeLimit || 60000,
+        deadlineTs: question.deadlineTs || (Date.now() + 60000)
       };
-
-      console.log(`Question data timeLimit: ${questionData.timeLimit}ms`);
 
       players.forEach(ws => {
         if (ws.readyState === 1) {
@@ -285,14 +213,13 @@ async function runDuel(wss, roomCode, players, subject) {
         }
       });
 
-      // Wait for answers or timeout with proper answer collection
+      // Wait for answers
       const answers = new Map();
       playerAnswers.set(roomCode, answers);
       
       await new Promise(resolve => {
         const timeout = setTimeout(resolve, 61000);
         
-        // Check for all answers periodically
         const checkInterval = setInterval(() => {
           if (answers.size >= players.length) {
             clearTimeout(timeout);
@@ -301,117 +228,77 @@ async function runDuel(wss, roomCode, players, subject) {
           }
         }, 100);
       });
-      
-      // Process round results with actual player answers
-      const roundAnswers = playerAnswers.get(roomCode) || new Map();
-      const results = {
+
+      // Process results
+      const results = [];
+      for (let i = 0; i < players.length; i++) {
+        const ws = players[i];
+        const answer = answers.get(ws) || { choice: -1, timeMs: 60000 };
+        const correct = answer.choice === question.correctIndex;
+        
+        if (correct) match.scores[i]++;
+        
+        results.push({
+          playerId: i,
+          choice: answer.choice,
+          correct,
+          timeMs: answer.timeMs
+        });
+      }
+
+      const resultData = {
         qid: question.qid,
+        round,
         correctIndex: question.correctIndex,
         explanation: question.explanation,
-        results: [],
-        scores: { player1: match.scores[0], player2: match.scores[1] }
+        results,
+        scores: match.scores.slice()
       };
-      
-      // Process each player's answer
-      players.forEach((ws, index) => {
-        const playerId = ws.profile?.id || `player${index + 1}`;
-        const answer = roundAnswers.get(playerId);
-        
-        if (answer) {
-          const correct = answer.selectedIndex === question.correctIndex;
-          if (correct) {
-            match.scores[index]++;
-          }
-          
-          results.results.push({
-            playerId,
-            selectedIndex: answer.selectedIndex,
-            timeMs: answer.timeMs,
-            correct
-          });
-        }
-      });
-      
-      results.scores = { player1: match.scores[0], player2: match.scores[1] };
-      playerAnswers.delete(roomCode);
 
       players.forEach(ws => {
         if (ws.readyState === 1) {
-          ws.send(JSON.stringify({ type: 'duel:result', payload: results }));
+          ws.send(JSON.stringify({ type: 'duel:result', payload: resultData }));
         }
       });
 
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
     } catch (error) {
-      console.error('Duel round error:', error);
+      console.error('Error in duel round:', error);
+      break;
     }
   }
 
-  // Determine winner and clean up
-  const winnerId = match.scores[0] > match.scores[1] ? 0 : 1;
-  
-  const finishedData = {
-    winnerId: players[winnerId]?.profile?.id || `player${winnerId + 1}`,
-    finalScores: { player1: match.scores[0], player2: match.scores[1] },
-    pointChanges: { player1: winnerId === 0 ? 25 : -25, player2: winnerId === 1 ? 25 : -25 },
-    xpGained: { player1: match.scores[0] * 10, player2: match.scores[1] * 10 }
+  // End duel
+  const winner = match.scores[0] > match.scores[1] ? 0 : 1;
+  const finalData = {
+    winner,
+    scores: match.scores,
+    roomCode
   };
 
   players.forEach(ws => {
     if (ws.readyState === 1) {
-      ws.send(JSON.stringify({ type: 'duel:finished', payload: finishedData }));
+      ws.send(JSON.stringify({ type: 'duel:end', payload: finalData }));
     }
   });
 
   activeMatches.delete(roomCode);
+  playerAnswers.delete(roomCode);
 }
 
 async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
-  console.log(`Starting duel ${roomCode} - Human WS state: ${humanWs.readyState}`);
-  
-  // Final connection check before starting the duel
-  if (humanWs.readyState !== 1) {
-    console.log('❌ Human WebSocket disconnected before duel start - canceling');
-    return;
-  }
-  
   const match = {
     roomCode,
     humanWs,
     bot,
     subject,
     round: 0,
-    scores: [0, 0], // [human, bot]
+    scores: [0, 0],
     usedQuestions: []
   };
 
   activeMatches.set(roomCode, match);
-  
-  // Ensure the human WebSocket is connected and ready before starting duel
-  console.log('Verifying human player connection before starting OpenAI generation...');
-  
-  if (humanWs.readyState !== 1) {
-    console.log('❌ Human WebSocket not ready - aborting duel');
-    return;
-  }
-  
-  // Send duel start notification to ensure client is ready
-  humanWs.send(JSON.stringify({ 
-    type: 'duel:start', 
-    payload: { 
-      roomCode, 
-      subject,
-      opponent: {
-        id: bot.id,
-        username: bot.username,
-        level: bot.level,
-        avatarData: bot.avatarData
-      }
-    } 
-  }));
-  
-  // Give client a moment to process the duel start and prepare for questions
-  console.log('Waiting for client to prepare for OpenAI questions...');
-  await new Promise(resolve => setTimeout(resolve, 2000));
 
   for (let round = 1; round <= 7; round++) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
@@ -419,14 +306,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     match.round = round;
     
     try {
-      console.log(`Generating fresh OpenAI question for round ${round} in ${subject}`);
-      
-      // Use coordinated question system to ensure fresh OpenAI questions
-      const question = await getQuestion(subject, match.usedQuestions, true); // Force new OpenAI questions for bot duels
-      console.log(`🎯 Question returned from coordinator: QID="${question.qid}", stem="${question.stem.substring(0, 50)}..."`);
-      
-      let useTrainingBanner = false;
-      
+      const question = await getQuestion(subject, match.usedQuestions, true);
       match.usedQuestions.push(question.qid);
 
       const questionData = {
@@ -434,166 +314,108 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         round,
         stem: question.stem,
         choices: question.choices,
-        timeLimit: question.timeLimit || 60000, // Ensure 60 seconds for bot duels
-        deadlineTs: question.deadlineTs || (Date.now() + 60000),
-        showTrainingBanner: useTrainingBanner
+        timeLimit: question.timeLimit || 60000,
+        deadlineTs: question.deadlineTs || (Date.now() + 60000)
       };
 
-      console.log(`Bot duel question timeLimit: ${questionData.timeLimit}ms`);
-      console.log(`Generated question object timeLimit: ${question.timeLimit}ms`);
-
-      console.log(`Broadcasting question to human player for round ${round}`);
-      console.log(`Question: "${question.stem.substring(0, 60)}..."`);
-
-      // Send question specifically to the human player (more targeted than broadcast)
-      console.log(`Sending OpenAI question directly to human player: ${question.qid}`);
-      let questionSent = false;
-      
       if (humanWs.readyState === 1) {
-        const questionMessage = JSON.stringify({ type: 'duel:question', payload: questionData });
-        humanWs.send(questionMessage);
-        questionSent = true;
-        console.log(`✅ OpenAI question sent directly to human: ${question.qid}`);
-      } else {
-        console.log('❌ Human WebSocket disconnected, cannot send OpenAI question');
+        humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
       }
+
+      // Wait for human answer and get bot decision
+      const answers = new Map();
+      playerAnswers.set(roomCode, answers);
       
-      if (!questionSent) {
-        console.error('❌ No active WebSocket connections found - client disconnected during OpenAI generation');
-        console.error('   This prevents fresh OpenAI questions from reaching the client');
-        break;
-      } else {
-        console.log(`✅ Fresh OpenAI question successfully delivered to client: ${question.qid}`);
-      }
-
-      // Schedule bot answer
       const botDecision = bot.decide(round, question.correctIndex);
-      setTimeout(() => {
-        // Simulate bot answer
-        const botAnswer = {
-          qid: question.qid,
-          idx: botDecision.idx,
-          ms: botDecision.ansMs,
-          opponentId: bot.id
-        };
-        
-        if (humanWs.readyState === 1) {
-          humanWs.send(JSON.stringify({ type: 'duel:botAnswer', payload: botAnswer }));
-        }
-      }, botDecision.ansMs);
-
-      // Wait for human answer or timeout
-      const humanAnswerMap = new Map();
-      playerAnswers.set(roomCode, humanAnswerMap);
       
       await new Promise(resolve => {
         const timeout = setTimeout(resolve, 61000);
         
         const checkInterval = setInterval(() => {
-          const playerId = humanWs.profile?.id || 'human';
-          if (humanAnswerMap.has(playerId)) {
+          if (answers.size >= 1) {
             clearTimeout(timeout);
             clearInterval(checkInterval);
             resolve();
           }
         }, 100);
       });
-      
-      // Process results with both human and bot answers
-      const roundAnswers = playerAnswers.get(roomCode) || new Map();
-      const humanPlayerId = humanWs.profile?.id || 'human';
-      const humanAnswer = roundAnswers.get(humanPlayerId);
-      
-      // Score human answer if provided
-      if (humanAnswer && humanAnswer.selectedIndex === question.correctIndex) {
-        match.scores[0]++;
-      }
-      
-      // Score bot answer
-      if (botDecision.idx === question.correctIndex) {
-        match.scores[1]++;
-      }
 
-      const results = {
+      // Process results
+      const humanAnswer = answers.get(humanWs) || { choice: -1, timeMs: 60000 };
+      const humanCorrect = humanAnswer.choice === question.correctIndex;
+      const botCorrect = botDecision.idx === question.correctIndex;
+      
+      if (humanCorrect) match.scores[0]++;
+      if (botCorrect) match.scores[1]++;
+
+      const results = [
+        {
+          playerId: 0,
+          choice: humanAnswer.choice,
+          correct: humanCorrect,
+          timeMs: humanAnswer.timeMs
+        },
+        {
+          playerId: 1,
+          choice: botDecision.idx,
+          correct: botCorrect,
+          timeMs: botDecision.ansMs
+        }
+      ];
+
+      const resultData = {
         qid: question.qid,
+        round,
         correctIndex: question.correctIndex,
         explanation: question.explanation,
-        results: [
-          {
-            playerId: bot.id,
-            selectedIndex: botDecision.idx,
-            timeMs: botDecision.ansMs,
-            correct: botDecision.idx === question.correctIndex
-          }
-        ],
-        scores: { player1: match.scores[0], player2: match.scores[1] }
+        results,
+        scores: match.scores.slice()
       };
-      
-      // Add human result if they answered
-      if (humanAnswer) {
-        results.results.unshift({
-          playerId: humanPlayerId,
-          selectedIndex: humanAnswer.selectedIndex,
-          timeMs: humanAnswer.timeMs,
-          correct: humanAnswer.selectedIndex === question.correctIndex
-        });
-      }
-      
-      playerAnswers.delete(roomCode);
 
       if (humanWs.readyState === 1) {
-        humanWs.send(JSON.stringify({ type: 'duel:result', payload: results }));
+        humanWs.send(JSON.stringify({ type: 'duel:result', payload: resultData }));
       }
+
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
     } catch (error) {
-      console.error('Duel with bot round error:', error);
-    }
-  }
-
-  // Finish match
-  const winnerId = match.scores[0] > match.scores[1] ? humanWs.profile?.id : bot.id;
-  const humanWon = match.scores[0] > match.scores[1];
-  
-  const finishedData = {
-    winnerId,
-    finalScores: { player1: match.scores[0], player2: match.scores[1] },
-    pointChanges: { player1: humanWon ? 25 : -25, player2: humanWon ? -25 : 25 },
-    xpGained: { player1: match.scores[0] * 10, player2: match.scores[1] * 10 }
-  };
-
-  if (humanWs.readyState === 1) {
-    humanWs.send(JSON.stringify({ type: 'duel:finished', payload: finishedData }));
-  }
-
-  activeMatches.delete(roomCode);
-}
-
-export function handleDuelAnswer(wss, ws, payload) {
-  const { qid, selectedIndex, timeMs } = payload;
-  const playerId = ws.profile?.id || ws.username || 'anonymous';
-  
-  // Find the match this player is in
-  for (const [roomCode, match] of activeMatches) {
-    if ((match.players && match.players.includes(ws)) || 
-        (match.humanWs && match.humanWs === ws)) {
-      
-      const answers = playerAnswers.get(roomCode);
-      if (answers) {
-        answers.set(playerId, {
-          qid,
-          selectedIndex,
-          timeMs: timeMs || Date.now(),
-          timestamp: Date.now()
-        });
-        
-        console.log(`Player ${playerId} answered question ${qid} in match ${roomCode}`);
-      }
+      console.error('Error in bot duel round:', error);
       break;
     }
   }
+
+  // End duel
+  const winner = match.scores[0] > match.scores[1] ? 0 : 1;
+  const finalData = {
+    winner,
+    scores: match.scores,
+    roomCode
+  };
+
+  if (humanWs.readyState === 1) {
+    humanWs.send(JSON.stringify({ type: 'duel:end', payload: finalData }));
+  }
+
+  activeMatches.delete(roomCode);
+  playerAnswers.delete(roomCode);
 }
 
-export function handleHintRequest(wss, ws, payload) {
-  // Implementation for hint requests can be added later
-  console.log('Hint request received:', payload);
+export function handleDuelAnswer(ws, payload) {
+  const { roomCode, choice, timeMs } = payload;
+  const answers = playerAnswers.get(roomCode);
+  
+  if (answers) {
+    answers.set(ws, { choice, timeMs });
+  }
+}
+
+export function handleHintRequest(ws, payload) {
+  const { qid } = payload;
+  ws.send(JSON.stringify({
+    type: 'duel:hint',
+    payload: {
+      qid,
+      hint: "Focus on the key legal principle being tested."
+    }
+  }));
 }
