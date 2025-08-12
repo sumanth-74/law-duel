@@ -26,10 +26,16 @@ export function AvatarRenderer({
     const scale = Math.min(1 + 0.08 * (level - 1), 1.8);
     const scaledSize = size * scale;
     
-    const svgString = renderAvatarSVG({
-      ...avatarData,
-      archetypeId: avatarData.archetypeId || null
-    }, scale);
+    // Provide safe fallback for avatarData to prevent crashes
+    const safeAvatarData = {
+      base: 'humanoid',
+      palette: '#5865f2',
+      props: [],
+      archetypeId: null,
+      ...avatarData
+    };
+    
+    const svgString = renderAvatarSVG(safeAvatarData, scale);
     containerRef.current.innerHTML = svgString;
     
     // Apply container size

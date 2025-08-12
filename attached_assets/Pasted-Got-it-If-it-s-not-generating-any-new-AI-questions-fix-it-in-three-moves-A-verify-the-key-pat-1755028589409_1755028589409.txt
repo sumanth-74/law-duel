@@ -1,0 +1,231 @@
+Got it. If it’s not generating any new AI questions, fix it in three moves: (A) verify the key + path actually hit OpenAI, (B) add retry/backoff + logging, (C) force novelty (randomization + de-dupe). Paste the snippets below into Replit.
+
+A) Sanity check: prove your server can reach OpenAI
+routes/health.js
+
+js
+Copy
+Edit
+import express from "express";
+import OpenAI from "openai";
+const r = express.Router();
+
+r.get("/health/openai", async (req, res) => {
+  try {
+    if (!process.env.OPENAI_API_KEY) return res.status(500).json({ ok:false, error:"Missing OPENAI_API_KEY" });
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const resp = await openai.responses.create({
+      model: "gpt-4o-mini",
+      input: "pong",
+      // keep tiny so usage is near-zero
+      max_output_tokens: 5
+    });
+    return res.json({ ok:true, text: resp.output_text?.slice(0,20) || "ok" });
+  } catch (e) {
+    return res.status(e.status || 500).json({ ok:false, status:e.status, error:e.message, detail: e.response?.data });
+  }
+});
+
+export default r;
+Mount it:
+
+js
+Copy
+Edit
+// server.js
+import health from "./routes/health.js";
+app.use(health);
+Hit /health/openai.
+
+If you get 401 → bad key or wrong project.
+
+If 429 → rate limit/quota; throttle or raise limits.
+
+If 200 → connectivity is fine; move on.
+
+(See OpenAI docs for structured outputs/responses + rate limits if you need to raise them.) 
+OpenAI Platform
++2
+OpenAI Platform
++2
+
+B) Make generation robust (retries + backoff + logs)
+generator.js (drop-in or patch your current)
+
+js
+Copy
+Edit
+import OpenAI from "openai";
+import crypto from "crypto";
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const MBE_SCHEMA = {
+  name: "MBEItem",
+  schema: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      subject: { type: "string" },
+      topic: { type: "string" },
+      subtopic: { type: "string" },
+      stem: { type: "string" },
+      choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+      correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+      optionRationales: { type: "object" },
+      explanationLong: { type: "string" },
+      ruleRefs: { type: "array", items: { type: "string" } },
+      difficultySeed: { type: "string", enum: ["easy","medium","hard"] },
+      timeLimitSec: { type: "integer" },
+      tags: { type: "array", items: { type: "string" } },
+      license: { type: "string" },
+      status: { type: "string", enum: ["draft","approved","calibrating","live","retired"] },
+      authorNote: { type: "string" }
+    },
+    required: ["subject","topic","stem","choices","correctIndex","optionRationales","explanationLong","ruleRefs","difficultySeed","license","status"],
+    additionalProperties: false
+  },
+  strict: true
+};
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+export async function callOpenAIWithRetry({ prompt, temperature=0.7, maxTries=4 }) {
+  let lastErr;
+  for (let i=0;i<maxTries;i++){
+    try {
+      const resp = await openai.responses.create({
+        model: "gpt-4o-mini",
+        input: prompt,
+        temperature,
+        response_format: { type: "json_schema", json_schema: MBE_SCHEMA },
+        max_output_tokens: 1200
+      });
+      const json = JSON.parse(resp.output_text);
+      return json;
+    } catch (e) {
+      lastErr = e;
+      const status = e.status || 0;
+      console.error("[GEN_ERR]", status, e.message, e.response?.data || "");
+      // Backoff only for 429/5xx; fail fast on 401/403/schema errors
+      if (status === 429 || status >= 500) {
+        await sleep(500 * Math.pow(2, i) + Math.floor(Math.random()*100));
+        continue;
+      }
+      throw e;
+    }
+  }
+  throw lastErr || new Error("OpenAI generation failed");
+}
+
+export async function generateFreshItem({ subject, topic, rule }) {
+  // Nonce to force freshness & reduce repeats
+  const nonce = crypto.randomBytes(6).toString("hex");
+  const prompt = `
+You are drafting an original **MBE-style** question.
+Subject: ${subject}. Topic: ${topic}.
+- Single best answer with exactly 4 options (A–D).
+- Fact pattern length: 120–180 words.
+- Test this rule: ${rule}.
+- National law only (FRE/FRCP/UCC Art.2/federal con law as relevant).
+- Include rationales for each option + a 3–6 sentence explanation.
+- No "all/none of the above". Output ONLY JSON for our schema.
+- Freshness token: ${nonce}. Do NOT mention the token.`;
+
+  const item = await callOpenAIWithRetry({ prompt, temperature: 0.65 });
+  item.id = item.id || `${subject.slice(0,2).toUpperCase()}-${Date.now()}-${nonce}`;
+  item.subject = item.subject || subject;
+  item.topic = item.topic || topic;
+  item.license = "© Law Duel, original";
+  item.status = "draft";
+  return item;
+}
+This gives you:
+
+Exponential backoff on 429/5xx (rate-limit/temporary issues).
+
+Useful logs ([GEN_ERR]) to see exactly why it fails.
+
+A nonce in the prompt to push the model toward new text each time.
+(OpenAI Responses + structured outputs: official docs.) 
+OpenAI Platform
++1
+
+C) Force novelty: reject dupes and auto-retry
+Add a tiny de-dupe before saving so repeats never enter the bank.
+
+dedupe.js
+
+js
+Copy
+Edit
+import crypto from "crypto";
+import { db } from "./db.js";
+
+// Create table once:
+// CREATE TABLE IF NOT EXISTS item_fingerprints (fp CHAR(40) PRIMARY KEY, created_at TIMESTAMPTZ DEFAULT now());
+
+export function fingerprint(text){
+  return crypto.createHash("sha1").update(text.toLowerCase().replace(/\s+/g," ")).digest("hex");
+}
+
+export async function seenBefore(stem){
+  const fp = fingerprint(stem);
+  const row = await db.oneOrNone("SELECT fp FROM item_fingerprints WHERE fp=$1", [fp]);
+  return { fp, exists: !!row };
+}
+
+export async function remember(fp){
+  await db.none("INSERT INTO item_fingerprints(fp) VALUES($1) ON CONFLICT DO NOTHING", [fp]);
+}
+routes/generate.js (use retries until fresh)
+
+js
+Copy
+Edit
+import express from "express";
+import { generateFreshItem } from "../generator.js";
+import { validateItem } from "../validate.js";
+import { saveItem } from "../db.js";
+import { seenBefore, remember } from "../dedupe.js";
+
+const r = express.Router();
+
+r.post("/v1/items/generate", async (req, res) => {
+  const { subject, topic, rule } = req.body || {};
+  if (!subject || !topic || !rule) return res.status(400).json({ error: "subject, topic, rule required" });
+
+  let item, fp;
+  for (let tries=0; tries<4; tries++){
+    item = await generateFreshItem({ subject, topic, rule });
+    if (!validateItem(item)) continue;
+    const check = await seenBefore(item.stem);
+    fp = check.fp;
+    if (!check.exists) break; // fresh
+  }
+  if (!item) return res.status(502).json({ error: "generation failed" });
+
+  await remember(fp);
+  await saveItem(item); // keep as "draft" or "approved"
+  const { correctIndex, ...safe } = item;
+  res.status(201).json({ ok:true, id:item.id, item:safe });
+});
+
+export default r;
+Now each call:
+
+Randomizes via nonce
+
+Retries on rate limits
+
+Rejects any stem you’ve seen before (exact match) and tries again
+
+Quick tests (do these now)
+Health: open /health/openai → should be { ok:true }. If not: fix key/project/limits in the dashboard (Usage/Limits & Rate Limits docs). 
+OpenAI Help Center
+OpenAI Platform
+
+Generate: POST /v1/items/generate with { "subject":"Evidence","topic":"Hearsay 801–807","rule":"Prior identification under 801(d)(1)(C) is non-hearsay" } → you get 201 and a new item; run it twice → you get a different stem (or the server retries until it is).
+
+Watch logs: if you see [GEN_ERR] 429 ... you’re hitting limits → lower concurrency or batch; if [GEN_ERR] 401, fix the key; if 5xx, the retry will cover you.
+
+If you’re still getting nothing new after this, the failure is outside code (budget/limits, wrong project key, or trying to call OpenAI from the browser instead of your server). Move all generation server-side, raise limits if needed, and keep the backoff on. (Docs: Responses API, Structured Outputs, Rate Limits.)

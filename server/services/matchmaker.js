@@ -53,11 +53,66 @@ export function registerPresence(ws, payload) {
 export function startMatchmaking(wss, ws, payload) {
   console.log('Matchmaking started for:', payload);
   const { subject } = payload;
-  const queue = queues[subject];
-  if (!queue) {
-    console.log('Invalid subject:', subject);
-    return;
-  }
+  
+  // Import normalizeSubject to handle "Mixed Questions"
+  import('./subjects.js').then(({ normalizeSubject }) => {
+    const normalizedSubject = normalizeSubject(subject);
+    console.log(`Subject "${subject}" normalized to "${normalizedSubject}"`);
+    
+    const queue = queues[normalizedSubject];
+    if (!queue) {
+      console.log('Invalid normalized subject:', normalizedSubject);
+      return;
+    }
+
+    console.log(`Queue for ${normalizedSubject} has ${queue.length} players`);
+
+    // Try to match immediately
+    const waitingPlayer = queue.shift();
+    if (waitingPlayer && waitingPlayer.ws !== ws && waitingPlayer.ws.readyState === 1) {
+      console.log('Found immediate match, starting duel');
+      return startDuel(wss, normalizedSubject, waitingPlayer.ws, ws, { ranked: false, stake: 0 });
+    }
+
+    // Add to queue with timeout for stealth bot
+    const entry = { ws, timeout: null };
+    queue.push(entry);
+    console.log(`Player added to ${normalizedSubject} queue. Queue size: ${queue.length}`);
+    
+    // Send queue confirmation to player
+    if (ws.readyState === 1) {
+      ws.send(JSON.stringify({ 
+        type: 'queue:joined', 
+        payload: { subject: normalizedSubject, position: queue.length } 
+      }));
+    }
+    
+    entry.timeout = setTimeout(() => {
+      const idx = queue.indexOf(entry);
+      if (idx >= 0) queue.splice(idx, 1);
+      
+      // Check if client is still connected before starting duel
+      if (ws.readyState !== 1) {
+        console.log('❌ Client disconnected during queue wait - aborting match');
+        return;
+      }
+      
+      console.log(`Starting bot match for player in ${normalizedSubject}`);
+      
+      // Spawn stealth bot
+      const player = ws.profile || { level: 1, points: 0, avatarData: { base: 'shadow_goblin', palette: '#5865f2', props: [] } };
+      const bot = makeStealthBot({ 
+        subject: normalizedSubject, 
+        targetLevel: player.level, 
+        targetPoints: player.points 
+      });
+      
+      startDuelWithBot(wss, normalizedSubject, ws, bot);
+    }, 8000); // 8 second grace period
+  }).catch(err => {
+    console.error('Error importing subjects:', err);
+  });
+}
 
   console.log(`Queue for ${subject} has ${queue.length} players`);
 

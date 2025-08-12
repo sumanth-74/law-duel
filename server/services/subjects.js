@@ -19,6 +19,13 @@ const ALIASES = new Map([
 export function normalizeSubject(input) {
   if (!input) return null;
   const s = String(input).trim();
+  
+  // Handle "Mixed Questions" as a special case - return random subject
+  if (s === "Mixed Questions" || s.toLowerCase() === "mixed questions") {
+    const subjects = Object.keys(SUBJECTS);
+    return subjects[Math.floor(Math.random() * subjects.length)];
+  }
+  
   if (SUBJECTS[s]) return s;
   const lower = s.toLowerCase();
   if (ALIASES.has(lower)) return ALIASES.get(lower);

@@ -71,7 +71,8 @@ export function makeStealthBot({ subject, targetLevel = 1, targetPoints = 0 }) {
     avatarData: {
       base: archetype.base,
       palette: archetype.palette,
-      props: archetype.props
+      props: archetype.props,
+      archetypeId: `${archetype.base}_${Math.floor(Math.random() * 1000)}`
     },
     decide,
     isBot: true // Internal flag, never sent to client
