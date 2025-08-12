@@ -54,9 +54,9 @@ export const LAW_ARCHETYPES = {
       category: "corporate"
     },
     {
-      id: "stare-drake",
-      label: "Stare Drake", 
-      base: "arcane",
+      id: "merger_maven",
+      label: "Merger Maven", 
+      base: "construct",
       palette: "statute_silver",
       props: ["briefcase", "codex", "scales"],
       category: "corporate"
@@ -140,9 +140,9 @@ export const LAW_ARCHETYPES = {
       category: "publicdefender"
     },
     {
-      id: "remand-kraken",
-      label: "Remand Kraken",
-      base: "alien", 
+      id: "justice_wraith",
+      label: "Justice Wraith",
+      base: "undead", 
       palette: "statute_silver",
       props: ["codex", "quill", "law_library"],
       category: "publicdefender"
