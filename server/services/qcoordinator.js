@@ -23,6 +23,7 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
         const newQuestion = await generateFreshQuestion(subject);
         if (newQuestion) {
           console.log(`✅ Fresh OpenAI question generated: "${newQuestion.stem.substring(0, 50)}..."`);
+          console.log(`✅ Fresh question correctIndex: ${newQuestion.correctIndex}`);
           // Store the generated question for future reference but don't rely on storage
           try {
             await storage.createQuestion(newQuestion);
@@ -32,8 +33,9 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
           return formatQuestion(newQuestion);
         }
       } catch (openaiError) {
-        console.error(`❌ OpenAI generation failed for duel ${subject}:`, openaiError);
-        // Fall back to stored question only if OpenAI fails
+        console.error(`❌ OpenAI generation failed for duel ${subject}:`, openaiError.message);
+        console.log('🔄 Falling back to stored questions for this round');
+        // Continue to stored question fallback
       }
     }
 
@@ -195,8 +197,8 @@ function formatQuestion(question) {
     choices: question.choices,
     correctIndex: question.correctIndex,
     explanation: question.explanation,
-    timeLimit: 20000, // 20 seconds
-    deadlineTs: Date.now() + 20000
+    timeLimit: 60000, // 60 seconds
+    deadlineTs: Date.now() + 60000
   };
 }
 
@@ -211,7 +213,9 @@ function getFallbackQuestion(subject) {
         "Misleading the jury"
       ],
       correctIndex: 1,
-      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice."
+      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice.",
+      timeLimit: 60000,
+      deadlineTs: Date.now() + 60000
     },
     "Contracts": {
       stem: "What is required for a valid offer under common law contract formation?",
@@ -222,7 +226,9 @@ function getFallbackQuestion(subject) {
         "All of the above"
       ],
       correctIndex: 3,
-      explanation: "A valid offer requires present intent, definite terms, and communication to the offeree."
+      explanation: "A valid offer requires present intent, definite terms, and communication to the offeree.",
+      timeLimit: 60000,
+      deadlineTs: Date.now() + 60000
     },
     "Torts": {
       stem: "What are the elements required to establish a negligence claim?",
@@ -249,7 +255,7 @@ function getFallbackQuestion(subject) {
   };
 
   const fallback = fallbacks[subject] || fallbacks["Evidence"];
-  console.log(`Using fallback question for ${subject}:`, fallback.stem);
+  console.log(`Using fallback question for ${subject}: ${fallback.stem}`);
   
   return {
     qid: `fallback_${subject}_${Date.now()}`,
@@ -257,8 +263,8 @@ function getFallbackQuestion(subject) {
     choices: fallback.choices,
     correctIndex: fallback.correctIndex,
     explanation: fallback.explanation,
-    timeLimit: 20000,
-    deadlineTs: Date.now() + 20000
+    timeLimit: 60000,
+    deadlineTs: Date.now() + 60000
   };
 }
 

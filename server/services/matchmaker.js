@@ -34,8 +34,8 @@ function getFallbackQuestion(subject) {
     choices: fallback.choices,
     correctIndex: fallback.correctIndex,
     explanation: fallback.explanation,
-    timeLimit: 20000,
-    deadlineTs: Date.now() + 20000
+    timeLimit: 60000,
+    deadlineTs: Date.now() + 60000
   };
 }
 
@@ -211,10 +211,12 @@ async function runDuel(wss, roomCode, players, subject) {
         round,
         stem: question.stem,
         choices: question.choices,
-        timeLimit: question.timeLimit,
-        deadlineTs: question.deadlineTs,
+        timeLimit: question.timeLimit || 60000, // Ensure 60 seconds
+        deadlineTs: question.deadlineTs || (Date.now() + 60000),
         showTrainingBanner: useTrainingBanner
       };
+
+      console.log(`Question data timeLimit: ${questionData.timeLimit}ms`);
 
       players.forEach(ws => {
         if (ws.readyState === 1) {
@@ -227,7 +229,7 @@ async function runDuel(wss, roomCode, players, subject) {
       playerAnswers.set(roomCode, answers);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 21000);
+        const timeout = setTimeout(resolve, 61000);
         
         // Check for all answers periodically
         const checkInterval = setInterval(() => {
@@ -342,10 +344,13 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         round,
         stem: question.stem,
         choices: question.choices,
-        timeLimit: question.timeLimit,
-        deadlineTs: question.deadlineTs,
+        timeLimit: question.timeLimit || 60000, // Ensure 60 seconds for bot duels
+        deadlineTs: question.deadlineTs || (Date.now() + 60000),
         showTrainingBanner: useTrainingBanner
       };
+
+      console.log(`Bot duel question timeLimit: ${questionData.timeLimit}ms`);
+      console.log(`Generated question object timeLimit: ${question.timeLimit}ms`);
 
       console.log(`Broadcasting question to human player for round ${round}`);
       console.log(`Question: "${question.stem.substring(0, 60)}..."`);
@@ -389,7 +394,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       playerAnswers.set(roomCode, humanAnswerMap);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 21000);
+        const timeout = setTimeout(resolve, 61000);
         
         const checkInterval = setInterval(() => {
           const playerId = humanWs.profile?.id || 'human';
