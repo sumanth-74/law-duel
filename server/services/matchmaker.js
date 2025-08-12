@@ -345,12 +345,25 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       console.log(`Question: "${question.stem.substring(0, 60)}..."`);
 
       // Send to human player
+      console.log('Human WebSocket readyState before send:', humanWs.readyState);
       if (humanWs.readyState === 1) {
-        humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
+        const questionMessage = JSON.stringify({ type: 'duel:question', payload: questionData });
+        console.log('Sending question message:', questionMessage.substring(0, 100) + '...');
+        humanWs.send(questionMessage);
         console.log('Question sent successfully to human player');
       } else {
-        console.error('Human WebSocket disconnected, readyState:', humanWs.readyState);
-        break; // Exit duel if human disconnected
+        console.error('Human WebSocket not ready, readyState:', humanWs.readyState);
+        // Try to send anyway if connecting
+        if (humanWs.readyState === 0) {
+          console.log('WebSocket connecting, will retry...');
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          if (humanWs.readyState === 1) {
+            humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
+            console.log('Question sent after reconnection');
+          }
+        } else {
+          break; // Exit duel if disconnected
+        }
       }
 
       // Schedule bot answer
