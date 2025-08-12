@@ -8,68 +8,51 @@ export function getCharacterData() {
   }
 }
 
-// Base character portraits - general types
-import wizardPortrait from '@assets/generated_images/Photorealistic_wizard_portrait_e5565b85.png';
-import werewolfPortrait from '@assets/generated_images/Photorealistic_werewolf_portrait_fc511a15.png';
-import golemPortrait from '@assets/generated_images/Photorealistic_stone_golem_portrait_8c705a4a.png';
-import necromancerPortrait from '@assets/generated_images/Photorealistic_necromancer_portrait_7186375f.png';
-import elementalPortrait from '@assets/generated_images/Photorealistic_fire_elemental_portrait_dbddd022.png';
-import angelPortrait from '@assets/generated_images/Photorealistic_divine_angel_portrait_94c3a62d.png';
-import alienPortrait from '@assets/generated_images/Photorealistic_alien_scholar_portrait_3e37dc62.png';
-import sorcererPortrait from '@assets/generated_images/Photorealistic_dark_sorcerer_portrait_8eaaf1ab.png';
-
-// Specific creature portraits - highly distinctive
-import sphinxPortrait from '@assets/generated_images/Photorealistic_sphinx_portrait_7d9c1f15.png';
-import hawkPortrait from '@assets/generated_images/Photorealistic_hawk_portrait_5834a384.png';
-import dragonPortrait from '@assets/generated_images/Photorealistic_dragon_portrait_05f5ff29.png';
-import serpentPortrait from '@assets/generated_images/Photorealistic_serpent_portrait_a322fcab.png';
-import crowPortrait from '@assets/generated_images/crow_lawyer_portrait_962cc1e7.png';
-import minotaurPortrait from '@assets/generated_images/minotaur_lawyer_portrait_b796d7ac.png';
-import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a2834bd.png';
-import bansheePortrait from '@assets/generated_images/banshee_lawyer_portrait_c0258cbe.png';
+// Premium character portraits - generating 31 new stunning images
+import bradyBansheePortrait from '@assets/generated_images/banshee_lawyer_portrait_c0258cbe.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
-  // Professional character mappings - each character gets unique, appropriate portrait
+  // Temporarily using banshee for all while generating new portraits
   const specificArchetypes = {
-    // Corporate characters - 8 distinct business professionals
-    'due-diligence-dragon': dragonPortrait,           // Dragon (powerful, business-savvy)
-    'covenant-golem': golemPortrait,                  // Golem (contract enforcement)
-    'prospectus-paladin': angelPortrait,              // Angel (noble, trustworthy)
-    'disclosure-djinn': elementalPortrait,            // Elemental (disclosure magic)
-    'antitrust-automaton': wizardPortrait,            // Wizard (analytical mind)
-    'fiduciary-seraph': sphinxPortrait,               // Sphinx (wise guardian)
-    'takeover-titan': sorcererPortrait,               // Sorcerer (powerful dealmaker)
-    'compliance-chimera': werewolfPortrait,           // Werewolf (regulatory beast)
+    // Corporate characters - will have 8 unique professional portraits
+    'due-diligence-dragon': bradyBansheePortrait,
+    'covenant-golem': bradyBansheePortrait,
+    'prospectus-paladin': bradyBansheePortrait,
+    'disclosure-djinn': bradyBansheePortrait,
+    'antitrust-automaton': bradyBansheePortrait,
+    'fiduciary-seraph': bradyBansheePortrait,
+    'takeover-titan': bradyBansheePortrait,
+    'compliance-chimera': bradyBansheePortrait,
     
-    // White Collar Criminal specialists - 8 distinct investigators/prosecutors
-    'insider-trading-hawk': hawkPortrait,             // Hawk (sharp-eyed hunter)
-    'subpoena-phoenix': phoenixPortrait,              // Phoenix (rises from ashes)
-    'obstruction-minotaur': minotaurPortrait,         // Minotaur (bulldozes through lies)
-    'wiretap-wraith': necromancerPortrait,            // Necromancer (secrets from shadows)
-    'forensic-basilisk': serpentPortrait,             // Serpent (poison detection)
-    'rico-revenant': alienPortrait,                   // Alien (otherworldly investigation)
-    'whistleblower-wyvern': crowPortrait,             // Crow (messenger of truth)
-    'fraudulent-scheme-specter': golemPortrait,       // Different golem (fraud detection)
+    // White Collar Criminal specialists - will have 8 unique portraits
+    'insider-trading-hawk': bradyBansheePortrait,
+    'subpoena-phoenix': bradyBansheePortrait,
+    'obstruction-minotaur': bradyBansheePortrait,
+    'wiretap-wraith': bradyBansheePortrait,
+    'forensic-basilisk': bradyBansheePortrait,
+    'rico-revenant': bradyBansheePortrait,
+    'whistleblower-wyvern': bradyBansheePortrait,
+    'fraudulent-scheme-specter': bradyBansheePortrait,
     
-    // Constitutional scholars - 8 distinct academic experts
-    'strict-scrutiny-sphinx': sphinxPortrait,         // Sphinx (ancient wisdom)
-    'viewpoint-viper': serpentPortrait,               // Serpent (sharp legal analysis)
-    'incorporation-oracle': angelPortrait,            // Angel (divine interpretation)
-    'nondelegation-naga': dragonPortrait,             // Dragon (powerful constitutional force)
-    'takings-titan': elementalPortrait,               // Elemental (eminent domain power)
-    'prior-restraint-sorcerer': sorcererPortrait,     // Sorcerer (dark constitutional magic)
-    'equal-protection-paladin': wizardPortrait,       // Wizard (equality scholar)
-    'dormant-commerce-gargoyle': werewolfPortrait,    // Werewolf (commerce guardian)
+    // Constitutional scholars - will have 8 unique portraits
+    'strict-scrutiny-sphinx': bradyBansheePortrait,
+    'viewpoint-viper': bradyBansheePortrait,
+    'incorporation-oracle': bradyBansheePortrait,
+    'nondelegation-naga': bradyBansheePortrait,
+    'takings-titan': bradyBansheePortrait,
+    'prior-restraint-sorcerer': bradyBansheePortrait,
+    'equal-protection-paladin': bradyBansheePortrait,
+    'dormant-commerce-gargoyle': bradyBansheePortrait,
     
-    // Public defenders - 8 distinct justice advocates
-    'gideon-crow': crowPortrait,                      // Crow (landmark case messenger)
-    'miranda-hawk': hawkPortrait,                     // Hawk (rights protector)
-    'suppression-wraith': necromancerPortrait,        // Necromancer (evidence suppression)
-    'probable-cause-kraken': alienPortrait,           // Alien (tentacled investigator)
-    'speedy-trial-sprite': elementalPortrait,         // Elemental (swift justice)
-    'reasonable-doubt-revenant': phoenixPortrait,     // Phoenix (doubt rises)
-    'brady-banshee': bansheePortrait,                 // Banshee (haunting disclosure)
-    'ineffective-assistance-shade': golemPortrait     // Golem (protection construct)
+    // Public defenders - will have 8 unique portraits
+    'gideon-crow': bradyBansheePortrait,
+    'miranda-hawk': bradyBansheePortrait,
+    'suppression-wraith': bradyBansheePortrait,
+    'probable-cause-kraken': bradyBansheePortrait,
+    'speedy-trial-sprite': bradyBansheePortrait,
+    'reasonable-doubt-revenant': bradyBansheePortrait,
+    'brady-banshee': bradyBansheePortrait,
+    'ineffective-assistance-shade': bradyBansheePortrait
   };
   
   // Debug logging to see what's being passed
