@@ -1,5 +1,5 @@
 import { makeStealthBot } from './stealthbot.js';
-import { getQuestion } from './qcoordinator.js';
+import { generateQuestion } from '../ai.js';
 import { storage } from '../storage.js';
 
 const presence = new Map();
@@ -9,6 +9,34 @@ const playerAnswers = new Map(); // Track player answers by match ID
 
 const SUBJECTS = ["Evidence","Contracts","Torts","Property","Civil Procedure","Constitutional Law","Criminal Law/Procedure"];
 SUBJECTS.forEach(s => queues[s] = []);
+
+// Fallback question function
+function getFallbackQuestion(subject) {
+  const fallbacks = {
+    "Evidence": {
+      stem: "Under Federal Rule of Evidence 403, evidence may be excluded if its probative value is substantially outweighed by what?",
+      choices: ["Any prejudicial effect", "The danger of unfair prejudice", "Confusion of the issues", "Misleading the jury"],
+      correctIndex: 1,
+      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice."
+    },
+    "Contracts": {
+      stem: "What is required for a valid offer under common law contract formation?",
+      choices: ["Present intent to contract", "Definite and certain terms", "Communication to offeree", "All of the above"],
+      correctIndex: 3,
+      explanation: "A valid offer requires present intent, definite terms, and communication to the offeree."
+    }
+  };
+  const fallback = fallbacks[subject] || fallbacks["Evidence"];
+  return {
+    qid: `fallback_${subject}_${Date.now()}`,
+    stem: fallback.stem,
+    choices: fallback.choices,
+    correctIndex: fallback.correctIndex,
+    explanation: fallback.explanation,
+    timeLimit: 20000,
+    deadlineTs: Date.now() + 20000
+  };
+}
 
 export function registerPresence(ws, payload) {
   const { username, profile } = payload;
@@ -291,15 +319,17 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     match.round = round;
     
     try {
-      console.log(`Getting question for round ${round} in ${subject}`);
-      const question = await getQuestion(subject, match.usedQuestions);
+      console.log(`Generating question for round ${round} in ${subject}`);
       
-      if (!question) {
-        console.error('No question returned for round', round);
-        continue;
+      let question;
+      try {
+        question = await generateQuestion(subject);
+        console.log(`OpenAI question generated: "${question.stem.substring(0, 50)}..."`);
+      } catch (aiError) {
+        console.log('OpenAI failed, using fallback question');
+        question = getFallbackQuestion(subject);
       }
       
-      console.log(`Question received: "${question.stem?.substring(0, 50)}..."`);
       match.usedQuestions.push(question.qid);
 
       const questionData = {
@@ -307,23 +337,20 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         round,
         stem: question.stem,
         choices: question.choices,
-        timeLimit: question.timeLimit || 20000,
-        deadlineTs: question.deadlineTs || (Date.now() + 20000)
+        timeLimit: question.timeLimit,
+        deadlineTs: question.deadlineTs
       };
 
-      console.log(`Sending question to human:`, {
-        qid: questionData.qid,
-        round: questionData.round,
-        stem: questionData.stem?.substring(0, 30) + '...',
-        choiceCount: questionData.choices?.length
-      });
+      console.log(`Broadcasting question to human player for round ${round}`);
+      console.log(`Question: "${question.stem.substring(0, 60)}..."`);
 
-      // Send to human
+      // Send to human player
       if (humanWs.readyState === 1) {
         humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
-        console.log('Question sent successfully to human');
+        console.log('Question sent successfully to human player');
       } else {
-        console.error('Human WebSocket not ready, readyState:', humanWs.readyState);
+        console.error('Human WebSocket disconnected, readyState:', humanWs.readyState);
+        break; // Exit duel if human disconnected
       }
 
       // Schedule bot answer
