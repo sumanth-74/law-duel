@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import path from "path";
 import { storage } from "./storage";
 import { insertUserSchema } from "@shared/schema";
-import { registerPresence, startMatchmaking } from "./services/matchmaker.js";
+import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard } from "./services/leaderboard.js";
 
@@ -102,11 +102,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
             break;
           
           case 'duel:answer':
-            // Handle duel answer submission
+            handleDuelAnswer(wss, ws, payload);
             break;
           
           case 'duel:hint':
-            // Handle hint request
+            handleHintRequest(wss, ws, payload);
             break;
           
           default:

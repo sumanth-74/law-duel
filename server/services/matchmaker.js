@@ -5,6 +5,7 @@ import { storage } from '../storage.js';
 const presence = new Map();
 const queues = Object.create(null);
 const activeMatches = new Map();
+const playerAnswers = new Map(); // Track player answers by match ID
 
 const SUBJECTS = ["Evidence","Contracts","Torts","Property","Civil Procedure","Constitutional Law","Criminal Law/Procedure"];
 SUBJECTS.forEach(s => queues[s] = []);
@@ -173,10 +174,25 @@ async function runDuel(wss, roomCode, players, subject) {
         }
       });
 
-      // Wait for answers or timeout
-      await new Promise(resolve => setTimeout(resolve, 21000));
+      // Wait for answers or timeout with proper answer collection
+      const answers = new Map();
+      playerAnswers.set(roomCode, answers);
       
-      // Process round results (simplified)
+      await new Promise(resolve => {
+        const timeout = setTimeout(resolve, 21000);
+        
+        // Check for all answers periodically
+        const checkInterval = setInterval(() => {
+          if (answers.size >= players.length) {
+            clearTimeout(timeout);
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+      });
+      
+      // Process round results with actual player answers
+      const roundAnswers = playerAnswers.get(roomCode) || new Map();
       const results = {
         qid: question.qid,
         correctIndex: question.correctIndex,
@@ -184,6 +200,29 @@ async function runDuel(wss, roomCode, players, subject) {
         results: [],
         scores: { player1: match.scores[0], player2: match.scores[1] }
       };
+      
+      // Process each player's answer
+      players.forEach((ws, index) => {
+        const playerId = ws.profile?.id || `player${index + 1}`;
+        const answer = roundAnswers.get(playerId);
+        
+        if (answer) {
+          const correct = answer.selectedIndex === question.correctIndex;
+          if (correct) {
+            match.scores[index]++;
+          }
+          
+          results.results.push({
+            playerId,
+            selectedIndex: answer.selectedIndex,
+            timeMs: answer.timeMs,
+            correct
+          });
+        }
+      });
+      
+      results.scores = { player1: match.scores[0], player2: match.scores[1] };
+      playerAnswers.delete(roomCode);
 
       players.forEach(ws => {
         if (ws.readyState === 1) {
@@ -267,10 +306,34 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         }
       }, botDecision.ansMs);
 
-      // Wait for round completion
-      await new Promise(resolve => setTimeout(resolve, 21000));
+      // Wait for human answer or timeout
+      const humanAnswerMap = new Map();
+      playerAnswers.set(roomCode, humanAnswerMap);
       
-      // Process results (simplified - bot gets its decision result)
+      await new Promise(resolve => {
+        const timeout = setTimeout(resolve, 21000);
+        
+        const checkInterval = setInterval(() => {
+          const playerId = humanWs.profile?.id || 'human';
+          if (humanAnswerMap.has(playerId)) {
+            clearTimeout(timeout);
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+      });
+      
+      // Process results with both human and bot answers
+      const roundAnswers = playerAnswers.get(roomCode) || new Map();
+      const humanPlayerId = humanWs.profile?.id || 'human';
+      const humanAnswer = roundAnswers.get(humanPlayerId);
+      
+      // Score human answer if provided
+      if (humanAnswer && humanAnswer.selectedIndex === question.correctIndex) {
+        match.scores[0]++;
+      }
+      
+      // Score bot answer
       if (botDecision.idx === question.correctIndex) {
         match.scores[1]++;
       }
@@ -289,6 +352,18 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         ],
         scores: { player1: match.scores[0], player2: match.scores[1] }
       };
+      
+      // Add human result if they answered
+      if (humanAnswer) {
+        results.results.unshift({
+          playerId: humanPlayerId,
+          selectedIndex: humanAnswer.selectedIndex,
+          timeMs: humanAnswer.timeMs,
+          correct: humanAnswer.selectedIndex === question.correctIndex
+        });
+      }
+      
+      playerAnswers.delete(roomCode);
 
       if (humanWs.readyState === 1) {
         humanWs.send(JSON.stringify({ type: 'duel:result', payload: results }));
@@ -315,4 +390,34 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   }
 
   activeMatches.delete(roomCode);
+}
+
+export function handleDuelAnswer(wss, ws, payload) {
+  const { qid, selectedIndex, timeMs } = payload;
+  const playerId = ws.profile?.id || ws.username || 'anonymous';
+  
+  // Find the match this player is in
+  for (const [roomCode, match] of activeMatches) {
+    if ((match.players && match.players.includes(ws)) || 
+        (match.humanWs && match.humanWs === ws)) {
+      
+      const answers = playerAnswers.get(roomCode);
+      if (answers) {
+        answers.set(playerId, {
+          qid,
+          selectedIndex,
+          timeMs: timeMs || Date.now(),
+          timestamp: Date.now()
+        });
+        
+        console.log(`Player ${playerId} answered question ${qid} in match ${roomCode}`);
+      }
+      break;
+    }
+  }
+}
+
+export function handleHintRequest(wss, ws, payload) {
+  // Implementation for hint requests can be added later
+  console.log('Hint request received:', payload);
 }
