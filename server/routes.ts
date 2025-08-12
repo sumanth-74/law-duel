@@ -9,7 +9,7 @@ import { registerSchema, loginSchema } from "@shared/schema";
 import { statsService } from "./services/statsService";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
-import { initializeLeaderboard } from "./services/leaderboard.js";
+import { initializeLeaderboard, updateBotActivity } from "./services/leaderboard.js";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';
@@ -46,6 +46,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setInterval(async () => {
     await realTimeLeaderboard.updateAndBroadcast();
   }, 30000); // Update every 30 seconds
+
+  // Periodically update bot activity for more dynamic leaderboard
+  setInterval(async () => {
+    await updateBotActivity();
+  }, 5 * 60 * 1000); // Update bot activity every 5 minutes
 
   // Authentication middleware
   function requireAuth(req: any, res: any, next: any) {

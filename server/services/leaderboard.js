@@ -15,13 +15,148 @@ export async function initializeLeaderboard() {
     try {
       await fs.access(LEADERBOARD_FILE);
       console.log('Leaderboard file found');
+      
+      // Check if we need to seed with bots for a more active appearance
+      const leaderboard = await readLeaderboard();
+      if (leaderboard.length < 5) {
+        await seedLeaderboardWithBots();
+      }
     } catch {
-      // Create initial empty leaderboard
-      await writeLeaderboard([]);
-      console.log('Created new leaderboard file');
+      // Create initial leaderboard with bot players
+      await seedLeaderboardWithBots();
+      console.log('Created new leaderboard file with initial bot players');
     }
   } catch (error) {
     console.error('Failed to initialize leaderboard:', error);
+  }
+}
+
+// Seed leaderboard with realistic bot players to make platform look active
+async function seedLeaderboardWithBots() {
+  const botPlayers = [
+    {
+      id: 'bot_alexandra_carter',
+      username: 'AlexandraCarter',
+      displayName: 'Alexandra Carter',
+      level: 15,
+      points: 2850,
+      totalWins: 47,
+      totalLosses: 8,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_marcus_wong',
+      username: 'MarcusWong',
+      displayName: 'Marcus Wong',
+      level: 12,
+      points: 2400,
+      totalWins: 38,
+      totalLosses: 12,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_sarah_patel',
+      username: 'SarahPatel',
+      displayName: 'Sarah Patel',
+      level: 18,
+      points: 3200,
+      totalWins: 56,
+      totalLosses: 9,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_david_torres',
+      username: 'DavidTorres',
+      displayName: 'David Torres',
+      level: 14,
+      points: 2650,
+      totalWins: 42,
+      totalLosses: 11,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_rachel_kim',
+      username: 'RachelKim',
+      displayName: 'Rachel Kim',
+      level: 16,
+      points: 2950,
+      totalWins: 49,
+      totalLosses: 7,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_james_richardson',
+      username: 'JamesRichardson',
+      displayName: 'James Richardson',
+      level: 11,
+      points: 2100,
+      totalWins: 32,
+      totalLosses: 15,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_emma_thompson',
+      username: 'EmmaThompson',
+      displayName: 'Emma Thompson',
+      level: 17,
+      points: 3100,
+      totalWins: 52,
+      totalLosses: 6,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_carlos_mendez',
+      username: 'CarlosMendez',
+      displayName: 'Carlos Mendez',
+      level: 13,
+      points: 2300,
+      totalWins: 35,
+      totalLosses: 13,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+
+  // Sort by points descending
+  botPlayers.sort((a, b) => b.points - a.points);
+  await writeLeaderboard(botPlayers);
+}
+
+// Periodically update bot activity to make them appear more active
+export async function updateBotActivity() {
+  try {
+    const leaderboard = await readLeaderboard();
+    let updated = false;
+    
+    for (const player of leaderboard) {
+      if (player.id.startsWith('bot_')) {
+        // Randomly update bot stats occasionally (10% chance)
+        if (Math.random() < 0.1) {
+          // Small random point increases
+          const pointIncrease = Math.floor(Math.random() * 50) + 10;
+          player.points += pointIncrease;
+          
+          // Sometimes add a win
+          if (Math.random() < 0.7) {
+            player.totalWins += 1;
+          } else {
+            player.totalLosses += 1;
+          }
+          
+          // Update level based on new points
+          player.level = Math.floor(player.points / 200) + 1;
+          player.lastActive = new Date().toISOString();
+          updated = true;
+        }
+      }
+    }
+    
+    if (updated) {
+      // Sort by points descending
+      leaderboard.sort((a, b) => b.points - a.points);
+      await writeLeaderboard(leaderboard);
+    }
+  } catch (error) {
+    console.error('Failed to update bot activity:', error);
   }
 }
 
@@ -69,7 +204,7 @@ export async function getLeaderboard(limit = 20) {
   try {
     const leaderboard = await readLeaderboard();
     return leaderboard
-      .filter(player => !player.id.startsWith('sb_')) // Exclude stealth bots
+      .filter(player => !player.id.startsWith('sb_')) // Exclude stealth bots (but keep display bots)
       .slice(0, limit);
   } catch (error) {
     console.error('Failed to get leaderboard:', error);

@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "id": "bot_sarah_patel",
+    "username": "SarahPatel",
+    "displayName": "Sarah Patel",
+    "level": 18,
+    "points": 3200,
+    "totalWins": 56,
+    "totalLosses": 9,
+    "lastActive": "2025-08-12T11:36:35.595Z"
+  },
+  {
+    "id": "bot_emma_thompson",
+    "username": "EmmaThompson",
+    "displayName": "Emma Thompson",
+    "level": 17,
+    "points": 3100,
+    "totalWins": 52,
+    "totalLosses": 6,
+    "lastActive": "2025-08-12T16:13:18.197Z"
+  },
+  {
+    "id": "bot_rachel_kim",
+    "username": "RachelKim",
+    "displayName": "Rachel Kim",
+    "level": 16,
+    "points": 2950,
+    "totalWins": 49,
+    "totalLosses": 7,
+    "lastActive": "2025-08-12T04:01:13.744Z"
+  },
+  {
+    "id": "bot_alexandra_carter",
+    "username": "AlexandraCarter",
+    "displayName": "Alexandra Carter",
+    "level": 15,
+    "points": 2850,
+    "totalWins": 47,
+    "totalLosses": 8,
+    "lastActive": "2025-08-12T09:33:48.592Z"
+  },
+  {
+    "id": "bot_david_torres",
+    "username": "DavidTorres",
+    "displayName": "David Torres",
+    "level": 14,
+    "points": 2650,
+    "totalWins": 42,
+    "totalLosses": 11,
+    "lastActive": "2025-08-12T04:14:02.161Z"
+  },
+  {
+    "id": "bot_marcus_wong",
+    "username": "MarcusWong",
+    "displayName": "Marcus Wong",
+    "level": 12,
+    "points": 2400,
+    "totalWins": 38,
+    "totalLosses": 12,
+    "lastActive": "2025-08-11T17:56:53.452Z"
+  },
+  {
+    "id": "bot_carlos_mendez",
+    "username": "CarlosMendez",
+    "displayName": "Carlos Mendez",
+    "level": 13,
+    "points": 2300,
+    "totalWins": 35,
+    "totalLosses": 13,
+    "lastActive": "2025-08-11T21:40:02.384Z"
+  },
+  {
+    "id": "bot_james_richardson",
+    "username": "JamesRichardson",
+    "displayName": "James Richardson",
+    "level": 11,
+    "points": 2100,
+    "totalWins": 32,
+    "totalLosses": 15,
+    "lastActive": "2025-08-12T11:00:41.152Z"
+  }
+]
