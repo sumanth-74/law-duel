@@ -8,51 +8,89 @@ export function getCharacterData() {
   }
 }
 
-// Premium character portraits - generating 31 new stunning images
+// Premium character portraits - each professionally crafted and unique
+// Corporate characters
+import dueDiligenceDragonPortrait from '@assets/generated_images/due_diligence_dragon_cd8c2457.png';
+import covenantGolemPortrait from '@assets/generated_images/covenant_golem_lawyer_efb72961.png';
+import prospectusPaladinPortrait from '@assets/generated_images/prospectus_paladin_angel_42222e5d.png';
+import disclosureDjinnPortrait from '@assets/generated_images/disclosure_djinn_lawyer_137f6cee.png';
+import antitrustAutomatonPortrait from '@assets/generated_images/antitrust_automaton_lawyer_3bfbdaae.png';
+import fiduciarySeraphPortrait from '@assets/generated_images/fiduciary_seraph_lawyer_f46d9c65.png';
+import takeoverTitanPortrait from '@assets/generated_images/takeover_titan_lawyer_cdc6929a.png';
+import complianceChimeraPortrait from '@assets/generated_images/compliance_chimera_lawyer_8ea79779.png';
+
+// White Collar Criminal specialists
+import insiderTradingHawkPortrait from '@assets/generated_images/insider_trading_hawk_5d10c62f.png';
+import subpoenaPhoenixPortrait from '@assets/generated_images/subpoena_phoenix_lawyer_aa447872.png';
+import obstructionMinotaurPortrait from '@assets/generated_images/obstruction_minotaur_lawyer_3835e0e5.png';
+import wiretapWraithPortrait from '@assets/generated_images/wiretap_wraith_lawyer_99e679fa.png';
+import forensicBasiliskPortrait from '@assets/generated_images/forensic_basilisk_lawyer_d6b67d26.png';
+import ricoRevenantPortrait from '@assets/generated_images/rico_revenant_lawyer_520cb5ab.png';
+import whistleblowerWyvernPortrait from '@assets/generated_images/whistleblower_wyvern_lawyer_8dbd162a.png';
+import fraudulentSchemeSpecterPortrait from '@assets/generated_images/fraudulent_scheme_specter_3464e696.png';
+
+// Constitutional scholars
+import strictScrutinySphinxPortrait from '@assets/generated_images/strict_scrutiny_sphinx_8d7f129c.png';
+import viewpointViperPortrait from '@assets/generated_images/viewpoint_viper_lawyer_54ee03ca.png';
+import incorporationOraclePortrait from '@assets/generated_images/incorporation_oracle_lawyer_e25d711f.png';
+import nondelegationNagaPortrait from '@assets/generated_images/nondelegation_naga_lawyer_c7b4c43f.png';
+import takingsTitanPortrait from '@assets/generated_images/takings_titan_lawyer_02a08667.png';
+import priorRestraintSorcererPortrait from '@assets/generated_images/prior_restraint_sorcerer_07016049.png';
+import equalProtectionPaladinPortrait from '@assets/generated_images/equal_protection_paladin_4ff6523d.png';
+import dormantCommerceGargoylePortrait from '@assets/generated_images/dormant_commerce_gargoyle_05bd6c5e.png';
+
+// Public defenders
+import gideonCrowPortrait from '@assets/generated_images/gideon_crow_lawyer_45b27d6b.png';
+import mirandaHawkPortrait from '@assets/generated_images/miranda_hawk_lawyer_a601bff6.png';
+import suppressionWraithPortrait from '@assets/generated_images/suppression_wraith_lawyer_d176d969.png';
+import probableCauseKrakenPortrait from '@assets/generated_images/probable_cause_kraken_4bc0708f.png';
+import speedyTrialSpritePortrait from '@assets/generated_images/speedy_trial_sprite_84c295c2.png';
+import reasonableDoubtRevenantPortrait from '@assets/generated_images/reasonable_doubt_revenant_bac9f508.png';
 import bradyBansheePortrait from '@assets/generated_images/banshee_lawyer_portrait_c0258cbe.png';
+import ineffectiveAssistanceShadePortrait from '@assets/generated_images/ineffective_assistance_shade_c0b0501e.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
-  // Temporarily using banshee for all while generating new portraits
+  // Premium character mappings - each with professionally crafted unique portrait
   const specificArchetypes = {
-    // Corporate characters - will have 8 unique professional portraits
-    'due-diligence-dragon': bradyBansheePortrait,
-    'covenant-golem': bradyBansheePortrait,
-    'prospectus-paladin': bradyBansheePortrait,
-    'disclosure-djinn': bradyBansheePortrait,
-    'antitrust-automaton': bradyBansheePortrait,
-    'fiduciary-seraph': bradyBansheePortrait,
-    'takeover-titan': bradyBansheePortrait,
-    'compliance-chimera': bradyBansheePortrait,
+    // Corporate characters - 8 unique business professionals
+    'due-diligence-dragon': dueDiligenceDragonPortrait,
+    'covenant-golem': covenantGolemPortrait,
+    'prospectus-paladin': prospectusPaladinPortrait,
+    'disclosure-djinn': disclosureDjinnPortrait,
+    'antitrust-automaton': antitrustAutomatonPortrait,
+    'fiduciary-seraph': fiduciarySeraphPortrait,
+    'takeover-titan': takeoverTitanPortrait,
+    'compliance-chimera': complianceChimeraPortrait,
     
-    // White Collar Criminal specialists - will have 8 unique portraits
-    'insider-trading-hawk': bradyBansheePortrait,
-    'subpoena-phoenix': bradyBansheePortrait,
-    'obstruction-minotaur': bradyBansheePortrait,
-    'wiretap-wraith': bradyBansheePortrait,
-    'forensic-basilisk': bradyBansheePortrait,
-    'rico-revenant': bradyBansheePortrait,
-    'whistleblower-wyvern': bradyBansheePortrait,
-    'fraudulent-scheme-specter': bradyBansheePortrait,
+    // White Collar Criminal specialists - 8 unique investigators/prosecutors
+    'insider-trading-hawk': insiderTradingHawkPortrait,
+    'subpoena-phoenix': subpoenaPhoenixPortrait,
+    'obstruction-minotaur': obstructionMinotaurPortrait,
+    'wiretap-wraith': wiretapWraithPortrait,
+    'forensic-basilisk': forensicBasiliskPortrait,
+    'rico-revenant': ricoRevenantPortrait,
+    'whistleblower-wyvern': whistleblowerWyvernPortrait,
+    'fraudulent-scheme-specter': fraudulentSchemeSpecterPortrait,
     
-    // Constitutional scholars - will have 8 unique portraits
-    'strict-scrutiny-sphinx': bradyBansheePortrait,
-    'viewpoint-viper': bradyBansheePortrait,
-    'incorporation-oracle': bradyBansheePortrait,
-    'nondelegation-naga': bradyBansheePortrait,
-    'takings-titan': bradyBansheePortrait,
-    'prior-restraint-sorcerer': bradyBansheePortrait,
-    'equal-protection-paladin': bradyBansheePortrait,
-    'dormant-commerce-gargoyle': bradyBansheePortrait,
+    // Constitutional scholars - 8 unique academic experts
+    'strict-scrutiny-sphinx': strictScrutinySphinxPortrait,
+    'viewpoint-viper': viewpointViperPortrait,
+    'incorporation-oracle': incorporationOraclePortrait,
+    'nondelegation-naga': nondelegationNagaPortrait,
+    'takings-titan': takingsTitanPortrait,
+    'prior-restraint-sorcerer': priorRestraintSorcererPortrait,
+    'equal-protection-paladin': equalProtectionPaladinPortrait,
+    'dormant-commerce-gargoyle': dormantCommerceGargoylePortrait,
     
-    // Public defenders - will have 8 unique portraits
-    'gideon-crow': bradyBansheePortrait,
-    'miranda-hawk': bradyBansheePortrait,
-    'suppression-wraith': bradyBansheePortrait,
-    'probable-cause-kraken': bradyBansheePortrait,
-    'speedy-trial-sprite': bradyBansheePortrait,
-    'reasonable-doubt-revenant': bradyBansheePortrait,
+    // Public defenders - 8 unique justice advocates
+    'gideon-crow': gideonCrowPortrait,
+    'miranda-hawk': mirandaHawkPortrait,
+    'suppression-wraith': suppressionWraithPortrait,
+    'probable-cause-kraken': probableCauseKrakenPortrait,
+    'speedy-trial-sprite': speedyTrialSpritePortrait,
+    'reasonable-doubt-revenant': reasonableDoubtRevenantPortrait,
     'brady-banshee': bradyBansheePortrait,
-    'ineffective-assistance-shade': bradyBansheePortrait
+    'ineffective-assistance-shade': ineffectiveAssistanceShadePortrait
   };
   
   // Debug logging to see what's being passed
