@@ -8,10 +8,11 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/not-found";
+import CharacterCreation from "@/pages/CharacterCreation";
 import { Loader2 } from "lucide-react";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -28,9 +29,15 @@ function Router() {
     return <Landing />;
   }
 
+  // If user needs to create character, show character creation
+  if (user && (!user.displayName || !user.avatarData)) {
+    return <CharacterCreation />;
+  }
+
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/character" component={CharacterCreation} />
       <Route component={NotFound} />
     </Switch>
   );

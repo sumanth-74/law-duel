@@ -49,19 +49,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   }
 
-  // Authentication routes
+  // Simple username-only registration
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const userData = registerSchema.parse(req.body);
-      const { confirmPassword, ...userInsert } = userData;
+      const { username } = req.body;
+      
+      if (!username || typeof username !== 'string' || username.trim().length < 2) {
+        return res.status(400).json({ message: "Username must be at least 2 characters" });
+      }
+
+      const cleanUsername = username.trim();
       
       // Check if username is taken
-      const existing = await storage.getUserByUsername(userData.username);
+      const existing = await storage.getUserByUsername(cleanUsername);
       if (existing) {
         return res.status(409).json({ message: "Username already taken" });
       }
 
-      const user = await storage.createUser(userInsert);
+      // Create user with default avatar
+      const newUser = {
+        username: cleanUsername,
+        displayName: cleanUsername,
+        password: "temp", // We'll fix this by making password optional later
+        avatarData: {
+          archetype: "novice-scholar",
+          accessories: [],
+          level: 1
+        }
+      };
+
+      const user = await storage.createUser(newUser);
       
       // Auto-login after registration
       (req.session as any).userId = user.id;
@@ -70,7 +87,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { password, ...userResponse } = user;
       res.json(userResponse);
     } catch (error: any) {
-      res.status(400).json({ message: "Invalid user data", error: error.message });
+      console.error("Registration error:", error);
+      res.status(400).json({ message: "Failed to create account", error: error.message });
     }
   });
 
