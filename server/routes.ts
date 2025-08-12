@@ -54,6 +54,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Fresh question generation endpoint - always generates new questions
+  app.get("/question", async (req, res) => {
+    // Force no-cache headers
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    
+    try {
+      const requestedSubject = req.query.subject;
+      const subjects = ['Civil Procedure', 'Constitutional Law', 'Contracts', 'Criminal Law', 'Evidence', 'Property', 'Torts'];
+      
+      // Pick random subject if not specified or if "Mix" requested
+      const subject = (requestedSubject && subjects.includes(requestedSubject as string)) 
+        ? requestedSubject as string 
+        : subjects[Math.floor(Math.random() * subjects.length)];
+      
+      // Generate fresh question using the proven system
+      const { generateFreshQuestion } = await import("./services/robustGenerator.js");
+      const question = await generateFreshQuestion(subject);
+      
+      // Don't leak the answer to client
+      const { correctIndex, ...safeQuestion } = question;
+      const item = {
+        ...safeQuestion,
+        timeLimitSec: 60, // Always 60 seconds
+        id: question.qid
+      };
+      
+      console.log(`📤 Serving fresh question: ${item.id} for ${subject}`);
+      return res.json({ item });
+      
+    } catch (error) {
+      console.error("Question generation failed:", error);
+      return res.status(500).json({ 
+        error: "Failed to generate fresh question",
+        message: error.message 
+      });
+    }
+  });
+
   // Initialize services
   await initializeQuestionCoordinator();
   await initializeLeaderboard();

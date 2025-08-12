@@ -1,0 +1,129 @@
+1) Prove where the bug is (30-sec test)
+Open your app’s /question JSON endpoint directly in the browser twice (or curl it).
+
+If the JSON stem changes each refresh → backend is fine; the UI/duel is caching/reusing.
+
+If the JSON is identical → backend is serving the same thing; fix 2 or 3 below.
+
+2) Kill client caching & stale state
+In the client fetch where you load a question (Live Duel, Practice, etc.):
+
+ts
+Copy
+Edit
+// always-bust cache and force a new question
+const url = `/question${subject ? `?subject=${encodeURIComponent(subject)}` : ""}&ts=${Date.now()}`;
+const res = await fetch(url, { cache: "no-store", headers: { "Cache-Control": "no-cache" } });
+const { item } = await res.json();
+setQuestion(item);      // <- ensure you overwrite old state
+If you have a service worker/PWA, bypass cache for questions:
+
+js
+Copy
+Edit
+// service-worker.js
+self.addEventListener('fetch', (e) => {
+  if (new URL(e.request.url).pathname.startsWith('/question')) {
+    e.respondWith(fetch(e.request)); // network-only for questions
+    return;
+  }
+  // ... your normal caching strategy
+});
+Also: on “Rematch,” create a new duel id—don’t reuse the prior duel/session object.
+
+3) Make the server refuse to repeat
+Add a tiny per-user no-repeat window and auto-generate when the pool is small.
+
+js
+Copy
+Edit
+// memory guard (swap for Redis later)
+const recentByUser = new Map(); // userId -> Set of last N item ids
+const NO_REPEAT = 20;           // don’t repeat the last 20 items per user
+
+function remember(userId, itemId){
+  if (!recentByUser.has(userId)) recentByUser.set(userId, new Set());
+  const s = recentByUser.get(userId); s.add(itemId);
+  if (s.size > NO_REPEAT) s.delete([...s][0]);
+}
+
+function isRecent(userId, itemId){
+  const s = recentByUser.get(userId); return s ? s.has(itemId) : false;
+}
+In your serve route:
+
+js
+Copy
+Edit
+// GET /bank/serve?mode=ranked|practice&subject=optional
+const userId = req.user.id;
+
+// 1) Try to pick a bank item that the user hasn’t seen recently
+let item = await db.oneOrNone(`
+  WITH seen AS (
+    SELECT item_id FROM item_attempts
+    WHERE user_id = $1 AND created_at >= now() - interval '120 days'
+  )
+  SELECT i.* FROM items i
+  LEFT JOIN seen ON seen.item_id = i.id
+  WHERE i.status = 'live'
+    AND i.subject = ANY($2)
+    AND seen.item_id IS NULL
+  ORDER BY random()
+  LIMIT 1
+`, [userId, subjects]);
+
+// 2) If none (tiny pool), **generate on the fly** and save
+if (!item) {
+  const subj = requested || randomSubject();
+  const topic = randomTopic(subj);
+  const rule  = ruleHint(subj, topic);
+  item = await generateFreshItem({ subject: subj, topic, rule }); // calls OpenAI
+  await saveItem(item); // keep as draft/approved; it’s still unique for this user now
+}
+
+// 3) Don’t leak the answer; mark as seen
+remember(userId, item.id);
+const { correct_index, ...safe } = item;
+res.json({ item: { ...safe, timeLimitSec: 60 } });
+4) Force 60 seconds, always
+Set it server-side so the UI can’t drift:
+
+js
+Copy
+Edit
+item.timeLimitSec = 60; // before sending to client
+5) Make generation actually produce new text each call
+If you’re still on the same stem, your generator isn’t being hit or it’s deterministic. Ensure:
+
+temperature: 0.6–0.7
+
+add a nonce in the prompt (Freshness token: ${Date.now()}-${Math.random()}; do not mention it)
+
+retry on 429/5xx with exponential backoff
+
+de-dupe by hashing stems and rejecting repeats before save/serve
+
+Example inside your generator:
+
+js
+Copy
+Edit
+const nonce = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+const prompt = `... Output ONLY JSON. Freshness token: ${nonce} (do not mention it).`;
+
+const resp = await openai.responses.create({
+  model: "gpt-4o-mini",
+  input: prompt,
+  temperature: 0.65,
+  response_format: { type: "json_schema", json_schema: MBE_SCHEMA }
+});
+6) Quick sanity checklist
+Hitting /question in a new tab twice → two different stems, timeLimitSec: 60.
+
+Doing a “Rematch” creates a new duel record and calls /question again.
+
+Your serve route excludes items this user saw in the last 120 days (or last 20 items via memory guard).
+
+Browser Network tab shows Cache-Control: no-store and the URL has ?ts=<timestamp>.
+
