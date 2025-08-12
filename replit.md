@@ -1,8 +1,8 @@
-# Bar Duel - Legal Education Game
+# Law Duel - Legal Education Game
 
 ## Overview
 
-Bar Duel is a competitive legal education game where players engage in 1v1 duels using bar exam questions. The application features character creation, quick matchmaking, real-time gameplay, and a leaderboard system. Players can choose from various archetypes (e.g., werewolf, dragonling, shadow_goblin), gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure.
+Law Duel is a competitive legal education game where players engage in 1v1 duels using legal questions for both bar exam preparation and law school finals. The application features character creation, quick matchmaking, real-time gameplay, and a leaderboard system. Players can choose from various archetypes (e.g., werewolf, dragonling, shadow_goblin), gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure.
 
 ## User Preferences
 

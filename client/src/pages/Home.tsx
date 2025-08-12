@@ -230,7 +230,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container max-w-4xl mx-auto py-8 px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -241,8 +241,8 @@ export default function Home() {
               size={64}
             />
             <div>
-              <h1 className="font-cinzel text-2xl font-bold">{character.displayName}</h1>
-              <p className="text-muted">Level {character.level} • {character.points} Points</p>
+              <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
+              <p className="text-purple-400">Level {character.level} • {character.points} Points</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -250,6 +250,7 @@ export default function Home() {
               onClick={() => setShowCharacterCreation(true)} 
               variant="outline" 
               size="sm"
+              className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20 hover:border-purple-400"
             >
               Edit Character
             </Button>
@@ -257,7 +258,7 @@ export default function Home() {
               onClick={() => logout.mutate()} 
               variant="outline" 
               size="sm"
-              className="text-red-400 hover:text-red-300"
+              className="border-red-500/50 text-red-400 hover:bg-red-500/20 hover:border-red-400"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
@@ -271,11 +272,11 @@ export default function Home() {
             {gameMode === 'menu' && (
               <>
                 {/* Quick Match */}
-                <Card className="panel">
+                <Card className="bg-black/40 border-purple-500/20">
                   <CardHeader>
-                    <CardTitle className="font-cinzel text-xl flex items-center gap-2">
+                    <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
                       ⚔️ Quick Match
-                      <Badge variant="secondary">Find Opponent</Badge>
+                      <Badge variant="secondary" className="bg-purple-600/30 text-purple-200 border-purple-500/50">Find Opponent</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -334,18 +335,18 @@ export default function Home() {
                       </Select>
                     </div>
                     
-                    <Button onClick={handleStartBotGame} className="w-full" size="lg">
+                    <Button onClick={handleStartBotGame} className="w-full bg-purple-600 hover:bg-purple-700 border-purple-500" size="lg">
                       Find Match
                     </Button>
                   </CardContent>
                 </Card>
 
                 {/* Play with Friend */}
-                <Card className="panel">
+                <Card className="bg-black/40 border-purple-500/20">
                   <CardHeader>
-                    <CardTitle className="font-cinzel text-xl flex items-center gap-2">
+                    <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
                       👥 Play with Friend
-                      <Badge variant="default">Ranked</Badge>
+                      <Badge variant="default" className="bg-purple-600/30 text-purple-200 border-purple-500/50">Ranked</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -377,7 +378,7 @@ export default function Home() {
                     
                     <Button 
                       onClick={handleStartFriendGame} 
-                      className="w-full" 
+                      className="w-full bg-purple-600 hover:bg-purple-700 border-purple-500" 
                       size="lg"
                       disabled={!gameSettings.friendUsername.trim()}
                     >

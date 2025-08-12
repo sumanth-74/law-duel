@@ -55,7 +55,7 @@ export default function Login() {
       <Card className="w-full max-w-md bg-black/40 border-purple-500/20">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-cinzel text-purple-300">
-            {mode === 'login' ? 'Enter the Bar' : 'Join the Duel'}
+            {mode === 'login' ? 'Enter Law Duel' : 'Join Law Duel'}
           </CardTitle>
           <p className="text-sm text-slate-400">
             {mode === 'login' ? 'Login to your account' : 'Create your legal warrior'}
