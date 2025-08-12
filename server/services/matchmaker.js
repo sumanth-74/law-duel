@@ -85,6 +85,12 @@ export function startMatchmaking(wss, ws, payload) {
     const idx = queue.indexOf(entry);
     if (idx >= 0) queue.splice(idx, 1);
     
+    // Check if client is still connected before starting duel
+    if (ws.readyState !== 1) {
+      console.log('❌ Client disconnected during queue wait - aborting match');
+      return;
+    }
+    
     console.log(`Starting bot match for player in ${subject}`);
     
     // Spawn stealth bot
@@ -307,6 +313,12 @@ async function runDuel(wss, roomCode, players, subject) {
 async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   console.log(`Starting duel ${roomCode} - Human WS state: ${humanWs.readyState}`);
   
+  // Final connection check before starting the duel
+  if (humanWs.readyState !== 1) {
+    console.log('❌ Human WebSocket disconnected before duel start - canceling');
+    return;
+  }
+  
   const match = {
     roomCode,
     humanWs,
@@ -319,23 +331,32 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 
   activeMatches.set(roomCode, match);
   
-  // Wait for stable client connection before starting OpenAI generation
-  console.log('Ensuring stable client connection for OpenAI delivery...');
+  // Ensure the human WebSocket is connected and ready before starting duel
+  console.log('Verifying human player connection before starting OpenAI generation...');
   
-  // Wait for the client to be properly connected to the duel WebSocket
-  let connectionAttempts = 0;
-  while (connectionAttempts < 10) {
-    const connectedClients = Array.from(wss.clients).filter(client => client.readyState === 1).length;
-    if (connectedClients > 0) {
-      console.log(`Client connection confirmed (${connectedClients} active clients)`);
-      break;
-    }
-    await new Promise(resolve => setTimeout(resolve, 500));
-    connectionAttempts++;
+  if (humanWs.readyState !== 1) {
+    console.log('❌ Human WebSocket not ready - aborting duel');
+    return;
   }
   
-  // Additional buffer to ensure connection is stable
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  // Send duel start notification to ensure client is ready
+  humanWs.send(JSON.stringify({ 
+    type: 'duel:start', 
+    payload: { 
+      roomCode, 
+      subject,
+      opponent: {
+        id: bot.id,
+        username: bot.username,
+        level: bot.level,
+        avatarData: bot.avatarData
+      }
+    } 
+  }));
+  
+  // Give client a moment to process the duel start and prepare for questions
+  console.log('Waiting for client to prepare for OpenAI questions...');
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   for (let round = 1; round <= 7; round++) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
@@ -369,18 +390,18 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       console.log(`Broadcasting question to human player for round ${round}`);
       console.log(`Question: "${question.stem.substring(0, 60)}..."`);
 
-      // Broadcast to all connected clients for this room
-      console.log('Broadcasting question to all clients...');
+      // Send question specifically to the human player (more targeted than broadcast)
+      console.log(`Sending OpenAI question directly to human player: ${question.qid}`);
       let questionSent = false;
       
-      wss.clients.forEach(client => {
-        if (client.readyState === 1) {
-          const questionMessage = JSON.stringify({ type: 'duel:question', payload: questionData });
-          client.send(questionMessage);
-          questionSent = true;
-          console.log('Question broadcast to connected client');
-        }
-      });
+      if (humanWs.readyState === 1) {
+        const questionMessage = JSON.stringify({ type: 'duel:question', payload: questionData });
+        humanWs.send(questionMessage);
+        questionSent = true;
+        console.log(`✅ OpenAI question sent directly to human: ${question.qid}`);
+      } else {
+        console.log('❌ Human WebSocket disconnected, cannot send OpenAI question');
+      }
       
       if (!questionSent) {
         console.error('❌ No active WebSocket connections found - client disconnected during OpenAI generation');

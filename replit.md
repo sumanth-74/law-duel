@@ -76,8 +76,8 @@ The application uses a monorepo structure with shared types and schemas between 
 
 ### Error Handling and Resilience
 - **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control
-- **Fresh Duel Questions**: Implemented `generateFreshQuestion()` function that bypasses cache and calls OpenAI API directly for each duel round (Updated 2025-08-12)
-- **Question Mixing System**: Comprehensive topic variety with 6-8 topics per subject, random selection, and OpenAI generation working successfully (Updated 2025-08-12)
+- **Fresh Duel Questions**: OpenAI generation confirmed working - generates questions like `fresh_openai_1755027766896_aouqoebfa` with professional legal analysis (Updated 2025-08-12)
+- **Question Delivery**: Server successfully delivers OpenAI questions when clients maintain persistent WebSocket connections throughout the generation process (Updated 2025-08-12)
 - **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
 - **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
 - **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal
@@ -91,8 +91,9 @@ The application uses a monorepo structure with shared types and schemas between 
 ### Third-Party Services
 - **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **FULLY OPERATIONAL** (Updated 2025-08-12)
 - **Question Generation**: Answer randomization working correctly - questions generated with topics like "Separation of Powers", "Privacy Torts", "Hearsay", "Future Interests"
-- **Fresh Question System**: OpenAI generates unique questions with IDs like `fresh_openai_1755027472588_siy0r7bm6` for each duel round
-- **Topic Variety**: 6-8 topics per subject ensuring diverse question types across all legal areas
+- **Fresh Question System**: OpenAI generates unique questions with IDs like `fresh_openai_1755027766896_aouqoebfa` for each duel round
+- **Topic Variety**: Property (Covenants), Torts (Defamation), Evidence (Judicial Notice), Constitutional Law (Separation of Powers) - diverse topics across all subjects
+- **Connection Management**: Successfully delivers OpenAI questions when clients maintain persistent connections during generation
 - **Neon Database**: PostgreSQL hosting service for production data storage
 
 ### UI and Styling Libraries

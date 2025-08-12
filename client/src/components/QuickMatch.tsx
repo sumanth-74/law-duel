@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface QuickMatchProps {
-  onStartMatch: (subject: string, matchData?: any) => void;
+  onStartMatch: (subject: string, matchData?: any, websocket?: WebSocket) => void;
 }
 
 interface QueueState {
@@ -82,8 +82,8 @@ export function QuickMatch({ onStartMatch }: QuickMatchProps) {
           console.log('Duel starting!', message.payload);
           clearInterval(interval);
           setQueueState({ isQueuing: false, timeElapsed: 0 });
-          // Don't close websocket - let DuelArena handle its own connection
-          onStartMatch(subject, message.payload);
+          // Keep the WebSocket connection alive and pass it to the duel
+          onStartMatch(subject, message.payload, websocket);
         }
       } catch (error) {
         console.error('Failed to parse matchmaking message:', error);

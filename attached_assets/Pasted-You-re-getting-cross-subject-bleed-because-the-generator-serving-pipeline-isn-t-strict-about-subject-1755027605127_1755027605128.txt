@@ -1,0 +1,226 @@
+You’re getting cross-subject bleed because the generator/serving pipeline isn’t strict about subject tags. Lock it down with a “Subject Integrity Guard”: normalize the subject, force the model to stick to it, validate the draft, and only then save/serve.
+
+Here’s a copy-paste patch you can give Replit.
+
+1) Canonical subjects + normalizer (single source of truth)
+js
+Copy
+Edit
+// subjects.js
+export const SUBJECTS = {
+  "Civ Pro": ["Subject Matter Jurisdiction","Personal Jurisdiction","Erie","Preclusion","Venue","Erie","Joinder/Impleader"],
+  "Con Law": ["Speech","Equal Protection","Due Process","Commerce Clause","State Action","Standing","Takings"],
+  "Contracts": ["Offer/Acceptance","Consideration","Defenses","Parol Evidence","UCC §2—Formation","UCC §2—Risk of Loss","Warranties/Remedies"],
+  "Crim": ["Homicide","Accomplice/Pinkerton","Felony Murder","Fourth Amendment","Fifth/Miranda","Sixth/Confrontation"],
+  "Evidence": ["Relevance 401/403","Character 404/405","Impeachment 607/613","Hearsay 801–807","Privileges","Authentication/Best Evidence","Experts 702–705"],
+  "Property": ["Estates/Future Interests","RAP","Recording Acts","Adverse Possession","Easements/Covenants","Landlord–Tenant","Mortgages"],
+  "Torts": ["Negligence","Strict Liability","Products Liability","Defamation","Privacy/IIED/NIED","Vicarious Liability"]
+};
+
+const ALIASES = new Map([
+  ["civil procedure","Civ Pro"],["civpro","Civ Pro"],["civil-pro","Civ Pro"],
+  ["constitutional law","Con Law"],["conlaw","Con Law"],
+  ["criminal law","Crim"],["criminal procedure","Crim"],["crim law","Crim"],["crim pro","Crim"],
+  ["real property","Property"],["prop","Property"]
+]);
+
+export function normalizeSubject(input) {
+  if (!input) return null;
+  const s = String(input).trim();
+  if (SUBJECTS[s]) return s;
+  const lower = s.toLowerCase();
+  if (ALIASES.has(lower)) return ALIASES.get(lower);
+  // Last resort: case-insensitive exact match
+  const key = Object.keys(SUBJECTS).find(k => k.toLowerCase() === lower);
+  return key || null;
+}
+DB hardening (optional but ideal):
+
+sql
+Copy
+Edit
+ALTER TABLE items
+  ADD CONSTRAINT items_subject_enum
+  CHECK (subject IN ('Civ Pro','Con Law','Contracts','Crim','Evidence','Property','Torts'));
+2) Generator: force the requested subject + retry if mismatch
+js
+Copy
+Edit
+// generator.js
+import OpenAI from "openai";
+import crypto from "crypto";
+import { SUBJECTS, normalizeSubject } from "./subjects.js";
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+function pickTopic(subject) {
+  const list = SUBJECTS[subject];
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// quick heuristic classifier to sanity-check the item really belongs to the subject
+function classifySubjectHeuristic(item) {
+  const t = `${item.stem} ${item.explanationLong} ${JSON.stringify(item.ruleRefs||[])}`.toLowerCase();
+  if (/(fre|rule 401|rule 403|hearsay|801|802|803|impeachment|best evidence)/.test(t)) return "Evidence";
+  if (/(ucc|§2-|2-2\d\d|merchant|goods|perfect tender|risk of loss)/.test(t)) return "Contracts";
+  if (/(rap\b|recording act|bona fide purchaser|easement|covenant|mortgage)/.test(t)) return "Property";
+  if (/(summary judgment|personal jurisdiction|subject matter jurisdiction|er ie|diversity|venue|joinder|impleader|rule 11|rule 12)/.test(t)) return "Civ Pro";
+  if (/(first amendment|equal protection|due process|commerce clause|state action|takings)/.test(t)) return "Con Law";
+  if (/(mens rea|felony murder|accomplice|pinkerton|search|seizure|warrant|miranda|lineup)/.test(t)) return "Crim";
+  if (/(negligence|duty|breach|causation|strict liability|defamation|ii ed|products liability)/.test(t)) return "Torts";
+  return null;
+}
+
+const MBE_SCHEMA = {
+  name: "MBEItem",
+  schema: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      subject: { type: "string" },
+      topic: { type: "string" },
+      subtopic: { type: "string" },
+      stem: { type: "string" },
+      choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+      correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+      optionRationales: { type: "object" },
+      explanationLong: { type: "string" },
+      ruleRefs: { type: "array", items: { type: "string" } },
+      difficultySeed: { type: "string", enum: ["easy","medium","hard"] },
+      timeLimitSec: { type: "integer" },
+      tags: { type: "array", items: { type: "string" } },
+      license: { type: "string" },
+      status: { type: "string" },
+      authorNote: { type: "string" }
+    },
+    required: ["subject","topic","stem","choices","correctIndex","optionRationales","explanationLong","ruleRefs","difficultySeed","license","status"],
+    additionalProperties: false
+  },
+  strict: true
+};
+
+export async function generateMBEItem({ subject: rawSubject }) {
+  const subject = normalizeSubject(rawSubject) || Object.keys(SUBJECTS)[Math.floor(Math.random()*7)];
+  const topic = pickTopic(subject);
+
+  const prompt = `
+You are drafting an original **MBE-style** question for the subject **${subject}** ONLY.
+- The issue tested **must** be squarely within **${subject}**; do not rely on other subjects.
+- Topic focus: **${topic}**. If you must mention other law, keep it minimal and not outcome-determinative.
+- Single best answer, exactly 4 options (A–D). Fact pattern 120–180 words.
+- Include rationales for each option and a 3–6 sentence explanation stating the controlling rule.
+- National law only (FRE/FRCP/UCC Art. 2/federal con law as relevant to ${subject}). 
+- No “all/none of the above.” Output **ONLY** JSON matching our schema. Set "subject"="${subject}" and "topic"="${topic}".`;
+
+  const resp = await openai.responses.create({
+    model: "gpt-4o-mini",
+    input: prompt,
+    response_format: { type: "json_schema", json_schema: MBE_SCHEMA }
+  });
+
+  const item = JSON.parse(resp.output_text);
+  // enforce canonical labels
+  item.subject = subject;
+  item.topic = item.topic || topic;
+  item.id = item.id || `${subject.slice(0,2).toUpperCase()}-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`;
+  item.license = "© Law Duel, original";
+  item.status = "draft";
+  return item;
+}
+
+// wrapper with up to 3 retries if the heuristic says the content isn't in-subject
+export async function generateWithIntegrity({ subject }) {
+  const want = normalizeSubject(subject);
+  for (let i=0;i<3;i++){
+    const draft = await generateMBEItem({ subject: want });
+    const guess = classifySubjectHeuristic(draft);
+    if (!want || !guess || guess === want) return draft;
+  }
+  throw new Error("Subject integrity check failed after 3 attempts");
+}
+3) Validate & reject any off-subject item before saving/serving
+js
+Copy
+Edit
+// validate.js (add this check)
+import Ajv from "ajv";
+import { normalizeSubject } from "./subjects.js";
+
+const ajv = new Ajv({ allErrors: true, strict: true });
+// ... your existing schema compile to validateItem
+
+export function subjectIntegrityCheck(item, requestedSubject) {
+  if (!requestedSubject) return null; // nothing to enforce if caller didn't specify
+  const want = normalizeSubject(requestedSubject);
+  if (!want) return "Unknown subject requested";
+  if (item.subject !== want) return `Item subject '${item.subject}' != requested '${want}'`;
+  return null;
+}
+Use it in your route:
+
+js
+Copy
+Edit
+// routes/generate.js
+import { generateWithIntegrity } from "../generator.js";
+import { validateItem, subjectIntegrityCheck, basicContentChecks } from "../validate.js";
+import { saveItem } from "../db.js";
+
+r.get("/v1/items/generate-random", async (req, res) => {
+  try {
+    const subject = req.query.subject; // optional
+    const draft = await generateWithIntegrity({ subject });
+
+    if (!validateItem(draft)) return res.status(422).json({ error: "Invalid schema" });
+    const err1 = basicContentChecks(draft);
+    if (err1) return res.status(422).json({ error: err1 });
+    const err2 = subjectIntegrityCheck(draft, subject);
+    if (err2) return res.status(422).json({ error: err2 });
+
+    await saveItem(draft);
+    const { correctIndex, ...safe } = draft;
+    res.json({ item: safe });
+  } catch (e) {
+    res.status(500).json({ error: e.message || "generation failed" });
+  }
+});
+4) Serving: never “fall back to mix” when a subject is requested
+If a user asked for Evidence, do not fall back to random/mix on empty results. Fail loudly instead.
+
+js
+Copy
+Edit
+// routes/bank.js (serve)
+import { normalizeSubject } from "../subjects.js";
+
+r.get("/bank/serve", async (req, res) => {
+  const raw = req.query.subject;
+  const requested = raw ? normalizeSubject(raw) : null;
+  const subjects = requested ? [requested]
+    : (req.query.subjects ? req.query.subjects.split(",").map(normalizeSubject).filter(Boolean)
+      : Object.keys(SUBJECTS));
+
+  // if the client asked for a specific subject but normalization failed → 400
+  if (raw && !requested) return res.status(400).json({ error: `Unknown subject '${raw}'` });
+
+  // ... your existing SQL WITH seen ... WHERE i.subject = ANY($2)
+  // IMPORTANT: if requested, do NOT broaden to ANY(all) as a fallback. Return 404 instead.
+});
+5) UI: pass a canonical subject or don’t pass at all
+Dropdown options exactly: Civ Pro, Con Law, Contracts, Crim, Evidence, Property, Torts.
+
+When user selects “Mix,” omit subject entirely (or send subjects= list).
+
+Never send free-form text for subject.
+
+6) Acceptance checks (run now)
+Request GET /v1/items/generate-random?subject=Evidence 10× → every item returns with subject: "Evidence"; spot-check explanations mention Evidence concepts (e.g., FRE numbers).
+
+Request GET /bank/serve?subject=Contracts 5× → all served items have subject = Contracts; if the bank is empty for Contracts, you get 404, not a Torts or Evidence question.
+
+Try subject=Criminal Procedure → server normalizes to Crim and stays in that domain.
+
+Seed one obviously cross-subject draft (e.g., a Torts negligence Q mislabeled as Contracts) → subjectIntegrityCheck rejects it with 422.
+
+7) Extra guard (optional, stronger)
+Create a tiny subject classifier endpoint using your own bank as training data (bag-of-words or a simple linear model) and use it instead of the heuristic. Only accept drafts whose predicted subject == requested subject with confidence ≥ 0.8.
