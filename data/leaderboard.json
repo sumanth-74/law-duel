@@ -34,20 +34,30 @@
     "username": "AlexandraCarter",
     "displayName": "Alexandra Carter",
     "level": 15,
-    "points": 2917,
-    "totalWins": 49,
+    "points": 2959,
+    "totalWins": 50,
     "totalLosses": 9,
-    "lastActive": "2025-08-12T20:18:04.695Z"
+    "lastActive": "2025-08-12T20:56:16.685Z"
   },
   {
     "id": "bot_david_torres",
     "username": "DavidTorres",
     "displayName": "David Torres",
     "level": 14,
-    "points": 2715,
-    "totalWins": 44,
+    "points": 2734,
+    "totalWins": 45,
     "totalLosses": 11,
-    "lastActive": "2025-08-12T19:08:37.003Z"
+    "lastActive": "2025-08-12T20:56:16.685Z"
+  },
+  {
+    "id": "bot_carlos_mendez",
+    "username": "CarlosMendez",
+    "displayName": "Carlos Mendez",
+    "level": 13,
+    "points": 2488,
+    "totalWins": 39,
+    "totalLosses": 13,
+    "lastActive": "2025-08-12T20:51:16.687Z"
   },
   {
     "id": "bot_marcus_wong",
@@ -58,16 +68,6 @@
     "totalWins": 40,
     "totalLosses": 12,
     "lastActive": "2025-08-12T19:47:06.344Z"
-  },
-  {
-    "id": "bot_carlos_mendez",
-    "username": "CarlosMendez",
-    "displayName": "Carlos Mendez",
-    "level": 13,
-    "points": 2464,
-    "totalWins": 38,
-    "totalLosses": 13,
-    "lastActive": "2025-08-12T20:28:56.790Z"
   },
   {
     "id": "bot_james_richardson",

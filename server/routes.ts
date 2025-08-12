@@ -782,6 +782,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       .digest("hex");
   }
 
+  // Public test endpoint for duel questions (no auth required)
+  app.post("/test/duel-next", async (req, res) => {
+    console.log('🎯 TEST DUEL/NEXT endpoint called');
+    res.setHeader('Content-Type', 'application/json');
+    
+    try {
+      // Pick a random subject
+      const subjects = ['Evidence', 'Contracts', 'Criminal Law', 'Torts'];
+      const subject = subjects[Math.floor(Math.random() * subjects.length)];
+      
+      // Generate fresh question using proven system
+      const { generateFreshQuestion } = await import('./services/robustGenerator.js');
+      const item = await generateFreshQuestion(subject);
+      
+      console.log(`✅ Generated fresh question for test: ${item.qid}`);
+      
+      // Return clean question without answer (exactly as requested)
+      const question = {
+        id: item.qid,
+        subject: item.subject, // Shows ACTUAL subject from question, not user selection
+        topic: item.topic,
+        stem: item.stem,
+        choices: item.choices, // Already normalized, no "A)" prefixes
+        timeLimitSec: 60,
+        timeRemainingSec: 60,
+        round: 1,
+        totalRounds: 7
+      };
+      
+      res.json({ question });
+      
+    } catch (error: any) {
+      console.error('Test duel/next error:', error);
+      res.status(500).json({ error: 'Failed to generate question' });
+    }
+  });
+
   // Working duel endpoint with all requested features
   app.post("/duel/next", async (req, res) => {
     console.log('🎯 DUEL/NEXT endpoint called');
@@ -816,6 +853,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Duel/next error:', error);
       res.status(500).json({ error: 'Failed to generate question' });
+    }
+  });
+
+  // Public test endpoint for answers (no auth required)
+  app.post("/test/duel-answer", async (req, res) => {
+    console.log('🎯 TEST DUEL/ANSWER endpoint called');
+    res.setHeader('Content-Type', 'application/json');
+    
+    try {
+      const { choiceIndex } = req.body || {};
+      
+      // Return mock result for testing
+      const result = {
+        correct: Math.random() > 0.5, // Random for testing
+        correctIndex: Math.floor(Math.random() * 4),
+        explanation: "This is a test explanation for the answer choice selected.",
+        timeRemaining: 45,
+        scores: [1, 0],
+        roundFinished: true,
+        duelComplete: false
+      };
+      
+      console.log(`✅ Test answer submitted: choice ${choiceIndex}, correct: ${result.correct}`);
+      res.json(result);
+      
+    } catch (error: any) {
+      console.error('Test duel/answer error:', error);
+      res.status(500).json({ error: 'Failed to process answer' });
+    }
+  });
+
+  // Simple answer endpoint for testing
+  app.post("/duel/answer", async (req, res) => {
+    console.log('🎯 DUEL/ANSWER endpoint called');
+    res.setHeader('Content-Type', 'application/json');
+    
+    try {
+      const { choiceIndex } = req.body || {};
+      
+      // Return mock result for testing
+      const result = {
+        correct: Math.random() > 0.5, // Random for testing
+        correctIndex: Math.floor(Math.random() * 4),
+        explanation: "This is a test explanation for the answer choice selected.",
+        timeRemaining: 45,
+        scores: [1, 0],
+        roundFinished: true,
+        duelComplete: false
+      };
+      
+      console.log(`✅ Answer submitted: choice ${choiceIndex}, correct: ${result.correct}`);
+      res.json(result);
+      
+    } catch (error) {
+      console.error('Duel/answer error:', error);
+      res.status(500).json({ error: 'Failed to process answer' });
     }
   });
 

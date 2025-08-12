@@ -41,9 +41,9 @@ function Router() {
           <Route path="/daily" component={DailyCasefile} />
           <Route path="/stats" component={Stats} />
           <Route path="/stats/:userId" component={Stats} />
-          <Route path="/duel-test" component={DuelTestPage} />
         </>
       )}
+      <Route path="/duel-test" component={DuelTestPage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -62,7 +62,7 @@ export default function DuelTestPage() {
     setSelectedChoice(-1);
     
     try {
-      const response = await fetch('/duel/next', {
+      const response = await fetch('/test/duel-next', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -78,10 +78,12 @@ export default function DuelTestPage() {
         setDuelComplete(true);
         setCurrentQuestion(null);
       } else if (data.question) {
+        console.log('✅ Question received:', data.question.subject, data.question.topic);
         setCurrentQuestion(data.question);
         setTimeRemaining(data.question.timeRemainingSec || 60);
       } else {
         console.error('Invalid response:', data);
+        alert('Failed to load question: ' + JSON.stringify(data));
       }
     } catch (error) {
       console.error('Error fetching question:', error);
@@ -94,7 +96,7 @@ export default function DuelTestPage() {
     if (result) return; // Already submitted
 
     try {
-      const response = await fetch('/duel/answer', {
+      const response = await fetch('/test/duel-answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,6 +108,7 @@ export default function DuelTestPage() {
       });
 
       const data = await response.json();
+      console.log('✅ Answer result:', data);
       setResult(data);
       
       if (data.duelComplete) {
