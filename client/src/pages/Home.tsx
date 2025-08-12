@@ -22,12 +22,7 @@ const SUBJECTS = [
   'Criminal Law/Procedure'
 ];
 
-const BOT_DIFFICULTIES = [
-  { value: 'easy', label: 'Easy', description: 'Slower responses, 70% accuracy' },
-  { value: 'medium', label: 'Medium', description: 'Human-like timing, 80% accuracy' },
-  { value: 'hard', label: 'Hard', description: 'Quick responses, 90% accuracy' },
-  { value: 'expert', label: 'Expert', description: 'Lightning fast, 95% accuracy' }
-];
+// Removed BOT_DIFFICULTIES as we now use inline skill levels
 
 export default function Home() {
   const [character, setCharacter] = useState<User | null>(() => {
@@ -45,23 +40,56 @@ export default function Home() {
   const [duelData, setDuelData] = useState<any>(null);
 
   if (!character) {
-    return <CharacterCreation onComplete={setCharacter} />;
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <CharacterCreation 
+          isOpen={true} 
+          onClose={() => {}} 
+          onCharacterCreated={(newCharacter) => {
+            const fullCharacter: User = {
+              id: `user_${Date.now()}`,
+              username: newCharacter.username,
+              displayName: newCharacter.displayName,
+              level: 1,
+              xp: 0,
+              points: 0,
+              totalWins: 0,
+              totalLosses: 0,
+              createdAt: new Date(),
+              avatarData: newCharacter.avatarData
+            };
+            localStorage.setItem('bar-duel-character', JSON.stringify(fullCharacter));
+            setCharacter(fullCharacter);
+          }} 
+        />
+      </div>
+    );
   }
 
   const handleStartBotGame = () => {
-    // Create a bot opponent based on difficulty
+    // Create a stealth bot opponent that appears human
+    const humanNames = [
+      'LegalEagle47', 'JuristJoe', 'BarExamAce', 'LawScholar99', 'AttorneyAtLaw',
+      'CounselorCat', 'LegalBeagle', 'JudgeJudy42', 'BarPasser', 'LawStudent2024'
+    ];
+    
     const botOpponent: User = {
-      id: `bot_${Date.now()}`,
-      username: `Bot_${gameSettings.botDifficulty}`,
-      displayName: `${BOT_DIFFICULTIES.find(d => d.value === gameSettings.botDifficulty)?.label} Bot`,
-      level: gameSettings.botDifficulty === 'easy' ? 1 : 
-             gameSettings.botDifficulty === 'medium' ? 3 :
-             gameSettings.botDifficulty === 'hard' ? 5 : 8,
-      points: Math.floor(Math.random() * 1000),
+      id: `player_${Date.now()}`,
+      username: humanNames[Math.floor(Math.random() * humanNames.length)],
+      displayName: humanNames[Math.floor(Math.random() * humanNames.length)],
+      level: gameSettings.botDifficulty === 'easy' ? Math.floor(Math.random() * 3) + 1 : 
+             gameSettings.botDifficulty === 'medium' ? Math.floor(Math.random() * 3) + 3 :
+             gameSettings.botDifficulty === 'hard' ? Math.floor(Math.random() * 3) + 6 : 
+             Math.floor(Math.random() * 2) + 9,
+      xp: 0,
+      points: Math.floor(Math.random() * 2000) + 100,
+      totalWins: Math.floor(Math.random() * 50),
+      totalLosses: Math.floor(Math.random() * 30),
+      createdAt: new Date(),
       avatarData: {
-        base: 'robot',
-        palette: '#64748b',
-        props: ['circuits', 'antenna']
+        base: 'human',
+        palette: ['#8b5cf6', '#ef4444', '#10b981', '#f59e0b', '#06b6d4'][Math.floor(Math.random() * 5)],
+        props: [['hood', 'staff'], ['armor', 'sword'], ['cloak', 'dagger'], ['runes', 'crystal']][Math.floor(Math.random() * 4)]
       }
     };
     
@@ -89,7 +117,11 @@ export default function Home() {
         username: gameSettings.friendUsername,
         displayName: gameSettings.friendUsername,
         level: Math.floor(Math.random() * 10) + 1,
+        xp: 0,
         points: Math.floor(Math.random() * 2000),
+        totalWins: Math.floor(Math.random() * 100),
+        totalLosses: Math.floor(Math.random() * 50),
+        createdAt: new Date(),
         avatarData: {
           base: 'human',
           palette: '#8b5cf6',
@@ -170,7 +202,7 @@ export default function Home() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <AvatarRenderer
-              avatarData={character.avatarData}
+              avatarData={character.avatarData as any}
               level={character.level}
               size={64}
             />
@@ -193,12 +225,12 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-6">
             {gameMode === 'menu' && (
               <>
-                {/* Play Against Bot */}
+                {/* Quick Match */}
                 <Card className="panel">
                   <CardHeader>
                     <CardTitle className="font-cinzel text-xl flex items-center gap-2">
-                      🤖 Play Against Bot
-                      <Badge variant="secondary">Practice Mode</Badge>
+                      ⚔️ Quick Match
+                      <Badge variant="secondary">Find Opponent</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -220,7 +252,7 @@ export default function Home() {
                     </div>
                     
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Bot Difficulty</label>
+                      <label className="text-sm font-medium mb-2 block">Opponent Skill Level</label>
                       <Select 
                         value={gameSettings.botDifficulty}
                         onValueChange={(value) => setGameSettings(prev => ({ ...prev, botDifficulty: value }))}
@@ -229,20 +261,36 @@ export default function Home() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {BOT_DIFFICULTIES.map(difficulty => (
-                            <SelectItem key={difficulty.value} value={difficulty.value}>
-                              <div>
-                                <div className="font-medium">{difficulty.label}</div>
-                                <div className="text-xs text-muted">{difficulty.description}</div>
-                              </div>
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="easy">
+                            <div>
+                              <div className="font-medium">Novice</div>
+                              <div className="text-xs text-muted">Beginner level opponents</div>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="medium">
+                            <div>
+                              <div className="font-medium">Intermediate</div>
+                              <div className="text-xs text-muted">Average skill level</div>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="hard">
+                            <div>
+                              <div className="font-medium">Advanced</div>
+                              <div className="text-xs text-muted">Experienced players</div>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="expert">
+                            <div>
+                              <div className="font-medium">Expert</div>
+                              <div className="text-xs text-muted">Top tier opponents</div>
+                            </div>
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     
                     <Button onClick={handleStartBotGame} className="w-full" size="lg">
-                      Start Practice Duel
+                      Find Match
                     </Button>
                   </CardContent>
                 </Card>

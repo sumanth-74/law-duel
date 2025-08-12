@@ -8,6 +8,13 @@ Bar Duel is a competitive legal education game where players engage in 1v1 duels
 
 Preferred communication style: Simple, everyday language.
 
+**UX Requirements (Updated 2025-01-12):**
+- Stealth bot system: Players must never know they're playing against bots
+- Streamlined matchmaking: Remove redundant "Quick Match" and "Create Room" options
+- Clear game modes: "Quick Match" (vs stealth bots) and "Play with Friend" (enter username)
+- Subject selection: Specific subjects or "Mixed Questions" option
+- Rematch functionality: Allow rematches after game completion
+
 ## System Architecture
 
 ### Full-Stack TypeScript Application
@@ -41,8 +48,10 @@ The application uses a monorepo structure with shared types and schemas between 
 
 ### Game Logic Architecture
 - **Real-time Duels**: Server-authoritative timer system with 20-second question timeouts
-- **Question Generation**: OpenAI integration for dynamic question creation with strict JSON validation
-- **Stealth Bot System**: Intelligent bot opponents that mimic human behavior patterns and response times
+- **Question Generation**: OpenAI integration with 10-minute caching, 1200ms rate limiting, and training question fallbacks
+- **Stealth Bot System**: Human-appearing bots with realistic names, avatars, and skill-based difficulty levels (Novice to Expert)
+- **Streamlined Matchmaking**: Two clear modes - Quick Match (stealth bots) and Friend Challenge (username-based)
+- **Subject Flexibility**: Specific legal subjects or mixed question pools
 - **XP and Leveling**: Growth system with visual scaling based on character level (1 + 0.08 * level, capped at 1.8)
 - **Leaderboard System**: ELO-style ranking with atomic updates and backup mechanisms
 
