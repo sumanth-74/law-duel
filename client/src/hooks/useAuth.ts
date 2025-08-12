@@ -49,6 +49,7 @@ export function useAuth() {
       confirmPassword: string; 
       avatarData: any;
       email?: string;
+      lawSchool?: string;
     }) => {
       const response = await fetch('/api/auth/register', {
         method: 'POST',

@@ -14,6 +14,7 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
+  const [lawSchool, setLawSchool] = useState('');
 
   const { login, register } = useAuth();
 
@@ -42,6 +43,7 @@ export default function Login() {
         password,
         confirmPassword,
         email: email || undefined,
+        lawSchool: lawSchool || undefined,
         avatarData: tempAvatar,
       });
     }
@@ -103,6 +105,19 @@ export default function Login() {
                     className="bg-slate-800/50 border-purple-500/30 text-white"
                     placeholder="your.email@example.com"
                     data-testid="input-email"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="lawSchool" className="text-slate-200">Law School (Optional)</Label>
+                  <Input
+                    id="lawSchool"
+                    type="text"
+                    value={lawSchool}
+                    onChange={(e) => setLawSchool(e.target.value)}
+                    className="bg-slate-800/50 border-purple-500/30 text-white"
+                    placeholder="e.g., Harvard Law School, Stanford Law"
+                    data-testid="input-law-school"
                   />
                 </div>
               </>
