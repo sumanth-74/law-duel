@@ -27,47 +27,47 @@ import minotaurPortrait from '@assets/generated_images/minotaur_lawyer_portrait_
 import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a2834bd.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
-  // Specific archetype mappings for better visual accuracy - no duplicates
+  // Specific archetype mappings - matching names to appropriate creatures
   const specificArchetypes = {
-    // Corporate characters - 8 unique portraits
-    'due-diligence-dragon': dragonPortrait,
-    'covenant-golem': golemPortrait,
-    'prospectus-paladin': angelPortrait,
-    'disclosure-djinn': elementalPortrait,
-    'antitrust-automaton': wizardPortrait,
-    'fiduciary-seraph': sphinxPortrait,
-    'takeover-titan': sorcererPortrait,
-    'compliance-chimera': werewolfPortrait,
+    // Corporate characters - business/professional themes
+    'due-diligence-dragon': dragonPortrait,           // Dragon = Dragon
+    'covenant-golem': golemPortrait,                  // Golem = Golem
+    'prospectus-paladin': angelPortrait,              // Paladin = Angel (noble)
+    'disclosure-djinn': elementalPortrait,            // Djinn = Elemental (magical being)
+    'antitrust-automaton': golemPortrait,             // Automaton = Golem (construct)
+    'fiduciary-seraph': angelPortrait,                // Seraph = Angel (celestial)
+    'takeover-titan': wizardPortrait,                 // Titan = Wizard (powerful)
+    'compliance-chimera': werewolfPortrait,           // Chimera = Werewolf (beast)
     
-    // White Collar Criminal characters - 8 unique portraits
-    'insider-trading-hawk': hawkPortrait,
-    'subpoena-phoenix': phoenixPortrait,
-    'obstruction-minotaur': minotaurPortrait,
-    'wiretap-wraith': necromancerPortrait,
-    'forensic-basilisk': serpentPortrait,
-    'rico-revenant': alienPortrait,
-    'whistleblower-wyvern': crowPortrait,
-    'fraudulent-scheme-specter': golemPortrait,
+    // White Collar Criminal characters - investigation/crime themes
+    'insider-trading-hawk': hawkPortrait,             // Hawk = Hawk
+    'subpoena-phoenix': phoenixPortrait,              // Phoenix = Phoenix
+    'obstruction-minotaur': minotaurPortrait,         // Minotaur = Minotaur
+    'wiretap-wraith': necromancerPortrait,            // Wraith = Necromancer (undead)
+    'forensic-basilisk': serpentPortrait,             // Basilisk = Serpent (snake-like)
+    'rico-revenant': sorcererPortrait,                // Revenant = Sorcerer (dark magic)
+    'whistleblower-wyvern': dragonPortrait,           // Wyvern = Dragon (winged)
+    'fraudulent-scheme-specter': alienPortrait,       // Specter = Alien (otherworldly)
     
-    // Constitutional Scholar characters - 8 unique portraits
-    'strict-scrutiny-sphinx': sphinxPortrait,
-    'viewpoint-viper': serpentPortrait,
-    'incorporation-oracle': angelPortrait,
-    'nondelegation-naga': dragonPortrait,
-    'takings-titan': elementalPortrait,
-    'prior-restraint-sorcerer': sorcererPortrait,
-    'equal-protection-paladin': wizardPortrait,
-    'dormant-commerce-gargoyle': werewolfPortrait,
+    // Constitutional Scholar characters - academic/scholarly themes
+    'strict-scrutiny-sphinx': sphinxPortrait,         // Sphinx = Sphinx
+    'viewpoint-viper': serpentPortrait,               // Viper = Serpent
+    'incorporation-oracle': wizardPortrait,           // Oracle = Wizard (wise)
+    'nondelegation-naga': serpentPortrait,            // Naga = Serpent (but different from viper)
+    'takings-titan': golemPortrait,                   // Titan = Golem (massive)
+    'prior-restraint-sorcerer': sorcererPortrait,     // Sorcerer = Sorcerer
+    'equal-protection-paladin': angelPortrait,        // Paladin = Angel (righteous)
+    'dormant-commerce-gargoyle': werewolfPortrait,    // Gargoyle = Werewolf (stone-like)
     
-    // Public Defender characters - 8 unique portraits
-    'gideon-crow': crowPortrait,
-    'miranda-crow': hawkPortrait,
-    'suppression-wraith': necromancerPortrait,
-    'probable-cause-kraken': alienPortrait,
-    'speedy-trial-sprite': elementalPortrait,
-    'reasonable-doubt-revenant': phoenixPortrait,
-    'brady-banshee': minotaurPortrait,
-    'ineffective-assistance-shade': golemPortrait
+    // Public Defender characters - justice/defense themes
+    'gideon-crow': crowPortrait,                      // Crow = Crow
+    'miranda-crow': crowPortrait,                     // Crow = Crow (both are landmark cases)
+    'suppression-wraith': necromancerPortrait,        // Wraith = Necromancer (ghostly)
+    'probable-cause-kraken': alienPortrait,           // Kraken = Alien (tentacled)
+    'speedy-trial-sprite': elementalPortrait,         // Sprite = Elemental (quick/agile)
+    'reasonable-doubt-revenant': necromancerPortrait, // Revenant = Necromancer (undead)
+    'brady-banshee': elementalPortrait,               // Banshee = Elemental (spirit-like)
+    'ineffective-assistance-shade': necromancerPortrait // Shade = Necromancer (shadow)
   };
   
   // Debug logging to see what's being passed
