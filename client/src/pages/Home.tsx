@@ -29,6 +29,12 @@ const SUBJECTS = [
 export default function Home() {
   const { user, logout } = useAuth();
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
+  
+  // Check if new user needs character creation
+  const needsCharacterCreation = user?.avatarData && 
+    typeof user.avatarData === 'object' && 
+    'needsCharacterCreation' in user.avatarData && 
+    user.avatarData.needsCharacterCreation;
   const [gameMode, setGameMode] = useState<'menu' | 'bot-setup' | 'friend-setup' | 'searching' | 'duel'>('menu');
   const [gameSettings, setGameSettings] = useState({
     subject: 'Mixed Questions',
@@ -51,15 +57,42 @@ export default function Home() {
 
   const character = user;
 
-  if (showCharacterCreation) {
+  // Show character creation for new users or when manually requested
+  if (showCharacterCreation || needsCharacterCreation) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <CharacterCreation 
           isOpen={true} 
-          onClose={() => setShowCharacterCreation(false)} 
-          onCharacterCreated={(newCharacter) => {
-            // Update user avatar data via API call
-            console.log('Character updated:', newCharacter);
+          onClose={() => {
+            setShowCharacterCreation(false);
+            // For new users, don't allow closing without creating character
+            if (needsCharacterCreation) {
+              logout.mutate(); // Force them to complete character creation
+            }
+          }} 
+          onCharacterCreated={async (newCharacter) => {
+            // Update user in database with new character data
+            try {
+              const response = await fetch(`/api/users/${user?.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                  displayName: newCharacter.displayName,
+                  avatarData: {
+                    ...newCharacter.avatarData,
+                    needsCharacterCreation: false // Remove the flag
+                  }
+                })
+              });
+              
+              if (response.ok) {
+                // Refresh user data
+                window.location.reload();
+              }
+            } catch (error) {
+              console.error('Failed to update character:', error);
+            }
             setShowCharacterCreation(false);
           }} 
         />

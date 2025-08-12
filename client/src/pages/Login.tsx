@@ -27,12 +27,13 @@ export default function Login() {
         return;
       }
       
-      // Default avatar data for new users
-      const defaultAvatar = {
+      // Temporary avatar data - user will customize this next
+      const tempAvatar = {
         archetype: 'constitutional_scholar',
         primaryColor: '#8B5CF6',
         secondaryColor: '#A78BFA',
-        level: 1
+        level: 1,
+        needsCharacterCreation: true // Flag to trigger character creation
       };
 
       register.mutate({
@@ -41,7 +42,7 @@ export default function Login() {
         password,
         confirmPassword,
         email: email || undefined,
-        avatarData: defaultAvatar,
+        avatarData: tempAvatar,
       });
     }
   };

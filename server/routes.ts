@@ -114,9 +114,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json(user);
-    } catch (error) {
+      
+      // Don't return password
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch user", error: error.message });
+    }
+  });
+
+  // Update user profile
+  app.patch("/api/users/:id", requireAuth, async (req: any, res) => {
+    try {
+      // Ensure user can only update their own profile
+      if (req.params.id !== req.session.userId) {
+        return res.status(403).json({ message: "Forbidden: Can only update your own profile" });
+      }
+
+      const updates = req.body;
+      const user = await storage.updateUser(req.params.id, updates);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Don't return password
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to update user", error: error.message });
     }
   });
 
