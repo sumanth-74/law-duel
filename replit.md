@@ -2,7 +2,7 @@
 
 ## Overview
 
-Law Duel is a competitive legal education game where players engage in 1v1 duels using legal questions for both bar exam preparation and law school finals. The application features character creation, quick matchmaking, real-time gameplay, and a leaderboard system. Players can choose from various law-themed archetypes (e.g., Trial Hawk, Constitutional Scholar, Corporate Counsel) with legal accessories like gavels, scales of justice, law books, briefcases, and diplomas. Characters gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure.
+Law Duel is a competitive legal education game where players engage in 1v1 duels using legal questions for bar exam preparation and law school finals. The application features character creation, quick matchmaking, real-time gameplay, and a leaderboard system. Players can choose from various law-themed archetypes (e.g., Trial Hawk, Constitutional Scholar, Corporate Counsel) with legal accessories like gavels, scales of justice, law books, briefcases, and diplomas. Characters gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure.
 
 ## User Preferences
 

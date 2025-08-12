@@ -34,12 +34,12 @@ export default function Landing() {
           </h1>
           
           <p className="text-xl md:text-2xl text-purple-200 mb-4 max-w-3xl mx-auto">
-            Master the Bar Exam Through Epic Legal Duels
+            Master the Bar Exam & Law School Through Epic Legal Duels
           </p>
           
           <p className="text-lg text-purple-300/80 mb-12 max-w-2xl mx-auto">
             Transform legal education into competitive gameplay. Duel opponents with bar-quality questions, 
-            level up your legal knowledge, and climb the leaderboard.
+            ace your law school finals, and climb the leaderboard.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -80,9 +80,9 @@ export default function Landing() {
                 <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Scale className="w-8 h-8 text-purple-400" />
                 </div>
-                <h3 className="font-cinzel text-xl font-bold text-purple-200 mb-3">Bar-Quality Questions</h3>
+                <h3 className="font-cinzel text-xl font-bold text-purple-200 mb-3">Bar & Law School Questions</h3>
                 <p className="text-purple-300/80">
-                  Professional Themis/BarBri quality questions across Evidence, Contracts, Torts, and all MBE subjects.
+                  Professional Themis/BarBri quality questions for bar prep plus law school exam questions across all subjects.
                 </p>
               </CardContent>
             </Card>
@@ -127,7 +127,7 @@ export default function Landing() {
         <div className="container mx-auto px-4 py-8 text-center">
           <LawDuelLogo size="sm" showText={true} className="justify-center mb-4" />
           <p className="text-purple-400/60">
-            Transform your legal education. Master the bar exam through competitive gameplay.
+            Transform your legal education. Master the bar exam and law school finals through competitive gameplay.
           </p>
         </div>
       </footer>

@@ -58,52 +58,18 @@ export default function LawDuelLogo({ size = 'md', showText = false, className =
           strokeWidth="1"
         />
         
-        {/* Script-style L */}
-        <path 
-          d="M 25 25 
-             C 25 22, 26 20, 28 20
-             C 30 20, 31 22, 31 25
-             L 31 60
-             C 31 65, 33 67, 38 67
-             L 45 67
-             C 47 67, 48 69, 47 70
-             C 46 71, 44 70, 42 70
-             L 35 70
-             C 28 70, 25 67, 25 60
-             Z" 
+        {/* Simple elegant text using same font as Law Duel */}
+        <text 
+          x="50" 
+          y="55" 
+          textAnchor="middle" 
+          className="font-cinzel font-bold" 
+          fontSize="32" 
           fill="url(#purpleGradient)"
           filter="url(#glow)"
-        />
-        
-        {/* Script-style D */}
-        <path 
-          d="M 50 25
-             C 50 22, 51 20, 53 20
-             L 58 20
-             C 67 20, 73 28, 73 45
-             C 73 62, 67 70, 58 70
-             L 53 70
-             C 51 70, 50 68, 50 65
-             Z
-             
-             M 56 27
-             L 58 27
-             C 63 27, 66 32, 66 45
-             C 66 58, 63 63, 58 63
-             L 56 63
-             Z" 
-          fill="url(#purpleGradient)"
-          fillRule="evenodd"
-          filter="url(#glow)"
-        />
-        
-        {/* Legal accent - scales */}
-        <g transform="translate(77, 12) scale(0.25)" opacity="0.7">
-          <line x1="0" y1="10" x2="20" y2="10" stroke="url(#purpleGradient)" strokeWidth="2"/>
-          <line x1="10" y1="0" x2="10" y2="20" stroke="url(#purpleGradient)" strokeWidth="2"/>
-          <circle cx="5" cy="15" r="6" fill="none" stroke="url(#purpleGradient)" strokeWidth="1.5"/>
-          <circle cx="15" cy="15" r="6" fill="none" stroke="url(#purpleGradient)" strokeWidth="1.5"/>
-        </g>
+        >
+          LD
+        </text>
       </svg>
 
       {/* Text */}
