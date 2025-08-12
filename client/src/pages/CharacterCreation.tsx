@@ -43,17 +43,15 @@ export default function CharacterCreation() {
 
   // Set default display name when user loads
   React.useEffect(() => {
-    if (user && !displayName) {
-      setDisplayName(user.username);
+    if (user && !displayName && typeof user === 'object' && 'username' in user) {
+      setDisplayName((user as any).username);
     }
-  }, [user]);
+  }, [user, displayName]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (profileData: any) => {
-      return apiRequest(`/api/users/${user.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(profileData)
-      });
+      if (!user || typeof user !== 'object' || !('id' in user)) throw new Error('User not found');
+      return apiRequest(`/api/users/${(user as any).id}`, 'PATCH', profileData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
@@ -120,7 +118,7 @@ export default function CharacterCreation() {
 
               <div>
                 <label className="block text-sm font-medium text-purple-300 mb-2">
-                  Username: {user.username}
+                  Username: {typeof user === 'object' && user && 'username' in user ? (user as any).username : 'Loading...'}
                 </label>
                 <p className="text-xs text-purple-400/60">
                   Your unique identifier for login
