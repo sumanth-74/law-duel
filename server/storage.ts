@@ -1,12 +1,18 @@
-import { type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { users, matches, questions, type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc, sql, and, notInArray } from "drizzle-orm";
+import bcrypt from "bcrypt";
+
+const SALT_ROUNDS = 12;
 
 export interface IStorage {
-  // User methods
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  // User authentication methods
+  authenticateUser(username: string, password: string): Promise<User | null>;
   createUser(user: InsertUser): Promise<User>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
+  updateUserStats(id: string, won: boolean, xpGained: number): Promise<User | undefined>;
   getTopPlayers(limit: number): Promise<User[]>;
 
   // Match methods
@@ -24,136 +30,183 @@ export interface IStorage {
   incrementQuestionUsage(id: string): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private matches: Map<string, Match>;
-  private questions: Map<string, Question>;
-
-  constructor() {
-    this.users = new Map();
-    this.matches = new Map();
-    this.questions = new Map();
-  }
-
-  // User methods
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username.toLowerCase() === username.toLowerCase(),
-    );
+export class DatabaseStorage implements IStorage {
+  // User authentication methods
+  async authenticateUser(username: string, password: string): Promise<User | null> {
+    try {
+      const [user] = await db.select().from(users).where(eq(users.username, username));
+      if (!user) return null;
+      
+      const isValid = await bcrypt.compare(password, user.password);
+      if (!isValid) return null;
+      
+      // Update last login
+      await db.update(users)
+        .set({ lastLoginAt: new Date() })
+        .where(eq(users.id, user.id));
+      
+      return user;
+    } catch (error) {
+      console.error("Authentication error:", error);
+      return null;
+    }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
-      id,
-      createdAt: new Date(),
-    };
-    this.users.set(id, user);
+    const hashedPassword = await bcrypt.hash(insertUser.password, SALT_ROUNDS);
+    
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...insertUser,
+        password: hashedPassword,
+      })
+      .returning();
+    
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
 
   async updateUser(id: string, updates: Partial<User>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
+    const [user] = await db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, id))
+      .returning();
     
-    const updatedUser = { ...user, ...updates };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    return user;
+  }
+
+  async updateUserStats(id: string, won: boolean, xpGained: number): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({
+        xp: sql`${users.xp} + ${xpGained}`,
+        points: sql`${users.points} + ${won ? 100 : 20}`,
+        totalWins: won ? sql`${users.totalWins} + 1` : users.totalWins,
+        totalLosses: won ? users.totalLosses : sql`${users.totalLosses} + 1`,
+        level: sql`GREATEST(1, FLOOR(1 + (${users.xp} + ${xpGained}) / 100))`,
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return user;
   }
 
   async getTopPlayers(limit: number): Promise<User[]> {
-    return Array.from(this.users.values())
-      .sort((a, b) => b.points - a.points)
-      .slice(0, limit);
+    return await db
+      .select()
+      .from(users)
+      .orderBy(desc(users.points))
+      .limit(limit);
   }
 
   // Match methods
   async createMatch(insertMatch: InsertMatch): Promise<Match> {
-    const id = randomUUID();
-    const match: Match = {
-      ...insertMatch,
-      id,
-      createdAt: new Date(),
-      finishedAt: null,
-    };
-    this.matches.set(id, match);
+    const [match] = await db
+      .insert(matches)
+      .values(insertMatch)
+      .returning();
+    
     return match;
   }
 
   async getMatch(id: string): Promise<Match | undefined> {
-    return this.matches.get(id);
+    const [match] = await db.select().from(matches).where(eq(matches.id, id));
+    return match;
   }
 
   async getMatchByRoomCode(roomCode: string): Promise<Match | undefined> {
-    return Array.from(this.matches.values()).find(
-      (match) => match.roomCode === roomCode,
-    );
+    const [match] = await db.select().from(matches).where(eq(matches.roomCode, roomCode));
+    return match;
   }
 
   async updateMatch(id: string, updates: Partial<Match>): Promise<Match | undefined> {
-    const match = this.matches.get(id);
-    if (!match) return undefined;
-    
-    const updatedMatch = { ...match, ...updates };
-    if (updates.status === 'finished' && !updatedMatch.finishedAt) {
-      updatedMatch.finishedAt = new Date();
+    const updateData = { ...updates };
+    if (updates.status === 'finished' && !updateData.finishedAt) {
+      updateData.finishedAt = new Date();
     }
-    this.matches.set(id, updatedMatch);
-    return updatedMatch;
+    
+    const [match] = await db
+      .update(matches)
+      .set(updateData)
+      .where(eq(matches.id, id))
+      .returning();
+    
+    return match;
   }
 
   async getUserMatches(userId: string, limit: number): Promise<Match[]> {
-    return Array.from(this.matches.values())
-      .filter((match) => match.player1Id === userId || match.player2Id === userId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice(0, limit);
+    return await db
+      .select()
+      .from(matches)
+      .where(sql`${matches.player1Id} = ${userId} OR ${matches.player2Id} = ${userId}`)
+      .orderBy(desc(matches.createdAt))
+      .limit(limit);
   }
 
   // Question methods
   async createQuestion(insertQuestion: InsertQuestion): Promise<Question> {
-    const id = randomUUID();
-    const question: Question = {
-      ...insertQuestion,
-      id,
-      usageCount: 0,
-      createdAt: new Date(),
-    };
-    this.questions.set(id, question);
+    const [question] = await db
+      .insert(questions)
+      .values(insertQuestion)
+      .returning();
+    
     return question;
   }
 
   async getQuestion(id: string): Promise<Question | undefined> {
-    return this.questions.get(id);
+    const [question] = await db.select().from(questions).where(eq(questions.id, id));
+    return question;
   }
 
   async getQuestionsBySubject(subject: string, limit: number): Promise<Question[]> {
-    return Array.from(this.questions.values())
-      .filter((q) => q.subject === subject)
-      .slice(0, limit);
+    return await db
+      .select()
+      .from(questions)
+      .where(eq(questions.subject, subject))
+      .limit(limit);
   }
 
   async getRandomQuestion(subject: string, excludeIds: string[] = []): Promise<Question | undefined> {
-    const questions = Array.from(this.questions.values())
-      .filter((q) => q.subject === subject && !excludeIds.includes(q.id));
+    let query = db
+      .select()
+      .from(questions)
+      .where(eq(questions.subject, subject))
+      .orderBy(sql`RANDOM()`)
+      .limit(1);
     
-    if (questions.length === 0) return undefined;
+    if (excludeIds.length > 0) {
+      query = db
+        .select()
+        .from(questions)
+        .where(and(
+          eq(questions.subject, subject),
+          notInArray(questions.id, excludeIds)
+        ))
+        .orderBy(sql`RANDOM()`)
+        .limit(1);
+    }
     
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    return questions[randomIndex];
+    const [question] = await query;
+    return question;
   }
 
   async incrementQuestionUsage(id: string): Promise<void> {
-    const question = this.questions.get(id);
-    if (question) {
-      question.usageCount++;
-      this.questions.set(id, question);
-    }
+    await db
+      .update(questions)
+      .set({ usageCount: sql`${questions.usageCount} + 1` })
+      .where(eq(questions.id, id));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

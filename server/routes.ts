@@ -1,22 +1,49 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
+import session from "express-session";
+import MemoryStore from "memorystore";
 import path from "path";
 import { storage } from "./storage";
-import { insertUserSchema } from "@shared/schema";
+import { registerSchema, loginSchema } from "@shared/schema";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard } from "./services/leaderboard.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Session configuration
+  const MemStore = MemoryStore(session);
+  app.use(session({
+    secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
+    store: new MemStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+    },
+  }));
+
   // Initialize services
   await initializeQuestionCoordinator();
   await initializeLeaderboard();
 
-  // User registration
+  // Authentication middleware
+  function requireAuth(req: any, res: any, next: any) {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    next();
+  }
+
+  // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const userData = insertUserSchema.parse(req.body);
+      const userData = registerSchema.parse(req.body);
+      const { confirmPassword, ...userInsert } = userData;
       
       // Check if username is taken
       const existing = await storage.getUserByUsername(userData.username);
@@ -24,10 +51,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(409).json({ message: "Username already taken" });
       }
 
-      const user = await storage.createUser(userData);
-      res.json(user);
-    } catch (error) {
+      const user = await storage.createUser(userInsert);
+      
+      // Auto-login after registration
+      (req.session as any).userId = user.id;
+      
+      // Don't return password
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error: any) {
       res.status(400).json({ message: "Invalid user data", error: error.message });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const credentials = loginSchema.parse(req.body);
+      
+      const user = await storage.authenticateUser(credentials.username, credentials.password);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid username or password" });
+      }
+
+      (req.session as any).userId = user.id;
+      
+      // Don't return password
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error: any) {
+      res.status(400).json({ message: "Invalid credentials", error: error.message });
+    }
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Failed to logout" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
+  app.get("/api/auth/me", requireAuth, async (req: any, res) => {
+    try {
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Don't return password
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get user", error: error.message });
     }
   });
 

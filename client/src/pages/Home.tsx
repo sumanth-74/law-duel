@@ -9,6 +9,8 @@ import { QuickMatch } from '@/components/QuickMatch';
 import { DuelArena } from '@/components/DuelArena';
 import { Leaderboard } from '@/components/Leaderboard';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
+import { useAuth } from '@/hooks/useAuth';
+import { LogOut, User as UserIcon } from 'lucide-react';
 import type { User } from '@shared/schema';
 
 const SUBJECTS = [
@@ -25,11 +27,8 @@ const SUBJECTS = [
 // Removed BOT_DIFFICULTIES as we now use inline skill levels
 
 export default function Home() {
-  const [character, setCharacter] = useState<User | null>(() => {
-    const saved = localStorage.getItem('bar-duel-character');
-    return saved ? JSON.parse(saved) : null;
-  });
-
+  const { user, logout } = useAuth();
+  const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [gameMode, setGameMode] = useState<'menu' | 'bot-setup' | 'friend-setup' | 'searching' | 'duel'>('menu');
   const [gameSettings, setGameSettings] = useState({
     subject: 'Mixed Questions',
@@ -39,27 +38,29 @@ export default function Home() {
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
 
-  if (!character) {
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center text-slate-300">
+          <UserIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
+          <p>Loading your character...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const character = user;
+
+  if (showCharacterCreation) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <CharacterCreation 
           isOpen={true} 
-          onClose={() => {}} 
+          onClose={() => setShowCharacterCreation(false)} 
           onCharacterCreated={(newCharacter) => {
-            const fullCharacter: User = {
-              id: `user_${Date.now()}`,
-              username: newCharacter.username,
-              displayName: newCharacter.displayName,
-              level: 1,
-              xp: 0,
-              points: 0,
-              totalWins: 0,
-              totalLosses: 0,
-              createdAt: new Date(),
-              avatarData: newCharacter.avatarData
-            };
-            localStorage.setItem('bar-duel-character', JSON.stringify(fullCharacter));
-            setCharacter(fullCharacter);
+            // Update user avatar data via API call
+            console.log('Character updated:', newCharacter);
+            setShowCharacterCreation(false);
           }} 
         />
       </div>
@@ -211,13 +212,24 @@ export default function Home() {
               <p className="text-muted">Level {character.level} • {character.points} Points</p>
             </div>
           </div>
-          <Button 
-            onClick={() => setCharacter(null)} 
-            variant="outline" 
-            size="sm"
-          >
-            Change Character
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button 
+              onClick={() => setShowCharacterCreation(true)} 
+              variant="outline" 
+              size="sm"
+            >
+              Edit Character
+            </Button>
+            <Button 
+              onClick={() => logout.mutate()} 
+              variant="outline" 
+              size="sm"
+              className="text-red-400 hover:text-red-300"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -7,6 +7,8 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   displayName: text("display_name").notNull(),
+  password: text("password").notNull(),
+  email: text("email").unique(),
   avatarData: jsonb("avatar_data").notNull(),
   level: integer("level").notNull().default(1),
   xp: integer("xp").notNull().default(0),
@@ -14,6 +16,7 @@ export const users = pgTable("users", {
   totalWins: integer("total_wins").notNull().default(0),
   totalLosses: integer("total_losses").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastLoginAt: timestamp("last_login_at"),
 });
 
 export const matches = pgTable("matches", {
@@ -46,6 +49,20 @@ export const questions = pgTable("questions", {
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
+  lastLoginAt: true,
+});
+
+export const loginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export const registerSchema = insertUserSchema.extend({
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export const insertMatchSchema = createInsertSchema(matches).omit({
