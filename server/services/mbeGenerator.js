@@ -21,7 +21,8 @@ const MBE_SCHEMA = {
           "1": { type: "string" },
           "2": { type: "string" },
           "3": { type: "string" }
-        }
+        },
+        additionalProperties: false
       },
       explanationLong: { type: "string" },
       ruleRefs: { type: "array", items: { type: "string" } },

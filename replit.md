@@ -86,7 +86,7 @@ The application uses a monorepo structure with shared types and schemas between 
 ## External Dependencies
 
 ### Third-Party Services
-- **OpenAI API**: GPT-4o model for generating legal questions with server-side API key management
+- **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **ACTIVE AND WORKING** (Updated 2025-01-12)
 - **Neon Database**: PostgreSQL hosting service for production data storage
 
 ### UI and Styling Libraries

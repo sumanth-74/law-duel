@@ -10,7 +10,7 @@ import { statsService } from "./services/statsService";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard, updateBotActivity } from "./services/leaderboard.js";
-import { generateMBEItem } from "./services/mbeGenerator.js";
+import { generateMBEItem } from "./services/mbeGenerator";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';

@@ -11,30 +11,45 @@ const MBE_SCHEMA = {
       topic: { type: "string" },
       subtopic: { type: "string" },
       stem: { type: "string" },
-      choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
-      correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+      choices: { 
+        type: "array", 
+        items: { type: "string" }, 
+        minItems: 4, 
+        maxItems: 4 
+      },
+      correctIndex: { 
+        type: "integer", 
+        minimum: 0, 
+        maximum: 3 
+      },
       optionRationales: { 
-        type: "object",
-        properties: {
-          "0": { type: "string" },
-          "1": { type: "string" },
-          "2": { type: "string" },
-          "3": { type: "string" }
-        }
+        type: "array",
+        items: { type: "string" },
+        minItems: 4,
+        maxItems: 4
       },
       explanationLong: { type: "string" },
-      ruleRefs: { type: "array", items: { type: "string" } },
-      difficultySeed: { type: "string", enum: ["easy", "medium", "hard"] },
+      ruleRefs: { 
+        type: "array", 
+        items: { type: "string" } 
+      },
+      difficultySeed: { 
+        type: "string", 
+        enum: ["easy", "medium", "hard"] 
+      },
       timeLimitSec: { type: "integer" },
-      tags: { type: "array", items: { type: "string" } },
+      tags: { 
+        type: "array", 
+        items: { type: "string" } 
+      },
       license: { type: "string" },
       status: { type: "string" }
     },
-    required: ["subject", "topic", "stem", "choices", "correctIndex", "optionRationales",
-               "explanationLong", "ruleRefs", "difficultySeed", "license", "status"],
+    required: ["subject", "topic", "subtopic", "stem", "choices", "correctIndex", "optionRationales",
+               "explanationLong", "ruleRefs", "difficultySeed", "timeLimitSec", "tags", "license", "status"],
     additionalProperties: false
   },
-  strict: true
+  strict: false
 };
 
 export interface MBEGenerationRequest {
@@ -51,12 +66,7 @@ export interface MBEItem {
   stem: string;
   choices: string[];
   correctIndex: number;
-  optionRationales: {
-    "0": string;
-    "1": string;
-    "2": string;
-    "3": string;
-  };
+  optionRationales: string[];
   explanationLong: string;
   ruleRefs: string[];
   difficultySeed: "easy" | "medium" | "hard";
@@ -74,7 +84,7 @@ export async function generateMBEItem({ subject, topic, subtopic, rule }: MBEGen
 Write an original MBE-style multiple-choice question for ${subject} on ${topic}${subtopicText}${ruleText}.
 Single best answer, exactly 4 options (A–D). 120–180 word fact pattern.
 Test: ${rule || topic} under national law (FRE/FRCP/UCC Art. 2/federal constitutional law as relevant).
-Include rationales for each option (why each is right/wrong) and a 3–6 sentence explanation. 
+Include rationales for each option (why each is right/wrong) in optionRationales array and a 3–6 sentence explanation. 
 No "all/none of the above."
 Make this INCREDIBLY DIFFICULT - upper 10% difficulty for bar exam takers.
 Set difficultySeed = "hard", timeLimitSec = 90, license = "educational", status = "active".
@@ -94,8 +104,7 @@ Output ONLY JSON matching our schema.`;
         }
       ],
       response_format: { 
-        type: "json_schema", 
-        json_schema: MBE_SCHEMA 
+        type: "json_object"
       },
       temperature: 0.7,
     });
@@ -105,18 +114,59 @@ Output ONLY JSON matching our schema.`;
       throw new Error('No response content from OpenAI');
     }
 
-    const item: MBEItem = JSON.parse(jsonText);
+    const rawResponse = JSON.parse(jsonText);
+    console.log('OpenAI Response structure:', Object.keys(rawResponse));
     
-    // Validate that we got all required fields
-    if (!item.subject || !item.stem || !item.choices || item.choices.length !== 4) {
+    // Extract the actual question data - it might be nested under "question"
+    const questionData = rawResponse.question || rawResponse;
+    
+    // Transform the OpenAI response to our expected format
+    const item = {
+      subject: subject,
+      topic: topic,
+      subtopic: subtopic || "",
+      stem: questionData.factPattern || questionData.stem || "",
+      choices: questionData.options ? questionData.options.map((opt: any) => opt.text) : questionData.choices || [],
+      correctIndex: questionData.correctIndex || 0, // Find the correct answer
+      optionRationales: questionData.options ? questionData.options.map((opt: any) => opt.optionRationales?.[0] || "") : questionData.optionRationales || [],
+      explanationLong: questionData.explanation || questionData.explanationLong || "",
+      ruleRefs: questionData.ruleRefs || [],
+      difficultySeed: rawResponse.difficultySeed || "hard",
+      timeLimitSec: rawResponse.timeLimitSec || 90,
+      tags: questionData.tags || [],
+      license: rawResponse.license || "educational",
+      status: rawResponse.status || "active"
+    };
+    
+    console.log('Transformed item:', { stem: !!item.stem, choicesCount: item.choices.length });
+    
+    // Basic validation
+    if (!item.stem || !item.choices || item.choices.length !== 4) {
+      console.log('Validation failed:', { stem: !!item.stem, choicesCount: item.choices.length });
       throw new Error('Invalid MBE item structure');
     }
 
     return item;
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to generate MBE item:', error);
-    throw new Error('Failed to generate MBE question');
+    
+    // Handle specific OpenAI errors
+    if (error.status === 429 || error.message?.includes('quota')) {
+      throw new Error('QUOTA_EXCEEDED');
+    }
+    
+    if (error.status === 401) {
+      throw new Error('INVALID_API_KEY');
+    }
+    
+    // Handle JSON parsing errors specifically
+    if (error instanceof SyntaxError) {
+      console.error('JSON parsing failed for OpenAI response');
+      throw new Error('Invalid JSON response from OpenAI');
+    }
+    
+    throw error; // Re-throw the original error for better debugging
   }
 }
 
