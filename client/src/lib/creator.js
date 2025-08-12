@@ -26,6 +26,7 @@ import serpentPortrait from '@assets/generated_images/Photorealistic_serpent_por
 import crowPortrait from '@assets/generated_images/crow_lawyer_portrait_962cc1e7.png';
 import minotaurPortrait from '@assets/generated_images/minotaur_lawyer_portrait_b796d7ac.png';
 import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a2834bd.png';
+import bansheePortrait from '@assets/generated_images/banshee_lawyer_portrait_c0258cbe.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
   // Professional character mappings - each character gets unique, appropriate portrait
@@ -67,7 +68,7 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     'probable-cause-kraken': alienPortrait,           // Alien (tentacled investigator)
     'speedy-trial-sprite': elementalPortrait,         // Elemental (swift justice)
     'reasonable-doubt-revenant': phoenixPortrait,     // Phoenix (doubt rises)
-    'brady-banshee': minotaurPortrait,                // Minotaur (disclosure enforcer)
+    'brady-banshee': bansheePortrait,                 // Banshee (haunting disclosure)
     'ineffective-assistance-shade': golemPortrait     // Golem (protection construct)
   };
   

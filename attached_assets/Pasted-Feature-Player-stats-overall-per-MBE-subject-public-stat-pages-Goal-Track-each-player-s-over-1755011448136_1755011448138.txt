@@ -1,0 +1,104 @@
+Feature: Player stats (overall + per MBE subject) & public stat pages
+
+Goal
+Track each player’s overall strength at MBE and their micro-level performance for every subject. Show this on a profile “Stats” page that’s visible to the player and (by default) to other players.
+
+Subjects
+Civ Pro, Con Law, Contracts, Crim Law/Pro, Evidence, Real Property, Torts.
+
+What to store per player (overall):
+
+Overall ELO (used for matchmaking/rank).
+
+Overall accuracy: total questions answered, total correct.
+
+Recent form: last 20 questions (correct/incorrect), current streak.
+
+Seasons/badges (optional, for later).
+
+What to store per player (per subject):
+For each of the 7 subjects, keep:
+
+Questions answered (count).
+
+Correct answers (count).
+
+Accuracy % (correct / answered).
+
+Current subject streak (consecutive correct in this subject).
+
+Last 20 subject attempts (timestamps + correct/incorrect) for a “recent” mini-graph.
+
+Provisional flag (true until at least 20 attempts in that subject).
+
+(Optional v2) Subject rating (ELO-like) if we want difficulty-adjusted skill per subject.
+
+How stats update (after EVERY question):
+
+Determine the subject of the just-answered question.
+
+Increment that subject’s “answered”; if correct, increment “correct” and subject streak, else reset that subject streak to 0.
+
+Push the attempt (timestamp + result) into “last 20” for that subject (trim to 20).
+
+Update overall “answered/correct” and overall recent attempts (also trim to 20) and overall streak.
+
+If subject answered ≥20, set “provisional = false”; otherwise keep “provisional = true”.
+
+(If using subject rating) Update subject rating with a simple K-factor:
+
+expected = 0.5 by default, or tweak by difficulty (easy: 0.6, medium: 0.5, hard: 0.4)
+
+rating = rating + K * (actual(1/0) − expected), K=12.
+
+Stats page (self view):
+
+Header: Overall ELO, rank tier, overall accuracy, current overall streak.
+
+Grid: one card per subject showing:
+
+Subject name
+
+Accuracy % + attempts (e.g., “72% · 94 Qs”)
+
+Tiny recent-bar (last 10/20 attempts)
+
+Streak (e.g., “Streak: 4”)
+
+“Provisional” label if <20 attempts
+
+Tap a subject card → detail view: last 20 attempts list, weak topics (later), and a “Practice this subject” button.
+
+Public stats (viewing other players):
+
+Anyone can open another player’s profile and see the same Stats page.
+
+Hide private fields like email; show only display name, avatar, and stats.
+
+Add a privacy toggle later if needed (“Make stats private”).
+
+Where stats show up in the app:
+
+Post-match screen: show your opponent’s subject grid next to yours for comparison.
+
+Matchmaking preview: quick chips like “Opponent hot in Evidence (78%)”.
+
+Leaderboards (later): overall and per-subject boards.
+
+Edge cases & rules:
+
+New players: show “—” or “Provisional” until 20 attempts per subject.
+
+Accuracy always computed from stored counts; don’t try to infer from ELO.
+
+All updates are server-authoritative; client only displays.
+
+Acceptance criteria
+
+After answering 3 Evidence questions with 2 correct, my Evidence card shows “66.7% · 3 Qs” and “Streak: depends on last answer.”
+
+When I view another player’s profile, I see their overall ELO/accuracy and a 7-card subject grid with the same metrics.
+
+Subject and overall stats update immediately after a duel finishes (or after each question if we already send per-question events).
+
+Provisional label disappears for a subject once that player reaches 20 attempts in that subject.
