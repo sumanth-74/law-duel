@@ -84,6 +84,34 @@ export class QuestionBank {
     this.questions.set('Mixed', [...evidenceQuestions, ...contractQuestions]);
   }
 
+  // Method that was being called but missing
+  getCachedQuestion(subject: string): CachedQuestion | null {
+    const questions = this.questions.get(subject);
+    if (!questions || questions.length === 0) {
+      return null;
+    }
+    
+    // Return a random question from the subject
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    return questions[randomIndex];
+  }
+
+  // Get a random question from any subject
+  getRandomQuestion(): CachedQuestion | null {
+    const allSubjects = Array.from(this.questions.keys());
+    if (allSubjects.length === 0) {
+      return null;
+    }
+    
+    const randomSubject = allSubjects[Math.floor(Math.random() * allSubjects.length)];
+    return this.getCachedQuestion(randomSubject);
+  }
+
+  // Check if cache needs refresh
+  needsRefresh(): boolean {
+    return Date.now() - this.lastRefresh.getTime() > this.CACHE_DURATION;
+  }
+
   // Get question optimized for cost - shared between players
   getSharedQuestion(subject: string, difficulty: string = 'intermediate'): CachedQuestion | null {
     const subjectQuestions = this.questions.get(subject) || this.questions.get('Mixed') || [];

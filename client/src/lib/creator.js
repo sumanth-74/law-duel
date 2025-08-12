@@ -9,6 +9,14 @@ export function getCharacterData() {
 }
 
 // Premium character portraits - each professionally crafted and unique
+// Base fallback portraits for generic types
+import wizardPortrait from '@assets/generated_images/Photorealistic_wizard_portrait_e5565b85.png';
+import alienPortrait from '@assets/generated_images/Photorealistic_alien_scholar_portrait_3e37dc62.png';
+import golemPortrait from '@assets/generated_images/Photorealistic_stone_golem_portrait_8c705a4a.png';
+import necromancerPortrait from '@assets/generated_images/Photorealistic_necromancer_portrait_7186375f.png';
+import elementalPortrait from '@assets/generated_images/Photorealistic_fire_elemental_portrait_dbddd022.png';
+import sorcererPortrait from '@assets/generated_images/Photorealistic_dark_sorcerer_portrait_8eaaf1ab.png';
+
 // Corporate characters
 import dueDiligenceDragonPortrait from '@assets/generated_images/due_diligence_dragon_cd8c2457.png';
 import covenantGolemPortrait from '@assets/generated_images/covenant_golem_lawyer_efb72961.png';
