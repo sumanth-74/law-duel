@@ -15,15 +15,22 @@ export async function initializeQuestionCoordinator() {
 
 export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   try {
+    console.log(`🎯 getQuestion called: subject=${subject}, forceNew=${forceNew}, excludeIds=${excludeIds.length}`);
+    
     // For competitive duels, ALWAYS generate fresh questions from OpenAI - bypass all caching
     if (forceNew) {
-      console.log(`🔥 Generating COMPLETELY FRESH OpenAI question for duel in ${subject}`);
+      console.log(`🔥 FORCE NEW = TRUE - Generating COMPLETELY FRESH OpenAI question for duel in ${subject}`);
       try {
         const freshQuestion = await generateFreshQuestion(subject);
         if (freshQuestion && validateQuestion(freshQuestion)) {
           console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
           console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
-          return formatQuestion(freshQuestion);
+          const formatted = formatQuestion(freshQuestion);
+          console.log(`✅ SUCCESSFULLY returning fresh OpenAI question with QID: ${formatted.qid}`);
+          return formatted;
+        } else {
+          console.log(`❌ Fresh question failed validation - falling back`);
+          return getFallbackQuestion(subject);
         }
       } catch (openaiError) {
         console.error(`❌ OpenAI generation failed for duel ${subject}:`, openaiError.message);
@@ -78,6 +85,13 @@ async function generateFreshQuestion(subject) {
     console.log(`🎯 Generating fresh question: ${subject} - ${randomTopic}`);
     
     const mbeItem = await generateMBEItem(topicConfig);
+    console.log(`🔍 MBE Item generated:`, {
+      hasStem: !!mbeItem.stem,
+      hasChoices: !!mbeItem.choices,
+      choicesLength: mbeItem.choices?.length,
+      hasCorrectIndex: typeof mbeItem.correctIndex === 'number',
+      hasExplanation: !!mbeItem.explanation
+    });
     
     const question = {
       id: `fresh_openai_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -88,6 +102,14 @@ async function generateFreshQuestion(subject) {
       explanation: mbeItem.explanation,
       difficulty: mbeItem.difficultySeed || 'hard'
     };
+    
+    console.log(`🎯 Constructed question:`, {
+      id: question.id,
+      hasStem: !!question.stem,
+      stemLength: question.stem?.length,
+      choicesCount: question.choices?.length,
+      correctIndex: question.correctIndex
+    });
 
     console.log(`🔍 Pre-validation check: stem="${question.stem?.substring(0, 30)}...", choices=${question.choices?.length}, correctIndex=${question.correctIndex}`);
 

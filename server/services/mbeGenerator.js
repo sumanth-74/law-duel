@@ -159,12 +159,14 @@ Output ONLY JSON in this exact format:
         hasStem: !!mappedItem.stem, 
         hasChoices: !!mappedItem.choices,
         choicesCount: mappedItem.choices?.length,
-        originalKeys: Object.keys(item)
+        originalKeys: Object.keys(item),
+        stemPreview: mappedItem.stem?.substring(0, 50)
       });
       throw new Error('Invalid MBE item structure');
     }
 
-    console.log('✅ MBE validation passed');
+    console.log('✅ MBE validation passed - returning valid OpenAI question');
+    console.log(`✅ Question ID will be: ${mappedItem.id}`);
     return mappedItem;
     
   } catch (error) {

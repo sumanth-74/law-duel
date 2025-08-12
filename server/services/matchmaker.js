@@ -319,9 +319,9 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 
   activeMatches.set(roomCode, match);
   
-  // Give client time to set up duel connection
-  console.log('Waiting 2 seconds for client to establish duel connection...');
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  // Give client more time to set up duel connection for reliable OpenAI delivery
+  console.log('Waiting 3 seconds for client to establish duel connection...');
+  await new Promise(resolve => setTimeout(resolve, 3000));
 
   for (let round = 1; round <= 7; round++) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
@@ -333,7 +333,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       
       // Use coordinated question system to ensure fresh OpenAI questions
       const question = await getQuestion(subject, match.usedQuestions, true); // Force new OpenAI questions for bot duels
-      console.log(`Fresh question generated: "${question.stem.substring(0, 50)}..."`);
+      console.log(`🎯 Question returned from coordinator: QID="${question.qid}", stem="${question.stem.substring(0, 50)}..."`);
       
       let useTrainingBanner = false;
       

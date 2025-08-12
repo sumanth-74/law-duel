@@ -44,10 +44,20 @@
     "username": "DavidTorres",
     "displayName": "David Torres",
     "level": 14,
-    "points": 2674,
-    "totalWins": 43,
+    "points": 2715,
+    "totalWins": 44,
     "totalLosses": 11,
-    "lastActive": "2025-08-12T18:56:10.245Z"
+    "lastActive": "2025-08-12T19:08:37.003Z"
+  },
+  {
+    "id": "bot_marcus_wong",
+    "username": "MarcusWong",
+    "displayName": "Marcus Wong",
+    "level": 13,
+    "points": 2454,
+    "totalWins": 39,
+    "totalLosses": 12,
+    "lastActive": "2025-08-12T19:08:37.003Z"
   },
   {
     "id": "bot_carlos_mendez",
@@ -58,16 +68,6 @@
     "totalWins": 37,
     "totalLosses": 13,
     "lastActive": "2025-08-12T18:33:21.459Z"
-  },
-  {
-    "id": "bot_marcus_wong",
-    "username": "MarcusWong",
-    "displayName": "Marcus Wong",
-    "level": 12,
-    "points": 2400,
-    "totalWins": 38,
-    "totalLosses": 12,
-    "lastActive": "2025-08-11T17:56:53.452Z"
   },
   {
     "id": "bot_james_richardson",
