@@ -31,7 +31,7 @@ export default function LawDuelLogo({ size = 'md', showText = false, className =
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Elegant Script-style LD */}
+        {/* Elegant Script-style LD with Cat */}
         <defs>
           <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#9333ea" />
@@ -58,13 +58,30 @@ export default function LawDuelLogo({ size = 'md', showText = false, className =
           strokeWidth="1"
         />
         
-        {/* Simple elegant text using same font as Law Duel */}
+        {/* Cat silhouette - positioned above LD */}
+        <g transform="translate(50, 30)">
+          {/* Cat head */}
+          <ellipse cx="0" cy="0" rx="8" ry="6" fill="url(#purpleGradient)" opacity="0.8"/>
+          {/* Cat ears */}
+          <polygon points="-6,-4 -8,-10 -2,-6" fill="url(#purpleGradient)" opacity="0.8"/>
+          <polygon points="6,-4 8,-10 2,-6" fill="url(#purpleGradient)" opacity="0.8"/>
+          {/* Cat eyes */}
+          <circle cx="-3" cy="-1" r="1" fill="#e9d5ff"/>
+          <circle cx="3" cy="-1" r="1" fill="#e9d5ff"/>
+          {/* Cat body */}
+          <ellipse cx="0" cy="8" rx="6" ry="8" fill="url(#purpleGradient)" opacity="0.6"/>
+          {/* Cat tail */}
+          <path d="M 6,12 Q 12,8 10,16" stroke="url(#purpleGradient)" strokeWidth="2" fill="none" opacity="0.6"/>
+        </g>
+        
+        {/* LD Text - positioned lower and properly centered */}
         <text 
           x="50" 
-          y="55" 
+          y="70" 
           textAnchor="middle" 
+          dominantBaseline="middle"
           className="font-cinzel font-bold" 
-          fontSize="32" 
+          fontSize="24" 
           fill="url(#purpleGradient)"
           filter="url(#glow)"
         >
