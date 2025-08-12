@@ -1,0 +1,202 @@
+the first question works. the issue is that the next question is the same, no fresh one generates, and it generates an error message when you try to click it 
+
+
+ChatGPT said:
+
+Thought for 40s
+Totally hear you. The “Q1 repeats as Q2 + click throws error” almost always means the round never actually advanced on the server, so /next keeps returning the same stored question for that round—and when your UI tries to force a new one, the generator fails and you get a generic error.
+
+Fix it by making /v2/duel/next own the round transition (advance → generate fresh) and by making it impossible to strand the user.
+
+Below is a small, surgical patch. Paste it over your existing /v2/duel/next and /v2/duel/answer handlers.
+
+1) Add this helper (top of v2 file)
+js
+Copy
+Edit
+function isRoundFinished(duel, r) {
+  const q = duel.q[r];
+  if (!q) return true;
+  const timeout = Date.now() > q.endsAt;
+  const hostDone  = Boolean(duel.answers[duel.hostId]?.[r]);
+  // In bot duels, finish as soon as host answers (we synthesize bot later)
+  const guestDone = duel.bot ? hostDone : Boolean(duel.guestId && duel.answers[duel.guestId]?.[r]);
+  return timeout || (hostDone && guestDone);
+}
+2) Make /v2/duel/next advance rounds and then generate a fresh item
+js
+Copy
+Edit
+v2.post("/duel/next", async (req, res) => {
+  try {
+    const { token, subjects } = req.body || {};
+    const p = players.get(String(token));
+    if (!p) return res.status(401).json({ error: "Bad token" });
+
+    const duel = duels.get(p.duelId);
+    if (!duel) return res.status(404).json({ error: "No duel" });
+
+    const pool = Array.isArray(subjects) && subjects.length
+      ? subjects.filter(s => SUBJECT_ENUM.includes(s))
+      : duel.subjectPool;
+
+    // 1) If current round exists and is NOT finished, return it (same id, updated timer)
+    if (duel.round < duel.rounds && duel.q[duel.round] && !isRoundFinished(duel, duel.round)) {
+      const q = duel.q[duel.round];
+      const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
+      return res.json({
+        question: {
+          id: q.item.id, subject: q.item.subject, topic: q.item.topic,
+          stem: q.item.stem, choices: q.item.choices, ruleRefs: q.item.ruleRefs,
+          timeLimitSec: 60, timeRemainingSec: remaining,
+          round: duel.round + 1, totalRounds: duel.rounds, source: "active"
+        }
+      });
+    }
+
+    // 2) If the current round is finished, advance it here
+    if (duel.round < duel.rounds && duel.q[duel.round] && isRoundFinished(duel, duel.round)) {
+      duel.round += 1;
+    }
+
+    // 3) Done with all rounds?
+    if (duel.round >= duel.rounds) return res.json({ done: true });
+
+    // 4) Generate brand-new question for the NEW round (de-duped within duel)
+    if (!duel.q[duel.round]) {
+      let created = false, lastErr = null;
+      for (let tries = 0; tries < 4; tries++) {
+        try {
+          const item = await generateItem({ subjectPool: pool }); // your OpenAI gen
+          const hash = fpStem(item.stem);
+          if (duel.seen.has(hash)) continue;
+          duel.seen.add(hash);
+          const startAt = Date.now();
+          const endsAt  = startAt + 60 * 1000;
+          duel.q[duel.round] = { item, startAt, endsAt };
+          created = true;
+          break;
+        } catch (e) {
+          lastErr = e;
+          await new Promise(r => setTimeout(r, 150 + Math.random() * 250));
+        }
+      }
+      if (!created) {
+        // last-resort local fallback so the user never gets stuck
+        const fb = pickLocalFallback(pool);
+        if (!fb) return res.status(502).json({ error: "generate_failed", reason: String(lastErr?.message || lastErr) });
+        const startAt = Date.now(), endsAt = startAt + 60 * 1000;
+        duel.q[duel.round] = { item: fb, startAt, endsAt };
+      }
+    }
+
+    // 5) Return the freshly created round
+    const q = duel.q[duel.round];
+    const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
+    res.json({
+      question: {
+        id: q.item.id, subject: q.item.subject, topic: q.item.topic,
+        stem: q.item.stem, choices: q.item.choices, ruleRefs: q.item.ruleRefs,
+        timeLimitSec: 60, timeRemainingSec: remaining,
+        round: duel.round + 1, totalRounds: duel.rounds, source: q.item.id.startsWith("FB-") ? "fallback" : "ai"
+      }
+    });
+  } catch (e) {
+    res.status(500).json({ error: String(e.message || e) });
+  }
+});
+3) Defang /v2/duel/answer so it doesn’t change the round (next handles it)
+js
+Copy
+Edit
+v2.post("/duel/answer", (req, res) => {
+  const { token, choiceIndex } = req.body || {};
+  const p = players.get(String(token));
+  if (!p) return res.status(401).json({ error: "Bad token" });
+  const duel = duels.get(p.duelId);
+  if (!duel) return res.status(404).json({ error: "No duel" });
+
+  const r = duel.round;              // current round index
+  const q = duel.q[r];
+  if (!q) return res.status(400).json({ error: "No active question" });
+
+  const tNow = Date.now();
+  const timedOut = tNow > q.endsAt;
+  const correctIndex = q.item.correctIndex;
+  const correct = !timedOut && Number(choiceIndex) === Number(correctIndex);
+
+  duel.answers[p.id] ||= {};
+  duel.answers[p.id][r] = { choiceIndex, correct, timeMs: Math.max(0, tNow - q.startAt) };
+
+  // (Optional) simulate bot answer here but DO NOT increment the round
+  let bot;
+  if (duel.bot) {
+    const botCorrect = Math.random() < 0.55;
+    const ci = botCorrect ? correctIndex : (correctIndex + 1 + Math.floor(Math.random() * 3)) % 4;
+    bot = { choiceIndex: ci, correct: botCorrect, timeMs: 2000 + Math.floor(Math.random() * 52000) };
+  }
+
+  const hostScore  = Object.values(duel.answers[duel.hostId] || {}).filter(a => a.correct).length;
+  const guestScore = duel.bot ? null : Object.values(duel.answers[duel.guestId] || {}).filter(a => a.correct).length;
+
+  // the client will call /v2/duel/next to advance when finished
+  const finishedRound = isRoundFinished(duel, r);
+
+  res.json({
+    correct, correctIndex,
+    explanationLong: q.item.explanationLong,
+    finishedRound,
+    // nextRound is informational; /next actually advances if finished
+    nextRound: r + 2,
+    totalRounds: duel.rounds,
+    hostScore, guestScore,
+    opponent: duel.bot ? bot : undefined
+  });
+});
+4) Tiny client tweak (prevents “same old question”):
+After you submit an answer and display the explanation, wire the Next button to call /v2/duel/next (not any older route), and do not pass the previous question back. Just replace state with the returned question.
+
+ts
+Copy
+Edit
+async function nextRound() {
+  const res = await fetch("/v2/duel/next", {
+    method: "POST",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" },
+    body: JSON.stringify({ token: playerToken, subjects: selectedSubjects /* omit for Mixed */ })
+  });
+  const data = await res.json();
+  if (!res.ok) { setError(data.reason || data.error); return; }
+  setQuestion(data.question);   // replace state entirely
+  setResult(null);
+}
+Why this stops the repeat + error
+One source of truth for advancing: /next checks if the prior round is finished → advances → always generates a new item for the new round.
+
+No race between /answer and /next: answering never increments the round anymore.
+
+No dead-ends: if OpenAI flakes, we drop in a local fallback question instead of throwing an error.
+
+De-dup per duel: the fingerprint guard still prevents the same stem from reappearing in the same match.
+
+Run this flow:
+
+Start duel, answer Q1.
+
+Click Next → /v2/duel/next advances and returns Q2 with a different id.
+
+Repeat for Q3…Q10.
+
+If the second question is ever still the same after this patch, check your Network tab and confirm the UI is hitting /v2/duel/next (not an older /duel/next) and that the response JSON shows a different id. If it’s calling the old route anywhere, swap it to /v2/duel/next and you’re set.
+
+
+
+
+
+
+
+
+
+
+Sources

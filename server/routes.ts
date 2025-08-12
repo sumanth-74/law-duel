@@ -783,71 +783,151 @@ export async function registerRoutes(app: Express): Promise<Server> {
       .digest("hex");
   }
 
+  // Test duel state management  
+  const testDuels = new Map();
+  
+  // Helper to check if round is finished
+  function isRoundFinished(duel, r) {
+    const q = duel.q[r];
+    if (!q) return true;
+    const timeout = Date.now() > q.endsAt;
+    const playerDone = Boolean(duel.answers['test_player']?.[r]);
+    return timeout || playerDone;
+  }
+
   // Public test endpoint for duel questions (no auth required)
   app.post("/test/duel-next", async (req, res) => {
     console.log('🎯 TEST DUEL/NEXT endpoint called');
     res.setHeader('Content-Type', 'application/json');
     
     try {
-      // Pick a random subject
-      const subjects = ['Evidence', 'Contracts', 'Criminal Law', 'Torts'];
-      const subject = subjects[Math.floor(Math.random() * subjects.length)];
-      
-      let item;
-      try {
-        // Try to generate fresh question using OpenAI
-        const { generateFreshQuestion } = await import('./services/robustGenerator.js');
-        item = await generateFreshQuestion(subject);
-        console.log(`✅ Generated fresh OpenAI question for test: ${item.qid}`);
-      } catch (aiError) {
-        // Fallback to local question if OpenAI fails
-        console.warn(`[GEN_FAIL] OpenAI generation failed for ${subject}:`, aiError.message || aiError);
-        
-        try {
-          const { pickLocalFallback } = await import('./services/fallbacks.js');
-          item = pickLocalFallback([subject]);
-          
-          if (!item) {
-            console.error(`No fallback available for subject: ${subject}`);
-            return res.status(502).json({ 
-              error: 'generate_failed', 
-              reason: `OpenAI: ${String(aiError.message || aiError)}. No fallback available for ${subject}`
-            });
+      // Get or create test duel
+      let duel = testDuels.get('test_duel');
+      if (!duel) {
+        duel = {
+          id: 'test_duel',
+          round: 0,
+          rounds: 10,
+          q: {},
+          answers: {},
+          seen: new Set(),
+          subjectPool: ['Evidence', 'Contracts', 'Criminal Law', 'Torts']
+        };
+        testDuels.set('test_duel', duel);
+      }
+
+      // If current round exists and is NOT finished, return it with updated timer
+      if (duel.round < duel.rounds && duel.q[duel.round] && !isRoundFinished(duel, duel.round)) {
+        const q = duel.q[duel.round];
+        const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
+        return res.json({
+          question: {
+            id: q.item.qid, subject: q.item.subject, topic: q.item.topic,
+            stem: q.item.stem, choices: q.item.choices,
+            timeLimitSec: 60, timeRemainingSec: remaining,
+            round: duel.round + 1, totalRounds: duel.rounds, source: "active"
           }
+        });
+      }
+
+      // If current round is finished, advance to next round
+      if (duel.round < duel.rounds && duel.q[duel.round] && isRoundFinished(duel, duel.round)) {
+        duel.round += 1;
+      }
+
+      // Done with all rounds?
+      if (duel.round >= duel.rounds) {
+        return res.json({ done: true });
+      }
+
+      // Generate brand-new question for the new round
+      if (!duel.q[duel.round]) {
+        const subject = duel.subjectPool[Math.floor(Math.random() * duel.subjectPool.length)];
+        
+        let item;
+        let created = false;
+        let lastErr = null;
+
+        // Try OpenAI generation with de-duplication
+        for (let tries = 0; tries < 3; tries++) {
+          try {
+            const { generateFreshQuestion } = await import('./services/robustGenerator.js');
+            item = await generateFreshQuestion(subject);
+            
+            // Check if we've seen this question before
+            const hash = require('crypto').createHash('sha1')
+              .update(item.stem.toLowerCase().replace(/\s+/g, ' '))
+              .digest('hex');
+            
+            if (duel.seen.has(hash)) {
+              console.log(`🔄 Duplicate question detected, retrying...`);
+              continue;
+            }
+            
+            duel.seen.add(hash);
+            created = true;
+            console.log(`✅ Generated fresh OpenAI question for test: ${item.qid}`);
+            break;
+          } catch (e) {
+            lastErr = e;
+            await new Promise(r => setTimeout(r, 150 + Math.random() * 250));
+          }
+        }
+
+        // Fallback to local question if OpenAI fails
+        if (!created) {
+          console.warn(`[GEN_FAIL] OpenAI generation failed for ${subject}:`, lastErr?.message || lastErr);
           
-          // Add required fields for fallback
-          item.qid = `FB-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-          console.log(`✅ Using fallback question: ${item.id} → ${item.qid} for subject ${subject}`);
-          
-        } catch (fallbackError) {
-          console.error('Fallback import failed:', fallbackError);
+          try {
+            const { pickLocalFallback } = await import('./services/fallbacks.js');
+            item = pickLocalFallback([subject]);
+            
+            if (item) {
+              item.qid = `FB-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+              console.log(`✅ Using fallback question: ${item.id} → ${item.qid} for subject ${subject}`);
+              created = true;
+            }
+          } catch (fallbackError) {
+            console.error('Fallback import failed:', fallbackError);
+          }
+        }
+
+        if (!created || !item) {
           return res.status(502).json({ 
             error: 'generate_failed', 
-            reason: `OpenAI: ${String(aiError.message)}. Fallback failed: ${String(fallbackError.message)}`
+            reason: String(lastErr?.message || 'Failed to generate or find fallback question')
           });
         }
+
+        // Store the question for this round
+        const startAt = Date.now();
+        const endsAt = startAt + 60 * 1000;
+        duel.q[duel.round] = { item, startAt, endsAt };
+
+        // Store for answer validation  
+        testQuestionStorage.set(item.qid, {
+          correctIndex: item.correctIndex,
+          explanation: item.explanationLong || item.explanation,
+          item: item,
+          round: duel.round
+        });
       }
+
+      // Return the freshly created round
+      const q = duel.q[duel.round];
+      const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
       
-      // Store question with correct answer for validation
-      console.log(`📝 Storing question ${item.qid} with correct answer: ${item.correctIndex}`);
-      testQuestionStorage.set(item.qid, {
-        correctIndex: item.correctIndex,
-        explanation: item.explanationLong || item.explanation || `The correct answer is choice ${String.fromCharCode(65 + item.correctIndex)} because: Legal analysis not provided.`,
-        item: item
-      });
-      
-      // Return clean question without answer (exactly as requested)
       const question = {
-        id: item.qid,
-        subject: item.subject, // Shows ACTUAL subject from question, not user selection
-        topic: item.topic,
-        stem: item.stem,
-        choices: item.choices, // Already normalized, no "A)" prefixes
+        id: q.item.qid,
+        subject: q.item.subject,
+        topic: q.item.topic,
+        stem: q.item.stem,
+        choices: q.item.choices,
         timeLimitSec: 60,
-        timeRemainingSec: 60,
-        round: 1,
-        totalRounds: 7,
-        source: item.qid.startsWith('FB-') ? "fallback" : "ai" // For client debugging
+        timeRemainingSec: remaining,
+        round: duel.round + 1,
+        totalRounds: duel.rounds,
+        source: q.item.qid.startsWith('FB-') ? "fallback" : "ai"
       };
       
       res.json({ question });
@@ -928,8 +1008,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log(`🎯 Answer validation: Player chose ${choiceIndex}, correct is ${questionData.correctIndex}, timedOut: ${timedOut} → ${isCorrect ? 'CORRECT ✅' : 'WRONG ❌'}`);
       
-      // Clean up the question from storage after use
-      testQuestionStorage.delete(questionId);
+      // Mark answer in test duel if it exists
+      const testDuel = testDuels.get('test_duel');
+      if (testDuel && questionData.round !== undefined) {
+        testDuel.answers['test_player'] = testDuel.answers['test_player'] || {};
+        testDuel.answers['test_player'][questionData.round] = {
+          choiceIndex,
+          correct: isCorrect,
+          timeMs: Date.now() - (testDuel.q[questionData.round]?.startAt || Date.now())
+        };
+      }
+
+      // Don't delete - keep for potential retries or review
+      // testQuestionStorage.delete(questionId);
       
       res.json(result);
       
