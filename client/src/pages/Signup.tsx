@@ -114,7 +114,10 @@ export default function Signup() {
           confirmPassword: formData.confirmPassword,
           lawSchool: formData.lawSchool,
           avatarData: {
-            archetype: formData.selectedCharacter,
+            archetypeId: formData.selectedCharacter,
+            base: getSelectedCharacterData()?.base || 'humanoid',
+            palette: getSelectedCharacterData()?.palette || 'lawyer_navy',
+            props: getSelectedCharacterData()?.props || [],
             accessories: [],
             level: 1
           }
