@@ -78,6 +78,8 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control
 - **Fresh Duel Questions**: OpenAI generation confirmed working - generates questions like `fresh_openai_1755027766896_aouqoebfa` with professional legal analysis (Updated 2025-08-12)
 - **Question Delivery**: Server successfully delivers OpenAI questions when clients maintain persistent WebSocket connections throughout the generation process (Updated 2025-08-12)
+- **Answer Choice Validation**: Implemented robust choice normalization to prevent junk answers (e.g., "A", "B") and strip prefixes like "A)" from OpenAI responses (Updated 2025-08-12)
+- **UI Choice Display**: Fixed double-letter rendering issue - choices now display clean text without duplicating the letter labels (Updated 2025-08-12)
 - **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
 - **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
 - **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal

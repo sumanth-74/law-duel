@@ -106,6 +106,18 @@ async function callOpenAI(prompt) {
   return JSON.parse(data.choices[0].message.content);
 }
 
+// Normalize and validate choices to prevent junk like "A", "B" or "A) text"
+function normalizeChoices(raw) {
+  if (!Array.isArray(raw) || raw.length !== 4) throw new Error("Need exactly 4 choices");
+  // Strip leading A) / B. / C: etc.
+  const cleaned = raw.map((s) => String(s || "").replace(/^\s*[A-D][\)\].:\-]\s*/i, "").trim());
+  // Reject single-letter/empty/duplicate choices
+  if (cleaned.some((c) => c.length < 6)) throw new Error("Choices too short");
+  const set = new Set(cleaned.map((c) => c.toLowerCase()));
+  if (set.size < 4) throw new Error("Duplicate/identical choices");
+  return cleaned;
+}
+
 export async function generateFreshQuestion(subject) {
   try {
     // Map to canonical subject name
@@ -124,6 +136,14 @@ export async function generateFreshQuestion(subject) {
       // Basic validation - check structure and correctIndex range
       if (!item.stem || !item.choices || item.choices.length !== 4 || typeof item.correctIndex !== 'number') {
         err = "Invalid structure";
+        continue;
+      }
+      
+      // Validate and normalize choices - reject junk like "A", "B" or duplicate choices
+      try {
+        item.choices = normalizeChoices(item.choices);
+      } catch (e) {
+        err = e.message;
         continue;
       }
       
@@ -166,6 +186,7 @@ export async function generateFreshQuestion(subject) {
       correctIndex: item.correctIndex,
       explanation: item.explanation || "See explanation above.",
       timeLimit: 60000, // 60 seconds for duels
+      timeLimitSec: 60, // Enforce 60s
       deadlineTs: Date.now() + 60000
     };
     
