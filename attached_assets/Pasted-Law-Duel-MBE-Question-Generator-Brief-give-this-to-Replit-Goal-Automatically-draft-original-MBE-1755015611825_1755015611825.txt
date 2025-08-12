@@ -1,0 +1,118 @@
+Law Duel — MBE Question Generator Brief (give this to Replit)
+Goal
+Automatically draft original, MBE-style multiple-choice items (A–D, single best answer) for the 7 MBE subjects, then auto-check them before they enter calibration.
+
+1) What “MBE-style” means (guardrails)
+Format: one fact pattern (120–180 words), 4 options (A–D), exactly one correct answer. No “All/None of the above.”
+
+Law source: national rules: FRE, FRCP, UCC Article 2, federal constitutional law, majority/common-law rules. No state quirks unless the stem says so.
+
+Focus: black-letter rule application, not policy essays.
+
+Writing: neutral names, no sensitive traits unless legally necessary.
+
+Difficulty: label the draft as easy/medium/hard and justify it in one sentence for the reviewer (not shown to players).
+
+Originality: must be new (no copying NCBE or commercial banks).
+
+2) Subjects, topics (taxonomy to tag every item)
+Subjects: Civ Pro, Con Law, Contracts, Crim Law/Pro, Evidence, Real Property, Torts.
+Each subject uses ~8–15 topics (e.g., Evidence: Relevance; Character 404/405; Impeachment 607/613; Hearsay 801–807; Confrontation; Privileges; Authentication/Best Evidence; Experts 702–705). Store subject, topic, optional subtopic.
+
+3) Required output schema (structured JSON)
+Every generated item must conform to:
+
+json
+Copy
+Edit
+{
+  "id": "EV-HEARSAY-00123",
+  "subject": "Evidence",
+  "topic": "Hearsay",
+  "subtopic": "801(d)(1)(C) prior identification",
+  "stem": "120–180 word fact pattern...",
+  "choices": ["A ...", "B ...", "C ...", "D ..."],
+  "correctIndex": 2,
+  "optionRationales": {
+    "0": "Why A is wrong…",
+    "1": "Why B is wrong…",
+    "2": "Why C is correct…",
+    "3": "Why D is wrong…"
+  },
+  "explanationLong": "3–6 sentences. State the controlling rule, apply to facts, mention the common trap.",
+  "ruleRefs": ["FRE 801(d)(1)(C)"],
+  "difficultySeed": "hard",
+  "timeLimitSec": 75,
+  "tags": ["MBE","witnesses","identification"],
+  "license": "© Law Duel, original",
+  "status": "draft",
+  "authorNote": "1-sentence why difficultySeed was chosen"
+}
+4) Prompt template for the generator (LLM)
+Use this exact instruction when drafting:
+
+“Write an original MBE-style multiple-choice question for {subject} on {topic}/{subtopic}. Use a single best answer format with 4 options (A–D).
+Fact pattern length: 120–180 words. Test {specific rule} under national law (FRE/FRCP/UCC Art.2/federal con law as relevant). Avoid state-specific quirks unless stated.
+Output only JSON matching our schema. Include rationales for each option, a 3–6 sentence explanation stating the controlling rule and the common trap. No “all/none of the above,” no multiple correct answers, no quotes from copyrighted sources. Label difficultySeed = easy|medium|hard.”
+
+(Your generator fills {subject}, {topic}, {subtopic}, {specific rule} from your taxonomy/coverage goals.)
+
+5) Automatic validators (reject on fail)
+When a draft comes back, run these checks before saving:
+
+Schema checks: fields present; choices.length == 4; 0 ≤ correctIndex ≤ 3; every choice has a rationale; stem 120–180 words.
+
+Content checks:
+
+Ban phrases: “All of the above”, “None of the above”.
+
+Ensure exactly one option matches the explanation’s stated rule.
+
+No case law quotes/citations beyond generic rule refs; no local/state law unless stem says so.
+
+No absolute words like always/never in answer choices (unless the explanation supports a true absolute).
+
+Originality checks: compare against your own bank with minhash/simhash; reject if similarity > 0.80.
+
+Topic/rule alignment: simple keyword sanity (e.g., hearsay item mentions 801/802/803; UCC items reference goods/Art.2 concepts).
+
+Toxicity/PII: neutral names, no sensitive traits.
+
+If any validator fails → auto-return to “rewrite” with a reason.
+
+6) Difficulty targets (for coverage & timers)
+Easy: most examinees should get right; single clean issue; 60s timer.
+
+Medium: one main rule + one trap; 75s.
+
+Hard: layered facts or exception; 90s.
+(These are seeds; true difficulty is set later by calibration p-values.)
+
+7) Workflow (so quality stays high)
+Draft (generator) → auto-validate → if pass, status = approved.
+
+Push to calibrating (serve to 200–300 users mixed into play/Daily).
+
+Nightly job computes p-value (difficulty) and point-biserial (discrimination).
+
+Keep if biserial ≥ 0.15; Rewrite 0.05–0.14; Retire < 0.05 or negative.
+
+Items that pass flip to live and enter normal rotation with user cooldowns.
+
+8) Coverage scheduler (so it “knows” what to write next)
+Maintain a coverage matrix: desired # of items by subject/topic/difficulty. The scheduler picks the next {subject, topic, subtopic, rule} that is under-filled and calls the generator with that payload. Example: “Evidence→Hearsay→801(d)(1)(C) (hard)”.
+
+9) One concrete example (for the model)
+Subject: Evidence | Topic: Hearsay | Subtopic: 801(d)(1)(C)
+Specific rule: Prior identification by a testifying witness is non-hearsay.
+
+(Have the generator produce an item here; your validators ensure it comes back as JSON per schema.)
+
+10) Acceptance tests
+I can request “Contracts → UCC risk of loss → buyer breach” and receive a valid JSON item that passes validators.
+
+Bank imports 50 generated items, all original (similarity < 0.80 to any existing item).
+
+Calibrating items automatically get difficulty labels from p-value after ≥200 exposures and move to live or rewrite/retire based on biserial thresholds.
+
+Serving engine respects per-user 120-day cooldown; coverage stays within ±10% of targets.

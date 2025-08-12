@@ -164,7 +164,7 @@ export class DailyCasefileService {
 
   // Fallback pre-generated questions for when OpenAI is unavailable
   private async getFallbackQuestion(): Promise<any> {
-    const date = this.getTodayDateUtc();
+    const date = this.getTodayDateString();
     
     // High-quality fallback questions rotating by day
     const fallbackQuestions = [
