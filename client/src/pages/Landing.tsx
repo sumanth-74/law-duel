@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { BookOpen, Scale, Users, GraduationCap } from 'lucide-react';
 import { useState } from 'react';
@@ -12,7 +13,11 @@ export default function Landing() {
   const [password, setPassword] = useState('');
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  
+  // Separate state for modal login form
+  const [modalUsername, setModalUsername] = useState('');
+  const [modalPassword, setModalPassword] = useState('');
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,9 +54,9 @@ export default function Landing() {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleModalLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim() || !password.trim()) return;
+    if (!modalUsername.trim() || !modalPassword.trim()) return;
     
     setIsLoggingIn(true);
     try {
@@ -60,8 +65,8 @@ export default function Landing() {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ 
-          username: username.trim(), 
-          password: password.trim() 
+          username: modalUsername.trim(), 
+          password: modalPassword.trim() 
         })
       });
       
@@ -95,11 +100,11 @@ export default function Landing() {
           <LawDuelLogo size="md" showText={true} />
           <div className="flex gap-2">
             <Button 
-              onClick={() => setShowLoginForm(!showLoginForm)} 
+              onClick={() => setShowLoginModal(true)} 
               variant="outline"
               className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
             >
-              {showLoginForm ? 'Sign Up' : 'Sign In'}
+              Sign In
             </Button>
           </div>
         </div>
@@ -127,78 +132,35 @@ export default function Landing() {
           <div className="max-w-md mx-auto mb-12">
             <Card className="bg-black/40 border-purple-500/30">
               <CardContent className="p-6">
-                <h2 className="font-cinzel text-xl text-purple-200 mb-4 text-center">
-                  {showLoginForm ? 'Welcome Back' : 'Get Started'}
-                </h2>
+                <h2 className="font-cinzel text-xl text-purple-200 mb-4 text-center">Get Started</h2>
                 
-                {showLoginForm ? (
-                  <form onSubmit={handleLogin} className="space-y-4">
-                    <Input
-                      type="text"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className="bg-slate-800 border-purple-500/30 text-slate-200"
-                      disabled={isLoggingIn}
-                    />
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-slate-800 border-purple-500/30 text-slate-200"
-                      disabled={isLoggingIn}
-                    />
-                    <Button 
-                      type="submit"
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                      disabled={!username.trim() || !password.trim() || isLoggingIn}
+                <form onSubmit={handleSignup} className="space-y-4">
+                  <Input
+                    type="text"
+                    placeholder="Choose your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="bg-slate-800 border-purple-500/30 text-slate-200"
+                    disabled={isSigningUp}
+                  />
+                  <Button 
+                    type="submit"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                    disabled={!username.trim() || isSigningUp}
+                  >
+                    {isSigningUp ? 'Creating Account...' : 'Create Account & Avatar'}
+                  </Button>
+                  <p className="text-center text-sm text-purple-300">
+                    Already have an account? 
+                    <button
+                      type="button"
+                      onClick={() => setShowLoginModal(true)}
+                      className="text-purple-400 hover:text-purple-300 ml-1 underline"
                     >
-                      {isLoggingIn ? 'Signing In...' : 'Sign In'}
-                    </Button>
-                    <p className="text-center text-sm text-purple-300">
-                      Don't have an account? 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowLoginForm(false);
-                          setPassword('');
-                        }}
-                        className="text-purple-400 hover:text-purple-300 ml-1 underline"
-                      >
-                        Sign up
-                      </button>
-                    </p>
-                  </form>
-                ) : (
-                  <form onSubmit={handleSignup} className="space-y-4">
-                    <Input
-                      type="text"
-                      placeholder="Choose your username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className="bg-slate-800 border-purple-500/30 text-slate-200"
-                      disabled={isSigningUp}
-                    />
-                    <Button 
-                      type="submit"
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                      disabled={!username.trim() || isSigningUp}
-                    >
-                      {isSigningUp ? 'Creating Account...' : 'Create Account & Avatar'}
-                    </Button>
-                    <p className="text-center text-sm text-purple-300">
-                      Already have an account? 
-                      <button
-                        type="button"
-                        onClick={() => setShowLoginForm(true)}
-                        className="text-purple-400 hover:text-purple-300 ml-1 underline"
-                      >
-                        Sign in
-                      </button>
-                    </p>
-                  </form>
-                )}
+                      Sign in
+                    </button>
+                  </p>
+                </form>
 
               </CardContent>
             </Card>
@@ -252,6 +214,57 @@ export default function Landing() {
 
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="bg-slate-900 border-purple-500/30 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-cinzel text-xl text-purple-200 text-center">
+              Welcome Back
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleModalLogin} className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Username"
+              value={modalUsername}
+              onChange={(e) => setModalUsername(e.target.value)}
+              className="bg-slate-800 border-purple-500/30 text-slate-200"
+              disabled={isLoggingIn}
+              autoFocus
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={modalPassword}
+              onChange={(e) => setModalPassword(e.target.value)}
+              className="bg-slate-800 border-purple-500/30 text-slate-200"
+              disabled={isLoggingIn}
+            />
+            <Button 
+              type="submit"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+              disabled={!modalUsername.trim() || !modalPassword.trim() || isLoggingIn}
+            >
+              {isLoggingIn ? 'Signing In...' : 'Sign In'}
+            </Button>
+            <p className="text-center text-sm text-purple-300">
+              Don't have an account? 
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLoginModal(false);
+                  setModalUsername('');
+                  setModalPassword('');
+                }}
+                className="text-purple-400 hover:text-purple-300 ml-1 underline"
+              >
+                Sign up below
+              </button>
+            </p>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
