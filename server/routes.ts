@@ -6,6 +6,7 @@ import MemoryStore from "memorystore";
 import path from "path";
 import { storage } from "./storage";
 import { registerSchema, loginSchema } from "@shared/schema";
+import { statsService } from "./services/statsService";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard } from "./services/leaderboard.js";
@@ -90,6 +91,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const user = await storage.createUser(userInsert);
+      
+      // Initialize user stats
+      await statsService.initializeUserStats(user.id);
       
       // Auto-login after registration
       (req.session as any).userId = user.id;
@@ -258,6 +262,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error getting tier info:", error);
       res.status(500).json({ message: "Failed to get tier info" });
+    }
+  });
+
+  // === PLAYER STATS ROUTES ===
+  
+  // Get current user's comprehensive stats
+  app.get('/api/stats/me', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const stats = await statsService.getUserStats(userId);
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Error fetching user stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats", error: error.message });
+    }
+  });
+
+  // Get any user's public stats
+  app.get('/api/stats/user/:userId', async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const stats = await statsService.getPublicStats(userId);
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Error fetching public stats:", error);
+      if (error.message === 'User not found') {
+        res.status(404).json({ message: "User not found" });
+      } else {
+        res.status(500).json({ message: "Failed to fetch stats", error: error.message });
+      }
+    }
+  });
+
+  // Get overall leaderboard with stats
+  app.get('/api/stats/leaderboard', async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      const leaderboard = await statsService.getLeaderboard(limit);
+      res.json(leaderboard);
+    } catch (error: any) {
+      console.error("Error fetching stats leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch leaderboard", error: error.message });
+    }
+  });
+
+  // Get subject-specific leaderboard
+  app.get('/api/stats/leaderboard/:subject', async (req, res) => {
+    try {
+      const { subject } = req.params;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const leaderboard = await statsService.getSubjectLeaderboard(subject as any, limit);
+      res.json(leaderboard);
+    } catch (error: any) {
+      console.error("Error fetching subject leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch subject leaderboard", error: error.message });
+    }
+  });
+
+  // Record question attempt (called during/after matches)
+  app.post('/api/stats/question-attempt', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { 
+        questionId, 
+        subject, 
+        selectedAnswer, 
+        correctAnswer, 
+        timeSpent, 
+        difficulty,
+        matchId 
+      } = req.body;
+      
+      const isCorrect = selectedAnswer === correctAnswer;
+      
+      await statsService.recordQuestionAttempt(
+        userId,
+        questionId,
+        subject,
+        selectedAnswer,
+        correctAnswer,
+        isCorrect,
+        timeSpent,
+        difficulty,
+        matchId
+      );
+      
+      res.json({ success: true, isCorrect });
+    } catch (error: any) {
+      console.error("Error recording question attempt:", error);
+      res.status(500).json({ message: "Failed to record attempt", error: error.message });
+    }
+  });
+
+  // Initialize stats for existing users (migration endpoint)
+  app.post('/api/stats/initialize', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      await statsService.initializeUserStats(userId);
+      res.json({ success: true, message: "Stats initialized" });
+    } catch (error: any) {
+      console.error("Error initializing stats:", error);
+      res.status(500).json({ message: "Failed to initialize stats", error: error.message });
+    }
+  });
+
+  // User search by username (for stats lookup)
+  app.post("/api/auth/search", async (req, res) => {
+    try {
+      const { username } = req.body;
+      
+      if (!username || typeof username !== 'string') {
+        return res.status(400).json({ message: "Username is required" });
+      }
+      
+      const user = await storage.getUserByUsername(username.trim());
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Return public user info only
+      const { password, ...publicUser } = user;
+      res.json(publicUser);
+    } catch (error: any) {
+      console.error("Error searching for user:", error);
+      res.status(500).json({ message: "Failed to search for user", error: error.message });
     }
   });
 

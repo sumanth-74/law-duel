@@ -480,6 +480,15 @@ export default function Home() {
             >
               Edit Character
             </Button>
+            <Button
+              onClick={() => window.location.href = '/stats'}
+              variant="outline"
+              size="sm"
+              className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20 hover:border-purple-400"
+            >
+              <UserIcon className="h-4 w-4 mr-2" />
+              My Stats
+            </Button>
             <Button 
               onClick={() => logout.mutate()} 
               variant="outline" 

@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Landing from "@/pages/Landing";
+import Stats from "@/pages/Stats";
 import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
 import { Loader2 } from "lucide-react";
@@ -35,6 +36,8 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Home} />
+          <Route path="/stats" component={Stats} />
+          <Route path="/stats/:userId" component={Stats} />
         </>
       )}
       <Route component={NotFound} />

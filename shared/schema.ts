@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, jsonb, real } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -25,6 +25,18 @@ export const users = pgTable("users", {
     questsCompleted: string[];
     xpEarned: number;
   }>(),
+  
+  // Player Stats
+  overallElo: integer("overall_elo").notNull().default(1200),
+  totalQuestionsAnswered: integer("total_questions_answered").notNull().default(0),
+  totalCorrectAnswers: integer("total_correct_answers").notNull().default(0),
+  currentOverallStreak: integer("current_overall_streak").notNull().default(0),
+  recentAttempts: jsonb("recent_attempts").$type<Array<{
+    timestamp: string;
+    correct: boolean;
+    subject: string;
+  }>>().default([]),
+  
   createdAt: timestamp("created_at").notNull().defaultNow(),
   lastLoginAt: timestamp("last_login_at"),
 });
@@ -56,6 +68,38 @@ export const questions = pgTable("questions", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Player stats per subject
+export const playerSubjectStats = pgTable("player_subject_stats", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  subject: text("subject").notNull(), // Civil Procedure, Constitutional Law, etc.
+  questionsAnswered: integer("questions_answered").notNull().default(0),
+  correctAnswers: integer("correct_answers").notNull().default(0),
+  currentStreak: integer("current_streak").notNull().default(0),
+  isProvisional: boolean("is_provisional").notNull().default(true), // true until 20+ attempts
+  subjectRating: integer("subject_rating").notNull().default(1200), // ELO-like per subject
+  recentAttempts: jsonb("recent_attempts").$type<Array<{
+    timestamp: string;
+    correct: boolean;
+  }>>().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Individual question attempts (for detailed tracking)
+export const questionAttempts = pgTable("question_attempts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  questionId: varchar("question_id").notNull(),
+  matchId: varchar("match_id"), // null for practice
+  subject: text("subject").notNull(),
+  selectedAnswer: integer("selected_answer").notNull(),
+  isCorrect: boolean("is_correct").notNull(),
+  timeSpent: integer("time_spent"), // milliseconds
+  difficulty: text("difficulty").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -73,7 +117,6 @@ export const registerSchema = insertUserSchema.extend({
   lawSchool: z.string().optional(),
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ["confirmPassword"],
   path: ["confirmPassword"],
 });
 
@@ -95,6 +138,21 @@ export type InsertMatch = z.infer<typeof insertMatchSchema>;
 export type Match = typeof matches.$inferSelect;
 export type InsertQuestion = z.infer<typeof insertQuestionSchema>;
 export type Question = typeof questions.$inferSelect;
+export type PlayerSubjectStats = typeof playerSubjectStats.$inferSelect;
+export type QuestionAttempt = typeof questionAttempts.$inferSelect;
+
+// MBE Subjects
+export const MBE_SUBJECTS = [
+  "Civil Procedure",
+  "Constitutional Law", 
+  "Contracts",
+  "Criminal Law/Procedure",
+  "Evidence",
+  "Real Property",
+  "Torts"
+] as const;
+
+export type MBESubject = typeof MBE_SUBJECTS[number];
 
 // Avatar system types
 export const avatarDataSchema = z.object({
