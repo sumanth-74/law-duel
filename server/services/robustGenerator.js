@@ -59,15 +59,34 @@ function ruleHint(subject, topic) {
 function buildPrompt(subject, topic, rule) {
   const nonce = crypto.randomBytes(6).toString("hex");
   return `
-Write an original **MBE-style** multiple-choice question.
-Subject: ${subject}. Topic: ${topic}. Rule to test: ${rule}.
-- Single best answer with exactly 4 options (A–D).
-- Fact pattern length: 120–180 words.
-- National (majority) law only (FRE/FRCP/UCC Art.2/federal con law as relevant).
-- Include clear explanation with the controlling rule.
-- No "all/none of the above". 
-- Return JSON: {"subject":"${subject}","stem":"...","choices":["A","B","C","D"],"correctIndex":0,"explanation":"..."}
-Freshness token: ${nonce} (do not mention it).`;
+Generate an original MBE-style multiple-choice question.
+
+REQUIREMENTS:
+- Subject: ${subject}
+- Topic: ${topic} 
+- Rule to test: ${rule}
+- EXACTLY 4 answer choices (no more, no less)
+- One correct answer
+- Fact pattern: 120-180 words
+- Professional legal writing
+- No "all/none of the above"
+
+RESPONSE FORMAT (JSON only):
+{
+  "subject": "${subject}",
+  "stem": "Your question text here...",
+  "choices": [
+    "First answer option",
+    "Second answer option", 
+    "Third answer option",
+    "Fourth answer option"
+  ],
+  "correctIndex": 0,
+  "explanation": "Legal explanation with controlling rule..."
+}
+
+CRITICAL: Return exactly 4 choices in the choices array. No additional text outside the JSON.
+Freshness token: ${nonce}`;
 }
 
 // OpenAI call using the working Responses API
@@ -134,8 +153,20 @@ export async function generateFreshQuestion(subject) {
       item.topic = item.topic || topic;
       
       // Basic validation - check structure and correctIndex range
-      if (!item.stem || !item.choices || item.choices.length !== 4 || typeof item.correctIndex !== 'number') {
-        err = "Invalid structure";
+      if (!item.stem || !item.choices || !Array.isArray(item.choices)) {
+        err = "Missing stem or choices";
+        continue;
+      }
+      
+      // CRITICAL: Ensure exactly 4 choices (OpenAI sometimes returns 8)
+      if (item.choices.length !== 4) {
+        console.log(`❌ OpenAI returned ${item.choices.length} choices instead of 4, retrying...`);
+        err = `Invalid choice count: ${item.choices.length} (expected 4)`;
+        continue;
+      }
+      
+      if (typeof item.correctIndex !== 'number') {
+        err = "Invalid correctIndex type";
         continue;
       }
       
