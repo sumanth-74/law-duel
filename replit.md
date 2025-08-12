@@ -85,6 +85,7 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Data Validation**: Strict schema validation for all user inputs and API responses
 - **Quality Monitoring**: Daily spot-checking of question accuracy and explanation tightness
 - **Leaderboard System**: Fixed "users2" initialization error caused by variable shadowing in statsService - both overall and real-time leaderboards now functional
+- **Subject Integrity Guard**: Comprehensive system implemented to eliminate cross-subject bleed with canonical subject normalization, heuristic validation, and retry logic (Updated 2025-08-12)
 
 ## External Dependencies
 

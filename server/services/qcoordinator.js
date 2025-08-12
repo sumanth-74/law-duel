@@ -1,10 +1,6 @@
-import { generateMBEItem, getDailyTopic } from './mbeGenerator.js';
+import { generateMBEItem, getDailyTopic, generateWithIntegrity } from './mbeGenerator.js';
+import { normalizeSubject, SUBJECTS } from './subjects.js';
 import { storage } from "../storage.js";
-
-const SUBJECTS = [
-  "Evidence", "Contracts", "Torts", "Property", 
-  "Civil Procedure", "Constitutional Law", "Criminal Law/Procedure"
-];
 
 const questionCache = new Map();
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
@@ -72,19 +68,19 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
 // Generate completely fresh question for duels (no cache, no storage)
 async function generateFreshQuestion(subject) {
   try {
-    const randomTopic = getTopicForSubject(subject);
-    console.log(`🚀 Calling OpenAI API for fresh ${subject} question on ${randomTopic}...`);
+    // Normalize subject and enforce integrity
+    const normalizedSubject = normalizeSubject(subject);
+    if (!normalizedSubject) {
+      throw new Error(`Unknown subject: ${subject}`);
+    }
     
-    const topicConfig = {
-      subject,
-      topic: randomTopic,
-      subtopic: undefined,
-      rule: undefined
-    };
-
-    console.log(`🎯 Generating fresh question: ${subject} - ${randomTopic}`);
+    const randomTopic = getTopicForSubject(normalizedSubject);
+    console.log(`🚀 Calling OpenAI API for fresh ${normalizedSubject} question on ${randomTopic}...`);
     
-    const mbeItem = await generateMBEItem(topicConfig);
+    console.log(`🎯 Generating fresh question: ${normalizedSubject} - ${randomTopic}`);
+    
+    // Use integrity-protected generation with up to 3 retries for cross-subject bleed
+    const mbeItem = await generateWithIntegrity({ subject: normalizedSubject });
     console.log(`🔍 MBE Item generated:`, {
       hasStem: !!mbeItem.stem,
       hasChoices: !!mbeItem.choices,
@@ -95,7 +91,7 @@ async function generateFreshQuestion(subject) {
     
     const question = {
       id: `fresh_openai_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      subject: subject,
+      subject: normalizedSubject, // Use normalized subject
       stem: mbeItem.stem,
       choices: mbeItem.choices,
       correctIndex: mbeItem.correctIndex,
@@ -171,43 +167,26 @@ async function generateQuestion(subject) {
   }
 }
 
-// Helper function to get randomized topics for each subject to mix up question types
+// Helper function to get randomized topics using canonical subjects system
 function getTopicForSubject(subject) {
-  const topicPools = {
-    "Evidence": [
-      "Hearsay", "Authentication", "Best Evidence Rule", "Privileged Communications",
-      "Character Evidence", "Expert Testimony", "Judicial Notice", "Relevance and Prejudice"
-    ],
-    "Contracts": [
-      "Formation", "Consideration", "Statute of Frauds", "Performance and Breach", 
-      "Remedies", "Third Party Rights", "Parol Evidence Rule", "Conditions"
-    ],
-    "Torts": [
-      "Negligence", "Intentional Torts", "Products Liability", "Defamation",
-      "Privacy Torts", "Nuisance", "Strict Liability", "Economic Torts"
-    ],
-    "Property": [
-      "Estates", "Future Interests", "Landlord-Tenant", "Easements",
-      "Covenants", "Adverse Possession", "Recording Acts", "Mortgages"
-    ],
-    "Civil Procedure": [
-      "Jurisdiction", "Venue", "Pleadings", "Discovery", 
-      "Summary Judgment", "Trial Procedure", "Appeals", "Joinder"
-    ],
-    "Constitutional Law": [
-      "Due Process", "Equal Protection", "First Amendment", "Commerce Clause",
-      "Separation of Powers", "Federalism", "Takings Clause", "Judicial Review"
-    ],
-    "Criminal Law/Procedure": [
-      "Fourth Amendment", "Fifth Amendment", "Sixth Amendment", "Mens Rea",
-      "Actus Reus", "Defenses", "Accomplice Liability", "Search and Seizure"
-    ]
+  // Map legacy subject names to canonical ones for backward compatibility
+  const legacyMapping = {
+    "Civil Procedure": "Civ Pro",
+    "Constitutional Law": "Con Law", 
+    "Criminal Law/Procedure": "Crim"
   };
   
-  const topics = topicPools[subject] || ["General Principles"];
+  const canonicalSubject = legacyMapping[subject] || subject;
+  const topics = SUBJECTS[canonicalSubject];
+  
+  if (!topics || topics.length === 0) {
+    console.log(`⚠️ No topics found for subject: ${subject} (canonical: ${canonicalSubject})`);
+    return "General Principles";
+  }
+  
   // Randomly select a topic to ensure variety
   const randomTopic = topics[Math.floor(Math.random() * topics.length)];
-  console.log(`🎲 Selected random topic for ${subject}: ${randomTopic}`);
+  console.log(`🎲 Selected random topic for ${canonicalSubject}: ${randomTopic}`);
   return randomTopic;
 }
 

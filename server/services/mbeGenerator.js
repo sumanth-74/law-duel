@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { SUBJECTS, normalizeSubject, pickTopic, subjectIntegrityCheck, classifySubjectHeuristic } from './subjects.js';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -41,7 +42,29 @@ const MBE_SCHEMA = {
   strict: true
 };
 
-export async function generateMBEItem({ subject, topic, subtopic, rule }) {
+// Subject integrity wrapper with up to 3 retries if heuristic detects cross-subject bleed
+export async function generateWithIntegrity({ subject: rawSubject }) {
+  const subject = normalizeSubject(rawSubject) || Object.keys(SUBJECTS)[Math.floor(Math.random() * 7)];
+  
+  for (let i = 0; i < 3; i++) {
+    const draft = await generateMBEItem({ subject });
+    const integrityError = subjectIntegrityCheck(draft, subject);
+    
+    if (!integrityError) {
+      console.log(`✅ Subject integrity verified: ${draft.subject} question generated successfully`);
+      return draft;
+    } else {
+      console.log(`⚠️ Subject integrity check failed (attempt ${i + 1}): ${integrityError}`);
+      if (i === 2) throw new Error(`Subject integrity check failed after 3 attempts: ${integrityError}`);
+    }
+  }
+}
+
+export async function generateMBEItem({ subject: rawSubject, topic, subtopic, rule }) {
+  // Normalize subject and enforce integrity
+  const subject = normalizeSubject(rawSubject) || Object.keys(SUBJECTS)[Math.floor(Math.random() * 7)];
+  const finalTopic = topic || pickTopic(subject);
+  
   const ruleText = rule ? ` focusing on ${rule}` : '';
   const subtopicText = subtopic ? `/${subtopic}` : '';
   
@@ -56,15 +79,16 @@ export async function generateMBEItem({ subject, topic, subtopic, rule }) {
   const randomStyle = questionStyles[Math.floor(Math.random() * questionStyles.length)];
   
   const prompt = `
-${randomStyle} for ${subject} law, specifically testing ${topic}${subtopicText}${ruleText}.
+You are drafting an original **MBE-style** question for the subject **${subject}** ONLY.
+- The issue tested **must** be squarely within **${subject}**; do not rely on other subjects.
+- Topic focus: **${finalTopic}**. If you must mention other law, keep it minimal and not outcome-determinative.
+- Single best answer, exactly 4 options (A–D). Fact pattern 120–180 words.
+- Include rationales for each option and a 3–6 sentence explanation stating the controlling rule.
+- National law only (FRE/FRCP/UCC Art. 2/federal con law as relevant to ${subject}). 
+- No "all/none of the above." 
+- CRITICAL: Randomly distribute the correct answer across A, B, C, and D options.
 
-Write an original MBE-style multiple-choice question with exactly 4 options (A–D). 
-Vary the question format - use different fact patterns, party types, and legal scenarios.
-120–180 word fact pattern testing ${rule || topic} under national law.
-Include detailed rationales for each option and comprehensive explanation.
-No "all/none of the above."
-Make this challenging but fair - solid bar exam difficulty.
-CRITICAL: Randomly distribute the correct answer across A, B, C, and D options.
+${randomStyle} testing ${finalTopic}${subtopicText}${ruleText}.
 
 Output ONLY JSON in this exact format:
 {
