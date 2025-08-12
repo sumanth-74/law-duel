@@ -13,26 +13,36 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   try {
     console.log(`🎯 getQuestion called: subject=${subject}, forceNew=${forceNew}, excludeIds=${excludeIds.length}`);
     
-    // For competitive duels, ALWAYS generate fresh questions from OpenAI - bypass all caching
+    // For competitive duels, ALWAYS generate fresh questions from OpenAI - NO FALLBACKS ALLOWED
     if (forceNew) {
       console.log(`🔥 FORCE NEW = TRUE - Generating COMPLETELY FRESH OpenAI question for duel in ${subject}`);
-      try {
-        const { generateFreshQuestion } = await import('./robustGenerator.js');
-        const freshQuestion = await generateFreshQuestion(subject);
-        if (freshQuestion && validateQuestion(freshQuestion)) {
-          console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
-          console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
-          // The fresh question already has the correct format from robustGenerator
-          console.log(`✅ SUCCESSFULLY returning fresh OpenAI question with QID: ${freshQuestion.qid}`);
-          return freshQuestion;
-        } else {
-          console.log(`❌ Fresh question failed validation - falling back`);
-          return getFallbackQuestion(subject);
+      
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          console.log(`🎯 Attempt ${attempt}: Calling robust generator for ${subject}...`);
+          const { generateFreshQuestion } = await import('./robustGenerator.js');
+          const freshQuestion = await generateFreshQuestion(subject);
+          
+          if (freshQuestion && validateQuestion(freshQuestion)) {
+            console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
+            console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
+            console.log(`✅ SUCCESSFULLY returning fresh OpenAI question with QID: ${freshQuestion.qid}`);
+            return freshQuestion;
+          } else {
+            console.log(`❌ Attempt ${attempt} failed validation, retrying...`);
+            if (attempt === 3) {
+              throw new Error("Failed validation on all 3 attempts");
+            }
+          }
+        } catch (openaiError) {
+          console.error(`❌ Attempt ${attempt} failed for duel ${subject}:`, openaiError.message);
+          if (attempt === 3) {
+            // If we absolutely cannot generate after 3 attempts, throw error instead of fallback
+            throw new Error(`Unable to generate fresh question after 3 attempts: ${openaiError.message}`);
+          }
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
-      } catch (openaiError) {
-        console.error(`❌ OpenAI generation failed for duel ${subject}:`, openaiError.message);
-        console.log('🔄 Using random fallback question for variety');
-        return getFallbackQuestion(subject);
       }
     }
 
