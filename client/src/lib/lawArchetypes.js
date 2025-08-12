@@ -252,8 +252,8 @@ export const LAW_ARCHETYPES = {
       category: "publicdefender"
     },
     {
-      id: "miranda-crow",
-      label: "Miranda Crow",
+      id: "miranda-hawk",
+      label: "Miranda Hawk",
       base: "beast",
       palette: "constitutional_purple",
       props: ["constitution", "gavel", "legal_pad"],

@@ -61,7 +61,7 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
     
     // Public Defender characters - justice/defense themes
     'gideon-crow': crowPortrait,                      // Crow = Crow
-    'miranda-crow': crowPortrait,                     // Crow = Crow (both are landmark cases)
+    'miranda-hawk': hawkPortrait,                     // Hawk = Hawk (landmark case)
     'suppression-wraith': necromancerPortrait,        // Wraith = Necromancer (ghostly)
     'probable-cause-kraken': alienPortrait,           // Kraken = Alien (tentacled)
     'speedy-trial-sprite': elementalPortrait,         // Sprite = Elemental (quick/agile)
