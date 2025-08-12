@@ -1,0 +1,53 @@
+Random question generation per round
+
+On the backend, implement an API endpoint (e.g. /duel/next) that:
+
+Accepts the current duel ID and an optional list of subjects (subjects=["Evidence","Torts"] or empty for “mix”).
+
+Creates a new question only if the current round hasn’t already generated one.
+
+Calls your OpenAI generator with a “freshness nonce” and subject/topic hints to force unique content. Use an exponential backoff with up to three retries; if a generated item has duplicate answers or “All/None” wording, discard it and retry.
+
+Hash the question stem (e.g. SHA‑1) and store it in a seen set attached to that duel; if the hash is already in seen, discard and retry. This prevents repeats within a single duel.
+
+Enforce a 60‑second timer by storing startAt and endsAt timestamps; pass these back to the client with each question and mark unanswered submissions as incorrect if they arrive after endsAt.
+
+Choice normalisation
+
+Strip any leading “A)”, “B.” etc. from the choices returned by OpenAI and discard questions where any choice is shorter than a few words or any choice is a duplicate.
+
+Always send only the array of choice texts and withhold the answer index; the client can render the letters (“A”, “B”, “C”, “D”) itself.
+
+Subject handling
+
+Maintain a canonical list of subjects (e.g. ['Civ Pro','Con Law','Contracts','Crim','Evidence','Property','Torts']), and validate that each generated item’s subject matches one in this list.
+
+When the user selects “mixed”, simply do not pass a subject filter; the generator should pick a random subject from this list. When the user selects one or more subjects, pass only those to the generator.
+
+On the frontend, display question.subject from the returned item, not the originally requested subject, so you don’t show “Contracts” over an Evidence question.
+
+Client-side updates
+
+When you fetch a new question, append a cache‑busting query parameter (e.g. ?ts=Date.now()) and set cache: "no-store" in the fetch options to prevent Chrome from reusing a cached response.
+
+After receiving a question, set your local state entirely from the new payload rather than merging with previous state; this avoids inadvertently reusing old data.
+
+Render choices by pairing the array of texts returned by the server with your own letters array:
+
+jsx
+Copy
+Edit
+const letters = ['A','B','C','D'];
+return question.choices.map((txt, idx) => (
+  <button key={idx} onClick={() => answer(idx)}>
+    <span className="label">{letters[idx]}</span>
+    <span className="text">{txt}</span>
+  </button>
+));
+Do not use the same field for both the letter and the text.
+
+Advancing rounds
+
+In your /duel/answer endpoint, after recording a player’s answer, check if both players (or the player and the bot) have answered or the timer has expired; if so, increment duel.round so the next call to /duel/next will generate a new question.
+
+Do not overwrite or reuse the question object after incrementing the round; keep each question in the duel history for scoring.

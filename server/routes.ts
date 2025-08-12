@@ -760,6 +760,184 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // === DUEL API ENDPOINTS ===
+  
+  // Duel state storage
+  const duelStorage = new Map();
+  const CANONICAL_SUBJECTS = ['Civil Procedure', 'Constitutional Law', 'Contracts', 'Criminal Law', 'Evidence', 'Property', 'Torts'];
+
+  // Helper functions for duel management
+  function normalizeChoices(raw) {
+    if (!Array.isArray(raw) || raw.length !== 4) throw new Error("Need exactly 4 choices");
+    const cleaned = raw.map(s => String(s || "").replace(/^\s*[A-D][\)\].:\-]\s*/i, "").trim());
+    if (cleaned.some(c => c.length < 6)) throw new Error("Choices too short");
+    if (new Set(cleaned.map(c => c.toLowerCase())).size < 4) throw new Error("Duplicate choices");
+    return cleaned;
+  }
+
+  function fingerprintStem(stem) {
+    const crypto = require('crypto');
+    return crypto.createHash("sha1")
+      .update(String(stem).toLowerCase().replace(/\s+/g, " "))
+      .digest("hex");
+  }
+
+  // /duel/next - Core duel question endpoint
+  app.post("/duel/next", async (req, res) => {
+    try {
+      const { duelId, subjects } = req.body || {};
+      if (!duelId) return res.status(400).json({ error: "Missing duelId" });
+
+      let duel = duelStorage.get(duelId);
+      if (!duel) {
+        // Initialize new duel
+        duel = {
+          id: duelId,
+          round: 0,
+          rounds: 7,
+          q: {},
+          seen: new Set(),
+          subjectPool: Array.isArray(subjects) && subjects.length ? subjects : CANONICAL_SUBJECTS,
+          scores: [0, 0]
+        };
+        duelStorage.set(duelId, duel);
+      }
+
+      // Check if duel is complete
+      if (duel.round >= duel.rounds) {
+        return res.json({ done: true, finalScores: duel.scores });
+      }
+
+      // Generate question for current round if not already done
+      if (!duel.q[duel.round]) {
+        let item, err;
+        for (let tries = 0; tries < 4; tries++) {
+          try {
+            // Pick random subject from pool
+            const subjectForRound = duel.subjectPool[Math.floor(Math.random() * duel.subjectPool.length)];
+            
+            // Generate fresh question
+            const { generateFreshQuestion } = await import('./services/robustGenerator.js');
+            item = await generateFreshQuestion(subjectForRound);
+            
+            // Validate and normalize choices
+            item.choices = normalizeChoices(item.choices);
+            if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3) {
+              throw new Error("Bad correctIndex");
+            }
+
+            // Check for duplicates within this duel
+            const fp = fingerprintStem(item.stem);
+            if (duel.seen.has(fp)) {
+              err = "Seen in this duel";
+              continue;
+            }
+
+            // Success - mark as seen
+            duel.seen.add(fp);
+            const startAt = Date.now();
+            const endsAt = startAt + 60 * 1000;
+            
+            duel.q[duel.round] = { 
+              item, 
+              startAt, 
+              endsAt, 
+              source: "ai",
+              answers: {} // Track player answers for this round
+            };
+            break;
+          } catch (e) {
+            err = e.message;
+            await new Promise(r => setTimeout(r, 120 + Math.random() * 180));
+            item = null;
+          }
+        }
+
+        if (!duel.q[duel.round]) {
+          return res.status(502).json({ error: `Could not generate fresh question: ${err}` });
+        }
+      }
+
+      const q = duel.q[duel.round];
+      const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
+
+      // Return question without answer key
+      const safe = {
+        id: q.item.qid,
+        subject: q.item.subject,
+        topic: q.item.topic,
+        stem: q.item.stem,
+        choices: q.item.choices, // Already normalized
+        timeLimitSec: 60,
+        timeRemainingSec: remaining,
+        round: duel.round + 1,
+        totalRounds: duel.rounds,
+        duelId: duelId
+      };
+
+      res.json({ question: safe });
+
+    } catch (e) {
+      console.error("Duel/next error:", e);
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // /duel/answer - Submit answer and advance round
+  app.post("/duel/answer", async (req, res) => {
+    try {
+      const { duelId, playerId, choiceIndex, timeMs } = req.body || {};
+      if (!duelId) return res.status(400).json({ error: "Missing duelId" });
+
+      const duel = duelStorage.get(duelId);
+      if (!duel) return res.status(404).json({ error: "Duel not found" });
+
+      const q = duel.q[duel.round];
+      if (!q) return res.status(400).json({ error: "No active question" });
+
+      const tNow = Date.now();
+      const timedOut = tNow > q.endsAt;
+      const correct = !timedOut && Number(choiceIndex) === Number(q.item.correctIndex);
+
+      // Record answer
+      q.answers[playerId || 'player'] = {
+        choice: Number(choiceIndex),
+        correct,
+        timeMs: timeMs || (tNow - q.startAt),
+        timedOut
+      };
+
+      // Check if round is finished (for bot duels, assume bot answers immediately)
+      const playerAnswered = Boolean(q.answers['player']);
+      const botAnswered = true; // Assume bot for now
+      const roundFinished = timedOut || (playerAnswered && botAnswered);
+
+      if (roundFinished) {
+        // Update scores
+        if (correct) duel.scores[0]++;
+        // Bot score would be updated here based on bot logic
+        
+        duel.round += 1; // Advance to next round
+      }
+
+      const result = {
+        correct,
+        correctIndex: q.item.correctIndex,
+        explanation: q.item.explanation,
+        timeRemaining: Math.max(0, Math.floor((q.endsAt - tNow) / 1000)),
+        scores: duel.scores,
+        roundFinished,
+        duelComplete: duel.round >= duel.rounds
+      };
+
+      res.json(result);
+
+    } catch (e) {
+      console.error("Duel/answer error:", e);
+      res.status(500).json({ error: e.message });
+    }
+  });
+
   const httpServer = createServer(app);
 
   // WebSocket server for real-time features

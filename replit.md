@@ -82,6 +82,7 @@ The application uses a monorepo structure with shared types and schemas between 
 - **UI Choice Display**: Fixed double-letter rendering issue - choices now display clean text without duplicating the letter labels (Updated 2025-08-12)
 - **Critical Fixes Deployed**: Fixed OpenAI prompt to require exactly 4 choices, added server-side choice normalization, and eliminated stale question caching - fresh questions now generated consistently (Updated 2025-08-12)
 - **Duel Deduplication System**: Implemented per-duel fingerprinting to prevent repeated questions within single duels, with 4-attempt retry logic for truly unique questions each round (Updated 2025-08-12)
+- **Robust Duel API**: Implemented `/duel/next` and `/duel/answer` endpoints with proper subject handling, 60-second server-enforced timers, choice normalization, and round advancement logic (Updated 2025-08-12)
 - **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
 - **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
 - **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal
