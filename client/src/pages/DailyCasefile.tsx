@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CalendarDays, Clock, Trophy, Target, Flame, Star } from 'lucide-react';
+import { CalendarDays, Clock, Trophy, Target, Flame, Star, Home } from 'lucide-react';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 
 interface DailyQuestion {
@@ -46,6 +47,7 @@ interface SubmitResult {
 }
 
 export default function DailyCasefile() {
+  const [, setLocation] = useLocation();
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState(90); // 90 second timer
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -283,6 +285,18 @@ export default function DailyCasefile() {
             </CardContent>
           </Card>
         )}
+
+        {/* Back to Home Button */}
+        <div className="text-center mt-8">
+          <Button
+            onClick={() => setLocation('/')}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg"
+            data-testid="back-to-home"
+          >
+            <Home className="w-5 h-5 mr-2" />
+            Back to Home
+          </Button>
+        </div>
       </div>
     );
   }
