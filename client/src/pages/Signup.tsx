@@ -8,28 +8,10 @@ import LawDuelLogo from '@/components/LawDuelLogo';
 import { useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 
-const archetypes = [
-  {
-    id: "novice-scholar",
-    name: "Novice Scholar",
-    description: "Starting your legal journey with determination and fresh perspectives."
-  },
-  {
-    id: "trial-hawk",
-    name: "Trial Hawk", 
-    description: "Aggressive litigator who thrives in courtroom combat."
-  },
-  {
-    id: "constitutional-scholar",
-    name: "Constitutional Scholar",
-    description: "Deep thinker focused on fundamental legal principles."
-  },
-  {
-    id: "corporate-counsel", 
-    name: "Corporate Counsel",
-    description: "Strategic advisor navigating complex business law."
-  }
-];
+import { LAW_ARCHETYPES } from '@/lib/lawArchetypes';
+import { getCharacterImage, renderAvatarSVG } from '@/lib/creator';
+
+const categories = LAW_ARCHETYPES.categories;
 
 const lawSchools = [
   "Harvard Law School",
@@ -65,8 +47,11 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
     lawSchool: '',
-    archetype: 'novice-scholar'
+    selectedCategory: '',
+    selectedCharacter: ''
   });
+
+  const [step, setStep] = useState(1); // 1: Category selection, 2: Character selection
 
   // Get username from URL params
   useEffect(() => {
@@ -83,6 +68,23 @@ export default function Signup() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setFormData(prev => ({ ...prev, selectedCategory: categoryId, selectedCharacter: '' }));
+    setStep(2);
+  };
+
+  const handleCharacterSelect = (characterId: string) => {
+    setFormData(prev => ({ ...prev, selectedCharacter: characterId }));
+  };
+
+  const getCharactersForCategory = (categoryId: string) => {
+    return LAW_ARCHETYPES.archetypes.filter(char => char.category === categoryId);
+  };
+
+  const getSelectedCharacterData = () => {
+    return LAW_ARCHETYPES.archetypes.find(char => char.id === formData.selectedCharacter);
   };
 
   const handleCreateAccount = async (e: React.FormEvent) => {
@@ -112,7 +114,7 @@ export default function Signup() {
           confirmPassword: formData.confirmPassword,
           lawSchool: formData.lawSchool,
           avatarData: {
-            archetype: formData.archetype,
+            archetype: formData.selectedCharacter,
             accessories: [],
             level: 1
           }
