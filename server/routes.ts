@@ -15,6 +15,7 @@ import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';
 import streakManager from './services/streakManager.js';
 import asyncDuels from './services/async.js';
+import { dailyCasefileService } from './services/dailyCasefileService';
 
 // Initialize bot practice system
 import { BotPractice } from './services/botPractice.js';
@@ -602,6 +603,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve archetypes data
   app.get("/api/archetypes", (req, res) => {
     res.sendFile(path.join(process.cwd(), "client/public/archetypes.json"));
+  });
+
+  // === DAILY CASEFILE ROUTES ===
+  
+  // Get today's daily question
+  app.get("/api/daily-question", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const result = await dailyCasefileService.getTodaysQuestion(userId);
+      res.json(result);
+    } catch (error) {
+      console.error("Error getting daily question:", error);
+      res.status(500).json({ message: "Failed to get daily question" });
+    }
+  });
+
+  // Submit daily answer
+  app.post("/api/daily-answer", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { questionId, choiceIndex } = req.body;
+      
+      if (!questionId || typeof choiceIndex !== 'number') {
+        return res.status(400).json({ message: "Invalid request data" });
+      }
+
+      const result = await dailyCasefileService.submitDailyAnswer(userId, questionId, choiceIndex);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error submitting daily answer:", error);
+      if (error.message === 'Daily question already attempted today') {
+        return res.status(400).json({ message: error.message });
+      }
+      res.status(500).json({ message: "Failed to submit answer" });
+    }
+  });
+
+  // Get daily streak info
+  app.get("/api/daily-streak", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const streakInfo = await dailyCasefileService.getDailyStreakInfo(userId);
+      res.json(streakInfo);
+    } catch (error) {
+      console.error("Error getting daily streak:", error);
+      res.status(500).json({ message: "Failed to get streak info" });
+    }
   });
 
   const httpServer = createServer(app);

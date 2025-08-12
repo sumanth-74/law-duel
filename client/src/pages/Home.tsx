@@ -17,7 +17,8 @@ import LawDuelLogo from '@/components/LawDuelLogo';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays } from 'lucide-react';
+import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 
 const SUBJECTS = [
@@ -509,6 +510,26 @@ export default function Home() {
             </Button>
           </div>
         </div>
+
+        {/* Daily Casefile Banner */}
+        <Card className="bg-gradient-to-r from-amber-900/40 via-yellow-900/40 to-orange-900/40 border-amber-500/30 mb-6">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <CalendarDays className="w-8 h-8 text-amber-400" />
+                <div>
+                  <h3 className="font-cinzel text-lg font-bold text-amber-200">Daily Casefile</h3>
+                  <p className="text-amber-300 text-sm">Hard question • Enhanced rewards • Resets daily</p>
+                </div>
+              </div>
+              <Link href="/daily">
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white border-0">
+                  Take Challenge
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Game Modes */}

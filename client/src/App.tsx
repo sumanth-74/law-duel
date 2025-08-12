@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Landing from "@/pages/Landing";
 import Stats from "@/pages/Stats";
+import DailyCasefile from "@/pages/DailyCasefile";
 import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
 import { Loader2 } from "lucide-react";
@@ -36,6 +37,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Home} />
+          <Route path="/daily" component={DailyCasefile} />
           <Route path="/stats" component={Stats} />
           <Route path="/stats/:userId" component={Stats} />
         </>

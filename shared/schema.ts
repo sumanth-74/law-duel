@@ -40,6 +40,12 @@ export const users = pgTable("users", {
   lastDailyReset: timestamp("last_daily_reset").defaultNow(),
   firstDuelOfDay: boolean("first_duel_of_day").notNull().default(true),
   
+  // Daily Casefile System
+  timezone: text("timezone").default("UTC"),
+  dailyStreak: integer("daily_streak").notNull().default(0),
+  bestDailyStreak: integer("best_daily_streak").notNull().default(0),
+  lastDailyDate: text("last_daily_date"), // YYYY-MM-DD format
+  
   // Overall Stats
   totalQuestionsAnswered: integer("total_questions_answered").notNull().default(0),
   totalCorrectAnswers: integer("total_correct_answers").notNull().default(0),
@@ -198,6 +204,41 @@ export const LEVEL_TITLES = [
 // Mastery Thresholds (0-1250 points for Mastery 0-X)
 export const MASTERY_THRESHOLDS = [0, 80, 170, 270, 380, 500, 630, 770, 920, 1080, 1250] as const;
 export const MASTERY_NUMERALS = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] as const;
+
+// Daily Questions Table
+export const dailyQuestions = pgTable("daily_questions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  dateUtc: text("date_utc").notNull(), // YYYY-MM-DD format
+  subject: text("subject").notNull(),
+  topic: text("topic"),
+  difficulty: text("difficulty").notNull().default("hard"),
+  stem: text("stem").notNull(),
+  choices: jsonb("choices").$type<string[]>().notNull(), // Array of 4 choices
+  correctIndex: integer("correct_index").notNull(), // 0-3
+  explanationLong: text("explanation_long").notNull(),
+  ruleRefs: jsonb("rule_refs").$type<string[]>().default([]),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User Daily Attempts Table
+export const userDailyAttempts = pgTable("user_daily_attempts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  questionId: varchar("question_id").notNull(),
+  answeredAt: timestamp("answered_at").defaultNow(),
+  isCorrect: boolean("is_correct").notNull(),
+  choiceIndex: integer("choice_index").notNull(), // User's choice 0-3
+  xpAwarded: integer("xp_awarded").notNull().default(0),
+  masteryDelta: integer("mastery_delta").notNull().default(0),
+  streakBefore: integer("streak_before").notNull().default(0),
+  streakAfter: integer("streak_after").notNull().default(0),
+});
+
+export type DailyQuestion = typeof dailyQuestions.$inferSelect;
+export type InsertDailyQuestion = typeof dailyQuestions.$inferInsert;
+export type UserDailyAttempt = typeof userDailyAttempts.$inferSelect;
+export type InsertUserDailyAttempt = typeof userDailyAttempts.$inferInsert;
 
 // Avatar system types
 export const avatarDataSchema = z.object({
