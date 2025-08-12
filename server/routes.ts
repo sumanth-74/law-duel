@@ -764,6 +764,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Duel state storage
   const duelStorage = new Map();
+  const testQuestionStorage = new Map(); // Store questions for answer validation
   const CANONICAL_SUBJECTS = ['Civil Procedure', 'Constitutional Law', 'Contracts', 'Criminal Law', 'Evidence', 'Property', 'Torts'];
 
   // Helper functions for duel management
@@ -797,6 +798,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const item = await generateFreshQuestion(subject);
       
       console.log(`✅ Generated fresh question for test: ${item.qid}`);
+      
+      // Store question with correct answer for validation
+      testQuestionStorage.set(item.qid, {
+        correctIndex: item.correctIndex,
+        explanation: item.explanation || "No explanation provided",
+        item: item
+      });
       
       // Return clean question without answer (exactly as requested)
       const question = {
@@ -862,20 +870,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.setHeader('Content-Type', 'application/json');
     
     try {
-      const { choiceIndex } = req.body || {};
+      const { choiceIndex, questionId } = req.body || {};
       
-      // Return mock result for testing
+      // Find the specific question to validate against
+      const questionData = testQuestionStorage.get(questionId);
+      
+      if (!questionData) {
+        console.log(`❌ Question ${questionId} not found in storage`);
+        return res.status(400).json({ error: 'Question not found for validation' });
+      }
+      
+      // Check if answer is correct
+      const isCorrect = choiceIndex === questionData.correctIndex;
+      
       const result = {
-        correct: Math.random() > 0.5, // Random for testing
-        correctIndex: Math.floor(Math.random() * 4),
-        explanation: "This is a test explanation for the answer choice selected.",
+        correct: isCorrect,
+        correctIndex: questionData.correctIndex,
+        explanation: questionData.explanation,
         timeRemaining: 45,
         scores: [1, 0],
         roundFinished: true,
         duelComplete: false
       };
       
-      console.log(`✅ Test answer submitted: choice ${choiceIndex}, correct: ${result.correct}`);
+      console.log(`✅ Test answer: choice ${choiceIndex}, correct answer: ${questionData.correctIndex}, result: ${isCorrect ? 'CORRECT' : 'WRONG'}`);
       res.json(result);
       
     } catch (error: any) {

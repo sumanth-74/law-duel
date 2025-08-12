@@ -30,6 +30,7 @@ interface DuelResult {
 export default function DuelTestPage() {
   const [duelId] = useState(`test_duel_${Date.now()}`);
   const [currentQuestion, setCurrentQuestion] = useState<DuelQuestion | null>(null);
+  const [usedQuestions, setUsedQuestions] = useState<Set<string>>(new Set());
   const [selectedChoice, setSelectedChoice] = useState(-1);
   const [result, setResult] = useState<DuelResult | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(60);
@@ -78,8 +79,16 @@ export default function DuelTestPage() {
         setDuelComplete(true);
         setCurrentQuestion(null);
       } else if (data.question) {
+        // Check if we've seen this question before
+        if (usedQuestions.has(data.question.id)) {
+          console.warn('⚠️ Duplicate question detected, fetching another...');
+          setTimeout(fetchNextQuestion, 100); // Try again quickly
+          return;
+        }
+        
         console.log('✅ Question received:', data.question.subject, data.question.topic);
         setCurrentQuestion(data.question);
+        setUsedQuestions(prev => new Set([...prev, data.question.id]));
         setTimeRemaining(data.question.timeRemainingSec || 60);
       } else {
         console.error('Invalid response:', data);
@@ -103,6 +112,7 @@ export default function DuelTestPage() {
           duelId,
           playerId: 'test_player',
           choiceIndex,
+          questionId: currentQuestion?.id,
           timeMs: (60 - timeRemaining) * 1000
         })
       });
