@@ -58,14 +58,14 @@ export default function Landing() {
             <LawDuelLogo size="xl" className="scale-150" />
           </div>
           
-          <h1 className="font-cinzel text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="font-cinzel text-6xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-purple-500 bg-clip-text text-transparent">
-              Law School Exam & Bar Review Study Tool
+              Law Duel
             </span>
           </h1>
           
           <p className="text-lg md:text-xl text-purple-200 mb-8 max-w-3xl mx-auto">
-            Study legal concepts through competitive duels. Test your knowledge, track progress, and master the law.
+            Master law school exams and bar review through competitive duels. Test your knowledge, track progress, and play with friends.
           </p>
 
           {/* Signup Form */}

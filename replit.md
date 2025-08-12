@@ -9,7 +9,7 @@ Law Duel is a competitive legal education game where players engage in 1v1 duels
 Preferred communication style: Simple, everyday language.
 
 **UX Requirements (Updated 2025-01-12):**
-- **Simple study tool focus**: Basic law school exam and bar review study platform
+- **Game focus**: Law Duel is a competitive legal education game, not just a study tool
 - **Direct signup**: Users can register directly on landing page with username only
 - **Avatar creation**: Account creation leads directly to character/avatar creation
 - Stealth bot system: Players must never know they're playing against bots
