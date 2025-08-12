@@ -211,7 +211,8 @@ async function runDuel(wss, roomCode, players, subject) {
         stem: question.stem,
         choices: question.choices,
         timeLimit: question.timeLimit,
-        deadlineTs: question.deadlineTs
+        deadlineTs: question.deadlineTs,
+        showTrainingBanner: useTrainingBanner
       };
 
       players.forEach(ws => {
@@ -328,11 +329,18 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       console.log(`Generating question for round ${round} in ${subject}`);
       
       let question;
+      let useTrainingBanner = false;
+      
       try {
         question = await generateQuestion(subject);
         console.log(`OpenAI question generated: "${question.stem.substring(0, 50)}..."`);
       } catch (aiError) {
-        console.log('OpenAI failed, using fallback question');
+        if (aiError.message === 'QUOTA_EXCEEDED') {
+          console.log('Using training questions - quota exceeded');
+          useTrainingBanner = true;
+        } else {
+          console.log('OpenAI failed, using fallback question');
+        }
         question = getFallbackQuestion(subject);
       }
       
@@ -344,7 +352,8 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         stem: question.stem,
         choices: question.choices,
         timeLimit: question.timeLimit,
-        deadlineTs: question.deadlineTs
+        deadlineTs: question.deadlineTs,
+        showTrainingBanner: useTrainingBanner
       };
 
       console.log(`Broadcasting question to human player for round ${round}`);

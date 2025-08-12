@@ -27,6 +27,7 @@ interface DuelState {
   hintsUsed: number;
   hintText?: string;
   showHint: boolean;
+  showTrainingBanner: boolean;
 }
 
 export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaProps) {
@@ -38,7 +39,8 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
     isFinished: false,
     waitingForOpponent: false,
     hintsUsed: 0,
-    showHint: false
+    showHint: false,
+    showTrainingBanner: false
   });
 
   const timerRef = useRef<NodeJS.Timeout>();
@@ -123,7 +125,8 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
       selectedAnswer: undefined,
       showResult: false,
       waitingForOpponent: false,
-      showHint: false
+      showHint: false,
+      showTrainingBanner: questionData.showTrainingBanner || false
     }));
 
     startTimer(questionData.deadlineTs);
@@ -311,6 +314,15 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
             </div>
           </div>
         </div>
+        
+        {/* Training Banner */}
+        {duelState.showTrainingBanner && (
+          <div className="bg-mystic-gold/10 border border-mystic-gold/30 rounded-lg p-3 mb-4">
+            <p className="text-sm text-mystic-gold text-center">
+              Using training questions while Atticus refills the vault.
+            </p>
+          </div>
+        )}
         
         {/* Question */}
         {duelState.currentQuestion && (
