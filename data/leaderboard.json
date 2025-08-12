@@ -24,10 +24,10 @@
     "username": "RachelKim",
     "displayName": "Rachel Kim",
     "level": 16,
-    "points": 3006,
-    "totalWins": 50,
+    "points": 3040,
+    "totalWins": 51,
     "totalLosses": 7,
-    "lastActive": "2025-08-12T16:51:15.887Z"
+    "lastActive": "2025-08-12T18:56:10.245Z"
   },
   {
     "id": "bot_alexandra_carter",
@@ -44,10 +44,10 @@
     "username": "DavidTorres",
     "displayName": "David Torres",
     "level": 14,
-    "points": 2650,
-    "totalWins": 42,
+    "points": 2674,
+    "totalWins": 43,
     "totalLosses": 11,
-    "lastActive": "2025-08-12T04:14:02.161Z"
+    "lastActive": "2025-08-12T18:56:10.245Z"
   },
   {
     "id": "bot_carlos_mendez",
@@ -74,9 +74,9 @@
     "username": "JamesRichardson",
     "displayName": "James Richardson",
     "level": 11,
-    "points": 2129,
-    "totalWins": 33,
+    "points": 2151,
+    "totalWins": 34,
     "totalLosses": 15,
-    "lastActive": "2025-08-12T18:04:38.456Z"
+    "lastActive": "2025-08-12T18:56:10.245Z"
   }
 ]
