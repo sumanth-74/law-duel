@@ -1,0 +1,146 @@
+Add Async Duels (Game-Pigeon style) — minimal spec
+Keep live duels. Add an Async toggle that runs the same best-of-7, but turn-based.
+
+UX
+Play screen buttons:
+
+Quick Match (Live) • Quick Match (Async)
+
+Challenge Friend (Async) by username
+
+Inbox tab: list of active async matches with badges:
+
+“Your turn in Evidence vs @Maya · Round 4 · 11h left”
+
+Turn view: shows the round’s question, 20s local timer to answer, then locks. You can leave; server waits for opponent.
+
+Turn rules
+Best-of-7; each round = 1 question.
+
+Per-turn deadline: 24h to answer.
+
+If a player doesn’t answer in 24h → round forfeit to the other side.
+
+If a player misses 2 rounds in a row or 48h total → match forfeit.
+
+When both answers are in (or one timed out), server reveals, updates the score, then creates next round.
+
+Bot fallback (stealth)
+If you Quick Match (Async) and no human is free in 8s, spawn a stealth opponent with humany username/avatar.
+
+Bot answers after a natural delay (random 8–45 minutes) with accuracy tuned to your ladder. Never on Top 20.
+
+Data model (tiny, file-backed)
+json
+Copy
+Edit
+Match {
+  "id": "m_xxx",
+  "mode": "async",
+  "subject": "Evidence",
+  "audience": "1L|Bar",
+  "bestOf": 7,
+  "players": [{"id":"u1","username":"@you"},{"id":"u2","username":"@them"}],
+  "scores": {"u1":0,"u2":0},
+  "round": 1,
+  "turns": [
+    {
+      "qid":"q_xxx",
+      "stem":"...",
+      "choices":["A","B","C","D"],
+      "deadlineTs": 1723420000000,
+      "answers": { "u1": {"idx":2,"ms":7400}, "u2": {"idx":1,"ms":9800} },
+      "revealed": true,
+      "correctIndex": 2,
+      "explanation":"..."
+    }
+  ],
+  "status": "active|over",
+  "winnerId": null,
+  "updatedAt": 1723410000000
+}
+Endpoints (no refactor to live code)
+POST /api/async/create → { matchId } (friend or random queue)
+
+GET /api/async/inbox → list of your matches (condensed)
+
+GET /api/async/match/:id → full state (only your side’s not-yet-revealed info)
+
+POST /api/async/answer {matchId, round, idx, ms}
+
+POST /api/async/resign {matchId}
+
+Server does:
+
+On create or when a round ends, call the same OpenAI generator once → store Q + correctIndex server-side, send only {stem, choices} to clients.
+
+When both answered or deadline passes: score the round (speed tiebreak if both correct), append correctIndex + explanation, update scores, and if needed spin next turn or finalize match.
+
+When status: over: apply ladder +25/−25 (same as live), atomic write, clamp ≥0.
+
+Matching & queue (async)
+Keep a per-subject per-audience queue.
+
+If no human in 8s → spawn stealth bot and schedule its future answers (randomized 8–45 min + jitter). Don’t expose it’s a bot; no rematch or friend add from that card.
+
+Notifications (MVP)
+In-app badges (“Inbox (2)”) + toast: “It’s your turn vs @Maya.”
+
+Add a no-op notifications.enqueue(userId, text) you can later wire to email/push; for now it just increments unread.
+
+Atticus (optional but sticky)
+During your async turn: Hint (1 per round).
+
+After reveal: Explain.
+
+Rate-limit: max 3 Atticus calls per match (cached by qid).
+
+Guardrails you’ll forget at 1am 😉
+Same question for both: generate/store per round on server, never client.
+
+Schema guard + fallback if OpenAI fails.
+
+Auth check: user must be in match.players to read/post.
+
+Inbox pagination: cap 30 active; archive older.
+
+Bot concealment: never on global leaderboard, no friend/rematch, normal looking profile.
+
+Atomic writes to matches/leaderboard; keep .bak every 20 writes.
+
+Copy-paste to Replit (Ghostwriter)
+Add Async Duels alongside Live (no rewrite):
+
+New routes: /api/async/create, /api/async/inbox, /api/async/match/:id, /api/async/answer, /api/async/resign.
+
+New file server/async.js with a tiny state machine:
+
+createMatch(subject,audience,opponentUsername?)
+
+startTurn(match) → get or reuse cached Q; set deadlineTs = now+24h.
+
+submitAnswer(match,user,idx,ms) → store; if both or deadline → revealTurn(match) and maybeStartNextTurn(match).
+
+Reuse ai.generateQuestion + strict JSON parser; cache 10m per {subject,audience}.
+
+Inbox UI (/public/inbox.html/js): show cards with subject, round, who’s turn, time left, Play button.
+
+Match view reuses your duel UI; hide opponent’s answer until reveal.
+
+Forfeit rules: no answer in 24h → round to opponent; 2 missed rounds or 48h → match forfeit. Apply ladder +25/−25 on finish.
+
+Async Quick Match: queue 8s → else create match with stealth opponent (schedule answers in 8–45m). Never display bot on Top 20; no rematch/friend on that card.
+
+Acceptance: I can have 5 async matches at once, get “Your turn” badges, answer on my schedule, results reveal when the other answers, and ladder updates on completion.
+
+Quick acceptance checklist
+Start 3 async matches; see Inbox (3).
+
+Answer in one, leave; when friend answers later, you see a reveal + next round ready.
+
+Leave a turn idle past 24h → opponent gets the round.
+
+Finish a match → +25/−25 hits, persists, and the card moves to “Completed.”
+
+Quick Match (Async) alone starts a match within 8s; the “opponent” replies later naturally.
+

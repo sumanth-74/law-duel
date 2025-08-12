@@ -19,6 +19,11 @@ Preferred communication style: Simple, everyday language.
 - Purple theme: Mature, professional purple styling throughout platform
 - Real-time leaderboard: Global leaderboard updates live across all players
 - Friend challenges: Pop-up notifications with accept/decline options for friend duels
+- **Hot Streaks & Loss Shield**: Win streaks give bonus points (+3/+5/+8), first loss after 3+ wins is halved
+- **Instant Rematch**: Auto-focus rematch button, requeue both players in 3s
+- **Daily Quests**: 3 rotating goals with cosmetic rewards and XP bursts
+- **Tier Milestones**: Visible tiers (Novice to Archon) with short-term progression goals
+- **Atticus Hooks**: Memory hooks after each duel plus learning streak bonuses
 
 ## System Architecture
 

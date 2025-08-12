@@ -16,6 +16,15 @@ export const users = pgTable("users", {
   points: integer("points").notNull().default(0),
   totalWins: integer("total_wins").notNull().default(0),
   totalLosses: integer("total_losses").notNull().default(0),
+  streakWins: integer("streak_wins").notNull().default(0),
+  bestStreak: integer("best_streak").notNull().default(0),
+  lossShieldActive: boolean("loss_shield_active").notNull().default(false),
+  dailyData: jsonb("daily_data").$type<{
+    date: string;
+    winsToday: number;
+    questsCompleted: string[];
+    xpEarned: number;
+  }>(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   lastLoginAt: timestamp("last_login_at"),
 });

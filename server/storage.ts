@@ -92,16 +92,25 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserStats(id: string, won: boolean, xpGained: number, pointsChange: number): Promise<User | undefined> {
+  async updateUserStats(id: string, won: boolean, xpGained: number, pointsChange: number, streakData?: any): Promise<User | undefined> {
+    const updateData: any = {
+      xp: sql`${users.xp} + ${xpGained}`,
+      points: sql`GREATEST(0, ${users.points} + ${pointsChange})`,
+      totalWins: won ? sql`${users.totalWins} + 1` : users.totalWins,
+      totalLosses: won ? users.totalLosses : sql`${users.totalLosses} + 1`,
+      level: sql`GREATEST(1, FLOOR(1 + (${users.points} + ${pointsChange}) / 100))`,
+    };
+
+    // Update streak data if provided
+    if (streakData) {
+      updateData.streakWins = streakData.streakWins || 0;
+      updateData.bestStreak = streakData.bestStreak || 0;
+      updateData.lossShieldActive = streakData.lossShieldActive || false;
+    }
+
     const [user] = await db
       .update(users)
-      .set({
-        xp: sql`${users.xp} + ${xpGained}`,
-        points: sql`GREATEST(0, ${users.points} + ${pointsChange})`, // Don't go below 0 points
-        totalWins: won ? sql`${users.totalWins} + 1` : users.totalWins,
-        totalLosses: won ? users.totalLosses : sql`${users.totalLosses} + 1`,
-        level: sql`GREATEST(1, FLOOR(1 + (${users.points} + ${pointsChange}) / 100))`, // Level based on points
-      })
+      .set(updateData)
       .where(eq(users.id, id))
       .returning();
     

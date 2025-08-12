@@ -1,0 +1,74 @@
+Do these 8 tweaks
+Hot-Streaks + Loss Shield
+
+Win streaks give tiny bonus ladder points and juice the growth animation.
+
+First loss after a 3+ streak is halved (loss shield).
+
+Scoring: +25 base; streak bonus +3/+5/+8 for 2/3/4+ wins; shield → first loss after 3+ wins = −12 instead of −25.
+
+Instant Rematch
+
+After results, auto-focus a Rematch button and requeue both players in 3s (same subject).
+
+Also offer “New Opponent in 3s” that auto-queues Quick Match.
+
+Daily Quests (one screen, no economy)
+
+3 rotating goals like “Win 2 Evidence duels,” “Answer 20 Qs,” “Win a duel under 50s.”
+
+Reward: cosmetic tick (badge shard) + a tiny XP burst. No pay-to-win.
+
+Tier Milestones
+
+Keep your flat ladder, but add visible tiers (Novice, Clerk, Barrister, Counselor, Advocate, Magus, Archon).
+
+Show “4 pts to Barrister” under the score so players chase short-term goals.
+
+Fast Matchmaking Feel
+
+Guarantee <8s: keep stealth bot, but preload the next question while showing results.
+
+After two losses, soft-match to an easier bot next round (aim 48–55% win rate).
+
+Atticus Hooks
+
+After each duel, Atticus drops a 1-line Memory Hook (“403 nukes pretty but prejudicial proof.”) and a New Match CTA.
+
+One “Teach me ___” streak bonus per day (+5 XP) to nudge learning.
+
+Share/Challenge Link
+
+One-click “Challenge @friend” link that opens the app into the lobby with subject preselected. Viral loop = free users.
+
+Session Length Guardrails
+
+Target 5–7 min sessions: first-to-4, 20s timer is perfect. Keep everything snappy, no menus between rounds.
+
+Paste this to Replit (Ghostwriter) to implement 1–2–3 fast
+Add hot-streaks, loss shield, instant rematch, and daily quests (no refactor).
+
+Server: store per-player in memory/file: { streakWins, lossShieldActive, bestStreak, daily: { date, winsToday, quests: [{id, done}] } }.
+
+On match end:
+
+js
+Copy
+Edit
+if (winner) {
+  pWinner.streakWins++; pLoser.streakWins = 0;
+  const bonus = pWinner.streakWins>=4 ? 8 : pWinner.streakWins===3 ? 5 : pWinner.streakWins===2 ? 3 : 0;
+  winnerDelta = 25 + bonus;
+  if (pLoser.bestStreak >= 3) pLoser.lossShieldActive = true;
+  loserDelta = pLoser.lossShieldActive ? -12 : -25;
+  pLoser.lossShieldActive = false;
+}
+Persist ladder with atomic write; clamp ≥0.
+
+Client results modal: show “Hot Streak +5” chip or “Loss Shield −12” chip.
+
+Add Rematch and New Opponent buttons; Rematch auto-queues both in 3s if both click.
+
+Daily quests (client file public/quests.js): pick 3 from a small pool; store completion in localStorage by date; when all 3 complete, give +40 XP and a cosmetic badge tick.
+
+Acceptance: streak bonus changes the points; first loss after 3+ wins shows −12; Rematch starts in ≤3s; quests tick and reset daily.

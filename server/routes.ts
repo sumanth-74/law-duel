@@ -12,6 +12,7 @@ import { initializeLeaderboard } from "./services/leaderboard.js";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';
+import streakManager from './services/streakManager.js';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -173,8 +174,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Forbidden: Can only update your own stats" });
       }
       
-      const { won, xpGained, pointsChange } = req.body;
-      const user = await storage.updateUserStats(req.params.id, won, xpGained, pointsChange);
+      const { won, xpGained, pointsChange, streakData, opponentId } = req.body;
+      
+      // Calculate hot streaks and loss shield if opponent provided
+      let finalPointsChange = pointsChange;
+      let finalStreakData = streakData;
+      
+      if (opponentId) {
+        const result = streakManager.calculateMatchResults(
+          won ? req.params.id : opponentId,
+          won ? opponentId : req.params.id
+        );
+        
+        finalPointsChange = won ? result.winner.pointsDelta : result.loser.pointsDelta;
+        finalStreakData = won ? result.winner : result.loser;
+      }
+      
+      const user = await storage.updateUserStats(req.params.id, won, xpGained, finalPointsChange, finalStreakData);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -185,6 +201,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error updating user stats:", error);
       res.status(500).json({ message: "Failed to update user stats", error: error.message });
+    }
+  });
+
+  // Get Atticus memory hook
+  app.get('/api/memory-hook/:id', requireAuth, async (req: any, res) => {
+    try {
+      if (req.params.id !== req.session.userId) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+      
+      const memoryHook = streakManager.getMemoryHook(req.params.id);
+      res.json({ hook: memoryHook });
+    } catch (error) {
+      console.error("Error getting memory hook:", error);
+      res.status(500).json({ message: "Failed to get memory hook" });
+    }
+  });
+
+  // Get tier information
+  app.get('/api/tier-info/:points', requireAuth, async (req: any, res) => {
+    try {
+      const points = parseInt(req.params.points) || 0;
+      const tierInfo = streakManager.getTierInfo(points);
+      res.json(tierInfo);
+    } catch (error) {
+      console.error("Error getting tier info:", error);
+      res.status(500).json({ message: "Failed to get tier info" });
     }
   });
 
