@@ -12,7 +12,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUser(id: string): Promise<User | undefined>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
-  updateUserStats(id: string, won: boolean, xpGained: number): Promise<User | undefined>;
+  updateUserStats(id: string, won: boolean, xpGained: number, pointsChange: number): Promise<User | undefined>;
   getTopPlayers(limit: number): Promise<User[]>;
 
   // Match methods
@@ -92,15 +92,15 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserStats(id: string, won: boolean, xpGained: number): Promise<User | undefined> {
+  async updateUserStats(id: string, won: boolean, xpGained: number, pointsChange: number): Promise<User | undefined> {
     const [user] = await db
       .update(users)
       .set({
         xp: sql`${users.xp} + ${xpGained}`,
-        points: sql`${users.points} + ${won ? 100 : 20}`,
+        points: sql`GREATEST(0, ${users.points} + ${pointsChange})`, // Don't go below 0 points
         totalWins: won ? sql`${users.totalWins} + 1` : users.totalWins,
         totalLosses: won ? users.totalLosses : sql`${users.totalLosses} + 1`,
-        level: sql`GREATEST(1, FLOOR(1 + (${users.xp} + ${xpGained}) / 100))`,
+        level: sql`GREATEST(1, FLOOR(1 + (${users.points} + ${pointsChange}) / 100))`, // Level based on points
       })
       .where(eq(users.id, id))
       .returning();

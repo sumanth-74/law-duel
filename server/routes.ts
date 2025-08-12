@@ -157,6 +157,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update user stats after duel
+  app.patch('/api/users/:id/stats', requireAuth, async (req: any, res) => {
+    try {
+      // Ensure user can only update their own stats
+      if (req.params.id !== req.session.userId) {
+        return res.status(403).json({ message: "Forbidden: Can only update your own stats" });
+      }
+      
+      const { won, xpGained, pointsChange } = req.body;
+      const user = await storage.updateUserStats(req.params.id, won, xpGained, pointsChange);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Don't return password
+      const { password, ...userResponse } = user;
+      res.json(userResponse);
+    } catch (error: any) {
+      console.error("Error updating user stats:", error);
+      res.status(500).json({ message: "Failed to update user stats", error: error.message });
+    }
+  });
+
   // Get user matches
   app.get("/api/users/:id/matches", async (req, res) => {
     try {
@@ -444,6 +467,21 @@ function handleDuelAnswer(ws: WebSocket, payload: any) {
     if (duelState.currentRound >= duelState.totalRounds) {
       setTimeout(() => {
         const playerWon = duelState.scores[0] > duelState.scores[1];
+        const correctAnswers = duelState.scores[0];
+        const botCorrectAnswers = duelState.scores[1];
+        
+        // Competitive point system: 5 points per correct answer, steal 5 points from opponent per win
+        let pointsEarned = correctAnswers * 5; // Base points for correct answers
+        let pointsLost = 0;
+        
+        if (playerWon) {
+          pointsEarned += 25; // Bonus for winning the match
+        } else {
+          pointsLost = 25; // Lose points for losing the match
+        }
+        
+        // Calculate new level based on points (every 100 points = 1 level)
+        const finalPointChange = pointsEarned - pointsLost;
         
         ws.send(JSON.stringify({
           type: 'duel:finished',
@@ -454,12 +492,19 @@ function handleDuelAnswer(ws: WebSocket, payload: any) {
               player2: duelState.scores[1]
             },
             pointChanges: {
-              player1: playerWon ? 50 : 20,
+              player1: finalPointChange,
               player2: 0
             },
             xpGained: {
-              player1: duelState.scores[0] * 10 + (playerWon ? 25 : 0),
+              player1: correctAnswers * 10 + (playerWon ? 50 : 0), // XP for learning
               player2: 0
+            },
+            competitiveDetails: {
+              correctAnswers,
+              basePoints: correctAnswers * 5,
+              winBonus: playerWon ? 25 : 0,
+              lossePenalty: playerWon ? 0 : -25,
+              finalChange: finalPointChange
             }
           }
         }));

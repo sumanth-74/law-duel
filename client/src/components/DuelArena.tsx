@@ -150,7 +150,7 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
     );
   };
 
-  const handleDuelFinished = (finishedData: DuelFinishedData) => {
+  const handleDuelFinished = async (finishedData: any) => {
     setDuelState(prev => ({
       ...prev,
       isFinished: true,
@@ -158,10 +158,24 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
     }));
 
     const won = finishedData.winnerId === user.id;
+    const pointsChange = finishedData.pointChanges.player1;
+    const xpGained = finishedData.xpGained.player1;
+    
+    // Update user stats on server with competitive point system
+    try {
+      await fetch(`/api/users/${user.id}/stats`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ won, xpGained, pointsChange })
+      });
+    } catch (error) {
+      console.error("Failed to update user stats:", error);
+    }
+    
     announceForScreenReader(
       won 
-        ? `Duel complete! You won and gained ${finishedData.pointChanges.player1} points and ${finishedData.xpGained.player1} XP.`
-        : `Duel complete! You lost ${Math.abs(finishedData.pointChanges.player1)} points but gained ${finishedData.xpGained.player1} XP.`
+        ? `Duel complete! You won and gained ${pointsChange} points and ${xpGained} XP. Level up when you reach the next 100-point milestone!`
+        : `Duel complete! You lost ${Math.abs(pointsChange)} points but gained ${xpGained} XP. Keep fighting to earn your points back!`
     );
   };
 
@@ -409,20 +423,73 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
 
         {/* Duel Finished */}
         {duelState.isFinished && duelState.finalResult && (
-          <div className="text-center">
-            <div className="bg-panel-2 border border-white/10 rounded-xl p-6 mb-6">
-              <h3 className="font-cinzel text-2xl font-bold mb-4">
-                {duelState.finalResult.winnerId === user.id ? 'Victory!' : 'Defeat'}
-              </h3>
-              <div className="space-y-2">
-                <p>Final Score: {duelState.finalResult.finalScores.player1} - {duelState.finalResult.finalScores.player2}</p>
-                <p>Points: {duelState.finalResult.pointChanges.player1 > 0 ? '+' : ''}{duelState.finalResult.pointChanges.player1}</p>
-                <p>XP Gained: +{duelState.finalResult.xpGained.player1}</p>
+          <div className="text-center space-y-6">
+            <div className="text-4xl font-cinzel font-bold text-arcane">
+              {duelState.finalResult.winnerId === user.id ? "VICTORY!" : "DEFEAT"}
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 bg-arcane/10 rounded-lg">
+                <h4 className="font-bold text-arcane">Final Score</h4>
+                <p className="text-2xl font-cinzel">
+                  {duelState.finalResult.finalScores.player1} - {duelState.finalResult.finalScores.player2}
+                </p>
+              </div>
+              
+              <div className="p-4 bg-success/10 rounded-lg">
+                <h4 className="font-bold text-success">XP Gained</h4>
+                <p className="text-xl text-success">+{duelState.finalResult.xpGained.player1}</p>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${duelState.finalResult.pointChanges.player1 >= 0 ? "bg-success/10" : "bg-danger/10"}`}>
+                <h4 className={`font-bold ${duelState.finalResult.pointChanges.player1 >= 0 ? "text-success" : "text-danger"}`}>
+                  Points {duelState.finalResult.pointChanges.player1 >= 0 ? "Gained" : "Lost"}
+                </h4>
+                <p className={`text-xl ${duelState.finalResult.pointChanges.player1 >= 0 ? "text-success" : "text-danger"}`}>
+                  {duelState.finalResult.pointChanges.player1 >= 0 ? "+" : ""}{duelState.finalResult.pointChanges.player1}
+                </p>
               </div>
             </div>
-            <Button onClick={onDuelEnd} className="btn-primary py-3 px-8" data-testid="button-return-dashboard">
-              Return to Dashboard
-            </Button>
+            
+            {duelState.finalResult.competitiveDetails && (
+              <div className="p-4 bg-muted/50 rounded-lg text-sm space-y-2">
+                <h4 className="font-bold">Competitive Breakdown:</h4>
+                <div className="flex justify-between">
+                  <span>Correct Answers ({duelState.finalResult.competitiveDetails.correctAnswers}/10):</span>
+                  <span className="text-success">+{duelState.finalResult.competitiveDetails.basePoints} pts</span>
+                </div>
+                {duelState.finalResult.competitiveDetails.winBonus > 0 && (
+                  <div className="flex justify-between">
+                    <span>Victory Bonus:</span>
+                    <span className="text-success">+{duelState.finalResult.competitiveDetails.winBonus} pts</span>
+                  </div>
+                )}
+                {duelState.finalResult.competitiveDetails.lossePenalty < 0 && (
+                  <div className="flex justify-between">
+                    <span>Defeat Penalty:</span>
+                    <span className="text-danger">{duelState.finalResult.competitiveDetails.lossePenalty} pts</span>
+                  </div>
+                )}
+                <div className="border-t pt-2 flex justify-between font-bold">
+                  <span>Total Change:</span>
+                  <span className={duelState.finalResult.pointChanges.player1 >= 0 ? "text-success" : "text-danger"}>
+                    {duelState.finalResult.pointChanges.player1 >= 0 ? "+" : ""}{duelState.finalResult.pointChanges.player1} pts
+                  </span>
+                </div>
+                <p className="text-xs text-muted mt-2">
+                  Level up every 100 points! Keep dueling to climb the ranks.
+                </p>
+              </div>
+            )}
+            
+            <div className="flex gap-4 justify-center">
+              <Button onClick={onDuelEnd} data-testid="button-home">
+                Return Home
+              </Button>
+              <Button variant="outline" onClick={() => window.location.reload()} data-testid="button-rematch">
+                Rematch
+              </Button>
+            </div>
           </div>
         )}
         
