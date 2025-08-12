@@ -8,14 +8,14 @@ const NAMES = [
 ];
 
 const ARCHETYPES = [
-  { base: "humanoid", palette: "#5865f2", props: ["gavel","codex"] },
-  { base: "beast", palette: "#ef4444", props: ["chains","runes"] },
-  { base: "arcane", palette: "#8b5cf6", props: ["runes","cloak"] },
-  { base: "celestial", palette: "#d4b057", props: ["halo","scales"] },
-  { base: "construct", palette: "#64748b", props: ["circuit","scales"] },
-  { base: "undead", palette: "#111827", props: ["chains","cloak"] },
-  { base: "elemental", palette: "#10b981", props: ["flame","wings"] },
-  { base: "alien", palette: "#14b8a6", props: ["tentacle","circuit"] }
+  { base: "humanoid", palette: "#5865f2", props: ["gavel","codex","briefcase"] },
+  { base: "beast", palette: "#ef4444", props: ["scales","legal_pad","codex"] },
+  { base: "arcane", palette: "#8b5cf6", props: ["codex","law_diploma","scales"] },
+  { base: "celestial", palette: "#d4b057", props: ["scales","gavel","law_diploma"] },
+  { base: "construct", palette: "#64748b", props: ["briefcase","scales","codex"] },
+  { base: "undead", palette: "#111827", props: ["codex","gavel","legal_pad"] },
+  { base: "elemental", palette: "#10b981", props: ["scales","briefcase","law_diploma"] },
+  { base: "alien", palette: "#14b8a6", props: ["codex","legal_pad","gavel"] }
 ];
 
 function bandFor(points = 0) {

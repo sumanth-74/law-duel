@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { AvatarRenderer } from './AvatarRenderer';
 import { loadArchetypes, sanitizeUsername, validateAvatarData } from '@/lib/creator.js';
+import { loadLawArchetypes } from '@/lib/lawArchetypes.js';
 import type { AvatarData } from '@shared/schema';
 
 interface CharacterCreationProps {
@@ -53,7 +54,7 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
   useEffect(() => {
     if (isOpen) {
       setDataLoading(true);
-      loadArchetypes().then((data) => {
+      loadLawArchetypes().then((data) => {
         setArchetypes(data);
         setDataLoading(false);
       });

@@ -102,6 +102,7 @@ function getPropSVG(propName) {
         <rect x="15" y="2" width="4" height="18" rx="2" fill="#8b4513"/>
         <ellipse cx="12" cy="8" rx="8" ry="5" fill="#daa520"/>
         <circle cx="12" cy="8" r="2" fill="#fff" opacity="0.8"/>
+        <text x="12" y="25" text-anchor="middle" font-size="4" fill="#666">LAW</text>
       </g>
     `,
     scales: `
@@ -111,6 +112,7 @@ function getPropSVG(propName) {
         <circle cx="40" cy="75" r="6" fill="none" stroke="#b8860b" stroke-width="2"/>
         <circle cx="80" cy="75" r="6" fill="none" stroke="#b8860b" stroke-width="2"/>
         <path d="M40,62 L40,75 M80,62 L80,75" stroke="#666" stroke-width="1.5"/>
+        <text x="60" y="52" text-anchor="middle" font-size="3" fill="#daa520">JUSTICE</text>
       </g>
     `,
     codex: `
@@ -119,10 +121,37 @@ function getPropSVG(propName) {
         <rect x="2" y="2" width="20" height="14" fill="#a0522d"/>
         <path d="M4,5 L20,5 M4,8 L18,8 M4,11 L19,11 M4,14 L17,14" stroke="#daa520" stroke-width="0.8"/>
         <circle cx="12" cy="9" r="2.5" fill="none" stroke="#ffd700" stroke-width="1"/>
+        <text x="12" y="-2" text-anchor="middle" font-size="3" fill="#8b4513">LAW BOOKS</text>
+      </g>
+    `,
+    briefcase: `
+      <g transform="translate(80,75)">
+        <rect x="0" y="0" width="20" height="14" rx="2" fill="#654321"/>
+        <rect x="2" y="2" width="16" height="10" fill="#8b4513"/>
+        <rect x="8" y="-2" width="4" height="4" rx="1" fill="#daa520"/>
+        <circle cx="15" cy="7" r="1" fill="#ffd700"/>
+        <text x="10" y="18" text-anchor="middle" font-size="2.5" fill="#654321">LEGAL</text>
+      </g>
+    `,
+    law_diploma: `
+      <g transform="translate(85,15)">
+        <rect x="0" y="0" width="18" height="12" rx="1" fill="#f8f8ff" stroke="#daa520" stroke-width="1"/>
+        <rect x="2" y="2" width="14" height="8" fill="#fff"/>
+        <path d="M4,4 L14,4 M4,6 L12,6 M4,8 L13,8" stroke="#333" stroke-width="0.3"/>
+        <circle cx="9" cy="6" r="1.5" fill="none" stroke="#daa520" stroke-width="0.5"/>
+        <text x="9" y="14" text-anchor="middle" font-size="2" fill="#daa520">J.D.</text>
+      </g>
+    `,
+    legal_pad: `
+      <g transform="translate(85,70)">
+        <rect x="0" y="0" width="16" height="20" rx="1" fill="#ffff99" stroke="#ddd" stroke-width="0.5"/>
+        <path d="M2,3 L14,3 M2,6 L12,6 M2,9 L13,9 M2,12 L11,12" stroke="#333" stroke-width="0.3"/>
+        <rect x="0" y="0" width="16" height="3" fill="#ff6b6b"/>
+        <text x="8" y="24" text-anchor="middle" font-size="2" fill="#333">NOTES</text>
       </g>
     `,
     quill: `
-      <g transform="translate(15,70)">
+      <g transform="translate(15,70)"
         <path d="M0,8 Q8,2 16,8 Q12,12 8,16 Q4,12 0,8" fill="#f5f5dc" stroke="#daa520" stroke-width="1"/>
         <path d="M16,8 L22,12" fill="#8b4513" stroke-width="2"/>
         <ellipse cx="20" cy="11" rx="2" ry="1.5" fill="#4b0082"/>
