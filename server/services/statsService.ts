@@ -285,13 +285,13 @@ export class StatsService {
     overallAccuracy: number;
     rankTier: string;
   }>> {
-    const users = await db
+    const usersList = await db
       .select()
       .from(users)
       .orderBy(sql`${users.overallElo} DESC`)
       .limit(limit);
 
-    return users.map((user, index) => {
+    return usersList.map((user, index) => {
       const { password, email, ...publicUser } = user;
       const overallAccuracy = user.totalQuestionsAnswered > 0 
         ? (user.totalCorrectAnswers / user.totalQuestionsAnswered) * 100 

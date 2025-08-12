@@ -87,6 +87,9 @@ Test: ${rule || topic} under national law (FRE/FRCP/UCC Art. 2/federal constitut
 Include rationales for each option (why each is right/wrong) in optionRationales array and a 3–6 sentence explanation. 
 No "all/none of the above."
 Make this INCREDIBLY DIFFICULT - upper 10% difficulty for bar exam takers.
+CRITICAL: Randomly distribute correct answers across options A, B, C, and D. Do NOT always make A correct.
+For this question, randomly choose whether A, B, C, or D should be the correct answer.
+Mark the correct option with "isCorrect": true in the options array.
 Set difficultySeed = "hard", timeLimitSec = 90, license = "educational", status = "active".
 Output ONLY JSON matching our schema.`;
 
@@ -120,15 +123,40 @@ Output ONLY JSON matching our schema.`;
     // Extract the actual question data - it might be nested under "question"
     const questionData = rawResponse.question || rawResponse;
     
+    // Find the correct answer from OpenAI's response
+    let correctIndex = 0;
+    if (questionData.options) {
+      // Look for isCorrect flag or "Correct" in rationale
+      const correctOption = questionData.options.findIndex((opt: any) => {
+        if (opt.isCorrect === true) return true;
+        if (opt.optionRationales?.[0]?.toLowerCase?.()?.includes('correct')) return true;
+        return false;
+      });
+      if (correctOption !== -1) {
+        correctIndex = correctOption;
+      }
+    }
+    
+    // Extract choices and rationales
+    const choices = questionData.options ? questionData.options.map((opt: any) => opt.text) : questionData.choices || [];
+    const rationales = questionData.options ? 
+      questionData.options.map((opt: any) => opt.rationale || opt.optionRationales?.[0] || "") : 
+      questionData.optionRationales || [];
+
+    // Shuffle answers to randomize correct answer position
+    console.log('Before shuffle - correctIndex:', correctIndex, 'choices:', choices.map((c, i) => `${i}: ${c.substring(0, 20)}...`));
+    const shuffledData = shuffleAnswers(choices, rationales, correctIndex);
+    console.log('After shuffle - correctIndex:', shuffledData.correctIndex);
+    
     // Transform the OpenAI response to our expected format
     const item = {
       subject: subject,
       topic: topic,
       subtopic: subtopic || "",
       stem: questionData.factPattern || questionData.stem || "",
-      choices: questionData.options ? questionData.options.map((opt: any) => opt.text) : questionData.choices || [],
-      correctIndex: questionData.correctIndex || 0, // Find the correct answer
-      optionRationales: questionData.options ? questionData.options.map((opt: any) => opt.optionRationales?.[0] || "") : questionData.optionRationales || [],
+      choices: shuffledData.choices,
+      correctIndex: shuffledData.correctIndex,
+      optionRationales: shuffledData.rationales,
       explanationLong: questionData.explanation || questionData.explanationLong || "",
       ruleRefs: questionData.ruleRefs || [],
       difficultySeed: rawResponse.difficultySeed || "hard",
@@ -180,6 +208,40 @@ export const DAILY_TOPICS = [
   { subject: "Property", topic: "Estates", subtopic: "Rule Against Perpetuities", rule: "measuring lives analysis" },
   { subject: "Civil Procedure", topic: "Personal Jurisdiction", subtopic: "Specific", rule: "purposeful availment standard" }
 ];
+
+// Function to shuffle answer choices and update correct index
+function shuffleAnswers(choices: string[], rationales: string[], correctIndex: number) {
+  // Create array of items with their original indices
+  const items = choices.map((choice, index) => ({
+    choice,
+    rationale: rationales[index] || "",
+    originalIndex: index,
+    isCorrect: index === correctIndex
+  }));
+  
+  // Fisher-Yates shuffle the items array
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  
+  // Extract shuffled data and find new correct index
+  const shuffledChoices = items.map(item => item.choice);
+  const shuffledRationales = items.map(item => item.rationale);
+  const newCorrectIndex = items.findIndex(item => item.isCorrect);
+  
+  console.log('Shuffle debug:', {
+    originalCorrect: correctIndex,
+    newCorrect: newCorrectIndex,
+    shuffleMap: items.map((item, newIdx) => `${item.originalIndex}->${newIdx}`)
+  });
+  
+  return {
+    choices: shuffledChoices,
+    rationales: shuffledRationales,
+    correctIndex: newCorrectIndex
+  };
+}
 
 export function getDailyTopic(dayOfYear: number): MBEGenerationRequest {
   return DAILY_TOPICS[dayOfYear % DAILY_TOPICS.length];
