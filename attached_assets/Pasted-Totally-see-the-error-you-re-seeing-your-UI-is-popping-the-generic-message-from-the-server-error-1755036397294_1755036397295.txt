@@ -1,0 +1,264 @@
+Totally see the error you’re seeing: your UI is popping the generic message from the server ({"error":"Failed to generate question"}). That means the generator is being called but it bails after a few retries and your route throws a catch-all.
+
+Let’s fix this in three surgical moves—copy/paste these patches and you’ll (a) see exactly why it fails, (b) make it far less likely to fail, and (c) never strand a user because we add a local fallback item if OpenAI rejects too many times.
+
+1) Make the generator resilient and verbose (no more silent “failed”)
+Replace your generateItem with this sturdier version:
+
+js
+Copy
+Edit
+// helpers
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const countWords = s => String(s||"").trim().split(/\s+/).filter(Boolean).length;
+
+function normalizeChoices(raw) {
+  if (!Array.isArray(raw) || raw.length !== 4) throw { code:"choices_count", msg:"Need exactly 4 choices" };
+  const cleaned = raw.map(s => String(s||"").replace(/^\s*[A-D][\)\].:\-]\s*/i,"").trim());
+  if (cleaned.some(c => c.length < 6)) throw { code:"choices_short", msg:"Choices too short" };
+  const uniq = new Set(cleaned.map(c => c.toLowerCase()));
+  if (uniq.size < 4) throw { code:"choices_dupe", msg:"Duplicate choices" };
+  const joined = cleaned.join(" ").toLowerCase();
+  if (joined.includes("all of the above") || joined.includes("none of the above")))
+    throw { code:"choices_banned", msg:"Banned phrasing" };
+  return cleaned;
+}
+
+function classifyError(e) {
+  const m = String(e?.message || e);
+  if (m.includes("OpenAI 401")) return { code: "openai_401", msg: "Bad/expired API key" };
+  if (m.includes("OpenAI 429")) return { code: "openai_429", msg: "Rate limit/quota" };
+  if (/OpenAI 5\d\d/.test(m))   return { code: "openai_5xx", msg: "OpenAI server error" };
+  if (e?.code) return e; // our validation codes above
+  return { code: "unknown", msg: m.slice(0,200) };
+}
+
+async function generateItem({ subjectPool }) {
+  const subject = pick(subjectPool);
+  const topic = pick(SUBJECTS[subject]);
+  let last = { code: "none", msg: "" };
+
+  for (let i = 0; i < 5; i++) {               // 5 tries, slightly higher temp later
+    const nonce = crypto.randomBytes(6).toString("hex");
+    const prompt = `
+Write an original **MBE-style** question.
+Subject: ${subject}. Topic: ${topic}. Rule: ${ruleHint(subject, topic)}.
+- Single best answer; exactly 4 options (A–D).
+- Fact pattern 120–180 words.
+- National/majority law only (FRE/FRCP/UCC Art.2/federal con law).
+- Rationales for each option + 3–6 sentence explanation.
+- Set "timeLimitSec": 60. No “all/none of the above”.
+Freshness token: ${nonce} (do not mention it).`;
+
+    try {
+      const resp = await callOpenAI(prompt, itemSchema, i >= 2 ? 0.75 : 0.65);
+      const item = resp; // already parsed JSON
+
+      // normalize & validate (lighter than before so it passes more often)
+      item.subject = subject;
+      item.topic = item.topic || topic;
+      item.choices = normalizeChoices(item.choices);
+      if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3)
+        throw { code:"correct_index", msg:"Bad correctIndex" };
+      if (countWords(item.stem) < 110) throw { code:"stem_short", msg:"Stem too short" };
+      if (!item.explanationLong || item.explanationLong.trim().length < 50)
+        throw { code:"explanation_short", msg:"Explanation too short" };
+
+      item.timeLimitSec = 60;
+      item.license = "© Law Duel, original";
+      item.status = "approved";
+      item.id = item.id || `Q-${subject.slice(0,2).toUpperCase()}-${Date.now()}-${nonce}`;
+      return item;
+    } catch (e) {
+      last = classifyError(e);
+      // backoff on rate/server errors; jitter on content fails
+      await sleep((last.code.startsWith("openai_") ? 500 : 150) * (1 + i) + Math.random()*200);
+      continue;
+    }
+  }
+  const err = new Error(`gen_failed:${last.code}:${last.msg}`);
+  err.status = 502;
+  throw err;
+}
+Also tweak callOpenAI to accept a temperature:
+
+js
+Copy
+Edit
+async function callOpenAI(prompt, schema, temperature = 0.65) {
+  const r = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      input: prompt,
+      temperature,
+      max_output_tokens: 1200,
+      response_format: { type: "json_schema", json_schema: { name: "MBEItem", schema, strict: true } }
+    })
+  });
+  if (!r.ok) throw new Error(`OpenAI ${r.status} ${await r.text()}`);
+  const data = await r.json();
+  if (!data.output_text) throw new Error("openai_no_output_text");
+  return JSON.parse(data.output_text);
+}
+2) Make /v2/duel/next bubble the real reason (and add a fallback)
+Right now your route throws a generic error. Replace its try/catch with this:
+
+js
+Copy
+Edit
+v2.post("/duel/next", async (req, res) => {
+  const { token, subjects } = req.body || {};
+  const p = players.get(String(token));
+  if (!p) return res.status(401).json({ error: "Bad token" });
+  const duel = duels.get(p.duelId);
+  if (!duel) return res.status(404).json({ error: "No duel" });
+
+  const pool = Array.isArray(subjects) && subjects.length
+    ? subjects.filter(s => SUBJECT_ENUM.includes(s))
+    : duel.subjectPool;
+
+  if (duel.round >= duel.rounds) return res.json({ done: true });
+
+  if (!duel.q[duel.round]) {
+    try {
+      // up to 2 attempts at fresh unseen
+      for (let tries = 0; tries < 2; tries++) {
+        const item = await generateItem({ subjectPool: pool });
+        const f = fpStem(item.stem);
+        if (duel.seen.has(f)) continue;
+        duel.seen.add(f);
+        const startAt = Date.now();
+        const endsAt = startAt + 60 * 1000;
+        duel.q[duel.round] = { item, startAt, endsAt };
+        break;
+      }
+    } catch (e) {
+      // Fallback: serve one local, original item so the duel never dead-ends
+      console.warn("[GEN_FAIL]", e.message || e);
+      const fallback = pickLocalFallback(pool);
+      if (!fallback) return res.status(e.status || 502).json({ error: "generate_failed", reason: String(e.message || e) });
+      const startAt = Date.now();
+      const endsAt = startAt + 60 * 1000;
+      duel.q[duel.round] = { item: fallback, startAt, endsAt };
+    }
+  }
+
+  if (!duel.q[duel.round]) {
+    return res.status(502).json({ error: "no_question_for_round" });
+  }
+
+  const q = duel.q[duel.round];
+  const remaining = Math.max(0, Math.floor((q.endsAt - Date.now()) / 1000));
+  const safe = {
+    id: q.item.id, subject: q.item.subject, topic: q.item.topic,
+    stem: q.item.stem, choices: q.item.choices, ruleRefs: q.item.ruleRefs,
+    timeLimitSec: 60, timeRemainingSec: remaining,
+    round: duel.round + 1, totalRounds: duel.rounds,
+    // FYI for client logging:
+    source: q.item.id.startsWith("FB-") ? "fallback" : "ai"
+  };
+  res.json({ question: safe });
+});
+Add a tiny local fallback bank (all original) so users never get stuck on “Failed to generate”:
+
+js
+Copy
+Edit
+const FALLBACKS = [
+  {
+    id: "FB-EV-1",
+    subject: "Evidence",
+    topic: "Hearsay 801–807",
+    stem: "At trial for burglary, a neighbor testifies that, the night after the break-in, the victim said, “I saw the defendant on my porch yesterday.” The victim also testifies and is cross-examined at trial. The defense objects on hearsay grounds. Should the statement be admitted?",
+    choices: [
+      "Yes, as a prior identification by a testifying witness",
+      "Yes, as a present-sense impression",
+      "No, because it is testimonial under the Confrontation Clause",
+      "No, because the statement is offered to prove the truth of the matter asserted"
+    ],
+    correctIndex: 0,
+    explanationLong: "Under FRE 801(d)(1)(C), a declarant-witness’s prior identification of a person is non-hearsay if the declarant testifies and is subject to cross-examination. The victim testified and was cross-examined, so the neighbor can recount the victim’s prior identification. Present-sense impression is inapposite. The Confrontation Clause does not bar non-testimonial statements offered via a witness when the declarant appears and is cross-examined.",
+    ruleRefs: ["FRE 801(d)(1)(C)"],
+    difficultySeed: "medium",
+    timeLimitSec: 60,
+    license: "© Law Duel, original",
+    status: "approved"
+  },
+  {
+    id: "FB-K-1",
+    subject: "Contracts",
+    topic: "UCC §2—Risk of Loss",
+    stem: "A merchant seller tenders identified goods FOB seller’s city. Before the buyer can pick them up, the buyer repudiates. A storm then destroys the goods while still in the seller’s warehouse. Who bears the loss?",
+    choices: [
+      "The buyer, because risk of loss had already passed at tender",
+      "The buyer, because repudiation shifts the risk of loss under §2-510",
+      "The seller, because the goods were not yet delivered to a carrier",
+      "The seller, unless the goods were conforming"
+    ],
+    correctIndex: 1,
+    explanationLong: "Under UCC §2-510(3), when the buyer repudiates as to identified goods before risk of loss passes, the risk of loss shifts to the buyer for a commercially reasonable time to the extent of any deficiency in the seller’s insurance. Thus the buyer bears the loss here. The other options misstate when risk passes or ignore §2-510’s allocation after buyer breach.",
+    ruleRefs: ["UCC §2-510"],
+    difficultySeed: "medium",
+    timeLimitSec: 60,
+    license: "© Law Duel, original",
+    status: "approved"
+  },
+  {
+    id: "FB-T-1",
+    subject: "Torts",
+    topic: "Negligence",
+    stem: "During a charity 5K, a volunteer directs runners around a pothole. A late runner ignores the sign and trips, breaking her arm. She sues the city for negligence for failing to repair the street. The city asserts the runner’s comparative negligence. How should a court likely rule?",
+    choices: [
+      "For the city, because the runner’s negligence is a superseding cause",
+      "For the city, reducing damages under comparative negligence",
+      "For the runner, because participants assume no risks from city streets",
+      "For the runner, because the city owed a non-delegable duty"
+    ],
+    correctIndex: 1,
+    explanationLong: "The city owes a duty to maintain streets reasonably, but the runner’s failure to heed an obvious warning sign is comparative negligence, which reduces (not bars) recovery in comparative-fault jurisdictions. It is not a superseding cause. Assumption-of-risk is not categorical; and non-delegable duty does not make the city strictly liable.",
+    ruleRefs: ["Comparative Negligence"],
+    difficultySeed: "easy",
+    timeLimitSec: 60,
+    license: "© Law Duel, original",
+    status: "approved"
+  }
+];
+
+function pickLocalFallback(subjectPool) {
+  const pool = subjectPool && subjectPool.length ? subjectPool : SUBJECT_ENUM;
+  const candidates = FALLBACKS.filter(f => pool.includes(f.subject));
+  const item = candidates.length ? candidates[Math.floor(Math.random()*candidates.length)] : null;
+  return item ? { ...item, id: `FB-${item.id}-${Date.now()}` } : null;
+}
+Now, if OpenAI chokes or your validators say “nope,” the round still gets a question and your users keep playing—and you’ll see exactly why the AI gen failed in the JSON (reason).
+
+3) Show the real error in the client (and auto-retry)
+Instead of alert(JSON.stringify(err)), surface the reason and give a one-click retry:
+
+ts
+Copy
+Edit
+const res = await fetch("/v2/duel/next", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ token: playerToken, subjects: selectedSubjects }) });
+const data = await res.json();
+if (!res.ok) {
+  setError(data.reason || data.error || "Question generation failed");
+  // Optional: quick auto-retry once
+  setTimeout(() => fetchNext(), 400);
+  return;
+}
+setQuestion(data.question);
+setError(null);
+Quick sanity checks (do these now)
+GET /v2/health → { ok: true }. If not: fix your key or org/project.
+
+Start a duel and press “Start”:
+
+If AI gen works: you’ll see source: "ai" in the /v2/duel/next response (inspect Network).
+
+If AI gen fails: you’ll still get a question with source: "fallback" and reason will tell you exactly why generation failed (429, explanation too short, etc.).
+
+Round 2 should always be a different stem (duel-level fingerprint blocks repeats).
+
+If you paste these patches and still get the modal, tell me what reason you now see in the /v2/duel/next response body. With that code, I can pinpoint the exact fix (rate limit, key, schema, or validator) in one shot.

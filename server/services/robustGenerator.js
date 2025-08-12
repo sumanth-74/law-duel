@@ -89,10 +89,12 @@ RESPONSE FORMAT (JSON only):
     "Fourth answer option"
   ],
   "correctIndex": 0,
-  "explanation": "Legal explanation with controlling rule..."
+  "explanation": "Brief explanation here",
+  "explanationLong": "Detailed 3-6 sentence legal analysis explaining the correct answer, applicable rules, and why other options are wrong",
+  "topic": "${topic}"
 }
 
-CRITICAL: Return exactly 4 choices in the choices array. No additional text outside the JSON.
+CRITICAL: Return exactly 4 choices in the choices array. Include both explanation and explanationLong fields. No additional text outside the JSON.
 Freshness token: ${nonce}`;
 }
 
@@ -114,7 +116,7 @@ async function callOpenAI(prompt) {
       messages: [
         { 
           role: "system", 
-          content: "Return ONLY valid JSON matching this format: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[\"A\",\"B\",\"C\",\"D\"],\"correctIndex\":0,\"explanation\":\"...\"}" 
+          content: "Return ONLY valid JSON matching this format: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[\"A\",\"B\",\"C\",\"D\"],\"correctIndex\":0,\"explanation\":\"...\",\"explanationLong\":\"Detailed 3-6 sentence legal analysis...\",\"topic\":\"...\"}" 
         },
         { role: "user", content: prompt }
       ],
@@ -216,8 +218,8 @@ export async function generateFreshQuestion(subject) {
     // Hard enforce 60-second timer and quality controls
     item.timeLimitSec = 60;
     
-    // Require a real explanation
-    if (!item.explanationLong || item.explanationLong.trim().length < 80) {
+    // Require a real explanation (reduced length requirement to match actual OpenAI output)
+    if (!item.explanationLong || item.explanationLong.trim().length < 50) {
       throw new Error("Missing/short explanation"); // triggers a retry
     }
     

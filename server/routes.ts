@@ -793,17 +793,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subjects = ['Evidence', 'Contracts', 'Criminal Law', 'Torts'];
       const subject = subjects[Math.floor(Math.random() * subjects.length)];
       
-      // Generate fresh question using proven system
-      const { generateFreshQuestion } = await import('./services/robustGenerator.js');
-      const item = await generateFreshQuestion(subject);
-      
-      console.log(`✅ Generated fresh question for test: ${item.qid}`);
+      let item;
+      try {
+        // Try to generate fresh question using OpenAI
+        const { generateFreshQuestion } = await import('./services/robustGenerator.js');
+        item = await generateFreshQuestion(subject);
+        console.log(`✅ Generated fresh OpenAI question for test: ${item.qid}`);
+      } catch (aiError) {
+        // Fallback to local question if OpenAI fails
+        console.warn(`[GEN_FAIL] OpenAI generation failed for ${subject}:`, aiError.message || aiError);
+        
+        try {
+          const { pickLocalFallback } = await import('./services/fallbacks.js');
+          item = pickLocalFallback([subject]);
+          
+          if (!item) {
+            console.error(`No fallback available for subject: ${subject}`);
+            return res.status(502).json({ 
+              error: 'generate_failed', 
+              reason: `OpenAI: ${String(aiError.message || aiError)}. No fallback available for ${subject}`
+            });
+          }
+          
+          // Add required fields for fallback
+          item.qid = `FB-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+          console.log(`✅ Using fallback question: ${item.id} → ${item.qid} for subject ${subject}`);
+          
+        } catch (fallbackError) {
+          console.error('Fallback import failed:', fallbackError);
+          return res.status(502).json({ 
+            error: 'generate_failed', 
+            reason: `OpenAI: ${String(aiError.message)}. Fallback failed: ${String(fallbackError.message)}`
+          });
+        }
+      }
       
       // Store question with correct answer for validation
       console.log(`📝 Storing question ${item.qid} with correct answer: ${item.correctIndex}`);
       testQuestionStorage.set(item.qid, {
         correctIndex: item.correctIndex,
-        explanation: item.explanationLong || item.explanation || `The correct answer is choice ${String.fromCharCode(65 + item.correctIndex)} because: ${item.rationale || 'Legal analysis not provided.'}`,
+        explanation: item.explanationLong || item.explanation || `The correct answer is choice ${String.fromCharCode(65 + item.correctIndex)} because: Legal analysis not provided.`,
         item: item
       });
       
@@ -817,14 +846,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timeLimitSec: 60,
         timeRemainingSec: 60,
         round: 1,
-        totalRounds: 7
+        totalRounds: 7,
+        source: item.qid.startsWith('FB-') ? "fallback" : "ai" // For client debugging
       };
       
       res.json({ question });
       
     } catch (error: any) {
       console.error('Test duel/next error:', error);
-      res.status(500).json({ error: 'Failed to generate question' });
+      res.status(500).json({ error: 'Failed to generate question', reason: error.message });
     }
   });
 
