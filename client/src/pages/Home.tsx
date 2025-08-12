@@ -111,6 +111,8 @@ export default function Home() {
       id: `player_${Date.now()}`,
       username: humanNames[Math.floor(Math.random() * humanNames.length)],
       displayName: humanNames[Math.floor(Math.random() * humanNames.length)],
+      password: '', // Not used for bots
+      email: null,
       level: gameSettings.botDifficulty === 'easy' ? Math.floor(Math.random() * 3) + 1 : 
              gameSettings.botDifficulty === 'medium' ? Math.floor(Math.random() * 3) + 3 :
              gameSettings.botDifficulty === 'hard' ? Math.floor(Math.random() * 3) + 6 : 
@@ -120,6 +122,7 @@ export default function Home() {
       totalWins: Math.floor(Math.random() * 50),
       totalLosses: Math.floor(Math.random() * 30),
       createdAt: new Date(),
+      lastLoginAt: null,
       avatarData: {
         base: 'human',
         palette: ['#8b5cf6', '#ef4444', '#10b981', '#f59e0b', '#06b6d4'][Math.floor(Math.random() * 5)],
@@ -150,12 +153,15 @@ export default function Home() {
         id: `friend_${Date.now()}`,
         username: gameSettings.friendUsername,
         displayName: gameSettings.friendUsername,
+        password: '', // Not used for simulated friends
+        email: null,
         level: Math.floor(Math.random() * 10) + 1,
         xp: 0,
         points: Math.floor(Math.random() * 2000),
         totalWins: Math.floor(Math.random() * 100),
         totalLosses: Math.floor(Math.random() * 50),
         createdAt: new Date(),
+        lastLoginAt: null,
         avatarData: {
           base: 'human',
           palette: '#8b5cf6',
