@@ -427,11 +427,19 @@ export default function Home() {
                 size={64}
               />
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
                   <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/20">
                     @{character.username}
                   </Badge>
+                  {character.lawSchool && (
+                    <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-900/20">
+                      {character.lawSchool.includes('Law School') ? 
+                        character.lawSchool.split(' Law School')[0] : 
+                        character.lawSchool.split(' ')[0]
+                      }
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-purple-400">Level {character.level} • {character.points} Points</p>
               </div>

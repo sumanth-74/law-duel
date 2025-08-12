@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AvatarRenderer } from './AvatarRenderer';
 import type { User, QuestionData, DuelResultData, DuelFinishedData } from '@shared/schema';
@@ -273,7 +274,17 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
               size={56}
             />
             <div>
-              <h3 className="font-semibold">{opponent.displayName}</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold">{opponent.displayName}</h3>
+                {opponent.lawSchool && (
+                  <Badge variant="outline" className="text-xs border-purple-400/50 text-purple-300 bg-purple-900/20">
+                    {opponent.lawSchool.includes('Law School') ? 
+                      opponent.lawSchool.split(' Law School')[0] : 
+                      opponent.lawSchool.split(' ')[0]
+                    }
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm text-muted">Level {opponent.level} • {opponent.points} Points</p>
             </div>
           </div>
@@ -297,7 +308,17 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
           
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <h3 className="font-semibold">{user.displayName}</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold">{user.displayName}</h3>
+                {user.lawSchool && (
+                  <Badge variant="outline" className="text-xs border-purple-400/50 text-purple-300 bg-purple-900/20">
+                    {user.lawSchool.includes('Law School') ? 
+                      user.lawSchool.split(' Law School')[0] : 
+                      user.lawSchool.split(' ')[0]
+                    }
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm text-muted">Level {user.level} • {user.points} Points</p>
             </div>
             <AvatarRenderer

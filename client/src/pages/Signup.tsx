@@ -236,23 +236,70 @@ export default function Signup() {
           {/* Character Selection */}
           <Card className="bg-black/40 border-purple-500/30">
             <CardHeader>
-              <CardTitle className="font-cinzel text-purple-200">Choose Your Archetype</CardTitle>
+              <CardTitle className="font-cinzel text-purple-200">
+                {step === 1 ? 'Choose Your Legal Practice Area' : 'Select Your Character'}
+              </CardTitle>
+              {step === 2 && (
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setStep(1)}
+                  className="text-purple-400 hover:text-purple-300"
+                >
+                  ← Back to Categories
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="space-y-3">
-              {archetypes.map((archetype) => (
-                <div
-                  key={archetype.id}
-                  className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                    formData.archetype === archetype.id
-                      ? 'border-purple-500 bg-purple-500/20'
-                      : 'border-purple-500/30 hover:border-purple-400/50'
-                  }`}
-                  onClick={() => handleInputChange('archetype', archetype.id)}
-                >
-                  <h3 className="font-semibold text-purple-200">{archetype.name}</h3>
-                  <p className="text-sm text-purple-300/80">{archetype.description}</p>
+              {step === 1 ? (
+                // Category Selection
+                Object.entries(categories).map(([categoryId, category]) => (
+                  <div
+                    key={categoryId}
+                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                      formData.selectedCategory === categoryId
+                        ? 'border-purple-500 bg-purple-500/20'
+                        : 'border-purple-500/30 hover:border-purple-400/50'
+                    }`}
+                    onClick={() => handleCategorySelect(categoryId)}
+                  >
+                    <h3 className="font-semibold text-purple-200 flex items-center gap-2">
+                      <span className="text-lg">⚖️</span>
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-purple-300/80">{category.description}</p>
+                  </div>
+                ))
+              ) : (
+                // Character Selection
+                <div className="space-y-3">
+                  {getCharactersForCategory(formData.selectedCategory).map((character) => (
+                    <div
+                      key={character.id}
+                      className={`p-3 rounded-lg border cursor-pointer transition-colors flex items-center gap-3 ${
+                        formData.selectedCharacter === character.id
+                          ? 'border-purple-500 bg-purple-500/20'
+                          : 'border-purple-500/30 hover:border-purple-400/50'
+                      }`}
+                      onClick={() => handleCharacterSelect(character.id)}
+                    >
+                      <div className="w-12 h-12 flex-shrink-0">
+                        <img 
+                          src={getCharacterImage(character.base, character.id)} 
+                          alt={character.label}
+                          className="w-full h-full rounded-lg object-cover border border-purple-500/30"
+                        />
+                      </div>
+                      <div className="flex-grow">
+                        <h3 className="font-semibold text-purple-200">{character.label}</h3>
+                        <p className="text-xs text-purple-300/60">
+                          {character.base} • {LAW_ARCHETYPES.palettes[character.palette] ? character.palette.replace('_', ' ') : character.palette}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
 
@@ -260,12 +307,38 @@ export default function Signup() {
           <div className="md:col-span-2 text-center">
             <Button
               type="submit"
-              disabled={isCreating || !formData.username || !formData.displayName || !formData.password || !formData.confirmPassword}
+              disabled={
+                isCreating || 
+                !formData.username || 
+                !formData.displayName || 
+                !formData.password || 
+                !formData.confirmPassword || 
+                !formData.selectedCharacter ||
+                !formData.lawSchool
+              }
               size="lg"
               className="bg-purple-600 hover:bg-purple-700 text-white px-12 py-3"
             >
               {isCreating ? 'Creating Account...' : 'Create Account & Start Dueling'}
             </Button>
+            
+            {/* Character Preview */}
+            {formData.selectedCharacter && (
+              <div className="mt-6 text-center">
+                <div className="inline-block p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                  <h3 className="font-cinzel text-purple-200 mb-2">Your Character Preview</h3>
+                  <div className="w-20 h-20 mx-auto mb-2">
+                    <img 
+                      src={getCharacterImage(getSelectedCharacterData()?.base, formData.selectedCharacter)} 
+                      alt="Character preview"
+                      className="w-full h-full rounded-lg object-cover border border-purple-500/30"
+                    />
+                  </div>
+                  <p className="text-purple-300 font-medium">{getSelectedCharacterData()?.label}</p>
+                  <p className="text-purple-400/60 text-sm">{formData.displayName} • {formData.lawSchool}</p>
+                </div>
+              </div>
+            )}
           </div>
         </form>
       </div>
