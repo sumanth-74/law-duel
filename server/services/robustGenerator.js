@@ -1,5 +1,12 @@
 import crypto from "crypto";
 
+// ---- de-dupe inside a duel ----
+function fingerprintStem(stem) {
+  return crypto.createHash("sha1")
+    .update(String(stem).toLowerCase().replace(/\s+/g, " "))
+    .digest("hex");
+}
+
 // Canonical subjects - these map to your game's subject names
 const SUBJECTS = {
   "Civil Procedure": ["SMJ", "PJ", "Venue", "Erie", "Joinder", "Discovery", "Preclusion", "Rule 56"],
@@ -232,6 +239,8 @@ export async function generateFreshQuestion(subject) {
     throw error;
   }
 }
+
+export { fingerprintStem };
 
 export async function healthCheck() {
   try {

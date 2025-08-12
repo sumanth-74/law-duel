@@ -184,7 +184,8 @@ async function runDuel(wss, roomCode, players, subject) {
     subject,
     round: 0,
     scores: [0, 0],
-    usedQuestions: []
+    usedQuestions: [],
+    seen: new Set() // fingerprints of stems served in THIS duel
   };
 
   activeMatches.set(roomCode, match);
@@ -195,16 +196,44 @@ async function runDuel(wss, roomCode, players, subject) {
     match.round = round;
     
     try {
-      const question = await getQuestion(subject, match.usedQuestions, true);
+      // Try up to 4 times to get a fresh, valid, unseen question within this duel
+      let question, err;
+      for (let tries = 0; tries < 4; tries++) {
+        question = await getQuestion(subject, match.usedQuestions, true);
+        
+        // Check if we've seen this stem before in this duel
+        const { fingerprintStem } = await import('./robustGenerator.js');
+        const fp = fingerprintStem(question.stem);
+        if (match.seen.has(fp)) {
+          err = "Seen in this duel";
+          continue;
+        }
+        
+        // Success - mark as seen and break
+        match.seen.add(fp);
+        break;
+      }
+      
+      if (!question) {
+        throw new Error(err || "Could not get fresh question after 4 attempts");
+      }
+      
       match.usedQuestions.push(question.qid);
+
+      // Normalize choices to ensure proper display (no "A A" rendering)
+      const normalizedChoices = Array.isArray(question.choices) 
+        ? question.choices.map(choice => String(choice).replace(/^\s*[A-D][\)\].:\-]\s*/i, "").trim())
+        : [];
 
       const questionData = {
         qid: question.qid,
+        subject: question.subject, // Include subject from question, not user selection
         round,
         stem: question.stem,
-        choices: question.choices,
-        timeLimit: question.timeLimit || 60000,
-        deadlineTs: question.deadlineTs || (Date.now() + 60000)
+        choices: normalizedChoices,
+        timeLimit: 60000, // Always 60 seconds for duels
+        timeLimitSec: 60, // Enforce 60s
+        deadlineTs: Date.now() + 60000
       };
 
       players.forEach(ws => {
@@ -295,7 +324,8 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     subject,
     round: 0,
     scores: [0, 0],
-    usedQuestions: []
+    usedQuestions: [],
+    seen: new Set() // fingerprints of stems served in THIS duel
   };
 
   activeMatches.set(roomCode, match);
@@ -306,7 +336,28 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     match.round = round;
     
     try {
-      const question = await getQuestion(subject, match.usedQuestions, true);
+      // Try up to 4 times to get a fresh, valid, unseen question within this duel
+      let question, err;
+      for (let tries = 0; tries < 4; tries++) {
+        question = await getQuestion(subject, match.usedQuestions, true);
+        
+        // Check if we've seen this stem before in this duel
+        const { fingerprintStem } = await import('./robustGenerator.js');
+        const fp = fingerprintStem(question.stem);
+        if (match.seen.has(fp)) {
+          err = "Seen in this duel";
+          continue;
+        }
+        
+        // Success - mark as seen and break
+        match.seen.add(fp);
+        break;
+      }
+      
+      if (!question) {
+        throw new Error(err || "Could not get fresh question after 4 attempts");
+      }
+      
       match.usedQuestions.push(question.qid);
 
       // Normalize choices to ensure proper display (no "A A" rendering)
