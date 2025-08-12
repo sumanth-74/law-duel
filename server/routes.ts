@@ -278,59 +278,114 @@ function sendNextQuestion(ws: WebSocket) {
   
   const questions = [
     {
-      stem: "Which of the following statements about hearsay is correct?",
+      stem: "A witness testified that she saw the defendant hit the victim with a baseball bat. On cross-examination, defense counsel asked the witness, 'Isn't it true that you told the police officer immediately after the incident that you weren't sure what the defendant hit the victim with?' The witness denied making this statement. Defense counsel then called the police officer to testify about the witness's prior statement. The officer's testimony is:",
       choices: [
-        "Hearsay is never admissible in court",
-        "Hearsay is an out-of-court statement offered to prove the truth of the matter asserted",
-        "All hearsay exceptions require the declarant to be unavailable",
-        "Hearsay only applies to written statements"
+        "Admissible as substantive evidence and to impeach the witness",
+        "Admissible only to impeach the witness", 
+        "Inadmissible because it is hearsay",
+        "Inadmissible because the witness denied making the statement"
       ],
       correctIndex: 1,
-      explanation: "Hearsay is defined as an out-of-court statement offered to prove the truth of the matter asserted."
+      explanation: "Under FRE 613(b), extrinsic evidence of a prior inconsistent statement may be introduced only to impeach the witness's credibility, not as substantive evidence, unless the statement was made under oath at a prior proceeding."
     },
     {
-      stem: "Which constitutional amendment prohibits unreasonable searches and seizures?",
+      stem: "A homeowner contracted with a builder to construct a swimming pool for $50,000. The contract specified that the pool should be 20 feet long, 10 feet wide, and 8 feet deep. After completion, the homeowner discovered that the pool was only 19 feet long. The cost to reconstruct the pool to the correct length would be $25,000, but the difference in value between the pool as built and as contracted for is only $2,000. What is the homeowner's likely remedy?",
       choices: [
-        "First Amendment",
-        "Fourth Amendment",
-        "Fifth Amendment",
-        "Eighth Amendment"
+        "$25,000 in expectation damages",
+        "$2,000 in diminished value damages",
+        "No damages because the breach was not material", 
+        "Specific performance requiring reconstruction"
       ],
       correctIndex: 1,
-      explanation: "The Fourth Amendment protects against unreasonable searches and seizures."
+      explanation: "When the cost of completion greatly exceeds the diminished value and the deviation is relatively minor, courts typically award diminished value damages rather than cost of completion under the economic waste doctrine."
     },
     {
-      stem: "In contract law, what is required for consideration to be valid?",
+      stem: "A defendant was charged with burglary. At trial, the prosecution seeks to introduce evidence that the defendant committed two other burglaries in the same neighborhood within the past month. This evidence is:",
       choices: [
-        "It must be monetary",
-        "It must be adequate",
-        "It must be bargained for",
-        "It must be written"
+        "Admissible to prove the defendant's propensity to commit burglary",
+        "Admissible to prove modus operandi or identity",
+        "Inadmissible character evidence",
+        "Inadmissible unless the defendant opens the door by introducing character evidence"
       ],
       correctIndex: 2,
-      explanation: "Consideration must be bargained for exchange, though it need not be adequate."
+      explanation: "Under FRE 404(b), evidence of other crimes is generally inadmissible to prove character or propensity. While it may be admitted for other purposes like modus operandi, the question doesn't provide facts suggesting such a purpose, making it inadmissible character evidence."
     },
     {
-      stem: "What is the statute of limitations for most felonies?",
+      stem: "A landowner devised his property 'to my daughter for life, then to my grandson, but if my grandson dies before reaching age 25, then to my nephew.' The grandson is currently 20 years old. What interest does the nephew have?",
       choices: [
-        "3 years",
-        "5 years", 
-        "7 years",
-        "No limit"
-      ],
-      correctIndex: 1,
-      explanation: "Most felonies have a 5-year statute of limitations, though some exceptions apply."
-    },
-    {
-      stem: "Which tort requires proof of actual damages?",
-      choices: [
-        "Assault",
-        "Battery",
-        "Negligence",
-        "False imprisonment"
+        "Contingent remainder",
+        "Vested remainder subject to divestment", 
+        "Executory interest",
+        "Reversion"
       ],
       correctIndex: 2,
-      explanation: "Negligence requires proof of actual damages, unlike intentional torts."
+      explanation: "The nephew has an executory interest because his interest will divest the grandson's vested remainder if the grandson dies before age 25. This is a shifting executory interest that cuts short the preceding estate."
+    },
+    {
+      stem: "In a personal injury action, the plaintiff claims the defendant was driving 60 mph in a 35 mph zone. To prove the defendant's speed, the plaintiff offers testimony from a witness who will testify that immediately after the accident, a bystander who had since died said, 'That car must have been going at least 60 mph!' This testimony is:",
+      choices: [
+        "Admissible as a present sense impression",
+        "Admissible as an excited utterance", 
+        "Inadmissible hearsay because the declarant is unavailable",
+        "Inadmissible because it contains the witness's opinion about speed"
+      ],
+      correctIndex: 0,
+      explanation: "The bystander's statement qualifies as a present sense impression under FRE 803(1) because it was made immediately after perceiving the event (the car's speed) and describes what the declarant observed."
+    },
+    {
+      stem: "A buyer contracted to purchase a rare painting for $100,000. Before delivery, the seller learned the painting was actually worth $500,000 and refused to deliver it. The buyer sued for specific performance. The seller's best defense is:",
+      choices: [
+        "The contract price was unconscionably low",
+        "There was a mutual mistake about the painting's value",
+        "The seller's performance would cause undue hardship",
+        "Specific performance is inappropriate because money damages are adequate"
+      ],
+      correctIndex: 3,
+      explanation: "Specific performance is generally not awarded when money damages provide an adequate remedy. Since the buyer can purchase a substitute painting or be compensated monetarily, specific performance would likely be denied."
+    },
+    {
+      stem: "A defendant was arrested for robbery. During a properly conducted lineup, the victim identified the defendant as the perpetrator. At trial, the victim is unavailable to testify. The prosecution seeks to introduce the victim's out-of-court identification through the testimony of the police officer who conducted the lineup. This testimony is:",
+      choices: [
+        "Admissible as a prior identification under FRE 801(d)(1)(C)",
+        "Admissible as a present sense impression",
+        "Inadmissible hearsay because the victim cannot be cross-examined",
+        "Inadmissible because lineup identifications are inherently unreliable"
+      ],
+      correctIndex: 2,
+      explanation: "FRE 801(d)(1)(C) requires that the declarant testify at trial and be subject to cross-examination about the prior identification. Since the victim is unavailable, the identification is inadmissible hearsay."
+    },
+    {
+      stem: "A state law requires all attorneys to be members of the state bar association and pay annual dues of $500. An attorney challenges this requirement as a violation of his First Amendment freedom of association. The law is:",
+      choices: [
+        "Constitutional because bar membership is a compelling state interest",
+        "Constitutional because it regulates conduct, not speech",
+        "Unconstitutional because it compels association with an organization",
+        "Constitutional if the bar association does not engage in political activities unrelated to the legal profession"
+      ],
+      correctIndex: 3,
+      explanation: "Under Keller v. State Bar of California, mandatory bar membership is constitutional if the association limits its activities to regulating the legal profession and improving legal services, but not if it engages in political activities unrelated to these purposes."
+    },
+    {
+      stem: "A plaintiff was injured when a chair collapsed at a restaurant. The chair was manufactured by Company A but assembled by Company B. In strict products liability, if the plaintiff can prove the chair was defectively designed, who can be held liable?",
+      choices: [
+        "Only Company A because it designed the chair",
+        "Only Company B because it was in the stream of commerce when the injury occurred",
+        "Both companies because they are in the chain of distribution",
+        "Neither company if the restaurant modified the chair after assembly"
+      ],
+      correctIndex: 2,
+      explanation: "In strict products liability, all parties in the chain of distribution—including manufacturers, assemblers, and retailers—can be held liable for defective products that cause injury, regardless of their degree of fault."
+    },
+    {
+      stem: "A defendant was charged with assault. At trial, the prosecution calls a character witness to testify that the defendant has a reputation in the community for violence. Defense counsel's objection should be:",
+      choices: [
+        "Overruled because reputation evidence is always admissible",
+        "Overruled because the evidence is relevant to the defendant's propensity for violence",
+        "Sustained because the prosecution cannot introduce character evidence in its case-in-chief",
+        "Sustained because only specific acts evidence is admissible to prove character"
+      ],
+      correctIndex: 2,
+      explanation: "Under FRE 404(a)(1), the prosecution generally cannot introduce evidence of a defendant's bad character in its case-in-chief to prove the defendant's propensity to commit the charged crime. The defendant must 'open the door' by introducing character evidence first."
     }
   ];
 
@@ -359,7 +414,7 @@ function handleDuelAnswer(ws: WebSocket, payload: any) {
   if (!duelState) return;
   
   // Extract correct answer from the question (simplified - in real app would lookup by qid)
-  const correctAnswers = [1, 1, 2, 1, 2]; // Correct answers for our 5 rotating questions
+  const correctAnswers = [1, 1, 2, 2, 0, 3, 2, 3, 2, 2]; // Correct answers for our 10 rotating questions
   const correctIndex = correctAnswers[(duelState.currentRound - 1) % correctAnswers.length];
   
   // Generate bot answer (bot has ~70% accuracy)
@@ -423,11 +478,16 @@ function handleDuelAnswer(ws: WebSocket, payload: any) {
 
 function getExplanation(round: number): string {
   const explanations = [
-    "Hearsay is defined as an out-of-court statement offered to prove the truth of the matter asserted.",
-    "The Fourth Amendment protects against unreasonable searches and seizures.",
-    "Consideration must be bargained for exchange, though it need not be adequate.",
-    "Most felonies have a 5-year statute of limitations, though some exceptions apply.",
-    "Negligence requires proof of actual damages, unlike intentional torts."
+    "Under FRE 613(b), extrinsic evidence of a prior inconsistent statement may be introduced only to impeach the witness's credibility, not as substantive evidence, unless the statement was made under oath at a prior proceeding.",
+    "When the cost of completion greatly exceeds the diminished value and the deviation is relatively minor, courts typically award diminished value damages rather than cost of completion under the economic waste doctrine.",
+    "Under FRE 404(b), evidence of other crimes is generally inadmissible to prove character or propensity. While it may be admitted for other purposes like modus operandi, the question doesn't provide facts suggesting such a purpose, making it inadmissible character evidence.",
+    "The nephew has an executory interest because his interest will divest the grandson's vested remainder if the grandson dies before age 25. This is a shifting executory interest that cuts short the preceding estate.",
+    "The bystander's statement qualifies as a present sense impression under FRE 803(1) because it was made immediately after perceiving the event (the car's speed) and describes what the declarant observed.",
+    "Specific performance is generally not awarded when money damages provide an adequate remedy. Since the buyer can purchase a substitute painting or be compensated monetarily, specific performance would likely be denied.",
+    "FRE 801(d)(1)(C) requires that the declarant testify at trial and be subject to cross-examination about the prior identification. Since the victim is unavailable, the identification is inadmissible hearsay.",
+    "Under Keller v. State Bar of California, mandatory bar membership is constitutional if the association limits its activities to regulating the legal profession and improving legal services, but not if it engages in political activities unrelated to these purposes.",
+    "In strict products liability, all parties in the chain of distribution—including manufacturers, assemblers, and retailers—can be held liable for defective products that cause injury, regardless of their degree of fault.",
+    "Under FRE 404(a)(1), the prosecution generally cannot introduce evidence of a defendant's bad character in its case-in-chief to prove the defendant's propensity to commit the charged crime. The defendant must 'open the door' by introducing character evidence first."
   ];
   return explanations[(round - 1) % explanations.length];
 }

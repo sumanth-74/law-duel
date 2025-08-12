@@ -134,7 +134,7 @@ export default function Home() {
     setDuelData({
       roomCode: `bot_${Date.now()}`,
       subject: gameSettings.subject,
-      bestOf: 7,
+      bestOf: 10,
       ranked: false,
       stake: 0,
       botDifficulty: gameSettings.botDifficulty
@@ -173,7 +173,7 @@ export default function Home() {
       setDuelData({
         roomCode: `friend_${Date.now()}`,
         subject: gameSettings.subject,
-        bestOf: 7,
+        bestOf: 10,
         ranked: true,
         stake: 10
       });
