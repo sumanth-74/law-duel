@@ -1,0 +1,114 @@
+What it should say (outcome first)
+Hero headline
+
+Beat the bar. Beat your class.
+Duel on real MBE-style questions—live or async. Grow your avatar as you master the law. Atticus explains every answer.
+
+Primary CTAs
+
+Start a Duel (primary)
+
+Try a 30-sec demo (as Guest)
+
+Proof chips under the hero
+
+1L & Bar
+
+Same question head-to-head
+
+< 8s matching
+
+Explanation on every item
+
+How it works (3 steps)
+
+Make your avatar. Name it.
+
+Quick Match. Live or async; first to 4 wins.
+
+Climb the ladder. Correct answers = growth + points; Atticus gives the rule + why.
+
+Why it works (short, adult)
+
+Testing effect: recall beats rereading.
+
+Pressure calibration: 20-second decisions simulate exam pace.
+
+Focused feedback: one dispositive fact; concise rule-based explanations.
+
+Audience toggle
+
+Tabs: 1L Exams | Bar Prep
+
+Switches the copy below to list the exact subjects you offer for each.
+
+Async hook (Game-Pigeon style)
+
+Keep 5–10 matches going. Your inbox lights up when it’s your turn.
+
+Atticus teaser
+
+“Ask Atticus anything: Teach FRE 803(2)” → opens the mentor modal.
+
+Pricing strip (tiny)
+
+Free: 10 duels/day · 3 hints/day
+
+Pro/Season Pass: Unlimited duels · Atticus Teach · Advanced stats → See plans
+
+Paste this to Replit (Ghostwriter)
+Replace landing copy with outcome-driven content (no layout refactor).
+
+Hero:
+
+H1: “Beat the bar. Beat your class.”
+
+Sub: “Duel on real MBE-style questions—live or async. Grow your avatar as you master the law. Atticus explains every answer.”
+
+Buttons: Start a Duel (primary), Try a 30-sec demo (secondary → loads a single canned question and the duel UI with a fake opponent).
+
+Proof chips: “1L & Bar • Same question head-to-head • < 8s matching • Explanation on every item”.
+
+Replace the three purple feature cards with How it works (3 steps), Why it works (3 bullets), and an Audience toggle (tabs “1L Exams” | “Bar Prep” that just swaps the bullet list of subjects).
+
+Add a small Async Duels banner: “Keep 5–10 matches going. Your inbox lights up when it’s your turn.”
+
+Add an Ask Atticus teaser: a line + button that opens the existing Atticus modal.
+
+Keep login link minimal; add Play as Guest near the primary CTA.
+
+Copy tone: mature, clinical, concise. No cutesy emojis. Cinzel headings, Inter Tight body.
+
+Acceptance:
+
+Above-the-fold shows the two CTAs and proof chips.
+
+The three middle cards are replaced by “How it works / Why it works / Audience”.
+
+The demo launches a single canned duel without signup; finishing the demo routes to “Create account” or “Quick Match”.
+
+Microcopy you can drop in verbatim
+CTA buttons:
+
+Start a Duel
+
+Try a 30-sec demo
+
+Play as Guest
+
+Audience tabs copy:
+
+1L Exams: Civ Pro, Contracts (incl. UCC), Torts, Property, Crim, Con Law
+
+Bar Prep: All MBE subjects with bar-level difficulty
+
+Async banner: “Like Game Pigeon, but for the law. Take your turns when you’re free.”
+
+Atticus teaser: “Ask Atticus: rule → application → why the others are wrong.”
+
+Quick polish that sells
+Swap the hero art for a tight in-product screenshot of the duel screen (timer, choices, avatars) — that instantly communicates the goal.
+
+Put social proof when you have it (quotes, school badges). Until then, keep it minimal and confident.
+
+Want me to output a ready-to-paste React/TSX hero section with those CTAs and chips so you can drop it into Landing.tsx right now?

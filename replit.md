@@ -9,6 +9,8 @@ Law Duel is a competitive legal education game where players engage in 1v1 duels
 Preferred communication style: Simple, everyday language.
 
 **UX Requirements (Updated 2025-01-12):**
+- **Outcome-driven messaging**: "Beat the bar. Beat your class" - emphasizes both bar exam AND law school preparation
+- **Atticus AI mentor**: Mythical cat powered by ChatGPT who provides legal explanations and guidance
 - Stealth bot system: Players must never know they're playing against bots
 - Streamlined matchmaking: Remove redundant "Quick Match" and "Create Room" options
 - Clear game modes: "Quick Match" (vs stealth bots) and "Play with Friend" (enter username)
@@ -23,7 +25,7 @@ Preferred communication style: Simple, everyday language.
 - **Instant Rematch**: Auto-focus rematch button, requeue both players in 3s
 - **Daily Quests**: 3 rotating goals with cosmetic rewards and XP bursts
 - **Tier Milestones**: Visible tiers (Novice to Archon) with short-term progression goals
-- **Atticus Hooks**: Memory hooks after each duel plus learning streak bonuses
+- **Atticus Integration**: AI-powered mythical cat mentor provides legal guidance and explanations throughout platform
 
 ## System Architecture
 
