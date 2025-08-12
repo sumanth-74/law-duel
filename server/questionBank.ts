@@ -141,10 +141,7 @@ export class QuestionBank {
     return batch;
   }
 
-  // Check if bank needs refresh (10-min cache)
-  needsRefresh(): boolean {
-    return Date.now() - this.lastRefresh.getTime() > this.CACHE_DURATION;
-  }
+
 
   // Add new verified questions to bank
   addVerifiedQuestions(subject: string, questions: CachedQuestion[]) {

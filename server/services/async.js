@@ -174,7 +174,7 @@ class AsyncDuels {
 
     try {
       // Generate question for this round
-      const question = await questionBank.getCachedQuestion(match.subject, 'Bar');
+      const question = questionBank.getCachedQuestion(match.subject);
       
       if (!question) {
         console.error('Failed to generate question for match:', matchId);
@@ -385,7 +385,7 @@ class AsyncDuels {
       return {
         id: match.id,
         subject: match.subject,
-        opponent: opponent.username,
+        opponent: opponent ? opponent.username : 'Unknown',
         round: match.round,
         status: match.status,
         yourTurn,

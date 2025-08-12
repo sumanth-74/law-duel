@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { renderAvatarSVG } from '@/lib/creator.js';
+import { renderAvatarSVG } from '@/lib/creator';
 import type { AvatarData } from '@shared/schema';
 
 interface AvatarRendererProps {

@@ -57,6 +57,11 @@ import reasonableDoubtRevenantPortrait from '@assets/generated_images/reasonable
 import bradyBansheePortrait from '@assets/generated_images/banshee_lawyer_portrait_c0258cbe.png';
 import ineffectiveAssistanceShadePortrait from '@assets/generated_images/ineffective_assistance_shade_c0b0501e.png';
 
+/**
+ * @param {string} base - The character base type
+ * @param {string|null} archetypeId - The specific archetype ID
+ * @returns {string} - Image URL for the character
+ */
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
   // Premium character mappings - each with professionally crafted unique portrait
   const specificArchetypes = {
@@ -126,6 +131,15 @@ export function getCharacterImage(base = "humanoid", archetypeId = null) {
   return imageMap[base] || wizardPortrait;
 }
 
+/**
+ * @param {Object} avatarData - Avatar configuration object
+ * @param {string} avatarData.base - The character base type
+ * @param {string} avatarData.palette - Color palette for the avatar
+ * @param {Array} avatarData.props - Array of props/accessories
+ * @param {string|null} avatarData.archetypeId - The specific archetype ID
+ * @param {number} scale - Scale factor for the avatar
+ * @returns {string} - SVG string for the avatar
+ */
 export function renderAvatarSVG({ base = "humanoid", palette = "#5865f2", props = [], archetypeId = null }, scale = 1) {
   const size = 120 * scale;
   const characterImage = getCharacterImage(base, archetypeId);
