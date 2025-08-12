@@ -15,21 +15,22 @@ export default function Landing() {
     
     setIsSigningUp(true);
     try {
-      const response = await fetch('/api/auth/register', {
+      // Check if username is available
+      const checkResponse = await fetch('/api/auth/check-username', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.trim() })
       });
       
-      if (response.ok) {
-        // Redirect to character creation
-        window.location.href = '/';
+      if (checkResponse.ok) {
+        // Redirect to signup page with username
+        window.location.href = `/signup?username=${encodeURIComponent(username.trim())}`;
       } else {
-        const error = await response.json();
-        alert(error.message || 'Failed to create account');
+        const error = await checkResponse.json();
+        alert(error.message || 'Username not available');
       }
     } catch (error) {
-      alert('Failed to create account. Please try again.');
+      alert('Failed to check username. Please try again.');
     } finally {
       setIsSigningUp(false);
     }

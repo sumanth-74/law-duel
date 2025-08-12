@@ -49,8 +49,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   }
 
-  // Simple username-only registration
-  app.post("/api/auth/register", async (req, res) => {
+  // Check username availability
+  app.post("/api/auth/check-username", async (req, res) => {
     try {
       const { username } = req.body;
       
@@ -66,19 +66,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(409).json({ message: "Username already taken" });
       }
 
-      // Create user with default avatar
-      const newUser = {
-        username: cleanUsername,
-        displayName: cleanUsername,
-        password: "temp", // We'll fix this by making password optional later
-        avatarData: {
-          archetype: "novice-scholar",
-          accessories: [],
-          level: 1
-        }
-      };
+      res.json({ message: "Username available", username: cleanUsername });
+    } catch (error: any) {
+      console.error("Username check error:", error);
+      res.status(400).json({ message: "Failed to check username" });
+    }
+  });
 
-      const user = await storage.createUser(newUser);
+  // Full registration with password and character data
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const userData = registerSchema.parse(req.body);
+      const { confirmPassword, ...userInsert } = userData;
+      
+      // Check if username is taken
+      const existing = await storage.getUserByUsername(userData.username);
+      if (existing) {
+        return res.status(409).json({ message: "Username already taken" });
+      }
+
+      const user = await storage.createUser(userInsert);
       
       // Auto-login after registration
       (req.session as any).userId = user.id;
@@ -88,7 +95,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(userResponse);
     } catch (error: any) {
       console.error("Registration error:", error);
-      res.status(400).json({ message: "Failed to create account", error: error.message });
+      res.status(400).json({ message: "Invalid user data", error: error.message });
     }
   });
 

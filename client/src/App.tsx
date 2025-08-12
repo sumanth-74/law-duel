@@ -8,7 +8,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/not-found";
-import CharacterCreation from "@/pages/CharacterCreation";
+import Signup from "@/pages/Signup";
 import { Loader2 } from "lucide-react";
 
 function Router() {
@@ -25,19 +25,18 @@ function Router() {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Landing />;
-  }
-
-  // If user needs to create character, show character creation
-  if (user && (!user.displayName || !user.avatarData)) {
-    return <CharacterCreation />;
-  }
-
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/character" component={CharacterCreation} />
+      {!isAuthenticated ? (
+        <>
+          <Route path="/" component={Landing} />
+          <Route path="/signup" component={Signup} />
+        </>
+      ) : (
+        <>
+          <Route path="/" component={Home} />
+        </>
+      )}
       <Route component={NotFound} />
     </Switch>
   );
