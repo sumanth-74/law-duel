@@ -93,6 +93,7 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Subject Integrity Guard**: Comprehensive system implemented to eliminate cross-subject bleed with canonical subject normalization, heuristic validation, and retry logic (Updated 2025-08-12)
 - **Fresh Question Generation**: Fixed critical issue where OpenAI questions with invalid choice counts (8 instead of 4) caused fallback to cached questions. Implemented 3-attempt retry logic with no fallbacks for duels (Updated 2025-08-12)
 - **Round-Based Duel System**: Implemented proper round progression with state management, preventing question repetition and ensuring each "Next Question" generates unique content with proper fallback handling (Updated 2025-08-12)
+- **Answer Position Randomization**: Fixed critical "A bias" issue where correct answers defaulted to choice A. Implemented Fisher-Yates shuffle to distribute correct answers evenly across positions A, B, C, D, eliminating predictable patterns (Updated 2025-08-12)
 
 ## External Dependencies
 
