@@ -3,11 +3,11 @@
     "id": "bot_sarah_patel",
     "username": "SarahPatel",
     "displayName": "Sarah Patel",
-    "level": 18,
-    "points": 3200,
+    "level": 17,
+    "points": 3251,
     "totalWins": 56,
-    "totalLosses": 9,
-    "lastActive": "2025-08-12T11:36:35.595Z"
+    "totalLosses": 10,
+    "lastActive": "2025-08-12T17:44:38.455Z"
   },
   {
     "id": "bot_emma_thompson",
@@ -34,10 +34,10 @@
     "username": "AlexandraCarter",
     "displayName": "Alexandra Carter",
     "level": 15,
-    "points": 2850,
-    "totalWins": 47,
+    "points": 2875,
+    "totalWins": 48,
     "totalLosses": 8,
-    "lastActive": "2025-08-12T09:33:48.592Z"
+    "lastActive": "2025-08-12T18:09:38.458Z"
   },
   {
     "id": "bot_david_torres",
@@ -63,20 +63,20 @@
     "id": "bot_carlos_mendez",
     "username": "CarlosMendez",
     "displayName": "Carlos Mendez",
-    "level": 13,
-    "points": 2300,
-    "totalWins": 35,
+    "level": 12,
+    "points": 2356,
+    "totalWins": 36,
     "totalLosses": 13,
-    "lastActive": "2025-08-11T21:40:02.384Z"
+    "lastActive": "2025-08-12T18:04:38.456Z"
   },
   {
     "id": "bot_james_richardson",
     "username": "JamesRichardson",
     "displayName": "James Richardson",
     "level": 11,
-    "points": 2100,
-    "totalWins": 32,
+    "points": 2129,
+    "totalWins": 33,
     "totalLosses": 15,
-    "lastActive": "2025-08-12T11:00:41.152Z"
+    "lastActive": "2025-08-12T18:04:38.456Z"
   }
 ]
