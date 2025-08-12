@@ -1,0 +1,216 @@
+You’re right—it shouldn’t be this hard. Here’s a drop-in, 60-second, mixed-subject, AI-generated question endpoint that just works. Paste these two files into Replit, set OPENAI_API_KEY in Secrets, press Run.
+
+package.json
+json
+Copy
+Edit
+{
+  "name": "law-duel-qgen",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "ajv": "^8.17.1"
+  },
+  "scripts": { "start": "node server.js" }
+}
+server.js
+js
+Copy
+Edit
+import express from "express";
+import cors from "cors";
+import crypto from "crypto";
+import Ajv from "ajv";
+
+// ---- CONFIG ----
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) console.error("⚠️ Set OPENAI_API_KEY in Replit Secrets.");
+
+const PORT = process.env.PORT || 3000;
+const ajv = new Ajv({ allErrors: true, strict: true });
+
+// ---- CANONICAL SUBJECTS (mix comes from random pick here) ----
+const SUBJECTS = {
+  "Civ Pro": ["SMJ", "PJ", "Venue", "Erie", "Joinder", "Discovery", "Preclusion", "Rule 56"],
+  "Con Law": ["Speech", "Equal Protection", "Due Process", "Commerce Clause", "State Action", "Standing", "Takings"],
+  "Contracts": ["Offer/Acceptance", "Consideration", "Defenses", "Parol Evidence", "UCC §2—Formation", "UCC §2—Risk of Loss", "Warranties/Remedies"],
+  "Crim": ["Homicide", "Accomplice/Pinkerton", "Felony Murder", "Fourth Amendment", "Fifth/Miranda", "Sixth/Confrontation"],
+  "Evidence": ["Relevance 401/403", "Character 404/405", "Impeachment 607/613", "Hearsay 801–807", "Privileges", "Authentication/Best Evidence", "Experts 702–705"],
+  "Property": ["Estates/Future Interests", "RAP", "Recording Acts", "Adverse Possession", "Easements/Covenants", "Landlord–Tenant", "Mortgages"],
+  "Torts": ["Negligence", "Strict Liability", "Products Liability", "Defamation", "Privacy/IIED/NIED", "Vicarious Liability"]
+};
+const SUBJECT_ENUM = Object.keys(SUBJECTS);
+
+// Simple rule hints to keep variety & quality
+function ruleHint(subject, topic) {
+  const map = {
+    "Evidence:Hearsay 801–807": "FRE 801(d)(1)(C): prior identification is non-hearsay",
+    "Contracts:UCC §2—Risk of Loss": "UCC §2-510: buyer breach with identified goods",
+    "Property:Recording Acts": "Race-notice: BFP without notice who records first",
+    "Crim:Fifth/Miranda": "Unwarned but voluntary statements are admissible for impeachment",
+    "Civ Pro:Rule 56": "Summary judgment: no genuine dispute of material fact",
+    "Torts:Products Liability": "Design vs. manufacturing defect (risk-utility test)"
+  };
+  return map[`${subject}:${topic}`] || `${topic} — test the controlling black-letter rule`;
+}
+
+const itemSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    subject: { type: "string", enum: SUBJECT_ENUM },
+    topic: { type: "string" },
+    subtopic: { type: "string" },
+    stem: { type: "string" },
+    choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+    correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+    optionRationales: { type: "object" },
+    explanationLong: { type: "string" },
+    ruleRefs: { type: "array", items: { type: "string" } },
+    difficultySeed: { type: "string", enum: ["easy","medium","hard"] },
+    timeLimitSec: { type: "integer" },
+    tags: { type: "array", items: { type: "string" } },
+    license: { type: "string" },
+    status: { type: "string", enum: ["draft","approved"] },
+    authorNote: { type: "string" }
+  },
+  required: ["subject","topic","stem","choices","correctIndex","optionRationales","explanationLong","ruleRefs","difficultySeed","license","status"],
+  additionalProperties: false
+};
+const validateItem = ajv.compile(itemSchema);
+
+// quick lint so the model doesn’t drift or give junk
+function lint(item) {
+  const bad = [...item.choices].join(" ").toLowerCase();
+  if (bad.includes("all of the above") || bad.includes("none of the above")) return "Banned phrasing";
+  const w = (item.stem || "").trim().split(/\s+/).length;
+  if (w < 110 || w > 220) return "Stem should be ~120–180 words";
+  if (item.timeLimitSec !== 60) item.timeLimitSec = 60; // enforce 60s
+  return null;
+}
+
+// avoid immediate repeats within the same process
+const recent = new Set();
+const cap = 100; // remember last 100 stems
+function memoStem(stem) {
+  const key = stem.toLowerCase().replace(/\s+/g, " ").slice(0, 180);
+  recent.add(key);
+  if (recent.size > cap) recent.delete([...recent][0]);
+  return key;
+}
+function seenStem(stem) {
+  const key = stem.toLowerCase().replace(/\s+/g, " ").slice(0, 180);
+  return recent.has(key);
+}
+
+// tiny helper
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randomSubject() { return pick(SUBJECT_ENUM); }
+function randomTopic(subject) { return pick(SUBJECTS[subject]); }
+
+// OpenAI Responses API (using fetch; Node 18+ has global fetch in Replit)
+async function callOpenAI(prompt) {
+  const res = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      input: prompt,
+      temperature: 0.6,
+      max_output_tokens: 1200,
+      response_format: { type: "json_schema", json_schema: { name: "MBEItem", schema: itemSchema, strict: true } }
+    })
+  });
+  if (!res.ok) throw new Error(`OpenAI ${res.status} ${await res.text()}`);
+  const data = await res.json();
+  return JSON.parse(data.output_text);
+}
+
+// build a strong prompt with a freshness nonce and 60s timer locked
+function buildPrompt(subject, topic, rule) {
+  const nonce = crypto.randomBytes(6).toString("hex");
+  return `
+Write an original **MBE-style** multiple-choice question.
+Subject: ${subject}. Topic: ${topic}. Rule to test: ${rule}.
+- Single best answer with exactly 4 options (A–D).
+- Fact pattern length: 120–180 words.
+- National (majority) law only (FRE/FRCP/UCC Art.2/federal con law as relevant).
+- Include rationales for EACH option and a 3–6 sentence explanation with the controlling rule + common trap.
+- Set "timeLimitSec": 60 in the JSON.
+- No “all/none of the above”. Output ONLY JSON matching our schema.
+Freshness token: ${nonce} (do not mention it).`;
+}
+
+// ---- EXPRESS APP ----
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use((req,res,next)=>{
+  res.setHeader("Cache-Control","no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma","no-cache"); res.setHeader("Expires","0"); next();
+});
+
+// health check
+app.get("/health", async (req, res) => {
+  try {
+    if (!OPENAI_API_KEY) return res.status(500).json({ ok:false, error:"Missing OPENAI_API_KEY" });
+    const ping = await fetch("https://api.openai.com/v1/models", { headers: { Authorization: `Bearer ${OPENAI_API_KEY}` }});
+    return res.status(ping.ok ? 200 : ping.status).json({ ok: ping.ok });
+  } catch (e) { return res.status(500).json({ ok:false, error:e.message }); }
+});
+
+/**
+ * GET /question
+ * Optional query: ?subject=Evidence  (omit or set "Mix" to get a random subject)
+ * Returns a NEW, 60s, AI-generated, mixed-subject MBE item (answer omitted).
+ */
+app.get("/question", async (req, res) => {
+  try {
+    const requested = req.query.subject && SUBJECT_ENUM.includes(req.query.subject) ? req.query.subject : null;
+    const subject = requested || randomSubject();
+    const topic = randomTopic(subject);
+    const rule = ruleHint(subject, topic);
+    const prompt = buildPrompt(subject, topic, rule);
+
+    // retry up to 3x for novelty/validity
+    let item, err;
+    for (let i=0;i<3;i++){
+      item = await callOpenAI(prompt);
+      item.subject = subject;
+      item.topic = item.topic || topic;
+      item.license = "© Law Duel, original";
+      item.status = "approved";
+      item.id = item.id || `${subject.slice(0,2).toUpperCase()}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+
+      if (!validateItem(item)) { err = "Schema invalid"; continue; }
+      const l = lint(item); if (l) { err = l; continue; }
+      if (seenStem(item.stem)) { err = "Duplicate stem"; continue; }
+
+      memoStem(item.stem);
+      const { correctIndex, optionRationales, ...safe } = item; // don’t leak answer to the client
+      return res.json({ item: safe });
+    }
+    return res.status(502).json({ error: err || "Failed to produce a fresh valid item" });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// (Optional) admin endpoint to see the answer for testing
+app.get("/question/full", async (req, res) => {
+  try {
+    const subject = randomSubject();
+    const topic = randomTopic(subject);
+    const prompt = buildPrompt(subject, topic, ruleHint(subject, topic));
+    const item = await callOpenAI(prompt);
+    if (!validateItem(item)) return res.status(502).json({ error:"Schema invalid" });
+    item.timeLimitSec = 60;
+    res.json({ item });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.listen(PORT, () => console.log(`✅ QGen running on :${PORT}`));

@@ -22,9 +22,9 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
         if (freshQuestion && validateQuestion(freshQuestion)) {
           console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
           console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
-          const formatted = formatQuestion(freshQuestion);
-          console.log(`✅ SUCCESSFULLY returning fresh OpenAI question with QID: ${formatted.qid}`);
-          return formatted;
+          // The fresh question already has the correct format from robustGenerator
+          console.log(`✅ SUCCESSFULLY returning fresh OpenAI question with QID: ${freshQuestion.qid}`);
+          return freshQuestion;
         } else {
           console.log(`❌ Fresh question failed validation - falling back`);
           return getFallbackQuestion(subject);
