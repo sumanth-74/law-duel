@@ -126,27 +126,27 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
       showResult: false,
       waitingForOpponent: false,
       showHint: false,
-      showTrainingBanner: questionData.showTrainingBanner || false
+      showTrainingBanner: false
     }));
 
     startTimer(questionData.deadlineTs);
     announceForScreenReader(`Round ${questionData.round}. New question presented.`);
   };
 
-  const handleQuestionResult = (resultData: DuelResultData) => {
+  const handleQuestionResult = (resultData: any) => {
     setDuelState(prev => ({
       ...prev,
       showResult: true,
       lastResult: resultData,
-      scores: [resultData.scores.player1, resultData.scores.player2],
+      scores: resultData.scores || [0, 0],
       waitingForOpponent: false
     }));
 
-    const isCorrect = prev.selectedAnswer === resultData.correctIndex;
+    const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
     announceForScreenReader(
       isCorrect 
-        ? `Correct! You gained 10 XP. Current score: ${resultData.scores.player1} to ${resultData.scores.player2}.`
-        : `Incorrect. The correct answer was ${String.fromCharCode(65 + resultData.correctIndex)}. Current score: ${resultData.scores.player1} to ${resultData.scores.player2}.`
+        ? `Correct! You gained 10 XP. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
+        : `Incorrect. The correct answer was ${String.fromCharCode(65 + resultData.correctIndex)}. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
     );
   };
 
@@ -254,7 +254,7 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             <AvatarRenderer
-              avatarData={opponent.avatarData}
+              avatarData={opponent.avatarData as any}
               level={opponent.level}
               size={56}
             />
@@ -287,7 +287,7 @@ export function DuelArena({ user, opponent, isVisible, onDuelEnd }: DuelArenaPro
               <p className="text-sm text-muted">Level {user.level} • {user.points} Points</p>
             </div>
             <AvatarRenderer
-              avatarData={user.avatarData}
+              avatarData={user.avatarData as any}
               level={user.level}
               size={56}
             />
