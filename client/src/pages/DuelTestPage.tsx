@@ -38,25 +38,27 @@ export default function DuelTestPage() {
   const [duelComplete, setDuelComplete] = useState(false);
   const [playerScore, setPlayerScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   const letters = ['A', 'B', 'C', 'D'];
 
-  // Timer countdown
+  // Hard-enforced 60-second timer in sync with server
   useEffect(() => {
-    if (!currentQuestion || result) return;
-    
-    const timer = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          // Auto-submit when time expires
+    if (!currentQuestion) return;
+    const t0 = Date.now();
+    const tick = setInterval(() => {
+      const left = Math.max(0, currentQuestion.timeLimitSec - Math.floor((Date.now() - t0) / 1000));
+      setTimeLeft(left);
+      setTimeRemaining(left);
+      if (left === 0) {
+        clearInterval(tick);
+        // Server will mark as incorrect due to timeout
+        if (!result) {
           handleSubmitAnswer(-1); // -1 indicates timeout
-          return 0;
         }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
+      }
+    }, 250);
+    return () => clearInterval(tick);
   }, [currentQuestion, result]);
 
   const fetchNextQuestion = async () => {
@@ -91,8 +93,10 @@ export default function DuelTestPage() {
         console.log('✅ Question received:', data.question.subject, data.question.topic);
         setCurrentQuestion(data.question);
         setUsedQuestions(prev => new Set([...prev, data.question.id]));
-        setTimeRemaining(data.question.timeRemainingSec || 60);
+        setTimeRemaining(data.question.timeLimitSec || 60);
+        setTimeLeft(data.question.timeLimitSec || 60);
         setTotalQuestions(prev => prev + 1);
+        setResult(null); // Clear previous result
       } else {
         console.error('Invalid response:', data);
         alert('Failed to load question: ' + JSON.stringify(data));
@@ -146,7 +150,7 @@ export default function DuelTestPage() {
   };
 
   const handleChoiceClick = (index: number) => {
-    if (result || timeRemaining <= 0) return;
+    if (result || timeLeft <= 0) return; // Use timeLeft for immediate UI response
     setSelectedChoice(index);
     handleSubmitAnswer(index);
   };
@@ -237,11 +241,11 @@ export default function DuelTestPage() {
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium">Time Remaining</span>
                 <span className="text-lg font-bold" data-testid="timer-display">
-                  {timeRemaining}s
+                  {timeLeft}s
                 </span>
               </div>
               <Progress 
-                value={(timeRemaining / 60) * 100} 
+                value={(timeLeft / 60) * 100} 
                 className="h-2"
                 data-testid="timer-progress"
               />
@@ -278,7 +282,7 @@ export default function DuelTestPage() {
                 }
                 className="h-auto p-4 text-left justify-start"
                 onClick={() => handleChoiceClick(index)}
-                disabled={!!result || timeRemaining <= 0}
+                disabled={!!result || timeLeft <= 0}
                 data-testid={`choice-${index}`}
               >
                 <div className="flex gap-3 items-start w-full">
@@ -303,7 +307,7 @@ export default function DuelTestPage() {
               </CardHeader>
               <CardContent>
                 <p className="mb-4" data-testid="explanation">
-                  {result.explanation}
+                  {result.explanationLong || result.explanation}
                 </p>
                 <p className="text-sm text-muted-foreground mb-4" data-testid="scores">
                   Scores: Player {result.scores[0]} - Bot {result.scores[1]}

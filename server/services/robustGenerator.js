@@ -213,6 +213,23 @@ export async function generateFreshQuestion(subject) {
       throw new Error(err || "Could not generate fresh question after 3 attempts");
     }
     
+    // Hard enforce 60-second timer and quality controls
+    item.timeLimitSec = 60;
+    
+    // Require a real explanation
+    if (!item.explanationLong || item.explanationLong.trim().length < 80) {
+      throw new Error("Missing/short explanation"); // triggers a retry
+    }
+    
+    // Require sensible choices
+    const joined = item.choices.join(" ").toLowerCase();
+    if (joined.includes("all of the above") || joined.includes("none of the above")) {
+      throw new Error("Banned phrases in choices"); // retry
+    }
+    if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3) {
+      throw new Error("Bad correctIndex"); // retry
+    }
+
     // Add required fields for the duel system
     const qid = `fresh_openai_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
     const formattedQuestion = {
@@ -223,6 +240,7 @@ export async function generateFreshQuestion(subject) {
       choices: item.choices,
       correctIndex: item.correctIndex,
       explanation: item.explanation || "See explanation above.",
+      explanationLong: item.explanationLong, // Full explanation required
       timeLimit: 60000, // 60 seconds for duels
       timeLimitSec: 60, // Enforce 60s
       deadlineTs: Date.now() + 60000

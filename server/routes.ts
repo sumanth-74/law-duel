@@ -803,7 +803,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`📝 Storing question ${item.qid} with correct answer: ${item.correctIndex}`);
       testQuestionStorage.set(item.qid, {
         correctIndex: item.correctIndex,
-        explanation: item.explanation || `The correct answer is choice ${String.fromCharCode(65 + item.correctIndex)} because: ${item.rationale || 'Legal analysis not provided.'}`,
+        explanation: item.explanationLong || item.explanation || `The correct answer is choice ${String.fromCharCode(65 + item.correctIndex)} because: ${item.rationale || 'Legal analysis not provided.'}`,
         item: item
       });
       
@@ -881,20 +881,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Question not found for validation' });
       }
       
-      // Check if answer is correct
-      const isCorrect = choiceIndex === questionData.correctIndex;
+      // Check if timed out (-1 indicates timeout)
+      const timedOut = choiceIndex === -1;
+      const isCorrect = !timedOut && Number(choiceIndex) === Number(questionData.correctIndex);
       
       const result = {
         correct: isCorrect,
         correctIndex: questionData.correctIndex,
         explanation: questionData.explanation,
+        explanationLong: questionData.item?.explanationLong || questionData.explanation,
         timeRemaining: 45,
-        scores: [1, 0],
+        scores: [isCorrect ? 1 : 0, 0],
         roundFinished: true,
         duelComplete: false
       };
       
-      console.log(`🎯 Answer validation: Player chose ${choiceIndex}, correct is ${questionData.correctIndex} → ${isCorrect ? 'CORRECT ✅' : 'WRONG ❌'}`);
+      console.log(`🎯 Answer validation: Player chose ${choiceIndex}, correct is ${questionData.correctIndex}, timedOut: ${timedOut} → ${isCorrect ? 'CORRECT ✅' : 'WRONG ❌'}`);
       
       // Clean up the question from storage after use
       testQuestionStorage.delete(questionId);
