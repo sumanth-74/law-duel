@@ -215,6 +215,28 @@ export async function generateFreshQuestion(subject) {
       throw new Error(err || "Could not generate fresh question after 3 attempts");
     }
     
+    // CRITICAL: Randomize answer positions to prevent "A bias"
+    const originalCorrectIndex = item.correctIndex;
+    const originalCorrectChoice = item.choices[originalCorrectIndex];
+    
+    // Create array of indices and shuffle using Fisher-Yates
+    const indices = [0, 1, 2, 3];
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    // Reorder choices according to shuffled indices
+    const shuffledChoices = indices.map(i => item.choices[i]);
+    
+    // Find where the original correct answer ended up
+    const newCorrectIndex = shuffledChoices.indexOf(originalCorrectChoice);
+    
+    item.choices = shuffledChoices;
+    item.correctIndex = newCorrectIndex;
+    
+    console.log(`🔀 Answer randomized: ${String.fromCharCode(65 + originalCorrectIndex)} → ${String.fromCharCode(65 + newCorrectIndex)}`);
+
     // Hard enforce 60-second timer and quality controls
     item.timeLimitSec = 60;
     
