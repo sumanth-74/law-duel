@@ -225,7 +225,14 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <CharacterCreation 
-          isOpen={true} 
+          isOpen={true}
+          editMode={!needsCharacterCreation}
+          existingUser={!needsCharacterCreation ? {
+            username: user?.username || '',
+            displayName: user?.displayName || '',
+            lawSchool: user?.lawSchool || '',
+            avatarData: user?.avatarData || { base: 'humanoid', palette: '#5865f2', props: [] }
+          } : undefined}
           onClose={() => {
             setShowCharacterCreation(false);
             // For new users, don't allow closing without creating character

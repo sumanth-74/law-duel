@@ -13,6 +13,13 @@ interface CharacterCreationProps {
   isOpen: boolean;
   onClose: () => void;
   onCharacterCreated: (character: { username: string; displayName: string; lawSchool?: string; avatarData: AvatarData }) => void;
+  editMode?: boolean;
+  existingUser?: {
+    username: string;
+    displayName: string;
+    lawSchool?: string;
+    avatarData: AvatarData;
+  };
 }
 
 interface ArchetypeData {
@@ -34,7 +41,7 @@ interface ArchetypeData {
   }>;
 }
 
-export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: CharacterCreationProps) {
+export function CharacterCreation({ isOpen, onClose, onCharacterCreated, editMode = false, existingUser }: CharacterCreationProps) {
   const [archetypes, setArchetypes] = useState<ArchetypeData>({ bases: [], palettes: {}, props: [], categories: {}, archetypes: [] });
   const [selectedCategory, setSelectedCategory] = useState<string>('corporate');
   const [selectedArchetype, setSelectedArchetype] = useState<string>('');
@@ -58,8 +65,27 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
         setArchetypes(data);
         setDataLoading(false);
       });
+      
+      // Initialize form with existing user data in edit mode
+      if (editMode && existingUser) {
+        setUsername(existingUser.username);
+        setDisplayName(existingUser.displayName);
+        setLawSchool(existingUser.lawSchool || '');
+        
+        // Find matching archetype if available
+        const userArchetype = data.archetypes?.find(arch => 
+          arch.label === existingUser.displayName
+        );
+        if (userArchetype) {
+          setSelectedArchetype(userArchetype.id);
+          setSelectedCategory(userArchetype.category);
+        } else {
+          setCustomMode(true);
+          setCustomAvatarData(existingUser.avatarData);
+        }
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, editMode, existingUser]);
 
   const handleArchetypeSelect = (archetypeId: string) => {
     const archetype = archetypes.archetypes?.find(a => a.id === archetypeId);
@@ -232,22 +258,24 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
 
           {/* Name Inputs */}
           <div className="space-y-4 mb-6">
-            <div>
-              <Label htmlFor="username" className="block text-sm font-medium mb-2">
-                Username
-              </Label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username..."
-                maxLength={18}
-                className="w-full"
-                data-testid="input-username"
-              />
-              <p className="text-xs text-muted mt-1">2-18 characters, letters and spaces only</p>
-            </div>
+            {!editMode && (
+              <div>
+                <Label htmlFor="username" className="block text-sm font-medium mb-2">
+                  Username
+                </Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username..."
+                  maxLength={18}
+                  className="w-full"
+                  data-testid="input-username"
+                />
+                <p className="text-xs text-muted mt-1">2-18 characters, letters and spaces only</p>
+              </div>
+            )}
             
             <div>
               <Label htmlFor="displayName" className="block text-sm font-medium mb-2">
@@ -292,11 +320,11 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               onClick={handleSubmit}
-              disabled={loading || !username || !displayName || !selectedArchetype}
+              disabled={loading || (!editMode && !username) || !displayName || !selectedArchetype}
               className="btn-primary flex-1 py-3 px-6"
               data-testid="button-create-character"
             >
-              {loading ? 'Creating...' : 'Enter the Arena'}
+              {loading ? (editMode ? 'Updating...' : 'Creating...') : (editMode ? 'Update Character' : 'Enter the Arena')}
             </Button>
             <Button
               onClick={rollRandom}
