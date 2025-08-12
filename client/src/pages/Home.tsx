@@ -1,16 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CharacterCreation } from '@/components/CharacterCreation';
 import { QuickMatch } from '@/components/QuickMatch';
 import { DuelArena } from '@/components/DuelArena';
 import { Leaderboard } from '@/components/Leaderboard';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
 import { useAuth } from '@/hooks/useAuth';
-import { LogOut, User as UserIcon } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
+import { LogOut, User as UserIcon, Bell } from 'lucide-react';
 import type { User } from '@shared/schema';
 
 const SUBJECTS = [
@@ -26,9 +29,20 @@ const SUBJECTS = [
 
 // Removed BOT_DIFFICULTIES as we now use inline skill levels
 
+interface ChallengeNotification {
+  challengeId: string;
+  challengerName: string;
+  subject: string;
+  expiresAt: string;
+}
+
 export default function Home() {
   const { user, logout } = useAuth();
+  const { toast } = useToast();
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
+  const [realTimeLeaderboard, setRealTimeLeaderboard] = useState<any[]>([]);
+  const [challengeNotification, setChallengeNotification] = useState<ChallengeNotification | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
   
   // Check if new user needs character creation
   const needsCharacterCreation = user?.avatarData && 
@@ -43,6 +57,149 @@ export default function Home() {
   });
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
+
+  // WebSocket connection for real-time features
+  useEffect(() => {
+    if (!user) return;
+
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      console.log('Connected to real-time server');
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        
+        switch (message.type) {
+          case 'leaderboard:update':
+            setRealTimeLeaderboard(message.payload.leaderboard);
+            break;
+            
+          case 'challenge:received':
+            setChallengeNotification(message.payload);
+            toast({
+              title: "Challenge Received!",
+              description: `${message.payload.challengerName} wants to duel you in ${message.payload.subject}`,
+              variant: "default"
+            });
+            break;
+            
+          case 'challenge:declined':
+            toast({
+              title: "Challenge Declined",
+              description: `${message.payload.targetUsername} declined your challenge`,
+              variant: "destructive"
+            });
+            break;
+            
+          case 'challenge:expired':
+            toast({
+              title: "Challenge Expired",
+              description: `Your challenge to ${message.payload.targetUsername} has expired`,
+              variant: "destructive"
+            });
+            break;
+            
+          case 'duel:friend_match_start':
+            toast({
+              title: "Match Starting!",
+              description: "Your friend duel is about to begin",
+              variant: "default"
+            });
+            setGameMode('duel');
+            setDuelData(message.payload);
+            break;
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [user, toast]);
+
+  // Send friend challenge
+  const sendFriendChallenge = async () => {
+    if (!gameSettings.friendUsername.trim()) {
+      toast({
+        title: "Username Required",
+        description: "Please enter your friend's username",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await apiRequest('/api/challenge/send', {
+        method: 'POST',
+        body: JSON.stringify({
+          targetUsername: gameSettings.friendUsername,
+          subject: gameSettings.subject
+        })
+      });
+
+      toast({
+        title: "Challenge Sent!",
+        description: `Challenge sent to ${gameSettings.friendUsername}`,
+        variant: "default"
+      });
+
+      setGameMode('menu');
+    } catch (error) {
+      toast({
+        title: "Challenge Failed",
+        description: error instanceof Error ? error.message : "Failed to send challenge",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Respond to challenge
+  const respondToChallenge = async (accepted: boolean) => {
+    if (!challengeNotification) return;
+
+    try {
+      await apiRequest('/api/challenge/respond', {
+        method: 'POST',
+        body: JSON.stringify({
+          challengeId: challengeNotification.challengeId,
+          accepted
+        })
+      });
+
+      if (accepted) {
+        toast({
+          title: "Challenge Accepted!",
+          description: "Starting match...",
+          variant: "default"
+        });
+      }
+
+      setChallengeNotification(null);
+    } catch (error) {
+      toast({
+        title: "Response Failed",
+        description: error instanceof Error ? error.message : "Failed to respond to challenge",
+        variant: "destructive"
+      });
+    }
+  };
 
   if (!user) {
     return (

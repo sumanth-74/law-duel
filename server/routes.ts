@@ -11,6 +11,7 @@ import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
 import { initializeLeaderboard } from "./services/leaderboard.js";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
+import { realTimeLeaderboard } from './realTimeLeaderboard';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -32,6 +33,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
   await initializeQuestionCoordinator();
   await initializeLeaderboard();
+  
+  // Initialize real-time leaderboard updates
+  setInterval(async () => {
+    await realTimeLeaderboard.updateAndBroadcast();
+  }, 30000); // Update every 30 seconds
 
   // Authentication middleware
   function requireAuth(req: any, res: any, next: any) {
@@ -203,6 +209,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Send friend challenge
+  app.post('/api/challenge/send', requireAuth, async (req: any, res) => {
+    try {
+      const { targetUsername, subject } = req.body;
+      const challengerId = req.session.userId;
+      
+      const challenger = await storage.getUser(challengerId);
+      if (!challenger) {
+        return res.status(404).json({ message: "Challenger not found" });
+      }
+
+      const result = await realTimeLeaderboard.sendFriendChallenge(
+        challengerId,
+        challenger.displayName || challenger.username,
+        targetUsername,
+        subject
+      );
+
+      if (result.success) {
+        res.json({ message: result.message });
+      } else {
+        res.status(400).json({ message: result.message });
+      }
+    } catch (error) {
+      console.error("Error sending challenge:", error);
+      res.status(500).json({ message: "Failed to send challenge" });
+    }
+  });
+
+  // Respond to friend challenge
+  app.post('/api/challenge/respond', requireAuth, async (req: any, res) => {
+    try {
+      const { challengeId, accepted } = req.body;
+      const responderId = req.session.userId;
+
+      const result = await realTimeLeaderboard.handleChallengeResponse(
+        challengeId,
+        accepted,
+        responderId
+      );
+
+      if (result.success) {
+        res.json({ message: result.message });
+      } else {
+        res.status(400).json({ message: result.message });
+      }
+    } catch (error) {
+      console.error("Error responding to challenge:", error);
+      res.status(500).json({ message: "Failed to respond to challenge" });
+    }
+  });
+
   // Get user matches
   app.get("/api/users/:id/matches", async (req, res) => {
     try {
@@ -230,6 +288,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   wss.on('connection', (ws: WebSocket, req) => {
     console.log('Client connected to WebSocket');
+    
+    // Extract user ID from session if available (simplified for now)
+    const cookies = req.headers.cookie;
+    let userId: string | undefined;
+    // In a real implementation, you would parse the session cookie here
+    
+    // Add client to real-time leaderboard
+    realTimeLeaderboard.addClient(ws, userId);
+    
+    // Trigger immediate leaderboard update for new client
+    setTimeout(async () => {
+      await realTimeLeaderboard.updateAndBroadcast();
+    }, 500);
     
     // Immediately start a bot duel when client connects
     setTimeout(() => {

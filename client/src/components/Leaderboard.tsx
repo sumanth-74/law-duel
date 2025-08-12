@@ -7,15 +7,20 @@ import type { User } from '@shared/schema';
 
 interface LeaderboardProps {
   limit?: number;
+  realTimeData?: any[];
 }
 
-export function Leaderboard({ limit = 20 }: LeaderboardProps) {
+export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
   const [timeframe, setTimeframe] = useState<'weekly' | 'alltime'>('weekly');
 
   const { data: players = [], isLoading, error } = useQuery<User[]>({
     queryKey: ['/api/leaderboard', { limit, timeframe }],
-    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchInterval: realTimeData ? 60000 : 30000, // Slower refresh when real-time is available
+    enabled: !realTimeData || realTimeData.length === 0, // Disable API when real-time data is available
   });
+
+  // Use real-time data if available, otherwise use API data
+  const displayPlayers = realTimeData && realTimeData.length > 0 ? realTimeData : players;
 
   if (error) {
     return (

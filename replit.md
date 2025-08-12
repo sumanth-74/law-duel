@@ -16,6 +16,8 @@ Preferred communication style: Simple, everyday language.
 - Rematch functionality: Allow rematches after game completion
 - Persistent gamer tag: Username always visible like gaming platforms
 - Purple theme: Mature, professional purple styling throughout platform
+- Real-time leaderboard: Global leaderboard updates live across all players
+- Friend challenges: Pop-up notifications with accept/decline options for friend duels
 
 ## System Architecture
 
@@ -32,8 +34,9 @@ The application uses a monorepo structure with shared types and schemas between 
 
 ### Backend Architecture
 - **Express.js Server**: RESTful API with WebSocket support for real-time duel functionality
-- **WebSocket Integration**: Real-time communication for matchmaking, duels, and live game state updates
-- **Modular Services**: Separated concerns with dedicated services for matchmaking, question coordination, leaderboard management, and stealth bot opponents
+- **WebSocket Integration**: Real-time communication for matchmaking, duels, live game state updates, leaderboard broadcasting, and friend challenges
+- **Modular Services**: Separated concerns with dedicated services for matchmaking, question coordination, leaderboard management, stealth bot opponents, and friend challenge notifications
+- **Real-time Features**: Live leaderboard updates, instant friend challenge notifications, WebSocket-based duel invitations with 1-minute expiry timers
 - **In-Memory Storage**: File-based storage using JSON files with atomic write operations for data persistence
 
 ### Data Storage Solutions
