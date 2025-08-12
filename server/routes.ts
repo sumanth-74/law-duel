@@ -404,35 +404,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Atticus AI mentor endpoint  
-  app.post('/api/atticus/ask', async (req, res) => {
-    try {
-      const { question } = req.body;
-      
-      if (!question) {
-        return res.status(400).json({ error: 'Question is required' });
-      }
 
-      // For now, return a helpful legal mentor response
-      // TODO: Integrate with OpenAI when API key is available
-      const responses = [
-        `Great question! Let me break that down for you. ${question.includes('FRE') ? 'Federal Rule of Evidence 803(2) deals with excited utterances - statements made under the stress of excitement caused by a startling event. The key elements are: (1) a startling event occurred, (2) the statement was made while under the stress of that event, and (3) the statement relates to the startling event.' : 'This is a fundamental legal concept that requires careful analysis of the elements and their application.'}`,
-        
-        `I can help clarify that! ${question.includes('negligence') ? 'Negligence requires four elements: (1) Duty - defendant owed a duty of care to plaintiff, (2) Breach - defendant breached that duty, (3) Causation - both factual and proximate cause, and (4) Damages - plaintiff suffered actual harm.' : 'Let me explain the key principles and how they apply in practice.'}`,
-        
-        `Excellent legal question! ${question.includes('contract') ? 'In contract law, we need to analyze offer, acceptance, consideration, and capacity. The mailbox rule states that acceptance is effective when sent, not when received, but this only applies to properly dispatched acceptances.' : 'This involves analyzing the relevant legal standards and their practical application.'}`
-      ];
-
-      const response = responses[Math.floor(Math.random() * responses.length)];
-
-      res.json({ 
-        response: response + "\n\nRemember: Focus on the rule, apply it to the facts, and explain why the other options are wrong. That's how you master the law!"
-      });
-    } catch (error) {
-      console.error('Atticus error:', error);
-      res.status(500).json({ error: 'Atticus is temporarily unavailable' });
-    }
-  });
 
   // Serve archetypes data
   app.get("/api/archetypes", (req, res) => {
