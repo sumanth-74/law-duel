@@ -313,8 +313,8 @@ export default function DuelTestPage() {
                   Scores: Player {result.scores[0]} - Bot {result.scores[1]}
                 </p>
                 {!result.duelComplete && (
-                  <Button onClick={fetchNextQuestion} data-testid="next-question-button">
-                    Next Question
+                  <Button onClick={fetchNextQuestion} data-testid="next-question-button" className="mt-4">
+                    Next Question ({(currentQuestion?.round || 1)} of {(currentQuestion?.totalRounds || 10)})
                   </Button>
                 )}
               </CardContent>
