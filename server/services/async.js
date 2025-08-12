@@ -370,10 +370,10 @@ class AsyncDuels {
     return match.players.find(p => p.id !== userId);
   }
 
-  // Get user's inbox
+  // Get user's inbox - only friend challenges, no bot matches
   getUserInbox(userId) {
     const userMatches = Object.values(this.matches).filter(match => 
-      match.players.some(p => p.id === userId)
+      match.players.some(p => p.id === userId) && !match.isBotMatch
     );
 
     return userMatches.map(match => {

@@ -15,6 +15,10 @@ import { realTimeLeaderboard } from './realTimeLeaderboard';
 import streakManager from './services/streakManager.js';
 import asyncDuels from './services/async.js';
 
+// Initialize bot practice system
+import { BotPractice } from './services/botPractice.js';
+const botPractice = new BotPractice();
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
   const MemStore = MemoryStore(session);
@@ -257,13 +261,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // === ASYNC DUELS ROUTES ===
+  // === BOT PRACTICE ROUTES (Instant Practice) ===
+  
+  // Create instant bot practice match
+  app.post('/api/practice/start', requireAuth, async (req: any, res) => {
+    try {
+      const { subject } = req.body;
+      const userId = req.session.userId;
+      
+      const practiceSession = await botPractice.createPracticeMatch(userId, subject);
+      res.json(practiceSession);
+    } catch (error: any) {
+      console.error('Error creating practice match:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
 
-  // Create async match
+  // Submit answer to practice match
+  app.post('/api/practice/answer', requireAuth, async (req: any, res) => {
+    try {
+      const { practiceSession, userAnswer, responseTime } = req.body;
+      
+      const result = await botPractice.submitAnswer(practiceSession, userAnswer, responseTime);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Error submitting practice answer:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // === ASYNC DUELS ROUTES (Friend Challenges Only) ===
+
+  // Create async match with friend
   app.post('/api/async/create', requireAuth, async (req: any, res) => {
     try {
       const { subject, opponentUsername } = req.body;
       const userId = req.session.userId;
+      
+      // Only allow friend challenges - no bot matches
+      if (!opponentUsername) {
+        return res.status(400).json({ message: 'Opponent username required for friend challenges' });
+      }
       
       const result = await asyncDuels.createMatch(userId, subject, opponentUsername);
       res.json(result);

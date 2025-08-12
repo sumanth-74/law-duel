@@ -12,6 +12,7 @@ import { Leaderboard } from '@/components/Leaderboard';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
 import AsyncInbox from '@/components/AsyncInbox';
 import AsyncMatch from '@/components/AsyncMatch';
+import BotPractice from '@/components/BotPractice';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -54,7 +55,7 @@ export default function Home() {
     typeof user.avatarData === 'object' && 
     'needsCharacterCreation' in user.avatarData && 
     user.avatarData.needsCharacterCreation;
-  const [gameMode, setGameMode] = useState<'menu' | 'bot-setup' | 'friend-setup' | 'searching' | 'duel'>('menu');
+  const [gameMode, setGameMode] = useState<'menu' | 'bot-practice' | 'friend-setup' | 'searching' | 'duel'>('menu');
   const [gameSettings, setGameSettings] = useState({
     subject: 'Mixed Questions',
     botDifficulty: 'medium',
@@ -388,6 +389,24 @@ export default function Home() {
     );
   }
 
+  if (gameMode === 'bot-practice') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* Persistent Logo and Gamer Tag - Top Bar */}
+        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between">
+          <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
+          <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
+            @{character.username}
+          </Badge>
+        </div>
+        
+        <div className="pt-20 px-4">
+          <BotPractice onBack={() => setGameMode('menu')} />
+        </div>
+      </div>
+    );
+  }
+
   if (gameMode === 'searching') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -536,38 +555,11 @@ export default function Home() {
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3">
-                      <Button onClick={handleStartBotGame} className="bg-purple-600 hover:bg-purple-700 text-white" size="lg">
-                        Live Match
+                      <Button onClick={() => setGameMode('bot-practice')} className="bg-green-600 hover:bg-green-700 text-white" size="lg">
+                        Practice Mode
                       </Button>
-                      <Button 
-                        onClick={async () => {
-                          try {
-                            const response = await fetch('/api/async/create', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              credentials: 'include',
-                              body: JSON.stringify({
-                                subject: gameSettings.subject
-                              })
-                            });
-                            const data = await response.json();
-                            toast({
-                              title: "Async Match Created!",
-                              description: "Check your inbox to play",
-                            });
-                            setShowAsyncInbox(true);
-                          } catch (error) {
-                            toast({
-                              title: "Failed to create match",
-                              description: "Please try again",
-                              variant: "destructive"
-                            });
-                          }
-                        }} 
-                        className="bg-green-600 hover:bg-green-700 text-white" 
-                        size="lg"
-                      >
-                        Async Match
+                      <Button onClick={handleStartBotGame} className="bg-purple-600 hover:bg-purple-700 text-white" size="lg">
+                        Live Duel
                       </Button>
                     </div>
                   </CardContent>
