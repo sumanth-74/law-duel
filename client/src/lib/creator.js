@@ -29,17 +29,45 @@ import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
   // Specific archetype mappings for better visual accuracy
   const specificArchetypes = {
-    'res-ipsa-sphinx': sphinxPortrait,
-    'issue-preclusion-sphinx': sphinxPortrait,
-    'trial-hawk': hawkPortrait,
-    'stare-drake': dragonPortrait,
-    'dragon-solicitor': dragonPortrait,
-    'voir-dire-viper': serpentPortrait,
-    'pd-phoenix': phoenixPortrait, // Proper phoenix portrait
-    'dissenter-crow': crowPortrait, // Proper crow portrait
-    'prosecutor-minotaur': minotaurPortrait, // Proper minotaur portrait
-    'kraken-of-remand': alienPortrait, // Tentacled sea creature
-    'remand-kraken': alienPortrait // Tentacled sea creature
+    // Corporate characters
+    'due-diligence-dragon': dragonPortrait,
+    'covenant-golem': golemPortrait,
+    'prospectus-paladin': angelPortrait,
+    'disclosure-djinn': elementalPortrait,
+    'antitrust-automaton': golemPortrait,
+    'fiduciary-seraph': angelPortrait,
+    'takeover-titan': golemPortrait,
+    'compliance-chimera': werewolfPortrait,
+    
+    // White Collar Criminal characters
+    'insider-trading-hawk': hawkPortrait,
+    'subpoena-phoenix': phoenixPortrait,
+    'obstruction-minotaur': minotaurPortrait,
+    'wiretap-wraith': necromancerPortrait,
+    'forensic-basilisk': serpentPortrait,
+    'rico-revenant': necromancerPortrait,
+    'whistleblower-wyvern': dragonPortrait,
+    'fraudulent-scheme-specter': necromancerPortrait,
+    
+    // Constitutional Scholar characters
+    'strict-scrutiny-sphinx': sphinxPortrait,
+    'viewpoint-viper': serpentPortrait,
+    'incorporation-oracle': angelPortrait,
+    'nondelegation-naga': serpentPortrait,
+    'takings-titan': golemPortrait,
+    'prior-restraint-sorcerer': sorcererPortrait,
+    'equal-protection-paladin': angelPortrait,
+    'dormant-commerce-gargoyle': golemPortrait,
+    
+    // Public Defender characters
+    'gideon-crow': crowPortrait,
+    'miranda-crow': crowPortrait,
+    'suppression-wraith': necromancerPortrait,
+    'probable-cause-kraken': alienPortrait,
+    'speedy-trial-sprite': elementalPortrait,
+    'reasonable-doubt-revenant': necromancerPortrait,
+    'brady-banshee': necromancerPortrait,
+    'ineffective-assistance-shade': necromancerPortrait
   };
   
   // Debug logging to see what's being passed

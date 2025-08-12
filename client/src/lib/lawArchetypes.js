@@ -42,109 +42,269 @@ export const LAW_ARCHETYPES = {
     }
   },
   
-  // Law-themed character archetypes - using existing character portraits
+  // Law-themed character archetypes - comprehensive legal system
   archetypes: [
     // Corporate Law Category
     {
-      id: "corporate_counsel",
-      label: "Corporate Counsel",
-      base: "humanoid",
+      id: "due-diligence-dragon",
+      label: "Due-Diligence Dragon",
+      base: "arcane",
       palette: "lawyer_navy",
       props: ["briefcase", "legal_pad", "law_diploma"],
       category: "corporate"
     },
     {
-      id: "merger_maven",
-      label: "Merger Maven", 
+      id: "covenant-golem",
+      label: "Covenant Golem", 
       base: "construct",
       palette: "statute_silver",
       props: ["briefcase", "codex", "scales"],
       category: "corporate"
     },
     {
-      id: "dragon-solicitor",
-      label: "Dragon Solicitor",
-      base: "arcane", 
+      id: "prospectus-paladin",
+      label: "Prospectus Paladin",
+      base: "celestial", 
       palette: "evidence_green",
       props: ["scales", "legal_pad", "briefcase"],
+      category: "corporate"
+    },
+    {
+      id: "disclosure-djinn",
+      label: "Disclosure Djinn",
+      base: "elemental",
+      palette: "judicial_gold",
+      props: ["briefcase", "codex", "gavel"],
+      category: "corporate"
+    },
+    {
+      id: "antitrust-automaton",
+      label: "Antitrust Automaton",
+      base: "construct",
+      palette: "verdict_red",
+      props: ["scales", "legal_pad", "law_diploma"],
+      category: "corporate"
+    },
+    {
+      id: "fiduciary-seraph",
+      label: "Fiduciary Seraph",
+      base: "celestial",
+      palette: "constitutional_purple",
+      props: ["scales", "constitution", "briefcase"],
+      category: "corporate"
+    },
+    {
+      id: "takeover-titan",
+      label: "Takeover Titan",
+      base: "construct",
+      palette: "precedent_bronze",
+      props: ["briefcase", "gavel", "codex"],
+      category: "corporate"
+    },
+    {
+      id: "compliance-chimera",
+      label: "Compliance Chimera",
+      base: "beast",
+      palette: "brief_blue",
+      props: ["legal_pad", "scales", "law_diploma"],
       category: "corporate"
     },
     
     // White Collar Criminal Category
     {
-      id: "trial-hawk",
-      label: "Trial Hawk",
+      id: "insider-trading-hawk",
+      label: "Insider-Trading Hawk",
       base: "beast",
       palette: "verdict_red", 
       props: ["gavel", "scales", "codex"],
       category: "whitecollarcriminal"
     },
     {
-      id: "pd-phoenix",
-      label: "Prosecutor Phoenix",
+      id: "subpoena-phoenix",
+      label: "Subpoena Phoenix",
       base: "elemental",
       palette: "judicial_gold",
       props: ["gavel", "law_diploma", "scales"],
       category: "whitecollarcriminal"
     },
     {
-      id: "prosecutor-minotaur", 
-      label: "Prosecutor Minotaur",
+      id: "obstruction-minotaur", 
+      label: "Obstruction Minotaur",
       base: "beast",
       palette: "constitutional_purple",
       props: ["codex", "briefcase", "scales"],
       category: "whitecollarcriminal"
     },
+    {
+      id: "wiretap-wraith",
+      label: "Wiretap Wraith",
+      base: "undead",
+      palette: "statute_silver",
+      props: ["gavel", "codex", "legal_pad"],
+      category: "whitecollarcriminal"
+    },
+    {
+      id: "forensic-basilisk",
+      label: "Forensic Basilisk",
+      base: "beast",
+      palette: "evidence_green",
+      props: ["scales", "briefcase", "law_diploma"],
+      category: "whitecollarcriminal"
+    },
+    {
+      id: "rico-revenant",
+      label: "RICO Revenant",
+      base: "undead",
+      palette: "precedent_bronze",
+      props: ["gavel", "scales", "codex"],
+      category: "whitecollarcriminal"
+    },
+    {
+      id: "whistleblower-wyvern",
+      label: "Whistleblower Wyvern",
+      base: "beast",
+      palette: "brief_blue",
+      props: ["legal_pad", "law_diploma", "scales"],
+      category: "whitecollarcriminal"
+    },
+    {
+      id: "fraudulent-scheme-specter",
+      label: "Fraudulent-Scheme Specter",
+      base: "undead",
+      palette: "lawyer_navy",
+      props: ["briefcase", "gavel", "codex"],
+      category: "whitecollarcriminal"
+    },
     
     // Constitutional Scholar Category
     {
-      id: "res-ipsa-sphinx",
-      label: "Res Ipsa Sphinx",
+      id: "strict-scrutiny-sphinx",
+      label: "Strict-Scrutiny Sphinx",
       base: "celestial",
       palette: "constitutional_purple",
       props: ["codex", "scales", "law_diploma"], 
       category: "constitutional"
     },
     {
-      id: "issue-preclusion-sphinx",
-      label: "Issue Preclusion Sphinx",
-      base: "celestial",
-      palette: "judicial_gold",
-      props: ["scales", "constitution", "gavel"],
-      category: "constitutional"
-    },
-    {
-      id: "voir-dire-viper",
-      label: "Voir Dire Viper", 
+      id: "viewpoint-viper",
+      label: "Viewpoint Viper", 
       base: "beast",
       palette: "brief_blue",
       props: ["scales", "codex", "law_diploma"],
       category: "constitutional"
     },
+    {
+      id: "incorporation-oracle",
+      label: "Incorporation Oracle",
+      base: "celestial",
+      palette: "judicial_gold",
+      props: ["constitution", "scales", "gavel"],
+      category: "constitutional"
+    },
+    {
+      id: "nondelegation-naga",
+      label: "Nondelegation Naga",
+      base: "beast",
+      palette: "evidence_green",
+      props: ["codex", "constitution", "scales"],
+      category: "constitutional"
+    },
+    {
+      id: "takings-titan",
+      label: "Takings Titan",
+      base: "construct",
+      palette: "precedent_bronze",
+      props: ["scales", "law_diploma", "gavel"],
+      category: "constitutional"
+    },
+    {
+      id: "prior-restraint-sorcerer",
+      label: "Prior-Restraint Sorcerer",
+      base: "arcane",
+      palette: "statute_silver",
+      props: ["codex", "constitution", "legal_pad"],
+      category: "constitutional"
+    },
+    {
+      id: "equal-protection-paladin",
+      label: "Equal-Protection Paladin",
+      base: "celestial",
+      palette: "verdict_red",
+      props: ["scales", "constitution", "gavel"],
+      category: "constitutional"
+    },
+    {
+      id: "dormant-commerce-gargoyle",
+      label: "Dormant-Commerce Gargoyle",
+      base: "construct",
+      palette: "lawyer_navy",
+      props: ["codex", "scales", "briefcase"],
+      category: "constitutional"
+    },
     
     // Public Defenders Category  
     {
-      id: "dissenter-crow",
-      label: "Dissenter Crow",
+      id: "gideon-crow",
+      label: "Gideon Crow",
       base: "beast",
       palette: "precedent_bronze",
-      props: ["codex", "quill", "law_library"],
+      props: ["codex", "constitution", "law_library"],
       category: "publicdefender"
     },
     {
-      id: "kraken-of-remand",
-      label: "Kraken of Remand", 
-      base: "alien",
+      id: "miranda-crow",
+      label: "Miranda Crow",
+      base: "beast",
       palette: "constitutional_purple",
-      props: ["codex", "law_diploma", "legal_pad"],
+      props: ["constitution", "gavel", "legal_pad"],
       category: "publicdefender"
     },
     {
-      id: "justice_wraith",
-      label: "Justice Wraith",
+      id: "suppression-wraith",
+      label: "Suppression Wraith",
       base: "undead", 
       palette: "statute_silver",
-      props: ["codex", "quill", "law_library"],
+      props: ["codex", "gavel", "law_library"],
+      category: "publicdefender"
+    },
+    {
+      id: "probable-cause-kraken",
+      label: "Probable-Cause Kraken", 
+      base: "alien",
+      palette: "brief_blue",
+      props: ["scales", "constitution", "legal_pad"],
+      category: "publicdefender"
+    },
+    {
+      id: "speedy-trial-sprite",
+      label: "Speedy-Trial Sprite",
+      base: "elemental",
+      palette: "evidence_green",
+      props: ["gavel", "constitution", "scales"],
+      category: "publicdefender"
+    },
+    {
+      id: "reasonable-doubt-revenant",
+      label: "Reasonable-Doubt Revenant",
+      base: "undead",
+      palette: "judicial_gold",
+      props: ["scales", "codex", "gavel"],
+      category: "publicdefender"
+    },
+    {
+      id: "brady-banshee",
+      label: "Brady Banshee",
+      base: "undead",
+      palette: "verdict_red",
+      props: ["legal_pad", "constitution", "law_diploma"],
+      category: "publicdefender"
+    },
+    {
+      id: "ineffective-assistance-shade",
+      label: "Ineffective-Assistance Shade",
+      base: "undead",
+      palette: "lawyer_navy",
+      props: ["codex", "constitution", "gavel"],
       category: "publicdefender"
     }
   ]
