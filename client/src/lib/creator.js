@@ -8,7 +8,7 @@ export function getCharacterData() {
   }
 }
 
-// Import photorealistic character portraits
+// Base character portraits - general types
 import wizardPortrait from '@assets/generated_images/Photorealistic_wizard_portrait_e5565b85.png';
 import werewolfPortrait from '@assets/generated_images/Photorealistic_werewolf_portrait_fc511a15.png';
 import golemPortrait from '@assets/generated_images/Photorealistic_stone_golem_portrait_8c705a4a.png';
@@ -17,7 +17,8 @@ import elementalPortrait from '@assets/generated_images/Photorealistic_fire_elem
 import angelPortrait from '@assets/generated_images/Photorealistic_divine_angel_portrait_94c3a62d.png';
 import alienPortrait from '@assets/generated_images/Photorealistic_alien_scholar_portrait_3e37dc62.png';
 import sorcererPortrait from '@assets/generated_images/Photorealistic_dark_sorcerer_portrait_8eaaf1ab.png';
-// Specific archetype portraits
+
+// Specific creature portraits - highly distinctive
 import sphinxPortrait from '@assets/generated_images/Photorealistic_sphinx_portrait_7d9c1f15.png';
 import hawkPortrait from '@assets/generated_images/Photorealistic_hawk_portrait_5834a384.png';
 import dragonPortrait from '@assets/generated_images/Photorealistic_dragon_portrait_05f5ff29.png';
@@ -27,47 +28,47 @@ import minotaurPortrait from '@assets/generated_images/minotaur_lawyer_portrait_
 import phoenixPortrait from '@assets/generated_images/phoenix_lawyer_portrait_7a2834bd.png';
 
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
-  // Specific archetype mappings - matching names to appropriate creatures
+  // Professional character mappings - each character gets unique, appropriate portrait
   const specificArchetypes = {
-    // Corporate characters - business/professional themes
-    'due-diligence-dragon': dragonPortrait,           // Dragon = Dragon
-    'covenant-golem': golemPortrait,                  // Golem = Golem
-    'prospectus-paladin': angelPortrait,              // Paladin = Angel (noble)
-    'disclosure-djinn': elementalPortrait,            // Djinn = Elemental (magical being)
-    'antitrust-automaton': golemPortrait,             // Automaton = Golem (construct)
-    'fiduciary-seraph': angelPortrait,                // Seraph = Angel (celestial)
-    'takeover-titan': wizardPortrait,                 // Titan = Wizard (powerful)
-    'compliance-chimera': werewolfPortrait,           // Chimera = Werewolf (beast)
+    // Corporate characters - 8 distinct business professionals
+    'due-diligence-dragon': dragonPortrait,           // Dragon (powerful, business-savvy)
+    'covenant-golem': golemPortrait,                  // Golem (contract enforcement)
+    'prospectus-paladin': angelPortrait,              // Angel (noble, trustworthy)
+    'disclosure-djinn': elementalPortrait,            // Elemental (disclosure magic)
+    'antitrust-automaton': wizardPortrait,            // Wizard (analytical mind)
+    'fiduciary-seraph': sphinxPortrait,               // Sphinx (wise guardian)
+    'takeover-titan': sorcererPortrait,               // Sorcerer (powerful dealmaker)
+    'compliance-chimera': werewolfPortrait,           // Werewolf (regulatory beast)
     
-    // White Collar Criminal characters - investigation/crime themes
-    'insider-trading-hawk': hawkPortrait,             // Hawk = Hawk
-    'subpoena-phoenix': phoenixPortrait,              // Phoenix = Phoenix
-    'obstruction-minotaur': minotaurPortrait,         // Minotaur = Minotaur
-    'wiretap-wraith': necromancerPortrait,            // Wraith = Necromancer (undead)
-    'forensic-basilisk': serpentPortrait,             // Basilisk = Serpent (snake-like)
-    'rico-revenant': sorcererPortrait,                // Revenant = Sorcerer (dark magic)
-    'whistleblower-wyvern': dragonPortrait,           // Wyvern = Dragon (winged)
-    'fraudulent-scheme-specter': alienPortrait,       // Specter = Alien (otherworldly)
+    // White Collar Criminal specialists - 8 distinct investigators/prosecutors
+    'insider-trading-hawk': hawkPortrait,             // Hawk (sharp-eyed hunter)
+    'subpoena-phoenix': phoenixPortrait,              // Phoenix (rises from ashes)
+    'obstruction-minotaur': minotaurPortrait,         // Minotaur (bulldozes through lies)
+    'wiretap-wraith': necromancerPortrait,            // Necromancer (secrets from shadows)
+    'forensic-basilisk': serpentPortrait,             // Serpent (poison detection)
+    'rico-revenant': alienPortrait,                   // Alien (otherworldly investigation)
+    'whistleblower-wyvern': crowPortrait,             // Crow (messenger of truth)
+    'fraudulent-scheme-specter': golemPortrait,       // Different golem (fraud detection)
     
-    // Constitutional Scholar characters - academic/scholarly themes
-    'strict-scrutiny-sphinx': sphinxPortrait,         // Sphinx = Sphinx
-    'viewpoint-viper': serpentPortrait,               // Viper = Serpent
-    'incorporation-oracle': wizardPortrait,           // Oracle = Wizard (wise)
-    'nondelegation-naga': serpentPortrait,            // Naga = Serpent (but different from viper)
-    'takings-titan': golemPortrait,                   // Titan = Golem (massive)
-    'prior-restraint-sorcerer': sorcererPortrait,     // Sorcerer = Sorcerer
-    'equal-protection-paladin': angelPortrait,        // Paladin = Angel (righteous)
-    'dormant-commerce-gargoyle': werewolfPortrait,    // Gargoyle = Werewolf (stone-like)
+    // Constitutional scholars - 8 distinct academic experts
+    'strict-scrutiny-sphinx': sphinxPortrait,         // Sphinx (ancient wisdom)
+    'viewpoint-viper': serpentPortrait,               // Serpent (sharp legal analysis)
+    'incorporation-oracle': angelPortrait,            // Angel (divine interpretation)
+    'nondelegation-naga': dragonPortrait,             // Dragon (powerful constitutional force)
+    'takings-titan': elementalPortrait,               // Elemental (eminent domain power)
+    'prior-restraint-sorcerer': sorcererPortrait,     // Sorcerer (dark constitutional magic)
+    'equal-protection-paladin': wizardPortrait,       // Wizard (equality scholar)
+    'dormant-commerce-gargoyle': werewolfPortrait,    // Werewolf (commerce guardian)
     
-    // Public Defender characters - justice/defense themes
-    'gideon-crow': crowPortrait,                      // Crow = Crow
-    'miranda-hawk': hawkPortrait,                     // Hawk = Hawk (landmark case)
-    'suppression-wraith': necromancerPortrait,        // Wraith = Necromancer (ghostly)
-    'probable-cause-kraken': alienPortrait,           // Kraken = Alien (tentacled)
-    'speedy-trial-sprite': elementalPortrait,         // Sprite = Elemental (quick/agile)
-    'reasonable-doubt-revenant': necromancerPortrait, // Revenant = Necromancer (undead)
-    'brady-banshee': elementalPortrait,               // Banshee = Elemental (spirit-like)
-    'ineffective-assistance-shade': necromancerPortrait // Shade = Necromancer (shadow)
+    // Public defenders - 8 distinct justice advocates
+    'gideon-crow': crowPortrait,                      // Crow (landmark case messenger)
+    'miranda-hawk': hawkPortrait,                     // Hawk (rights protector)
+    'suppression-wraith': necromancerPortrait,        // Necromancer (evidence suppression)
+    'probable-cause-kraken': alienPortrait,           // Alien (tentacled investigator)
+    'speedy-trial-sprite': elementalPortrait,         // Elemental (swift justice)
+    'reasonable-doubt-revenant': phoenixPortrait,     // Phoenix (doubt rises)
+    'brady-banshee': minotaurPortrait,                // Minotaur (disclosure enforcer)
+    'ineffective-assistance-shade': golemPortrait     // Golem (protection construct)
   };
   
   // Debug logging to see what's being passed
