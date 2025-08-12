@@ -326,14 +326,16 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated, editMod
             >
               {loading ? (editMode ? 'Updating...' : 'Creating...') : (editMode ? 'Update Character' : 'Enter the Arena')}
             </Button>
-            <Button
-              onClick={rollRandom}
-              variant="outline"
-              className="py-3 px-6"
-              data-testid="button-random-archetype"
-            >
-              Roll Random
-            </Button>
+            {!editMode && (
+              <Button
+                onClick={rollRandom}
+                variant="outline"
+                className="py-3 px-6"
+                data-testid="button-random-archetype"
+              >
+                Roll Random
+              </Button>
+            )}
             <Button
               onClick={onClose}
               variant="outline"
