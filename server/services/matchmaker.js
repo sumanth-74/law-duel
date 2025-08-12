@@ -301,6 +301,8 @@ async function runDuel(wss, roomCode, players, subject) {
 }
 
 async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
+  console.log(`Starting duel ${roomCode} - Human WS state: ${humanWs.readyState}`);
+  
   const match = {
     roomCode,
     humanWs,
@@ -312,6 +314,10 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   };
 
   activeMatches.set(roomCode, match);
+  
+  // Give client time to set up duel connection
+  console.log('Waiting 2 seconds for client to establish duel connection...');
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   for (let round = 1; round <= 7; round++) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
@@ -344,26 +350,22 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       console.log(`Broadcasting question to human player for round ${round}`);
       console.log(`Question: "${question.stem.substring(0, 60)}..."`);
 
-      // Send to human player
-      console.log('Human WebSocket readyState before send:', humanWs.readyState);
-      if (humanWs.readyState === 1) {
-        const questionMessage = JSON.stringify({ type: 'duel:question', payload: questionData });
-        console.log('Sending question message:', questionMessage.substring(0, 100) + '...');
-        humanWs.send(questionMessage);
-        console.log('Question sent successfully to human player');
-      } else {
-        console.error('Human WebSocket not ready, readyState:', humanWs.readyState);
-        // Try to send anyway if connecting
-        if (humanWs.readyState === 0) {
-          console.log('WebSocket connecting, will retry...');
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          if (humanWs.readyState === 1) {
-            humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
-            console.log('Question sent after reconnection');
-          }
-        } else {
-          break; // Exit duel if disconnected
+      // Broadcast to all connected clients for this room
+      console.log('Broadcasting question to all clients...');
+      let questionSent = false;
+      
+      wss.clients.forEach(client => {
+        if (client.readyState === 1) {
+          const questionMessage = JSON.stringify({ type: 'duel:question', payload: questionData });
+          client.send(questionMessage);
+          questionSent = true;
+          console.log('Question broadcast to connected client');
         }
+      });
+      
+      if (!questionSent) {
+        console.error('No active WebSocket connections found');
+        break;
       }
 
       // Schedule bot answer

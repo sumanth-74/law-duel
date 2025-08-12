@@ -82,7 +82,7 @@ export function QuickMatch({ onStartMatch }: QuickMatchProps) {
           console.log('Duel starting!', message.payload);
           clearInterval(interval);
           setQueueState({ isQueuing: false, timeElapsed: 0 });
-          websocket.close();
+          // Don't close websocket - let DuelArena handle its own connection
           onStartMatch(subject, message.payload);
         }
       } catch (error) {
