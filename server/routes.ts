@@ -800,9 +800,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`✅ Generated fresh question for test: ${item.qid}`);
       
       // Store question with correct answer for validation
+      console.log(`📝 Storing question ${item.qid} with correct answer: ${item.correctIndex}`);
       testQuestionStorage.set(item.qid, {
         correctIndex: item.correctIndex,
-        explanation: item.explanation || "No explanation provided",
+        explanation: item.explanation || `The correct answer is choice ${String.fromCharCode(65 + item.correctIndex)} because: ${item.rationale || 'Legal analysis not provided.'}`,
         item: item
       });
       
@@ -893,7 +894,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         duelComplete: false
       };
       
-      console.log(`✅ Test answer: choice ${choiceIndex}, correct answer: ${questionData.correctIndex}, result: ${isCorrect ? 'CORRECT' : 'WRONG'}`);
+      console.log(`🎯 Answer validation: Player chose ${choiceIndex}, correct is ${questionData.correctIndex} → ${isCorrect ? 'CORRECT ✅' : 'WRONG ❌'}`);
+      
+      // Clean up the question from storage after use
+      testQuestionStorage.delete(questionId);
+      
       res.json(result);
       
     } catch (error: any) {

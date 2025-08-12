@@ -102,7 +102,9 @@ export default function DuelTestPage() {
   };
 
   const handleSubmitAnswer = async (choiceIndex: number) => {
-    if (result) return; // Already submitted
+    if (result || !currentQuestion) return; // Already submitted or no question
+
+    console.log(`🎯 Submitting answer: choice ${choiceIndex} for question ${currentQuestion.id}`);
 
     try {
       const response = await fetch('/test/duel-answer', {
@@ -112,13 +114,19 @@ export default function DuelTestPage() {
           duelId,
           playerId: 'test_player',
           choiceIndex,
-          questionId: currentQuestion?.id,
+          questionId: currentQuestion.id,
           timeMs: (60 - timeRemaining) * 1000
         })
       });
 
       const data = await response.json();
       console.log('✅ Answer result:', data);
+      
+      if (data.error) {
+        alert(`Error: ${data.error}`);
+        return;
+      }
+      
       setResult(data);
       
       if (data.duelComplete) {
