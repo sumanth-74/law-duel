@@ -92,6 +92,7 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Leaderboard System**: Fixed "users2" initialization error caused by variable shadowing in statsService - both overall and real-time leaderboards now functional
 - **Subject Integrity Guard**: Comprehensive system implemented to eliminate cross-subject bleed with canonical subject normalization, heuristic validation, and retry logic (Updated 2025-08-12)
 - **Fresh Question Generation**: Fixed critical issue where OpenAI questions with invalid choice counts (8 instead of 4) caused fallback to cached questions. Implemented 3-attempt retry logic with no fallbacks for duels (Updated 2025-08-12)
+- **Round-Based Duel System**: Implemented proper round progression with state management, preventing question repetition and ensuring each "Next Question" generates unique content with proper fallback handling (Updated 2025-08-12)
 
 ## External Dependencies
 

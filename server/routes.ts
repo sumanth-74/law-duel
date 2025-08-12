@@ -792,9 +792,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!q) return true;
     const timeout = Date.now() > q.endsAt;
     const playerDone = Boolean(duel.answers['test_player']?.[r]);
-    const finished = timeout || playerDone;
-    console.log(`🔍 Round ${r} finished check: timeout=${timeout}, playerDone=${playerDone}, finished=${finished}`);
-    return finished;
+    return timeout || playerDone;
   }
 
   // Public test endpoint for duel questions (no auth required)
@@ -834,7 +832,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // If current round is finished, advance to next round
       if (duel.round < duel.rounds && duel.q[duel.round] && isRoundFinished(duel, duel.round)) {
-        console.log(`🔄 Advancing from round ${duel.round} to ${duel.round + 1}`);
         duel.round += 1;
       }
 
@@ -844,7 +841,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Generate brand-new question for the new round
-      console.log(`🎯 Current round: ${duel.round}, generating new question...`);
       if (!duel.q[duel.round]) {
         const subject = duel.subjectPool[Math.floor(Math.random() * duel.subjectPool.length)];
         
