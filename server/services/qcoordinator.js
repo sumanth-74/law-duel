@@ -27,14 +27,19 @@ export async function getQuestion(subject, excludeIds = []) {
       return formatQuestion(storedQuestion);
     }
 
-    // Generate new question via OpenAI
-    const newQuestion = await generateQuestion(subject);
-    if (newQuestion) {
-      const stored = await storage.createQuestion(newQuestion);
-      return formatQuestion(stored);
+    // Try to generate new question via OpenAI, but fallback immediately on error
+    try {
+      const newQuestion = await generateQuestion(subject);
+      if (newQuestion) {
+        const stored = await storage.createQuestion(newQuestion);
+        return formatQuestion(stored);
+      }
+    } catch (openaiError) {
+      console.log(`OpenAI generation failed for ${subject}, using fallback question`);
     }
 
-    // Fallback question
+    // Use fallback question
+    console.log(`Using fallback question for ${subject}`);
     return getFallbackQuestion(subject);
   } catch (error) {
     console.error('Error getting question:', error);

@@ -291,7 +291,15 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     match.round = round;
     
     try {
+      console.log(`Getting question for round ${round} in ${subject}`);
       const question = await getQuestion(subject, match.usedQuestions);
+      
+      if (!question) {
+        console.error('No question returned for round', round);
+        continue;
+      }
+      
+      console.log(`Question received: "${question.stem?.substring(0, 50)}..."`);
       match.usedQuestions.push(question.qid);
 
       const questionData = {
@@ -299,13 +307,23 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         round,
         stem: question.stem,
         choices: question.choices,
-        timeLimit: question.timeLimit,
-        deadlineTs: question.deadlineTs
+        timeLimit: question.timeLimit || 20000,
+        deadlineTs: question.deadlineTs || (Date.now() + 20000)
       };
+
+      console.log(`Sending question to human:`, {
+        qid: questionData.qid,
+        round: questionData.round,
+        stem: questionData.stem?.substring(0, 30) + '...',
+        choiceCount: questionData.choices?.length
+      });
 
       // Send to human
       if (humanWs.readyState === 1) {
         humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
+        console.log('Question sent successfully to human');
+      } else {
+        console.error('Human WebSocket not ready, readyState:', humanWs.readyState);
       }
 
       // Schedule bot answer
