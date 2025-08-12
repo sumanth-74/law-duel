@@ -1,0 +1,174 @@
+1) Rank (ELO) — competitive
+Problem: Everyone starts at 1200 and shows “Skilled.”
+Fix: Hide rank until placements. Show Unranked (Placements 0/5).
+
+Start with hidden MMR=1200.
+
+5 placement duels → reveal rank.
+
+ELO bands & names:
+
+Paralegal: <1050
+
+1L: 1050–1149
+
+2L: 1150–1249
+
+3L: 1250–1349
+
+Associate: 1350–1449
+
+Senior Associate: 1450–1549
+
+Counsel: 1550–1649
+
+Partner: 1650–1799
+
+Trialmaster: 1800–1949
+
+Supreme Advocate: 1950+
+
+Show rank progress bar: “+18 / -14 next match” and animate deltas on result.
+
+2) Level (XP) — “name for each level”
+This is your always-forward bar. You level up by playing, not just winning.
+
+XP Sources
+
+Correct answer: +20 (easy), +25 (med), +30 (hard)
+
+Duel win: +100; loss: +40
+
+Streak bonus: +10 per consecutive win (caps at +50)
+
+First duel of day: +100
+
+Subject Gauntlet clear: +150
+
+Underdog win (beat higher ELO): +50
+
+Level curve
+Use: XP_to_next = ceil(220 * level^1.35)
+(Feels fast early, meaningful later.)
+
+Level titles (L1–L30)
+
+Novice Scribe
+
+Lawling
+
+Case Brief Cadet
+
+1L Initiate
+
+Apprentice Litigator
+
+Motion Drafter
+
+Rule 12(b)(6) Raider
+
+Discovery Adept
+
+Deposition Tactician
+
+Junior Advocate
+
+Hearsay Hunter
+
+Objection Specialist
+
+Summary-Judgment Seeker
+
+Voir Dire Virtuoso
+
+Trial Architect
+
+Precedent Bender
+
+Appellate Alchemist
+
+Counsel of Shadows
+
+Courtroom Conjurer
+
+Senior Advocate
+
+Partner Apparent
+
+Rainmaker
+
+Master of the Record
+
+Trialmaster
+
+Supreme Advocate
+
+Archon of Evidence
+
+Chancellor of Claims
+
+Warden of Writs
+
+Keeper of Precedent
+
+Legend of the Bar
+
+Level rewards (cosmetic & hooks)
+
+Avatar frames, banners, emote stickers, profile effects
+
+Streak Shield at L5/10/15 (saves 1 loss)
+
+Peek % power-up unlock L7; 50/50 at L12; +15s at L18
+
+Seasonal badge at L20+
+
+3) Subject Mastery — micro skill (per MBE subject)
+Each subject has Mastery 0–10 (Roman numerals I–X). Mastery points adjust every question.
+
+Start Provisional until 20 attempts in that subject.
+
+Mastery points per question = +8 (correct) / −3 (wrong) × difficulty weight (0.8/1/1.2).
+
+Thresholds (cumulative): 0, 80, 170, 270, 380, 500, 630, 770, 920, 1080, 1250.
+
+Show: Accuracy %, attempts, streak, Mastery I–X badge.
+
+Light weekly decay: −10 points per subject (floors at the lower tier) to keep engagement.
+
+UI copy & behavior
+Top of Stats page:
+
+If <5 placements: Rank: Unranked (Placements 2/5)
+
+Else: Rank: 2L — 1187 ELO with progress bar to 3L.
+
+Next row: Level 7 · Discovery Adept — progress bar “430/620 XP”.
+
+Subject grid chips: “Evidence — Mastery III, 72% · 94 Qs · Streak 4 (Provisional if <20)”.
+
+Post-match:
+
+Big XP card: “+100 Win, +60 Correct, +20 Streak = +180 XP → Level Up!”
+
+ELO delta card: “Beat higher ELO: +22 (1187 → 1209).”
+
+Subject deltas: “Evidence +18 pts (Mastery II → III).”
+
+Addictive loops (daily/weekly)
+Daily Casefile (1 curated duel): +100 XP, double mastery.
+
+Weekly Bounties: “Win 5 Con Law duels” = badge + 500 XP.
+
+Season Ladder (4 weeks): soft reset of rank; cosmetics carry.
+
+Friend Rivalry: weekly head-to-head board with tiny rewards.
+
+Acceptance criteria
+New account shows Unranked (0/5) and Level 1: Novice Scribe.
+
+After 1 duel win with 3 correct, XP increases and Level progress animates; rank stays hidden until placements complete.
+
+Subject cards update after each answered question; Mastery moves in visible steps; “Provisional” disappears ≥20 attempts.
+
+Rank tier names change strictly by ELO band; level titles change strictly by XP, never by ELO.

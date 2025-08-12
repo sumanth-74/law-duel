@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useLocation, Link } from 'wouter';
 import { PlayerStats } from '@/components/PlayerStats';
+import { PublicLeaderboard } from '@/components/PublicLeaderboard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Search, User } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ArrowLeft, Search, User, Trophy } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function Stats() {
@@ -84,12 +86,19 @@ export default function Stats() {
             {/* Search for other players */}
             <form onSubmit={handleSearch} className="flex gap-2">
               <Input
-                placeholder="Search player..."
+                placeholder="Search by username..."
                 value={searchUsername}
                 onChange={(e) => setSearchUsername(e.target.value)}
-                className="w-48 bg-slate-800 border-purple-500/30 text-slate-200"
+                className="w-56 bg-slate-800 border-purple-500/30 text-slate-200 placeholder:text-slate-500"
+                data-testid="input-search-player"
               />
-              <Button type="submit" size="sm" variant="outline" className="border-purple-500/50 text-purple-300">
+              <Button 
+                type="submit" 
+                size="sm" 
+                variant="outline" 
+                className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
+                data-testid="button-search-player"
+              >
                 <Search className="w-4 h-4" />
               </Button>
             </form>
@@ -104,14 +113,41 @@ export default function Stats() {
           isOwnProfile={isOwnProfile}
         />
       ) : (
-        <div className="container max-w-4xl mx-auto p-6">
-          <Card className="bg-black/40 border-purple-500/20">
-            <CardContent className="p-8 text-center">
-              <User className="w-12 h-12 mx-auto mb-4 text-purple-400" />
-              <h3 className="text-xl font-bold text-purple-200 mb-2">No Player Selected</h3>
-              <p className="text-purple-400">Search for a player above to view their statistics.</p>
-            </CardContent>
-          </Card>
+        <div className="container max-w-6xl mx-auto p-6">
+          <Tabs defaultValue="browse" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6 bg-slate-800 border-purple-500/30">
+              <TabsTrigger 
+                value="browse" 
+                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+                data-testid="tab-browse-players"
+              >
+                <Trophy className="w-4 h-4 mr-2" />
+                Browse Players
+              </TabsTrigger>
+              <TabsTrigger 
+                value="search" 
+                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+                data-testid="tab-search-player"
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Search Player
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="browse">
+              <PublicLeaderboard />
+            </TabsContent>
+
+            <TabsContent value="search">
+              <Card className="bg-black/40 border-purple-500/20 max-w-md mx-auto">
+                <CardContent className="p-8 text-center">
+                  <User className="w-12 h-12 mx-auto mb-4 text-purple-400" />
+                  <h3 className="text-xl font-bold text-purple-200 mb-2">Search for a Player</h3>
+                  <p className="text-purple-400 mb-4">Enter a username in the search box above to view their statistics.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       )}
     </div>

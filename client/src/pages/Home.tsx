@@ -467,7 +467,16 @@ export default function Home() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-purple-400">Level {character.level} • {character.points} Points</p>
+                <p className="text-purple-400">
+                  Level {character.level} • {character.points} Points • 
+                  <span 
+                    className="hover:text-purple-200 cursor-pointer underline decoration-purple-400/50"
+                    onClick={() => window.location.href = '/stats'}
+                    title="View leaderboard"
+                  >
+                    View Rankings
+                  </span>
+                </p>
               </div>
             </div>
           </div>
