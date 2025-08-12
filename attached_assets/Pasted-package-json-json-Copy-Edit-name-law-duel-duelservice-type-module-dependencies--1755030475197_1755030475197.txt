@@ -1,0 +1,405 @@
+package.json
+json
+Copy
+Edit
+{
+  "name": "law-duel-duelservice",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  },
+  "scripts": { "start": "node server.js" }
+}
+server.js
+js
+Copy
+Edit
+import express from "express";
+import cors from "cors";
+import crypto from "crypto";
+
+/* ------------------------- CONFIG ------------------------- */
+const PORT = process.env.PORT || 3000;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) console.error("⚠️ Set OPENAI_API_KEY in Replit Secrets.");
+
+const TIME_LIMIT_SEC = 60;
+const SUBJECTS = {
+  "Civ Pro": ["SMJ","PJ","Venue","Erie","Joinder","Discovery","Preclusion","Rule 56"],
+  "Con Law": ["Speech","Equal Protection","Due Process","Commerce Clause","State Action","Standing","Takings"],
+  "Contracts": ["Offer/Acceptance","Consideration","Defenses","Parol Evidence","UCC §2—Formation","UCC §2—Risk of Loss","Warranties/Remedies"],
+  "Crim": ["Homicide","Accomplice/Pinkerton","Felony Murder","Fourth Amendment","Fifth/Miranda","Sixth/Confrontation"],
+  "Evidence": ["Relevance 401/403","Character 404/405","Impeachment 607/613","Hearsay 801–807","Privileges","Authentication/Best Evidence","Experts 702–705"],
+  "Property": ["Estates/Future Interests","RAP","Recording Acts","Adverse Possession","Easements/Covenants","Landlord–Tenant","Mortgages"],
+  "Torts": ["Negligence","Strict Liability","Products Liability","Defamation","Privacy/IIED/NIED","Vicarious Liability"]
+};
+const SUBJECT_ENUM = Object.keys(SUBJECTS);
+const LETTERS = ["A","B","C","D"];
+
+/* ---------------------- MINI HELPERS ---------------------- */
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const now = () => Date.now();
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const randId = (p="D") => `${p}-${now()}-${Math.random().toString(36).slice(2,8)}`;
+
+function ruleHint(subject, topic) {
+  const map = {
+    "Evidence:Hearsay 801–807":"FRE 801(d)(1)(C): prior identification is non-hearsay",
+    "Contracts:UCC §2—Risk of Loss":"UCC §2-510: buyer breach & identified goods",
+    "Property:Recording Acts":"Race-notice: BFP without notice who records first",
+    "Crim:Fifth/Miranda":"Unwarned but voluntary statements admissible for impeachment",
+    "Civ Pro:Rule 56":"Summary judgment standard: no genuine dispute of material fact",
+    "Torts:Products Liability":"Design vs. manufacturing defect (risk-utility)"
+  };
+  return map[`${subject}:${topic}`] || `${topic} — test the controlling rule`;
+}
+
+function normalizeChoices(raw) {
+  if (!Array.isArray(raw) || raw.length !== 4) throw new Error("Need exactly 4 choices");
+  const cleaned = raw.map(s => String(s||"")
+    .replace(/^\s*[A-D][\)\].:\-]\s*/i,"").trim());
+  if (cleaned.some(c => c.length < 6)) throw new Error("Choices too short");
+  const uniq = new Set(cleaned.map(c => c.toLowerCase()));
+  if (uniq.size < 4) throw new Error("Duplicate choices");
+  return cleaned;
+}
+
+/* -------------------- OPENAI GENERATION ------------------- */
+// use fetch directly (Node 18+)
+async function callOpenAI(prompt, schema) {
+  const res = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      input: prompt,
+      temperature: 0.65,
+      max_output_tokens: 1200,
+      response_format: { type: "json_schema", json_schema: { name: "MBEItem", schema, strict: true } }
+    })
+  });
+  if (!res.ok) throw new Error(`OpenAI ${res.status} ${await res.text()}`);
+  const data = await res.json();
+  return JSON.parse(data.output_text);
+}
+
+const itemSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    subject: { type: "string", enum: SUBJECT_ENUM },
+    topic: { type: "string" },
+    subtopic: { type: "string" },
+    stem: { type: "string" },
+    choices: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+    correctIndex: { type: "integer", minimum: 0, maximum: 3 },
+    optionRationales: { type: "object" },
+    explanationLong: { type: "string" },
+    ruleRefs: { type: "array", items: { type: "string" } },
+    difficultySeed: { type: "string", enum: ["easy","medium","hard"] },
+    timeLimitSec: { type: "integer" },
+    tags: { type: "array", items: { type: "string" } },
+    license: { type: "string" },
+    status: { type: "string", enum: ["approved"] },
+    authorNote: { type: "string" }
+  },
+  required: ["subject","topic","stem","choices","correctIndex","optionRationales","explanationLong","ruleRefs","difficultySeed","license","status"],
+  additionalProperties: false
+};
+
+async function generateItem({ subjectPool }) {
+  const subject = pick(subjectPool);
+  const topic = pick(SUBJECTS[subject]);
+  const nonce = crypto.randomBytes(6).toString("hex");
+  const prompt = `
+Write an original **MBE-style** multiple-choice question.
+Subject: ${subject}. Topic: ${topic}. Rule to test: ${ruleHint(subject, topic)}.
+- Single best answer with exactly 4 options (A–D).
+- Fact pattern length: 120–180 words.
+- National (majority) law only (FRE/FRCP/UCC Art.2/federal con law as relevant).
+- Include rationales for EACH option and a 3–6 sentence explanation with the controlling rule + common trap.
+- Set "timeLimitSec": ${TIME_LIMIT_SEC} in the JSON.
+- No “all/none of the above”. Output ONLY JSON matching our schema.
+Freshness token: ${nonce} (do not mention it).`;
+
+  // retry/backoff on 429/5xx up to 3 times
+  let lastErr;
+  for (let i=0;i<3;i++){
+    try {
+      const item = await callOpenAI(prompt, itemSchema);
+      item.subject = subject;
+      item.topic = item.topic || topic;
+      item.timeLimitSec = TIME_LIMIT_SEC;
+      item.license = "© Law Duel, original";
+      item.status = "approved";
+      item.id = item.id || `Q-${subject.slice(0,2).toUpperCase()}-${now()}-${nonce}`;
+      item.choices = normalizeChoices(item.choices);
+      if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex > 3)
+        throw new Error("Bad correctIndex");
+      // basic content sanity
+      const txt = [...item.choices].join(" ").toLowerCase();
+      if (txt.includes("all of the above") || txt.includes("none of the above"))
+        throw new Error("Banned phrase");
+      const words = item.stem.trim().split(/\s+/).length;
+      if (words < 110 || words > 220) throw new Error("Bad stem length");
+      return item;
+    } catch (e) {
+      lastErr = e;
+      if (String(e.message).includes("OpenAI 429") || String(e.message).match(/OpenAI 5\d\d/))
+        await sleep(400*Math.pow(2,i) + Math.random()*200);
+      else break;
+    }
+  }
+  throw lastErr || new Error("generation failed");
+}
+
+/* ----------------------- DUEL STORAGE --------------------- */
+const duels = new Map(); // duelId -> duel object
+const players = new Map(); // token -> { duelId, id, name }
+
+/* duel shape:
+{
+  id, rounds, timeLimitSec,
+  subjectPool: [...],
+  bot: true/false,
+  hostId, guestId (optional),
+  round: 0-based,
+  q: [ { item, startAt, endsAt } ],
+  answers: { [playerId]: { [round]: { choiceIndex, correct, timeMs } } }
+}
+*/
+
+/* ----------------------- EXPRESS APP ---------------------- */
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use((req,res,next)=>{
+  res.setHeader("Cache-Control","no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma","no-cache"); res.setHeader("Expires","0"); next();
+});
+
+/* Health */
+app.get("/health", async (req,res)=>{
+  try {
+    if (!OPENAI_API_KEY) return res.status(500).json({ ok:false, error:"Missing OPENAI_API_KEY" });
+    const ping = await fetch("https://api.openai.com/v1/models", { headers: { Authorization: `Bearer ${OPENAI_API_KEY}` }});
+    return res.status(ping.ok?200:ping.status).json({ ok: ping.ok });
+  } catch(e){ return res.status(500).json({ ok:false, error: e.message }); }
+});
+
+/* Create duel */
+app.post("/duel/create", async (req,res)=>{
+  const { mode="bot", subjects="mix", rounds=10, name="Player" } = req.body || {};
+  const subjectPool = Array.isArray(subjects) && subjects.length
+    ? subjects.filter(s=>SUBJECT_ENUM.includes(s))
+    : SUBJECT_ENUM; // "mix" => all
+
+  const duelId = randId("DUEL");
+  const hostId = randId("P");
+  const hostToken = randId("T");
+  const duel = {
+    id: duelId,
+    rounds: Math.min(Math.max(1, rounds), 20),
+    timeLimitSec: TIME_LIMIT_SEC,
+    subjectPool,
+    bot: mode === "bot",
+    hostId,
+    guestId: null,
+    round: 0,
+    q: [],
+    answers: {}
+  };
+  duels.set(duelId, duel);
+  players.set(hostToken, { duelId, id: hostId, name });
+  res.json({ duelId, hostToken, joinCode: duelId.slice(-6), timeLimitSec: TIME_LIMIT_SEC, subjects: subjectPool });
+});
+
+/* Join friend duel */
+app.post("/duel/join", (req,res)=>{
+  const { duelId, name="Friend" } = req.body || {};
+  const duel = duels.get(duelId);
+  if (!duel) return res.status(404).json({ error: "No such duel" });
+  if (duel.bot) return res.status(400).json({ error: "This duel is vs bot" });
+  if (duel.guestId) return res.status(409).json({ error: "Already joined" });
+
+  const guestId = randId("P");
+  const guestToken = randId("T");
+  duel.guestId = guestId;
+  players.set(guestToken, { duelId, id: guestId, name });
+  res.json({ duelId, guestToken, timeLimitSec: duel.timeLimitSec, subjects: duel.subjectPool });
+});
+
+/* Next question (both players call this) */
+app.post("/duel/next", async (req,res)=>{
+  const { token } = req.body || {};
+  const p = players.get(token);
+  if (!p) return res.status(401).json({ error: "Bad token" });
+  const duel = duels.get(p.duelId);
+  if (!duel) return res.status(404).json({ error: "No duel" });
+
+  const r = duel.round;
+  if (r >= duel.rounds) return res.json({ done:true });
+
+  // generate once per round for both players
+  if (!duel.q[r]) {
+    const item = await generateItem({ subjectPool: duel.subjectPool });
+    const startAt = now();
+    const endsAt = startAt + duel.timeLimitSec*1000;
+    duel.q[r] = { item, startAt, endsAt };
+  }
+  const q = duel.q[r];
+  const remaining = Math.max(0, Math.floor((q.endsAt - now())/1000));
+  const safe = {
+    id: q.item.id,
+    subject: q.item.subject,
+    topic: q.item.topic,
+    stem: q.item.stem,
+    choices: q.item.choices,
+    ruleRefs: q.item.ruleRefs,
+    timeLimitSec: duel.timeLimitSec,
+    timeRemainingSec: remaining,
+    round: r+1, totalRounds: duel.rounds
+  };
+  res.json({ question: safe });
+});
+
+/* Submit answer */
+app.post("/duel/answer", (req,res)=>{
+  const { token, choiceIndex } = req.body || {};
+  const p = players.get(token);
+  if (!p) return res.status(401).json({ error: "Bad token" });
+  const duel = duels.get(p.duelId);
+  if (!duel) return res.status(404).json({ error: "No duel" });
+
+  const r = duel.round;
+  const q = duel.q[r];
+  if (!q) return res.status(400).json({ error: "No active question" });
+
+  // time check
+  const tNow = now();
+  const timedOut = tNow > q.endsAt;
+  const correctIndex = q.item.correctIndex;
+  const correct = !timedOut && Number(choiceIndex) === Number(correctIndex);
+
+  // record answer
+  duel.answers[p.id] ||= {};
+  duel.answers[p.id][r] = { choiceIndex, correct, timeMs: Math.max(0, tNow - q.startAt) };
+
+  // simple bot answer if applicable
+  let bot = null;
+  if (duel.bot) {
+    const botCorrect = Math.random() < 0.55; // tweak bot skill here
+    const botChoice = botCorrect ? correctIndex : (correctIndex + 1 + Math.floor(Math.random()*3)) % 4;
+    bot = { choiceIndex: botChoice, correct: botCorrect, timeMs: 2000 + Math.floor(Math.random()*52000) };
+  }
+
+  // if both players (or player+bot) have answered OR time is up, advance round
+  const haveHost = duel.answers[duel.hostId]?.[r];
+  const haveGuest = duel.bot ? bot : (duel.guestId && duel.answers[duel.guestId]?.[r]);
+  const finished = timedOut || (haveHost && (duel.bot || haveGuest));
+
+  if (finished) duel.round += 1;
+
+  res.json({
+    correct,
+    correctIndex,
+    explanationLong: q.item.explanationLong,
+    finishedRound: finished,
+    nextRound: duel.round + 1,
+    totalRounds: duel.rounds,
+    opponent: duel.bot ? bot : undefined
+  });
+});
+
+/* Scoreboard/state */
+app.get("/duel/state", (req,res)=>{
+  const { duelId } = req.query;
+  const duel = duels.get(String(duelId));
+  if (!duel) return res.status(404).json({ error: "No duel" });
+
+  const r = duel.round;
+  const hostAns = duel.answers[duel.hostId] || {};
+  const guestAns = duel.bot ? {} : (duel.answers[duel.guestId] || {});
+  const hostScore = Object.values(hostAns).filter(a => a.correct).length;
+  const guestScore = duel.bot ? null : Object.values(guestAns).filter(a => a.correct).length;
+
+  res.json({
+    round: Math.min(r+1, duel.rounds),
+    totalRounds: duel.rounds,
+    hostScore, guestScore,
+    timeLimitSec: duel.timeLimitSec
+  });
+});
+
+app.listen(PORT, ()=>console.log(`✅ Law Duel duel-service running on :${PORT}`));
+How to use it (client flow)
+Create a duel
+
+ts
+Copy
+Edit
+// vs Bot (mixed subjects)
+POST /duel/create
+{ "mode": "bot", "subjects": "mix", "rounds": 10, "name": "Savannah" }
+// -> { duelId, hostToken, joinCode, timeLimitSec }
+Invite a friend
+
+ts
+Copy
+Edit
+// host shares duelId (or joinCode)
+POST /duel/join
+{ "duelId": "<from host>", "name": "Friend" }
+// -> { duelId, guestToken }
+Start round / get question
+
+ts
+Copy
+Edit
+// both players (or you vs bot) call:
+POST /duel/next
+{ "token": "<hostToken or guestToken>" }
+// -> { question: { subject, stem, choices, timeRemainingSec: ≤60, round, totalRounds } }
+Submit answer (server enforces 60s)
+
+ts
+Copy
+Edit
+POST /duel/answer
+{ "token": "<playerToken>", "choiceIndex": 0..3 }
+// -> { correct, correctIndex, explanationLong, finishedRound, opponent? }
+Get scoreboard
+
+ts
+Copy
+Edit
+GET /duel/state?duelId=<id>
+// -> { round, totalRounds, hostScore, guestScore, timeLimitSec }
+Why this will stop the nonsense
+Fresh questions: generated on /duel/next per round with a randomness nonce; junk choices are rejected; 3× retry on API hiccups.
+
+Subject selection: pass subjects: ["Evidence","Torts"] or "mix"; each round picks one from your pool.
+
+60 seconds hard cap: server sets a per-round endsAt; late answers auto-fail.
+
+Bot or friend: same code path; bot logic answers with realistic timing; friend joins with duelId.
+
+No “A A” rendering: server only returns full-sentence choices; you render label + text.
+
+If you already have a backend, keep your stack—just lift the /duel/ endpoints* and the generateItem function into it. The behavior will be identical.
+
+
+
+
+
+
+
+
+
+Sources
+
+Ask ChatGPT
