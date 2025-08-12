@@ -1,287 +1,307 @@
-import { useState, useEffect } from 'react';
-import { CharacterCreation } from '@/components/CharacterCreation';
-import { Dashboard } from '@/components/Dashboard';
-import { DuelArena } from '@/components/DuelArena';
-import { AvatarRenderer } from '@/components/AvatarRenderer';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-import type { User, AvatarData } from '@shared/schema';
-import angelLogo from '@assets/generated_images/Photorealistic_divine_angel_portrait_94c3a62d.png';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { CharacterCreation } from '@/components/CharacterCreation';
+import { QuickMatch } from '@/components/QuickMatch';
+import { DuelArena } from '@/components/DuelArena';
+import { Leaderboard } from '@/components/Leaderboard';
+import { AvatarRenderer } from '@/components/AvatarRenderer';
+import type { User } from '@shared/schema';
 
-interface GameState {
-  currentView: 'dashboard' | 'duel';
-  user?: User;
-  opponent?: User;
-  showCharacterCreation: boolean;
-}
+const SUBJECTS = [
+  'Mixed Questions',
+  'Evidence',
+  'Contracts', 
+  'Torts',
+  'Property',
+  'Civil Procedure',
+  'Constitutional Law',
+  'Criminal Law/Procedure'
+];
+
+const BOT_DIFFICULTIES = [
+  { value: 'easy', label: 'Easy', description: 'Slower responses, 70% accuracy' },
+  { value: 'medium', label: 'Medium', description: 'Human-like timing, 80% accuracy' },
+  { value: 'hard', label: 'Hard', description: 'Quick responses, 90% accuracy' },
+  { value: 'expert', label: 'Expert', description: 'Lightning fast, 95% accuracy' }
+];
 
 export default function Home() {
-  const [gameState, setGameState] = useState<GameState>({
-    currentView: 'dashboard',
-    showCharacterCreation: false
+  const [character, setCharacter] = useState<User | null>(() => {
+    const saved = localStorage.getItem('bar-duel-character');
+    return saved ? JSON.parse(saved) : null;
   });
-  
-  const [motionReduced, setMotionReduced] = useState(false);
-  const { toast } = useToast();
 
-  useEffect(() => {
-    // Check for existing character in localStorage
-    const savedCharacter = localStorage.getItem('bar-duel-character');
-    const reducedMotion = localStorage.getItem('reduce-motion') === 'true';
-    
-    setMotionReduced(reducedMotion);
-    
-    if (savedCharacter) {
-      try {
-        const character = JSON.parse(savedCharacter);
-        setGameState(prev => ({ ...prev, user: character }));
-      } catch (error) {
-        console.error('Failed to parse saved character:', error);
-        setGameState(prev => ({ ...prev, showCharacterCreation: true }));
+  const [gameMode, setGameMode] = useState<'menu' | 'bot-setup' | 'friend-setup' | 'searching' | 'duel'>('menu');
+  const [gameSettings, setGameSettings] = useState({
+    subject: 'Mixed Questions',
+    botDifficulty: 'medium',
+    friendUsername: ''
+  });
+  const [opponent, setOpponent] = useState<User | null>(null);
+  const [duelData, setDuelData] = useState<any>(null);
+
+  if (!character) {
+    return <CharacterCreation onComplete={setCharacter} />;
+  }
+
+  const handleStartBotGame = () => {
+    // Create a bot opponent based on difficulty
+    const botOpponent: User = {
+      id: `bot_${Date.now()}`,
+      username: `Bot_${gameSettings.botDifficulty}`,
+      displayName: `${BOT_DIFFICULTIES.find(d => d.value === gameSettings.botDifficulty)?.label} Bot`,
+      level: gameSettings.botDifficulty === 'easy' ? 1 : 
+             gameSettings.botDifficulty === 'medium' ? 3 :
+             gameSettings.botDifficulty === 'hard' ? 5 : 8,
+      points: Math.floor(Math.random() * 1000),
+      avatarData: {
+        base: 'robot',
+        palette: '#64748b',
+        props: ['circuits', 'antenna']
       }
-    } else {
-      // Show character creation immediately for new users
-      setGameState(prev => ({ ...prev, showCharacterCreation: true }));
-    }
-
-    // Apply motion reduction styles
-    if (reducedMotion) {
-      document.body.style.setProperty('--motion-reduce', '1');
-      document.documentElement.style.setProperty('--reduce-motion', '1');
-    }
-  }, []);
-
-  const handleCharacterCreated = async (characterData: { 
-    username: string; 
-    displayName: string; 
-    avatarData: AvatarData 
-  }) => {
-    try {
-      const response = await apiRequest('POST', '/api/auth/register', {
-        username: characterData.username,
-        displayName: characterData.displayName,
-        avatarData: characterData.avatarData,
-        level: 1,
-        xp: 0,
-        points: 0,
-        totalWins: 0,
-        totalLosses: 0
-      });
-
-      const user = await response.json();
-      
-      // Save to localStorage
-      localStorage.setItem('bar-duel-character', JSON.stringify(user));
-      
-      setGameState(prev => ({ 
-        ...prev, 
-        user,
-        showCharacterCreation: false 
-      }));
-
-      toast({
-        title: "Welcome to Bar Duel!",
-        description: `${user.displayName} has entered the arena.`,
-      });
-    } catch (error) {
-      console.error('Failed to create character:', error);
-      toast({
-        title: "Character Creation Failed",
-        description: "Please try again. If the issue persists, check your connection.",
-        variant: "destructive",
-      });
-    }
+    };
+    
+    setOpponent(botOpponent);
+    setDuelData({
+      roomCode: `bot_${Date.now()}`,
+      subject: gameSettings.subject,
+      bestOf: 7,
+      ranked: false,
+      stake: 0,
+      botDifficulty: gameSettings.botDifficulty
+    });
+    setGameMode('duel');
   };
 
-  const handleQuickMatch = (subject: string) => {
-    // Create a mock opponent for the duel
-    const mockOpponent: User = {
-      id: 'opponent_1',
-      username: 'eriedemon',
-      displayName: 'Erie Demon',
-      avatarData: {
-        base: 'undead',
-        palette: '#ef4444',
-        props: ['chains', 'codex']
-      },
-      level: 8,
-      xp: 380,
-      points: 1340,
-      totalWins: 45,
-      totalLosses: 12,
-      createdAt: new Date()
-    };
-
-    setGameState(prev => ({
-      ...prev,
-      currentView: 'duel',
-      opponent: mockOpponent
-    }));
-
-    toast({
-      title: "Match Found!",
-      description: `Preparing duel against ${mockOpponent.displayName}`,
-    });
+  const handleStartFriendGame = () => {
+    if (!gameSettings.friendUsername.trim()) return;
+    
+    setGameMode('searching');
+    // This would normally search for the friend and initiate a match
+    // For now, we'll simulate finding them
+    setTimeout(() => {
+      const friendOpponent: User = {
+        id: `friend_${Date.now()}`,
+        username: gameSettings.friendUsername,
+        displayName: gameSettings.friendUsername,
+        level: Math.floor(Math.random() * 10) + 1,
+        points: Math.floor(Math.random() * 2000),
+        avatarData: {
+          base: 'human',
+          palette: '#8b5cf6',
+          props: ['hood', 'staff']
+        }
+      };
+      
+      setOpponent(friendOpponent);
+      setDuelData({
+        roomCode: `friend_${Date.now()}`,
+        subject: gameSettings.subject,
+        bestOf: 7,
+        ranked: true,
+        stake: 10
+      });
+      setGameMode('duel');
+    }, 2000);
   };
 
   const handleDuelEnd = () => {
-    setGameState(prev => ({
-      ...prev,
-      currentView: 'dashboard',
-      opponent: undefined
-    }));
-
-    toast({
-      title: "Duel Complete",
-      description: "Returning to the arena lobby.",
-    });
+    setGameMode('menu');
+    setOpponent(null);
+    setDuelData(null);
   };
 
-  const toggleMotionReduction = () => {
-    const newReducedState = !motionReduced;
-    setMotionReduced(newReducedState);
-    localStorage.setItem('reduce-motion', newReducedState.toString());
-    
-    if (newReducedState) {
-      document.body.style.setProperty('--motion-reduce', '1');
-      document.querySelectorAll('*').forEach(el => {
-        (el as HTMLElement).style.animationDuration = '0.01ms';
-        (el as HTMLElement).style.transitionDuration = '0.01ms';
+  const handleRematch = () => {
+    if (duelData) {
+      // Reset duel with same opponent and settings
+      setDuelData({
+        ...duelData,
+        roomCode: `rematch_${Date.now()}`
       });
-    } else {
-      document.body.style.removeProperty('--motion-reduce');
-      window.location.reload(); // Simple reset
     }
-
-    toast({
-      title: motionReduced ? "Motion Enabled" : "Motion Reduced",
-      description: motionReduced ? "Animations and transitions restored." : "Animations minimized for accessibility.",
-    });
   };
 
-  if (!gameState.user) {
+  if (gameMode === 'duel' && opponent && duelData) {
     return (
-      <div className="min-h-screen bg-dark-bg noise-overlay text-ink">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-arcane border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-muted">Loading your legal arsenal...</p>
-          </div>
-        </div>
-        
-        <CharacterCreation
-          isOpen={gameState.showCharacterCreation}
-          onClose={() => setGameState(prev => ({ ...prev, showCharacterCreation: false }))}
-          onCharacterCreated={handleCharacterCreated}
+      <div className="min-h-screen bg-background">
+        <DuelArena
+          user={character}
+          opponent={opponent}
+          isVisible={true}
+          onDuelEnd={handleDuelEnd}
         />
+        <div className="fixed bottom-4 right-4 space-x-2">
+          <Button onClick={handleRematch} variant="outline" size="sm">
+            Rematch
+          </Button>
+          <Button onClick={handleDuelEnd} variant="outline" size="sm">
+            Main Menu
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (gameMode === 'searching') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="panel max-w-md">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 border-4 border-arcane border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 className="font-cinzel text-xl font-bold mb-2">Searching for {gameSettings.friendUsername}</h3>
+            <p className="text-muted mb-4">Sending duel invitation...</p>
+            <Button onClick={() => setGameMode('menu')} variant="outline">
+              Cancel
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg noise-overlay text-ink">
-      {/* Navigation Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 panel border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo & Brand */}
-            <div className="flex items-center space-x-3" data-testid="brand-logo">
-              {/* Bar Duel Logo - Divine Angel Character */}
-              <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-mystic-gold/50">
-                <img 
-                  src={angelLogo} 
-                  alt="Bar Duel Logo" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h1 className="font-cinzel font-bold text-xl">Bar Duel</h1>
-                <p className="text-xs text-muted">Arcane Legal Arena</p>
-              </div>
-            </div>
-            
-            {/* User Profile */}
-            <div className="flex items-center space-x-4">
-              <div className="hidden sm:block text-right">
-                <p className="text-sm font-semibold" data-testid="user-display-name">{gameState.user.displayName}</p>
-                <p className="text-xs text-muted" data-testid="user-stats">
-                  Level {gameState.user.level} • {gameState.user.points.toLocaleString()} Points
-                </p>
-              </div>
-              <AvatarRenderer
-                avatarData={gameState.user.avatarData}
-                level={gameState.user.level}
-                size={48}
-              />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
-                data-testid="button-settings"
-              >
-                <i className="fas fa-cog text-muted"></i>
-              </Button>
+    <div className="min-h-screen bg-background">
+      <div className="container max-w-4xl mx-auto py-8 px-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <AvatarRenderer
+              avatarData={character.avatarData}
+              level={character.level}
+              size={64}
+            />
+            <div>
+              <h1 className="font-cinzel text-2xl font-bold">{character.displayName}</h1>
+              <p className="text-muted">Level {character.level} • {character.points} Points</p>
             </div>
           </div>
+          <Button 
+            onClick={() => setCharacter(null)} 
+            variant="outline" 
+            size="sm"
+          >
+            Change Character
+          </Button>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="pt-20 pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {gameState.currentView === 'dashboard' && (
-            <Dashboard 
-              user={gameState.user}
-              onQuickMatch={handleQuickMatch}
-            />
-          )}
-          
-          {gameState.currentView === 'duel' && gameState.opponent && (
-            <DuelArena
-              user={gameState.user}
-              opponent={gameState.opponent}
-              isVisible={true}
-              onDuelEnd={handleDuelEnd}
-            />
-          )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Game Modes */}
+          <div className="lg:col-span-2 space-y-6">
+            {gameMode === 'menu' && (
+              <>
+                {/* Play Against Bot */}
+                <Card className="panel">
+                  <CardHeader>
+                    <CardTitle className="font-cinzel text-xl flex items-center gap-2">
+                      🤖 Play Against Bot
+                      <Badge variant="secondary">Practice Mode</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Subject</label>
+                      <Select 
+                        value={gameSettings.subject} 
+                        onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SUBJECTS.map(subject => (
+                            <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Bot Difficulty</label>
+                      <Select 
+                        value={gameSettings.botDifficulty}
+                        onValueChange={(value) => setGameSettings(prev => ({ ...prev, botDifficulty: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {BOT_DIFFICULTIES.map(difficulty => (
+                            <SelectItem key={difficulty.value} value={difficulty.value}>
+                              <div>
+                                <div className="font-medium">{difficulty.label}</div>
+                                <div className="text-xs text-muted">{difficulty.description}</div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <Button onClick={handleStartBotGame} className="w-full" size="lg">
+                      Start Practice Duel
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Play with Friend */}
+                <Card className="panel">
+                  <CardHeader>
+                    <CardTitle className="font-cinzel text-xl flex items-center gap-2">
+                      👥 Play with Friend
+                      <Badge variant="default">Ranked</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Subject</label>
+                      <Select 
+                        value={gameSettings.subject} 
+                        onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SUBJECTS.map(subject => (
+                            <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Friend's Username</label>
+                      <Input
+                        placeholder="Enter username"
+                        value={gameSettings.friendUsername}
+                        onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
+                      />
+                    </div>
+                    
+                    <Button 
+                      onClick={handleStartFriendGame} 
+                      className="w-full" 
+                      size="lg"
+                      disabled={!gameSettings.friendUsername.trim()}
+                    >
+                      Challenge Friend
+                    </Button>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
+
+          {/* Leaderboard */}
+          <div>
+            <Leaderboard />
+          </div>
         </div>
-      </main>
-
-      {/* Floating Quick Match Button (Mobile) */}
-      {gameState.currentView === 'dashboard' && (
-        <Button 
-          onClick={() => handleQuickMatch('Evidence')}
-          className="fixed bottom-6 right-6 w-14 h-14 btn-primary rounded-full shadow-2xl lg:hidden animate-pulse-glow"
-          data-testid="button-floating-quick-match"
-        >
-          <i className="fas fa-bolt"></i>
-        </Button>
-      )}
-
-      {/* Accessibility Toggle */}
-      <div className="fixed bottom-6 left-6">
-        <Button
-          onClick={toggleMotionReduction}
-          variant="outline"
-          size="sm"
-          className="w-12 h-12 bg-panel border border-white/10 rounded-xl hover:bg-white/5 transition-colors"
-          title={motionReduced ? "Enable Motion" : "Reduce Motion"}
-          data-testid="button-toggle-motion"
-        >
-          <i className="fas fa-universal-access text-muted"></i>
-        </Button>
       </div>
-
-      {/* Character Creation Modal */}
-      <CharacterCreation
-        isOpen={gameState.showCharacterCreation}
-        onClose={() => setGameState(prev => ({ ...prev, showCharacterCreation: false }))}
-        onCharacterCreated={handleCharacterCreated}
-      />
-
-      {/* Screen Reader Announcements */}
-      <div aria-live="polite" aria-atomic="true" className="sr-only" id="announcements"></div>
     </div>
   );
 }
