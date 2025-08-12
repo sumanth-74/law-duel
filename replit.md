@@ -15,6 +15,7 @@ Preferred communication style: Simple, everyday language.
 - Subject selection: Specific subjects or "Mixed Questions" option
 - Rematch functionality: Allow rematches after game completion
 - Persistent gamer tag: Username always visible like gaming platforms
+- **Law school affiliation**: Display law school next to gamer tags across platform
 - Purple theme: Mature, professional purple styling throughout platform
 - Real-time leaderboard: Global leaderboard updates live across all players
 - Friend challenges: Pop-up notifications with accept/decline options for friend duels

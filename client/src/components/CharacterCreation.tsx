@@ -11,7 +11,7 @@ import type { AvatarData } from '@shared/schema';
 interface CharacterCreationProps {
   isOpen: boolean;
   onClose: () => void;
-  onCharacterCreated: (character: { username: string; displayName: string; avatarData: AvatarData }) => void;
+  onCharacterCreated: (character: { username: string; displayName: string; lawSchool?: string; avatarData: AvatarData }) => void;
 }
 
 interface ArchetypeData {
@@ -40,6 +40,7 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
   const [customMode, setCustomMode] = useState(false);
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [lawSchool, setLawSchool] = useState('');
   const [customAvatarData, setCustomAvatarData] = useState<AvatarData>({
     base: 'humanoid',
     palette: '#5865f2',
@@ -113,6 +114,7 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
       onCharacterCreated({
         username: cleanUsername,
         displayName: cleanDisplayName,
+        lawSchool: lawSchool.trim(),
         avatarData
       });
       onClose();
@@ -259,6 +261,22 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated }: Chara
                 maxLength={30}
                 className="w-full"
                 data-testid="input-display-name"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="lawSchool" className="block text-sm font-medium mb-2">
+                Law School <span className="text-muted text-xs">(Optional)</span>
+              </Label>
+              <Input
+                id="lawSchool"
+                type="text"
+                value={lawSchool}
+                onChange={(e) => setLawSchool(e.target.value)}
+                placeholder="e.g., Harvard Law School, Stanford Law..."
+                maxLength={150}
+                className="w-full"
+                data-testid="input-law-school"
               />
             </div>
           </div>
