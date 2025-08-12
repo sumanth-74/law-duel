@@ -89,8 +89,10 @@ The application uses a monorepo structure with shared types and schemas between 
 ## External Dependencies
 
 ### Third-Party Services
-- **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **ACTIVE AND WORKING** (Updated 2025-08-12)
-- **Question Generation**: Answer randomization fixed - correct answers now properly distributed across A, B, C, D options instead of defaulting to 'A'
+- **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **FULLY OPERATIONAL** (Updated 2025-08-12)
+- **Question Generation**: Answer randomization working correctly - questions generated with topics like "Separation of Powers", "Privacy Torts", "Hearsay", "Future Interests"
+- **Fresh Question System**: OpenAI generates unique questions with IDs like `fresh_openai_1755027472588_siy0r7bm6` for each duel round
+- **Topic Variety**: 6-8 topics per subject ensuring diverse question types across all legal areas
 - **Neon Database**: PostgreSQL hosting service for production data storage
 
 ### UI and Styling Libraries

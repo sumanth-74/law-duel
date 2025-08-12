@@ -319,9 +319,23 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 
   activeMatches.set(roomCode, match);
   
-  // Give client more time to set up duel connection for reliable OpenAI delivery
-  console.log('Waiting 3 seconds for client to establish duel connection...');
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  // Wait for stable client connection before starting OpenAI generation
+  console.log('Ensuring stable client connection for OpenAI delivery...');
+  
+  // Wait for the client to be properly connected to the duel WebSocket
+  let connectionAttempts = 0;
+  while (connectionAttempts < 10) {
+    const connectedClients = Array.from(wss.clients).filter(client => client.readyState === 1).length;
+    if (connectedClients > 0) {
+      console.log(`Client connection confirmed (${connectedClients} active clients)`);
+      break;
+    }
+    await new Promise(resolve => setTimeout(resolve, 500));
+    connectionAttempts++;
+  }
+  
+  // Additional buffer to ensure connection is stable
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   for (let round = 1; round <= 7; round++) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
@@ -369,8 +383,11 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       });
       
       if (!questionSent) {
-        console.error('No active WebSocket connections found');
+        console.error('❌ No active WebSocket connections found - client disconnected during OpenAI generation');
+        console.error('   This prevents fresh OpenAI questions from reaching the client');
         break;
+      } else {
+        console.log(`✅ Fresh OpenAI question successfully delivered to client: ${question.qid}`);
       }
 
       // Schedule bot answer
