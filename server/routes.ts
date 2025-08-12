@@ -39,6 +39,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   }));
 
+  // Health check endpoint for OpenAI
+  app.get("/health/openai", async (req, res) => {
+    try {
+      if (!process.env.OPENAI_API_KEY) {
+        return res.status(500).json({ ok: false, error: "Missing OPENAI_API_KEY" });
+      }
+      
+      const { OpenAI } = await import("openai");
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      
+      const resp = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: "ping" }],
+        max_tokens: 5
+      });
+      
+      return res.json({ 
+        ok: true, 
+        text: resp.choices[0].message.content?.slice(0, 20) || "ok",
+        model: resp.model
+      });
+    } catch (e) {
+      console.error("OpenAI health check failed:", e);
+      return res.status(e.status || 500).json({ 
+        ok: false, 
+        status: e.status, 
+        error: e.message
+      });
+    }
+  });
+
   // Initialize services
   await initializeQuestionCoordinator();
   await initializeLeaderboard();
