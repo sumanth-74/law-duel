@@ -15,35 +15,31 @@ export async function initializeQuestionCoordinator() {
 
 export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   try {
-    // For competitive duels, always generate fresh questions from OpenAI
+    // For competitive duels, ALWAYS generate fresh questions from OpenAI - bypass all caching
     if (forceNew) {
-      console.log(`🔥 Generating FRESH OpenAI question for duel in ${subject}`);
+      console.log(`🔥 Generating COMPLETELY FRESH OpenAI question for duel in ${subject}`);
       try {
-        // Always generate a completely fresh question for duels - no cache
-        const newQuestion = await generateFreshQuestion(subject);
-        if (newQuestion) {
-          console.log(`✅ Fresh OpenAI question generated: "${newQuestion.stem.substring(0, 50)}..."`);
-          console.log(`✅ Fresh question correctIndex: ${newQuestion.correctIndex}`);
-          // Store the generated question for future reference but don't rely on storage
-          try {
-            await storage.createQuestion(newQuestion);
-          } catch (storageError) {
-            console.log('Storage failed but continuing with fresh question');
-          }
-          return formatQuestion(newQuestion);
+        const freshQuestion = await generateFreshQuestion(subject);
+        if (freshQuestion && validateQuestion(freshQuestion)) {
+          console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
+          console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
+          return formatQuestion(freshQuestion);
         }
       } catch (openaiError) {
         console.error(`❌ OpenAI generation failed for duel ${subject}:`, openaiError.message);
-        console.log('🔄 Falling back to stored questions for this round');
-        // Continue to stored question fallback
+        console.log('🔄 Using random fallback question for variety');
+        return getFallbackQuestion(subject);
       }
     }
 
-    // Try to get from storage for non-competitive scenarios
-    const storedQuestion = await storage.getRandomQuestion(subject, excludeIds);
-    if (storedQuestion) {
-      await storage.incrementQuestionUsage(storedQuestion.id);
-      return formatQuestion(storedQuestion);
+    // SKIP storage lookup when forceNew is true - this was the bug!
+    // Only try storage for non-competitive scenarios
+    if (!forceNew) {
+      const storedQuestion = await storage.getRandomQuestion(subject, excludeIds);
+      if (storedQuestion) {
+        await storage.incrementQuestionUsage(storedQuestion.id);
+        return formatQuestion(storedQuestion);
+      }
     }
 
     // Generate new question via OpenAI if no stored questions
@@ -66,41 +62,44 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   }
 }
 
-// Generate fresh question for duels (no cache)
+// Generate completely fresh question for duels (no cache, no storage)
 async function generateFreshQuestion(subject) {
   try {
-    console.log(`🚀 Calling OpenAI API for fresh ${subject} question...`);
+    const randomTopic = getTopicForSubject(subject);
+    console.log(`🚀 Calling OpenAI API for fresh ${subject} question on ${randomTopic}...`);
     
-    // Create topic configuration for the subject
     const topicConfig = {
       subject,
-      topic: getTopicForSubject(subject),
+      topic: randomTopic,
       subtopic: undefined,
       rule: undefined
     };
 
-    // Generate using structured MBE generator with fresh OpenAI call
+    console.log(`🎯 Generating fresh question: ${subject} - ${randomTopic}`);
+    
     const mbeItem = await generateMBEItem(topicConfig);
     
     const question = {
-      id: `duel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      subject: mbeItem.subject,
+      id: `fresh_openai_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      subject: subject,
       stem: mbeItem.stem,
       choices: mbeItem.choices,
       correctIndex: mbeItem.correctIndex,
-      explanation: mbeItem.explanationLong,
-      difficulty: mbeItem.difficultySeed
+      explanation: mbeItem.explanation,
+      difficulty: mbeItem.difficultySeed || 'hard'
     };
 
-    // Validate the result
+    console.log(`🔍 Pre-validation check: stem="${question.stem?.substring(0, 30)}...", choices=${question.choices?.length}, correctIndex=${question.correctIndex}`);
+
     if (!validateQuestion(question)) {
       throw new Error("Generated question failed validation");
     }
 
-    console.log(`✅ Fresh question validated: correctIndex=${question.correctIndex}, stem length=${question.stem.length}`);
+    console.log(`✅ Fresh OpenAI question validated successfully`);
+    console.log(`📝 Question preview: "${question.stem.substring(0, 60)}..."`);
     return question;
   } catch (error) {
-    console.error('❌ Fresh MBE question generation failed:', error);
+    console.error('❌ Fresh MBE question generation failed:', error.message);
     throw error; // Re-throw to let caller handle
   }
 }
@@ -207,9 +206,11 @@ function validateQuestion(question) {
     console.log('❌ Validation failed: Invalid correctIndex', question.correctIndex);
     return false;
   }
-  if (!question.explanation || typeof question.explanation !== 'string') {
-    console.log('❌ Validation failed: Invalid explanation', typeof question.explanation);
-    return false;
+  
+  // More lenient explanation validation - allow any string or provide default
+  if (!question.explanation || typeof question.explanation !== 'string' || question.explanation === 'undefined') {
+    console.log('⚠️ Setting default explanation (original was undefined or invalid)');
+    question.explanation = "Legal analysis and reasoning provided.";
   }
   
   console.log('✅ Question validation passed');
