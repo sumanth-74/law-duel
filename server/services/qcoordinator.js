@@ -17,10 +17,12 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   try {
     // For competitive duels, always generate fresh questions from OpenAI
     if (forceNew) {
-      console.log(`Generating fresh OpenAI question for duel in ${subject}`);
+      console.log(`🔥 Generating FRESH OpenAI question for duel in ${subject}`);
       try {
-        const newQuestion = await generateQuestion(subject);
+        // Always generate a completely fresh question for duels - no cache
+        const newQuestion = await generateFreshQuestion(subject);
         if (newQuestion) {
+          console.log(`✅ Fresh OpenAI question generated: "${newQuestion.stem.substring(0, 50)}..."`);
           // Store the generated question for future reference but don't rely on storage
           try {
             await storage.createQuestion(newQuestion);
@@ -30,7 +32,7 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
           return formatQuestion(newQuestion);
         }
       } catch (openaiError) {
-        console.error(`OpenAI generation failed for duel ${subject}:`, openaiError);
+        console.error(`❌ OpenAI generation failed for duel ${subject}:`, openaiError);
         // Fall back to stored question only if OpenAI fails
       }
     }
@@ -59,6 +61,45 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false) {
   } catch (error) {
     console.error('Error getting question:', error);
     return getFallbackQuestion(subject);
+  }
+}
+
+// Generate fresh question for duels (no cache)
+async function generateFreshQuestion(subject) {
+  try {
+    console.log(`🚀 Calling OpenAI API for fresh ${subject} question...`);
+    
+    // Create topic configuration for the subject
+    const topicConfig = {
+      subject,
+      topic: getTopicForSubject(subject),
+      subtopic: undefined,
+      rule: undefined
+    };
+
+    // Generate using structured MBE generator with fresh OpenAI call
+    const mbeItem = await generateMBEItem(topicConfig);
+    
+    const question = {
+      id: `duel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      subject: mbeItem.subject,
+      stem: mbeItem.stem,
+      choices: mbeItem.choices,
+      correctIndex: mbeItem.correctIndex,
+      explanation: mbeItem.explanationLong,
+      difficulty: mbeItem.difficultySeed
+    };
+
+    // Validate the result
+    if (!validateQuestion(question)) {
+      throw new Error("Generated question failed validation");
+    }
+
+    console.log(`✅ Fresh question validated: correctIndex=${question.correctIndex}, stem length=${question.stem.length}`);
+    return question;
+  } catch (error) {
+    console.error('❌ Fresh MBE question generation failed:', error);
+    throw error; // Re-throw to let caller handle
   }
 }
 

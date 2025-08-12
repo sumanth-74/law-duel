@@ -76,6 +76,7 @@ The application uses a monorepo structure with shared types and schemas between 
 
 ### Error Handling and Resilience
 - **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control
+- **Fresh Duel Questions**: Implemented `generateFreshQuestion()` function that bypasses cache and calls OpenAI API directly for each duel round (Updated 2025-08-12)
 - **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
 - **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
 - **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal
