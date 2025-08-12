@@ -150,18 +150,44 @@ async function generateQuestion(subject) {
   }
 }
 
-// Helper function to get appropriate topics for each subject
+// Helper function to get randomized topics for each subject to mix up question types
 function getTopicForSubject(subject) {
-  const topicMap = {
-    "Evidence": "Hearsay",
-    "Contracts": "Formation",
-    "Torts": "Negligence", 
-    "Property": "Estates",
-    "Civil Procedure": "Jurisdiction",
-    "Constitutional Law": "Due Process",
-    "Criminal Law/Procedure": "Fourth Amendment"
+  const topicPools = {
+    "Evidence": [
+      "Hearsay", "Authentication", "Best Evidence Rule", "Privileged Communications",
+      "Character Evidence", "Expert Testimony", "Judicial Notice", "Relevance and Prejudice"
+    ],
+    "Contracts": [
+      "Formation", "Consideration", "Statute of Frauds", "Performance and Breach", 
+      "Remedies", "Third Party Rights", "Parol Evidence Rule", "Conditions"
+    ],
+    "Torts": [
+      "Negligence", "Intentional Torts", "Products Liability", "Defamation",
+      "Privacy Torts", "Nuisance", "Strict Liability", "Economic Torts"
+    ],
+    "Property": [
+      "Estates", "Future Interests", "Landlord-Tenant", "Easements",
+      "Covenants", "Adverse Possession", "Recording Acts", "Mortgages"
+    ],
+    "Civil Procedure": [
+      "Jurisdiction", "Venue", "Pleadings", "Discovery", 
+      "Summary Judgment", "Trial Procedure", "Appeals", "Joinder"
+    ],
+    "Constitutional Law": [
+      "Due Process", "Equal Protection", "First Amendment", "Commerce Clause",
+      "Separation of Powers", "Federalism", "Takings Clause", "Judicial Review"
+    ],
+    "Criminal Law/Procedure": [
+      "Fourth Amendment", "Fifth Amendment", "Sixth Amendment", "Mens Rea",
+      "Actus Reus", "Defenses", "Accomplice Liability", "Search and Seizure"
+    ]
   };
-  return topicMap[subject] || "General Principles";
+  
+  const topics = topicPools[subject] || ["General Principles"];
+  // Randomly select a topic to ensure variety
+  const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+  console.log(`🎲 Selected random topic for ${subject}: ${randomTopic}`);
+  return randomTopic;
 }
 
 function validateQuestion(question) {
@@ -203,62 +229,152 @@ function formatQuestion(question) {
 }
 
 function getFallbackQuestion(subject) {
-  const fallbacks = {
-    "Evidence": {
-      stem: "Under Federal Rule of Evidence 403, evidence may be excluded if its probative value is substantially outweighed by what?",
-      choices: [
-        "Any prejudicial effect",
-        "The danger of unfair prejudice", 
-        "Confusion of the issues",
-        "Misleading the jury"
-      ],
-      correctIndex: 1,
-      explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice.",
-      timeLimit: 60000,
-      deadlineTs: Date.now() + 60000
-    },
-    "Contracts": {
-      stem: "What is required for a valid offer under common law contract formation?",
-      choices: [
-        "Present intent to contract",
-        "Definite and certain terms",
-        "Communication to offeree", 
-        "All of the above"
-      ],
-      correctIndex: 3,
-      explanation: "A valid offer requires present intent, definite terms, and communication to the offeree.",
-      timeLimit: 60000,
-      deadlineTs: Date.now() + 60000
-    },
-    "Torts": {
-      stem: "What are the elements required to establish a negligence claim?",
-      choices: [
-        "Duty, breach, causation, damages",
-        "Intent, act, harm",
-        "Duty, intent, damages",
-        "Breach, harm, intent"
-      ],
-      correctIndex: 0,
-      explanation: "Negligence requires duty, breach of duty, causation, and damages."
-    },
-    "Constitutional Law": {
-      stem: "Under the Commerce Clause, Congress may regulate activities that have what effect on interstate commerce?",
-      choices: [
-        "Any effect whatsoever",
-        "A substantial effect",
-        "A direct effect only",
-        "No effect required"
-      ],
-      correctIndex: 1,
-      explanation: "Congress may regulate activities that substantially affect interstate commerce."
-    }
+  // Multiple fallback questions per subject to add variety
+  const fallbackPools = {
+    "Evidence": [
+      {
+        stem: "Under Federal Rule of Evidence 403, evidence may be excluded if its probative value is substantially outweighed by what?",
+        choices: [
+          "Any prejudicial effect",
+          "The danger of unfair prejudice", 
+          "Confusion of the issues",
+          "Misleading the jury"
+        ],
+        correctIndex: 1,
+        explanation: "FRE 403 allows exclusion when probative value is substantially outweighed by the danger of unfair prejudice."
+      },
+      {
+        stem: "A witness's prior consistent statement is admissible under FRE 801(d)(1)(B) to rehabilitate the witness's credibility when the witness has been charged with what?",
+        choices: [
+          "Bias or improper influence",
+          "Recent fabrication or improper motive",
+          "Poor character for truthfulness",
+          "Lack of personal knowledge"
+        ],
+        correctIndex: 1,
+        explanation: "Prior consistent statements are admissible to rebut charges of recent fabrication or improper influence or motive."
+      }
+    ],
+    "Contracts": [
+      {
+        stem: "What is required for a valid offer under common law contract formation?",
+        choices: [
+          "Present intent to contract",
+          "Definite and certain terms",
+          "Communication to offeree", 
+          "All of the above"
+        ],
+        correctIndex: 3,
+        explanation: "A valid offer requires present intent, definite terms, and communication to the offeree."
+      },
+      {
+        stem: "Under the UCC, a contract for the sale of goods priced at $500 or more must satisfy the Statute of Frauds. Which writing satisfies this requirement?",
+        choices: [
+          "Any writing signed by the party to be charged",
+          "A writing indicating a contract and signed by the party to be charged",
+          "A detailed writing with all essential terms",
+          "A writing that specifies quantity and is signed by the party to be charged"
+        ],
+        correctIndex: 3,
+        explanation: "UCC § 2-201 requires a writing indicating a contract for sale, specifying quantity, and signed by the party to be charged."
+      }
+    ],
+    "Torts": [
+      {
+        stem: "What are the elements required to establish a negligence claim?",
+        choices: [
+          "Duty, breach, causation, damages",
+          "Intent, act, harm",
+          "Duty, intent, damages",
+          "Breach, harm, intent"
+        ],
+        correctIndex: 0,
+        explanation: "Negligence requires duty, breach of duty, causation, and damages."
+      },
+      {
+        stem: "In a products liability case based on strict liability, which element is NOT required to be proven?",
+        choices: [
+          "The product was defective",
+          "The defect caused plaintiff's injury",
+          "The defendant was negligent",
+          "The product was unreasonably dangerous"
+        ],
+        correctIndex: 2,
+        explanation: "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
+      }
+    ],
+    "Property": [
+      {
+        stem: "A fee simple determinable automatically ends when what occurs?",
+        choices: [
+          "The grantor exercises right of entry",
+          "The stated condition is violated",
+          "The grantee transfers the property",
+          "A court declares forfeiture"
+        ],
+        correctIndex: 1,
+        explanation: "A fee simple determinable ends automatically when the stated condition occurs, reverting to the grantor."
+      }
+    ],
+    "Civil Procedure": [
+      {
+        stem: "For a federal court to have specific personal jurisdiction over a non-resident defendant, what is required?",
+        choices: [
+          "Defendant must have systematic contacts with the forum state",
+          "The claim must arise from defendant's forum-related activities",
+          "Defendant must be personally served in the forum state",
+          "Defendant must have minimum contacts of any kind"
+        ],
+        correctIndex: 1,
+        explanation: "Specific personal jurisdiction requires the claim to arise from or relate to the defendant's activities in the forum state."
+      }
+    ],
+    "Constitutional Law": [
+      {
+        stem: "Under the Commerce Clause, Congress may regulate activities that have what effect on interstate commerce?",
+        choices: [
+          "Any effect whatsoever",
+          "A substantial effect",
+          "A direct effect only",
+          "No effect required"
+        ],
+        correctIndex: 1,
+        explanation: "Congress may regulate activities that substantially affect interstate commerce."
+      },
+      {
+        stem: "The Equal Protection Clause applies to which government actions?",
+        choices: [
+          "Federal government actions only",
+          "State government actions only",
+          "Both federal and state actions",
+          "Local government actions only"
+        ],
+        correctIndex: 2,
+        explanation: "Equal protection applies to all government actions - federal (via 5th Amendment due process) and state/local (via 14th Amendment)."
+      }
+    ],
+    "Criminal Law/Procedure": [
+      {
+        stem: "The Fourth Amendment's warrant requirement applies to searches where the defendant had what?",
+        choices: [
+          "A property interest in the place searched",
+          "A reasonable expectation of privacy",
+          "Personal ownership of items seized",
+          "Physical presence during the search"
+        ],
+        correctIndex: 1,
+        explanation: "The Fourth Amendment protects reasonable expectations of privacy, not just property interests."
+      }
+    ]
   };
 
-  const fallback = fallbacks[subject] || fallbacks["Evidence"];
-  console.log(`Using fallback question for ${subject}: ${fallback.stem}`);
+  const fallbackPool = fallbackPools[subject] || fallbackPools["Evidence"];
+  // Randomly select from available fallbacks to add variety
+  const fallback = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
+  console.log(`🎲 Using random fallback question for ${subject}: ${fallback.stem.substring(0, 50)}...`);
   
   return {
-    qid: `fallback_${subject}_${Date.now()}`,
+    qid: `fallback_${subject}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
     stem: fallback.stem,
     choices: fallback.choices,
     correctIndex: fallback.correctIndex,

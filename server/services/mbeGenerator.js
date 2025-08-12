@@ -45,15 +45,28 @@ export async function generateMBEItem({ subject, topic, subtopic, rule }) {
   const ruleText = rule ? ` focusing on ${rule}` : '';
   const subtopicText = subtopic ? `/${subtopic}` : '';
   
+  // Add variety in question styles and difficulty
+  const questionStyles = [
+    "Create a complex fact pattern with multiple parties and legal issues",
+    "Design a scenario with competing legal theories and close analysis required",
+    "Present a case with procedural complications and substantive law intersections",
+    "Construct a multi-jurisdictional problem testing nuanced legal distinctions"
+  ];
+  
+  const randomStyle = questionStyles[Math.floor(Math.random() * questionStyles.length)];
+  
   const prompt = `
-Write an original MBE-style multiple-choice question for ${subject} on ${topic}${subtopicText}${ruleText}.
-Single best answer, exactly 4 options (A–D). 120–180 word fact pattern.
-Test: ${rule || topic} under national law (FRE/FRCP/UCC Art. 2/federal constitutional law as relevant).
-Include rationales for each option (why each is right/wrong) and a 3–6 sentence explanation. 
+${randomStyle} for ${subject} law, specifically testing ${topic}${subtopicText}${ruleText}.
+
+Write an original MBE-style multiple-choice question with exactly 4 options (A–D). 
+Vary the question format - use different fact patterns, party types, and legal scenarios.
+120–180 word fact pattern testing ${rule || topic} under national law.
+Include detailed rationales for each option and comprehensive explanation.
 No "all/none of the above."
-Make this INCREDIBLY DIFFICULT - upper 10% difficulty for bar exam takers.
-Set id = unique string, difficultySeed = "hard", timeLimitSec = 90, license = "educational", status = "active", authorNote = "Generated for Law Duel competitive play".
-Output ONLY JSON matching our schema.`;
+Make this challenging but fair - solid bar exam difficulty.
+CRITICAL: Randomly distribute the correct answer across A, B, C, and D options.
+Set id = unique string, difficultySeed = "hard", timeLimitSec = 60, license = "educational", status = "active".
+Output ONLY JSON with: factPattern, options (array of 4 strings), correctAnswer (A/B/C/D), explanation, rationales (array of 4 explanations).`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -87,12 +100,18 @@ Output ONLY JSON matching our schema.`;
     console.log('OpenAI response structure:', Object.keys(rawResponse));
     console.log('Extracted item structure:', Object.keys(item));
     
-    // Map OpenAI response fields to our expected format
+    // Map OpenAI response fields to our expected format  
     let choices = [];
     if (item.options && Array.isArray(item.options)) {
       choices = item.options.map(opt => typeof opt === 'string' ? opt : opt.text || opt.option || String(opt));
-    } else if (item.choices) {
+    } else if (item.choices && Array.isArray(item.choices)) {
       choices = item.choices;
+    }
+    
+    // Ensure we have exactly 4 choices
+    if (choices.length === 0 && item.options) {
+      console.log('Attempting to extract choices from options structure:', JSON.stringify(item.options).substring(0, 200));
+      choices = Array.isArray(item.options) ? item.options : [];
     }
 
     const mappedItem = {
