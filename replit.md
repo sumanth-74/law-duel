@@ -33,6 +33,16 @@ Preferred communication style: Simple, everyday language.
 - **Daily Casefile System**: Automated daily question generation with fresh content every 24 hours at midnight UTC
 - **Daily Question Rotation**: Questions automatically regenerate with cleanup system removing old questions after 7 days
 
+## Recent Changes (August 13, 2025)
+
+### MBE Subtopic Tracking System
+- **Comprehensive Progress Tracking**: Added granular tracking for all MBE subjects and subtopics (70+ legal areas)
+- **Hard-Won Progress**: Proficiency scores increase slowly (0.5% per correct answer) to reflect true mastery
+- **Smart Recommendations**: System identifies weakest subtopics and provides focused study recommendations
+- **Visual Progress Display**: New SubtopicProgress component shows detailed mastery levels for each legal area
+- **Automatic Subtopic Detection**: Questions automatically tagged with appropriate subtopics based on content analysis
+- **Persistence**: All subtopic progress saved to JSON file for development environment
+
 ## System Architecture
 
 ### Full-Stack TypeScript Application

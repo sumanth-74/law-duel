@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+// @ts-ignore
+import { MBE_TOPICS, identifySubtopic, getRandomSubtopic } from './mbeTopics.js';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -77,6 +79,14 @@ export interface MBEItem {
 }
 
 export async function generateMBEItem({ subject, topic, subtopic, rule }: MBEGenerationRequest): Promise<MBEItem> {
+  // If no subtopic provided, select a random one for this subject
+  if (!subtopic && subject) {
+    const randomSubtopic = getRandomSubtopic(subject);
+    if (randomSubtopic) {
+      subtopic = randomSubtopic.name;
+    }
+  }
+  
   const ruleText = rule ? ` focusing on ${rule}` : '';
   const subtopicText = subtopic ? `/${subtopic}` : '';
   

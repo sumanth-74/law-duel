@@ -170,6 +170,25 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100386877,
       "generatedAt": 1755100326877
+    },
+    {
+      "qid": "fresh_openai_1755100767881_e8f652c9",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "During a heated election season, a state legislature passed a law requiring all candidates for state office to disclose their campaign contributions publicly. A candidate argues that this law violates the First Amendment's free speech protections. What is the most likely outcome if the candidate challenges the law in court?",
+      "choices": [
+        "The law is constitutional because it regulates commercial speech.",
+        "The law is unconstitutional because it restricts political speech.",
+        "The law is unconstitutional because it imposes an undue burden on candidates.",
+        "The law is constitutional because it serves a compelling state interest in transparency."
+      ],
+      "correctIndex": 3,
+      "explanation": "The law is constitutional because it serves a compelling state interest in transparency.",
+      "explanationLong": "The correct answer is that the law is constitutional because it serves a compelling state interest in transparency. The Supreme Court has held that laws requiring disclosure of campaign contributions are generally permissible under the First Amendment, as they promote informed voter decision-making and serve a significant government interest in preventing corruption and the appearance of corruption. In this case, the law's requirement for public disclosure aligns with these principles. The first answer is incorrect because while political speech is protected, the requirement for transparency does not constitute a restriction on speech. The third answer is incorrect because the law does not impose an undue burden on candidates; rather, it provides necessary information to voters. Finally, the fourth answer is incorrect because the law does not regulate commercial speech but rather addresses political speech and campaign financing, which is subject to different standards under the First Amendment.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100827881,
+      "generatedAt": 1755100767881
     }
   ],
   "Property": [
@@ -343,6 +362,25 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100382586,
       "generatedAt": 1755100322586
+    },
+    {
+      "qid": "fresh_openai_1755100771078_c886874a",
+      "subject": "Property",
+      "topic": "Mortgages",
+      "stem": "Alice takes out a mortgage on her home with Bank X for $300,000. The mortgage contains a due-on-sale clause. Alice later decides to sell the house to Bob for $350,000 and does not inform Bank X of the sale. Bank X discovers the sale and seeks to enforce the due-on-sale clause. What is the likely outcome regarding Bank X's ability to enforce the due-on-sale clause?",
+      "choices": [
+        "Bank X cannot enforce the due-on-sale clause because Bob assumed the mortgage.",
+        "Bank X cannot enforce the due-on-sale clause because the sale price exceeded the mortgage amount.",
+        "Bank X can only enforce the due-on-sale clause if Alice defaulted on the mortgage.",
+        "Bank X can enforce the due-on-sale clause because Alice sold the property without their consent."
+      ],
+      "correctIndex": 3,
+      "explanation": "Bank X can enforce the due-on-sale clause because Alice sold the property without their consent, violating the terms of the mortgage.",
+      "explanationLong": "The correct answer is that Bank X can enforce the due-on-sale clause because Alice sold the property without their consent. Under mortgage law, a due-on-sale clause allows the lender to call the entire debt due if the property is sold or transferred without the lender's approval. Here, Alice's sale to Bob without notifying Bank X constitutes a breach of this clause, allowing Bank X to enforce it. The second option is incorrect because the sale price exceeding the mortgage amount does not negate the violation of the due-on-sale clause. The third option is also incorrect because Bob's assumption of the mortgage does not apply here; Alice sold the property without Bank X's consent, which is the key issue. Finally, the fourth option is wrong because enforcement of the due-on-sale clause is based on the unauthorized sale, not on whether Alice defaulted on the mortgage. Thus, Bank X has a valid claim to enforce the clause regardless of Alice's payment status.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100831078,
+      "generatedAt": 1755100771079
     }
   ],
   "Civ Pro": [
@@ -516,6 +554,25 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100393408,
       "generatedAt": 1755100333408
+    },
+    {
+      "qid": "fresh_openai_1755100771285_afbdd8cf",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a diversity case, the plaintiff filed a complaint in federal court alleging that the defendant breached a contract for the sale of goods. The defendant responded with a motion to dismiss for lack of subject matter jurisdiction, arguing that the parties were not completely diverse because both the plaintiff and the defendant were citizens of the same state. The plaintiff counters that the amount in controversy exceeds $75,000, but the defendant insists that the citizenship of the parties is determinative. Which of the following is the correct ruling for the court regarding subject matter jurisdiction?",
+      "choices": [
+        "The court can exercise supplemental jurisdiction over the case since the amount in controversy exceeds $75,000.",
+        "The court may hear the case because the amount in controversy exceeds $75,000, regardless of the parties' citizenship.",
+        "The court must deny the motion to dismiss because federal courts have exclusive jurisdiction over contracts.",
+        "The court must dismiss the case for lack of subject matter jurisdiction because the parties are not completely diverse."
+      ],
+      "correctIndex": 3,
+      "explanation": "The court must dismiss the case for lack of subject matter jurisdiction because the parties are not completely diverse.",
+      "explanationLong": "The correct answer is that the court must dismiss the case for lack of subject matter jurisdiction because the parties are not completely diverse. Under 28 U.S.C. § 1332, federal courts have jurisdiction based on diversity of citizenship only if the parties are citizens of different states, which is not the case here. The plaintiff and defendant being from the same state means there is no complete diversity, rendering the federal court unable to exercise jurisdiction over this case. The amount in controversy exceeding $75,000 does not cure this jurisdictional defect; it is a separate requirement that only applies if diversity exists. Answer choice B is incorrect because the amount in controversy alone cannot confer jurisdiction without complete diversity. Answer choice C fails because supplemental jurisdiction applies to claims that are related to a claim over which the court has original jurisdiction, but here, the foundational requirement of diversity is absent. Finally, answer choice D is incorrect because federal courts do not have exclusive jurisdiction over contracts; they can only hear contract cases under diversity jurisdiction or federal question jurisdiction, neither of which applies here due to the lack of diversity.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100831285,
+      "generatedAt": 1755100771285
     }
   ],
   "Evidence": [
@@ -689,6 +746,25 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100389216,
       "generatedAt": 1755100329216
+    },
+    {
+      "qid": "fresh_openai_1755100768517_e9f07e21",
+      "subject": "Evidence",
+      "topic": "Privileges",
+      "stem": "During a civil trial for breach of contract, the defendant attempts to introduce an email correspondence between himself and his attorney discussing the case strategy. The plaintiff objects, claiming that the email is protected by attorney-client privilege. Which of the following is the most accurate statement regarding the admissibility of the email?",
+      "choices": [
+        "The email is inadmissible because it is a communication made in the course of seeking legal advice.",
+        "The email is inadmissible unless the defendant can prove that the communication was made in furtherance of a crime.",
+        "The email is admissible because it discusses the defendant's strategy, which is not protected by privilege.",
+        "The email is admissible if the defendant voluntarily disclosed its contents to a third party."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that the email is inadmissible because it is a communication made in the course of seeking legal advice, falling under attorney-client privilege.",
+      "explanationLong": "The correct answer is that the email is inadmissible because it is a communication made in the course of seeking legal advice, which is protected under the attorney-client privilege. This privilege allows clients to communicate freely with their attorneys without fear of disclosure. In this case, the email clearly pertains to the defendant's legal strategy concerning the breach of contract case, making it privileged. The first answer is incorrect because discussing strategy with an attorney is precisely what is protected by privilege. The third choice is also incorrect; while disclosure to a third party may waive the privilege, the case does not indicate such disclosure occurred, and thus the email remains protected. Lastly, the fourth answer misapplies the privilege doctrine; the crime-fraud exception is a narrow exception that does not apply here, as there is no indication the email pertains to any criminal activity. Therefore, the attorney-client privilege protects this communication from being admissible in court.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100828517,
+      "generatedAt": 1755100768517
     }
   ],
   "Torts": [
@@ -862,6 +938,25 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100391867,
       "generatedAt": 1755100331867
+    },
+    {
+      "qid": "fresh_openai_1755100771169_5959d856",
+      "subject": "Torts",
+      "topic": "Vicarious Liability",
+      "stem": "During a company-sponsored picnic, an employee, John, was tasked with setting up the event. While driving a company vehicle to pick up supplies, he accidentally hit another car at an intersection, causing injuries to the other driver. The injured driver sued both John and the company for damages. Which of the following statements is correct regarding the company's potential liability under the doctrine of vicarious liability?",
+      "choices": [
+        "The company is not liable because John was not directly performing his job duties at the time of the accident.",
+        "The company is liable only if John was negligent in his driving.",
+        "The company is not liable because the accident happened during a personal errand of John.",
+        "The company is liable because John was acting within the scope of his employment when the accident occurred."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is that the company is liable because John was acting within the scope of his employment when the accident occurred.",
+      "explanationLong": "The correct answer is that the company is liable because John was acting within the scope of his employment when the accident occurred. Under the doctrine of vicarious liability, an employer can be held responsible for the negligent acts of an employee if those acts occur during the course of employment. Here, John was driving a company vehicle to pick up supplies for a company-sponsored event, which is considered within the scope of his employment. The first incorrect answer states that the company is not liable because John was not directly performing his job duties; however, driving to pick up supplies is a task related to his employment. The second incorrect answer suggests that the company is liable only if John was negligent; however, vicarious liability does not depend on the employer's own negligence but rather on the employee's actions within the scope of employment. The final incorrect answer states that the company is not liable because John was running a personal errand; this is inaccurate as he was engaged in a work-related task, thus satisfying the criteria for vicarious liability.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100831169,
+      "generatedAt": 1755100771169
     }
   ],
   "Contracts": [
@@ -978,6 +1073,82 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100237252,
       "generatedAt": 1755100177252
+    },
+    {
+      "qid": "fresh_openai_1755100417004_052ee706",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "Alice and Bob entered into a written contract for the sale of a car, which stated that the car was sold 'as is' with no warranties. After the sale, Alice claims that Bob verbally assured her that the car was in excellent condition. Bob denies making any such statement. If Alice attempts to introduce Bob's alleged oral statement in court, what is the likely outcome regarding the enforceability of the contract's 'as is' clause?",
+      "choices": [
+        "Alice can introduce the oral statement because it pertains to a separate agreement not covered by the written contract.",
+        "Alice can introduce the oral statement because it shows Bob's intent to deceive her about the car's condition.",
+        "Alice cannot introduce the oral statement because the written contract is a complete and final expression of the parties' agreement.",
+        "Alice cannot introduce the oral statement because it contradicts the express terms of the written contract."
+      ],
+      "correctIndex": 2,
+      "explanation": "Alice cannot introduce the oral statement because the written contract is a complete and final expression of the parties' agreement.",
+      "explanationLong": "The correct answer is that Alice cannot introduce the oral statement because the written contract is a complete and final expression of the parties' agreement. Under the parol evidence rule, when a written contract is intended to be a complete and final integration of the parties' agreement, prior or contemporaneous oral statements that contradict the written terms are inadmissible. In this case, the 'as is' clause indicates that the written contract is comprehensive, and Alice's claim of a verbal assurance contradicts that clause. The first answer is incorrect because intent to deceive does not override the parol evidence rule. The third answer is incorrect because there is no separate agreement; the oral statement is directly related to the subject matter of the written contract. The fourth answer is partially correct but does not capture the full legal principle; while the oral statement does contradict the written terms, the primary reason it is inadmissible is due to the contract being a complete integration, not merely because it contradicts express terms.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100477004,
+      "generatedAt": 1755100417004
+    },
+    {
+      "qid": "fresh_openai_1755100329354_1ed94b6f",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "Alice and Bob entered into a written contract for the sale of a car, which included a clause stating that the written agreement constituted the entire agreement between the parties. After the contract was signed, Alice claimed that Bob had verbally promised to repair the car before the sale. Bob denied making any such promise. If Alice attempts to introduce evidence of Bob's alleged verbal promise, what is the likely outcome regarding the enforceability of that evidence?",
+      "choices": [
+        "The evidence of Bob's verbal promise will be inadmissible because the written contract includes an integration clause.",
+        "The evidence of Bob's verbal promise will be admissible because it clarifies the contract's terms.",
+        "The evidence of Bob's verbal promise will be admissible because it shows fraud in the inducement.",
+        "The evidence of Bob's verbal promise will be admissible as a separate agreement."
+      ],
+      "correctIndex": 0,
+      "explanation": "The evidence of Bob's verbal promise will be inadmissible because the written contract includes an integration clause.",
+      "explanationLong": "The correct answer is that the evidence of Bob's verbal promise will be inadmissible because the written contract includes an integration clause. Under the parol evidence rule, when parties have reduced their agreement to writing and included an integration clause, any prior or contemporaneous oral agreements that contradict the written terms are generally not admissible to alter the contract. In this case, the contract explicitly states that it constitutes the entire agreement, thereby precluding Alice from introducing evidence of Bob's alleged verbal promise. The first answer is incorrect because it misapplies the parol evidence rule by suggesting that clarifying evidence is allowed, which is not the case when a contract is fully integrated. The third answer fails as it incorrectly assumes that evidence of fraud can bypass the integration clause; while fraud can be a valid claim, it does not allow for contradicting integrated terms. The fourth answer is wrong because it mischaracterizes the nature of the alleged promise; it does not constitute a separate agreement but rather contradicts the terms of the existing agreement.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100389354,
+      "generatedAt": 1755100329354
+    },
+    {
+      "qid": "fresh_openai_1755100331225_ae70083d",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "Alice and Bob entered into a written contract for the sale of a car. The contract included a clause stating that it represented the entire agreement between the parties. After the contract was signed, Alice claimed that Bob had verbally agreed to provide her with a warranty for the car, which was not included in the written document. Bob denied this claim. Which of the following is the most likely outcome if Alice attempts to introduce the verbal warranty as evidence in court?",
+      "choices": [
+        "The court will not allow the verbal warranty because of the integration clause in the contract.",
+        "The court will allow the verbal warranty because it clarifies the terms of the agreement.",
+        "The court will allow the verbal warranty because it is a separate agreement.",
+        "The court will not allow the verbal warranty because parol evidence is inadmissible in all circumstances."
+      ],
+      "correctIndex": 0,
+      "explanation": "The court will not allow the verbal warranty because of the integration clause in the contract.",
+      "explanationLong": "The correct answer is that the court will not allow the verbal warranty because of the integration clause in the contract. Under the parol evidence rule, if a written contract is intended to be a complete and final expression of the parties' agreement, any prior or contemporaneous oral agreements that contradict the written terms are inadmissible. Here, the contract explicitly states that it is the entire agreement, making it clear that any prior verbal agreements, like the warranty, cannot be introduced as evidence. The first answer is incorrect because the purpose of the parol evidence rule is to prevent the introduction of prior agreements that contradict the written contract, not to clarify it. The third answer mistakenly suggests that the warranty is a separate agreement; however, it is directly related to the terms of the sale and thus would be governed by the parol evidence rule. The fourth answer is incorrect because the parol evidence rule does allow for certain exceptions, such as evidence of fraud or mistake, but does not apply here as no such circumstances are presented.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100391225,
+      "generatedAt": 1755100331225
+    },
+    {
+      "qid": "fresh_openai_1755100772116_6edb4165",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "Alice and Bob entered into a written agreement for the sale of a car, which included a clause stating that the written contract was the complete and exclusive statement of their agreement. After the contract was signed, Alice claimed that Bob had promised her a warranty on the car, but this warranty was not included in the written agreement. Bob denied making any such promise. If Alice attempts to introduce evidence of Bob's alleged warranty promise, what is the likely outcome under the parol evidence rule?",
+      "choices": [
+        "Alice cannot introduce the evidence of the warranty promise because the written agreement is fully integrated.",
+        "Alice cannot introduce the evidence of the warranty promise because it contradicts the written agreement.",
+        "Alice can introduce the evidence of the warranty promise as a separate agreement.",
+        "Alice can introduce the evidence of the warranty promise because it clarifies the terms of the written agreement."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alice cannot introduce the evidence of the warranty promise because the written agreement is fully integrated.",
+      "explanationLong": "The correct answer is that Alice cannot introduce the evidence of the warranty promise because the written agreement is fully integrated. Under the parol evidence rule, if a written contract is deemed to be a complete and exclusive statement of the parties' agreement, any prior or contemporaneous oral agreements that contradict or modify the written terms are generally inadmissible. In this case, the contract explicitly states it is the complete agreement, thus barring the introduction of Bob's alleged oral warranty promise. The first option is incorrect because the parol evidence rule does not allow for the introduction of evidence to clarify terms when the contract is fully integrated. The third option fails because it misunderstands that the warranty claim is not a separate agreement but rather a modification to the existing contract. Lastly, the fourth option is misleading as it implies that contradictory evidence can be introduced; however, it is not just about contradiction but also about the completeness of the written agreement that prevents the introduction of the oral promise.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100832116,
+      "generatedAt": 1755100772116
     }
   ],
   "Crim": [
@@ -1151,6 +1322,25 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100384515,
       "generatedAt": 1755100324515
+    },
+    {
+      "qid": "fresh_openai_1755100769260_8040b371",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Alex threatens to harm Jamie and then pushes Jamie to the ground. Jamie, feeling threatened, calls the police. Later, Alex is charged with assault. What is the most likely outcome of the case against Alex?",
+      "choices": [
+        "Alex will be acquitted because there was no actual physical harm done to Jamie.",
+        "Alex will be acquitted because the act was not committed in a public place.",
+        "Alex will be convicted of assault only if Jamie suffered psychological harm.",
+        "Alex will be convicted of assault because the threat and the physical act constitute an assault."
+      ],
+      "correctIndex": 3,
+      "explanation": "Alex will be convicted of assault because the threat combined with the physical act constitutes an assault under criminal law.",
+      "explanationLong": "The correct answer is that Alex will be convicted of assault because both the threat to harm Jamie and the actual physical act of pushing constitute the elements of assault. In criminal law, assault can occur through either a threat of harm or actual physical contact, and here both elements are present. The second option is incorrect because assault does not require actual physical harm; the threat and the act of pushing suffice. The third option is also incorrect; while psychological harm can be relevant in some contexts, it is not a necessary element for an assault charge. Lastly, the fourth option is flawed because the location of the act does not negate the assault; it is the nature of the act and the threat that are critical, not whether it occurred in public. Thus, Alex's actions clearly meet the criteria for assault.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100829260,
+      "generatedAt": 1755100769260
     }
   ]
 }

@@ -135,6 +135,8 @@ class SoloChallengeService {
 
   // Submit an answer to a challenge
   async submitAnswer(challengeId, questionId, userAnswer) {
+    // Import subtopic tracking
+    const { subtopicProgressService } = await import('./subtopicProgressService.js');
     const challenge = this.activeChallenges.get(challengeId);
     if (!challenge) {
       throw new Error('Challenge not found');
@@ -173,6 +175,21 @@ class SoloChallengeService {
     challenge.difficulty = newDifficulty;
 
     await this.saveToFile();
+
+    // Track subtopic progress
+    try {
+      const subtopicResult = await subtopicProgressService.recordAttempt(
+        challenge.userId,
+        challenge.subject,
+        question.question || question.stem || '',
+        question.explanation || '',
+        isCorrect,
+        this.getDifficultyName(challenge.difficulty)
+      );
+      console.log(`📊 Subtopic progress updated: ${subtopicResult.subject}/${subtopicResult.subtopic} - Proficiency: ${subtopicResult.newProficiency.toFixed(1)}%`);
+    } catch (error) {
+      console.error('Error tracking subtopic progress:', error);
+    }
 
     return {
       isCorrect,
@@ -250,6 +267,13 @@ class SoloChallengeService {
   getChallengeStatus(userId) {
     const todaysChallenge = this.getTodaysChallenge(userId);
     return todaysChallenge || { isDailyComplete: false };
+  }
+
+  // Helper to get difficulty name
+  getDifficultyName(level) {
+    if (level <= 3) return 'easy';
+    if (level <= 7) return 'medium';
+    return 'hard';
   }
 }
 

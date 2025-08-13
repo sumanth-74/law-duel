@@ -658,6 +658,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // === SUBTOPIC PROGRESS ROUTES ===
+  
+  // Get detailed subtopic progress for current user
+  app.get("/api/stats/subtopics", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      if (!userId) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { subtopicProgressService } = await import('./services/subtopicProgressService.js');
+      const progress = subtopicProgressService.getDetailedProgress(userId);
+      
+      res.json(progress);
+    } catch (error: any) {
+      console.error("Error fetching subtopic progress:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get study recommendations based on weak areas
+  app.get("/api/stats/recommendations", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      if (!userId) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { subtopicProgressService } = await import('./services/subtopicProgressService.js');
+      const recommendations = subtopicProgressService.getStudyRecommendations(userId);
+      
+      res.json(recommendations);
+    } catch (error: any) {
+      console.error("Error fetching study recommendations:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // === ASYNC DUELS ROUTES (Friend Challenges Only) ===
 
   // Create async match with friend

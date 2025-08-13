@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MasteryProgress } from '@/components/MasteryProgress';
+import SubtopicProgress from '@/components/SubtopicProgress';
 import { useAuth } from '@/hooks/useAuth';
-import { ArrowLeft, Trophy, TrendingUp, BarChart3, Clock } from 'lucide-react';
+import { ArrowLeft, Trophy, TrendingUp, BarChart3, Clock, BookOpen } from 'lucide-react';
 import { Link } from 'wouter';
 import LawDuelLogo from '@/components/LawDuelLogo';
 
@@ -49,10 +50,14 @@ export default function Stats() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-2xl mx-auto">
+          <TabsList className="grid grid-cols-5 w-full max-w-3xl mx-auto">
             <TabsTrigger value="mastery" className="flex items-center gap-2">
               <Trophy className="w-4 h-4" />
               Mastery
+            </TabsTrigger>
+            <TabsTrigger value="subtopics" className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              Subtopics
             </TabsTrigger>
             <TabsTrigger value="performance" className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
@@ -70,6 +75,10 @@ export default function Stats() {
 
           <TabsContent value="mastery" className="space-y-6">
             <MasteryProgress />
+          </TabsContent>
+
+          <TabsContent value="subtopics" className="space-y-6">
+            <SubtopicProgress />
           </TabsContent>
 
           <TabsContent value="performance" className="space-y-6">
