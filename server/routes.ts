@@ -10,7 +10,7 @@ import { registerSchema, loginSchema } from "@shared/schema";
 import { statsService } from "./services/statsService";
 import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
 import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
-import { initializeLeaderboard, updateBotActivity } from "./services/leaderboard.js";
+import { initializeLeaderboard, updateBotActivity, updatePlayerStats } from "./services/leaderboard.js";
 import { generateMBEItem } from "./services/mbeGenerator";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
@@ -197,6 +197,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Initialize user stats
       await statsService.initializeUserStats(user.id);
+      
+      // Add new user to leaderboard JSON file
+      updatePlayerStats(user.id, user.username, user.points || 0, user.level || 1);
       
       // Auto-login after registration
       (req.session as any).userId = user.id;
@@ -407,6 +410,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+      
+      // Sync with leaderboard JSON file to ensure real users appear on leaderboard
+      updatePlayerStats(req.params.id, user.username, user.points, user.level);
       
       // Don't return password
       const { password, ...userResponse } = user;
