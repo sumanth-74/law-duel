@@ -96,10 +96,10 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center text-purple-300 font-cinzel">
               <Mail className="w-5 h-5 mr-2" />
-              Async Inbox
+              Friend Games
               {unreadCount > 0 && (
-                <Badge className="ml-2 bg-red-500 text-white border-0">
-                  {unreadCount}
+                <Badge className="ml-2 bg-red-500 text-white border-0 animate-pulse">
+                  {unreadCount} waiting
                 </Badge>
               )}
             </CardTitle>
@@ -130,8 +130,9 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
           {inbox.length === 0 ? (
             <div className="text-center py-8 text-slate-400">
               <Mail className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No async matches yet</p>
-              <p className="text-sm">Start a new async duel to see it here</p>
+              <p className="text-lg">No friend games yet</p>
+              <p className="text-sm mt-2">Type a friend's username on the main screen to start</p>
+              <p className="text-xs mt-1 text-purple-400">Games are asynchronous - play at your own pace!</p>
             </div>
           ) : (
             <>
@@ -157,10 +158,13 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
                           <div className="flex items-center space-x-3">
                             <div>
                               <div className="font-semibold text-slate-200">
-                                {match.subject} vs @{match.opponent}
+                                vs @{match.opponent}
                               </div>
                               <div className="text-sm text-slate-400">
-                                Round {match.round} · {formatTimeLeft(match.timeLeft)}
+                                {match.subject} · Round {match.round}/10
+                              </div>
+                              <div className="text-xs text-amber-400">
+                                {formatTimeLeft(match.timeLeft)}
                               </div>
                             </div>
                           </div>
@@ -258,7 +262,8 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
           )}
 
           <div className="text-center text-sm text-slate-400 pt-4 border-t border-slate-700">
-            Matches refresh every 30 seconds. Turn deadline: 24 hours.
+            <p>Take your turn when you're ready • Games expire after 24 hours of inactivity</p>
+            <p className="text-xs mt-1">Your friend will be notified when you make a move</p>
           </div>
         </CardContent>
       </Card>

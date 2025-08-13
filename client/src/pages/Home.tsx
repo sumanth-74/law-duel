@@ -50,6 +50,7 @@ export default function Home() {
   const [challengeNotification, setChallengeNotification] = useState<ChallengeNotification | null>(null);
   const [showAsyncInbox, setShowAsyncInbox] = useState(false);
   const [showAsyncMatch, setShowAsyncMatch] = useState<string | null>(null);
+  const [asyncNotificationCount, setAsyncNotificationCount] = useState(0);
   const wsRef = useRef<WebSocket | null>(null);
   
   // Check if new user needs character creation
@@ -66,6 +67,31 @@ export default function Home() {
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
   const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
+
+  // Fetch async inbox notifications count
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchNotificationCount = async () => {
+      try {
+        const response = await fetch('/api/async/inbox', {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const activeGames = data.matches?.filter((m: any) => m.status === 'active' && m.yourTurn) || [];
+          setAsyncNotificationCount(activeGames.length);
+        }
+      } catch (error) {
+        console.error('Error fetching notification count:', error);
+      }
+    };
+
+    fetchNotificationCount();
+    const interval = setInterval(fetchNotificationCount, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   // WebSocket connection for real-time features
   useEffect(() => {
@@ -124,6 +150,15 @@ export default function Home() {
             setGameMode('duel');
             setDuelData(message.payload);
             break;
+            
+          case 'async:turn_notification':
+            setAsyncNotificationCount(prev => prev + 1);
+            toast({
+              title: "Your Turn!",
+              description: `${message.payload.opponentName} made their move in your game`,
+              variant: "default"
+            });
+            break;
         }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
@@ -143,7 +178,49 @@ export default function Home() {
     };
   }, [user, toast]);
 
-  // Send friend challenge
+  // Start async friend game
+  const handleStartAsyncFriendGame = async () => {
+    if (!gameSettings.friendUsername.trim()) {
+      toast({
+        title: "Username Required",
+        description: "Please enter your friend's username",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const response = await apiRequest('/api/async/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          opponentUsername: gameSettings.friendUsername,
+          subject: gameSettings.subject
+        })
+      });
+
+      toast({
+        title: "Game Started!",
+        description: `New game with ${gameSettings.friendUsername}`,
+        variant: "default"
+      });
+
+      // Clear the username field
+      setGameSettings(prev => ({ ...prev, friendUsername: '' }));
+      
+      // Open the async match directly
+      if (response.matchId) {
+        setShowAsyncMatch(response.matchId);
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to Start Game",
+        description: error instanceof Error ? error.message : "Could not start game with this user",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Send friend challenge (for live challenges - kept for future use)
   const sendFriendChallenge = async () => {
     if (!gameSettings.friendUsername.trim()) {
       toast({
@@ -647,57 +724,69 @@ export default function Home() {
                   </CardContent>
                 </Card>
 
-                {/* Play with Friend */}
+                {/* Play with Friend - Async Style */}
                 <Card className="bg-black/40 border-purple-500/20">
                   <CardHeader>
                     <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
-                      👥 Play with a Friend
-                      <Badge variant="default" className="bg-purple-600/30 text-purple-200 border-purple-500/50">Ranked</Badge>
+                      👥 Play with Friends
+                      <Badge variant="default" className="bg-blue-600/30 text-blue-200 border-blue-500/50">Async</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Subject</label>
-                      <Select 
-                        value={gameSettings.subject} 
-                        onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {SUBJECTS.map(subject => (
-                            <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Friend's Username</label>
-                      <Input
-                        placeholder="Enter username"
-                        value={gameSettings.friendUsername}
-                        onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-3">
+                      <label className="text-sm font-medium mb-2 block">Start New Game</label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Friend's username"
+                          value={gameSettings.friendUsername}
+                          onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
+                          className="flex-1"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
+                              handleStartAsyncFriendGame();
+                            }
+                          }}
+                        />
+                        <Select 
+                          value={gameSettings.subject}
+                          onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                        >
+                          <SelectTrigger className="w-40">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {SUBJECTS.map(subject => (
+                              <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <Button 
-                        onClick={handleStartFriendGame} 
-                        className="bg-purple-600 hover:bg-purple-700 text-white" 
-                        size="lg"
+                        onClick={handleStartAsyncFriendGame}
+                        className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white" 
                         disabled={!gameSettings.friendUsername.trim()}
                       >
-                        Live Challenge
+                        Start Game
                       </Button>
+                    </div>
+                    
+                    <div className="border-t border-purple-500/20 pt-4">
                       <Button 
                         onClick={() => setShowAsyncInbox(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white" 
+                        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white" 
                         size="lg"
                       >
-                        Async Inbox
+                        <Bell className={`h-4 w-4 mr-2 ${asyncNotificationCount > 0 ? 'animate-pulse' : ''}`} />
+                        View Active Games
+                        {asyncNotificationCount > 0 && (
+                          <Badge className="ml-2 bg-red-500 text-white">
+                            {asyncNotificationCount}
+                          </Badge>
+                        )}
                       </Button>
+                      <p className="text-xs text-purple-400 mt-2 text-center">
+                        {asyncNotificationCount > 0 ? `${asyncNotificationCount} games waiting for you` : 'Play on your own time'}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
