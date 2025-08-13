@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AvatarRenderer } from './AvatarRenderer';
+import { AtticusCat } from './AtticusCat';
 import type { User, QuestionData, DuelResultData, DuelFinishedData } from '@shared/schema';
 
 interface DuelArenaProps {
@@ -445,7 +446,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
                     title={`Ask Atticus for a hint (${3 - duelState.hintsUsed} remaining)`}
                     data-testid="button-hint"
                   >
-                    <i className="fas fa-cat"></i>
+                    <AtticusCat size="xs" className="inline-block" />
                   </button>
                   <span className="text-xs text-muted">Hints: {duelState.hintsUsed}/3</span>
                 </div>
@@ -494,10 +495,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
               <div className="bg-mystic-gold/10 border border-mystic-gold/30 rounded-xl p-4 mt-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-mystic-gold rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6 fill-dark-bg">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3-9c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm6 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-3 5c1.66 0 3-1.34 3-3h-6c0 1.66 1.34 3 3 3z"/>
-                      <path d="M8 4c0-.55-.45-1-1-1s-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4zm10 0c0-.55-.45-1-1-1s-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4z"/>
-                    </svg>
+                    <AtticusCat size="md" className="opacity-90" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-mystic-gold mb-1">Atticus Says:</p>
@@ -518,7 +516,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           <div className="bg-mystic-gold/10 border border-mystic-gold/30 rounded-xl p-4 mb-6" data-testid="hint-display">
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-mystic-gold rounded-lg flex items-center justify-center flex-shrink-0">
-                <i className="fas fa-cat text-dark-bg text-sm"></i>
+                <AtticusCat size="sm" className="opacity-90" />
               </div>
               <div>
                 <p className="text-sm font-medium text-mystic-gold mb-1">Atticus whispers:</p>
