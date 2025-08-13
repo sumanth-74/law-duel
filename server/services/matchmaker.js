@@ -4,7 +4,7 @@ import { getQuestion } from "./qcoordinator.js";
 import { storage } from "../storage.js";
 import { getWeaknessTargetedQuestions, logTargeting } from "./weaknessTargeting.js";
 import { updateWeeklyLadder } from "./weeklyLadder.js";
-import { subtopicProgressService } from "./subtopicProgressService.js";
+import { progressService } from "../progress.js";
 
 // North Star configuration: All modes use 5 questions
 const MATCH_QUESTIONS = 5;
@@ -293,17 +293,17 @@ async function runDuel(wss, roomCode, players, subject) {
         // Track subtopic progress for human players (not bots)
         if (ws.profile?.id && !ws.isBot) {
           try {
-            const progressResult = await subtopicProgressService.recordAttempt(
-              ws.profile.id,
-              question.subject,
-              question.stem,
-              question.explanation,
+            const progressResult = await progressService.recordAttempt({
+              userId: ws.profile.id,
+              duelId: roomCode,
+              questionId: question.qid,
+              subject: question.subject,
+              subtopic: question.subtopic || question.subject, // Use subtopic if available
+              difficulty: match.difficulty,
               correct,
-              match.difficulty, // Pass current difficulty level
-              answer.timeMs,    // Time to answer
-              roomCode,         // Duel ID
-              question.qid      // Question ID
-            );
+              msToAnswer: answer.timeMs,
+              ts: Date.now()
+            });
             
             // Store progress result for inclusion in response
             if (progressResult) {

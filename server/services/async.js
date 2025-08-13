@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { questionBank } from '../questionBank.js';
 import { storage } from '../storage.js';
-import { subtopicProgressService } from './subtopicProgressService.js';
+import { progressService } from '../progress.js';
 
 const ASYNC_MATCHES_FILE = path.join(process.cwd(), 'data/async_matches.json');
 const ASYNC_QUEUE_FILE = path.join(process.cwd(), 'data/async_queue.json');
@@ -312,17 +312,17 @@ class AsyncDuels {
       // Track subtopic progress for human players
       if (!player.id.startsWith('bot_')) {
         try {
-          await subtopicProgressService.recordAttempt(
-            player.id,
-            currentTurn.subject || match.subject,
-            currentTurn.stem,
-            currentTurn.explanation,
-            isCorrect,
-            currentTurn.difficulty || 1,
-            answer ? answer.ms : 60000, // Use 60s if no answer
-            matchId, // Use match ID as duel ID
-            currentTurn.qid // Question ID
-          );
+          await progressService.recordAttempt({
+            userId: player.id,
+            duelId: matchId,
+            questionId: currentTurn.qid,
+            subject: currentTurn.subject || match.subject,
+            subtopic: currentTurn.subtopic || currentTurn.subject || match.subject,
+            difficulty: currentTurn.difficulty || 1,
+            correct: isCorrect,
+            msToAnswer: answer ? answer.ms : 60000,
+            ts: Date.now()
+          });
         } catch (error) {
           console.error('Error recording subtopic progress in async duel:', error);
         }

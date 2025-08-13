@@ -273,6 +273,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all subtopic stats for the current user - Per North Star requirement
+  app.get("/api/stats/subtopics", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { progressService } = await import("./progress.js");
+      const stats = progressService.getSubtopicStats(userId);
+      
+      // Include zero stats for all subjects/subtopics per requirement
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to fetch subtopic stats", error: error.message });
+    }
+  });
+
+  // Get public profile by username - Per North Star requirement
+  app.get("/api/profile/:username", async (req, res) => {
+    try {
+      const username = req.params.username;
+      const user = await storage.getUserByUsername(username);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Get progress data
+      const { progressService } = await import("./progress.js");
+      const profileData = progressService.getPublicProfile(user.id);
+      
+      // Return public profile data
+      res.json({
+        username: user.username,
+        level: user.level || 1,
+        xp: user.xp || 0,
+        elo: user.points || 1200,
+        wins: user.wins || 0,
+        losses: user.losses || 0,
+        winRate: user.wins && user.losses ? Math.round((user.wins / (user.wins + user.losses)) * 100) : 0,
+        ...profileData
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to fetch profile", error: error.message });
+    }
+  });
+
   // Get mastery progress for the current user
   app.get("/api/mastery/progress", requireAuth, async (req: any, res) => {
     try {
