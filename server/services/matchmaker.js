@@ -197,7 +197,7 @@ async function runDuel(wss, roomCode, players, subject) {
 
   // Get weakness targeting for both players (use first player for targeting)
   const player1Id = players[0].profile?.id || 'guest';
-  const questionTargets = getWeaknessTargetedQuestions(player1Id, subject, MATCH_QUESTIONS);
+  const questionTargets = await getWeaknessTargetedQuestions(player1Id, subject, MATCH_QUESTIONS);
   logTargeting(player1Id, questionTargets);
   match.questionTargets = questionTargets;
 
@@ -217,7 +217,7 @@ async function runDuel(wss, roomCode, players, subject) {
       // Use adaptive difficulty from weakness targeting (based on user mastery)
       const targetDifficulty = targetInfo?.difficulty || match.difficulty;
       
-      console.log(`📈 Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.targetType || 'normal'}`);
+      console.log(`📈 Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.type || 'normal'}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
       let question, err;
       for (let tries = 0; tries < 4; tries++) {
@@ -431,7 +431,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 
   // Get weakness targeting for the human player
   const playerId = humanWs.profile?.id || 'guest';
-  const questionTargets = getWeaknessTargetedQuestions(playerId, subject, MATCH_QUESTIONS);
+  const questionTargets = await getWeaknessTargetedQuestions(playerId, subject, MATCH_QUESTIONS);
   logTargeting(playerId, questionTargets);
   match.questionTargets = questionTargets;
 
@@ -451,7 +451,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       // Use adaptive difficulty from weakness targeting (based on user mastery)
       const targetDifficulty = targetInfo?.difficulty || match.difficulty;
       
-      console.log(`📈 Bot Duel Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.targetType || 'normal'}`);
+      console.log(`📈 Bot Duel Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.type || 'normal'}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
       let question, err;
       for (let tries = 0; tries < 4; tries++) {

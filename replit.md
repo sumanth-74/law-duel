@@ -33,7 +33,15 @@ Preferred communication style: Simple, everyday language.
 - **Daily Casefile System**: Automated daily question generation with fresh content every 24 hours at midnight UTC
 - **Daily Question Rotation**: Questions automatically regenerate with cleanup system removing old questions after 7 days
 
-## Recent Changes (August 13, 2025)
+## Recent Changes (August 13, 2025 - Latest Core Loop Update)
+
+### Stable Core Loop Implementation
+- **Canonical Taxonomy Service**: Created server/taxonomy.js as single source of truth for all MBE subjects/subtopics
+- **Progress Tracking Service**: Built server/progress.js with idempotent recording that captures attempts immediately
+- **Weakness Targeting**: Implemented server/services/weaknessTargeting.js ensuring ≥3/5 questions from weakest subtopics
+- **Adaptive Difficulty**: Questions scale based on player mastery (lower mastery = easier questions for learning)
+- **API Endpoints**: Added /api/stats/subtopics and /api/profile/:username for stats and public profiles
+- **Integration Complete**: Progress tracking integrated into matchmaker and async duels with proper subtopic tagging
 
 ### Comprehensive MBE Subtopic Implementation
 - **Detailed Subtopic Structure**: Implemented full MBE subtopic breakdown with 75+ specific legal areas
