@@ -291,9 +291,9 @@ export class StatsService {
       .orderBy(desc(users.overallElo))
       .limit(limit * 2); // Get extra users to account for filtering
 
-    // Filter out users with zero points (default ELO is 1200) or who haven't played
+    // Filter out users with zero points - only show players who have earned points
     const activeUsers = usersList.filter(user => 
-      user.points > 0 || user.totalQuestionsAnswered > 0
+      user.points > 0 && !user.id.startsWith('sb_')
     );
 
     return activeUsers.slice(0, limit).map((user, index) => {
