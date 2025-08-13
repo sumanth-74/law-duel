@@ -84,7 +84,10 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Monetization Strategy**: Pay-to-continue model when all lives are lost, allowing players to restore 3 lives and continue their challenge
 - **Daily Question System**: Automatic generation of fresh daily questions with OpenAI integration, topic rotation based on day of year
 - **Daily Question Management**: Automated cleanup system removes questions older than 7 days, with scheduled regeneration at midnight UTC
-- **Daily Streak Tracking**: User streaks with milestone bonuses, comprehensive attempt tracking and XP rewards (Updated 2025-08-13)
+- **Daily Streak System**: Comprehensive daily participation tracking with milestone rewards at 3, 7, 14, 30, 50, and 100 days
+- **Streak Milestone Rewards**: Bonus XP ranging from 25 XP (3-day) to 1000 XP (100-day) with visual celebrations and progress tracking
+- **Daily Participation Logic**: Streaks continue for any daily attempt (correct or incorrect), resetting only when days are missed
+- **Enhanced UI Feedback**: Streak flames, milestone badges, progress bars, and motivational messages for building momentum (Updated 2025-08-13)
 
 ### Error Handling and Resilience
 - **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control

@@ -181,10 +181,21 @@ export default function DailyCasefile() {
                 <div className="text-sm text-purple-400">Experience Earned</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-200">
+                <div className="text-2xl font-bold text-purple-200 flex items-center justify-center gap-1">
+                  {attempt.streakAfter > 0 && <span className="text-orange-400">🔥</span>}
                   {attempt.streakAfter}
+                  {attempt.streakAfter >= 7 && <span className="text-yellow-400">⭐</span>}
                 </div>
                 <div className="text-sm text-purple-400">Daily Streak</div>
+                {attempt.streakAfter >= 3 && (
+                  <div className="text-xs text-orange-400 mt-1">
+                    {attempt.streakAfter >= 100 ? "Legendary!" : 
+                     attempt.streakAfter >= 50 ? "Unstoppable!" :
+                     attempt.streakAfter >= 30 ? "Amazing!" :
+                     attempt.streakAfter >= 14 ? "Incredible!" :
+                     attempt.streakAfter >= 7 ? "On fire!" : "Building momentum!"}
+                  </div>
+                )}
               </div>
               <div className="text-center">
                 <div className="text-xl font-bold text-purple-200">
@@ -282,6 +293,23 @@ export default function DailyCasefile() {
                     />
                   </div>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Streak Milestone Achievement */}
+        {submitMutation.data?.streakMilestone && (
+          <Card className="bg-gradient-to-r from-yellow-900/40 to-orange-900/40 border-yellow-500/50 mb-6">
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl font-bold text-yellow-200 mb-2">
+                🏆 Streak Milestone Achieved! 🏆
+              </div>
+              <div className="text-lg text-yellow-300">
+                {submitMutation.data.streakMilestone.level} Days in a Row!
+              </div>
+              <div className="text-xl font-bold text-yellow-100 mt-2">
+                +{submitMutation.data.streakMilestone.bonus} Bonus XP
               </div>
             </CardContent>
           </Card>

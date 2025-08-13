@@ -286,36 +286,44 @@ export class DailyCasefileService {
       throw new Error('User not found');
     }
     
-    // Calculate streak
+    // Calculate streak - daily participation streak (not just correct answers)
     const today = this.getTodayDateString();
     const yesterday = new Date();
     yesterday.setUTCDate(yesterday.getUTCDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
     
-    let newStreak = 1;
-    if (correct) {
-      if (user.lastDailyDate === yesterdayStr) {
-        newStreak = user.dailyStreak + 1;
-      }
-    } else {
-      newStreak = 0; // Streak breaks on incorrect answer
+    let newStreak = 1; // Starting today's attempt
+    if (user.lastDailyDate === yesterdayStr) {
+      // Consecutive day - continue streak
+      newStreak = user.dailyStreak + 1;
+    } else if (user.lastDailyDate && user.lastDailyDate !== today) {
+      // Missed a day - streak resets to 1 (today's attempt)
+      newStreak = 1;
     }
+    // If lastDailyDate is null, this is their first attempt ever, streak = 1
     
     // Calculate rewards
     const baseXp = correct ? 150 : 30;
     const masteryMultiplier = correct ? 2 : 1;
     const masteryDelta = progressionService.calculateMasteryPoints(correct, "hard") * masteryMultiplier;
     
-    // Check for streak milestone
+    // Check for streak milestone (daily participation milestones)
     let streakMilestone: { level: number; bonus: number } | undefined;
     let bonusXp = 0;
-    if (correct && [3, 7, 14, 30].includes(newStreak)) {
-      const bonuses = { 3: 50, 7: 100, 14: 200, 30: 400 };
+    if ([3, 7, 14, 30, 50, 100].includes(newStreak)) {
+      const bonuses = { 3: 25, 7: 75, 14: 150, 30: 300, 50: 500, 100: 1000 };
       bonusXp = bonuses[newStreak as keyof typeof bonuses];
       streakMilestone = { level: newStreak, bonus: bonusXp };
+      console.log(`🔥 Daily streak milestone reached: ${newStreak} days! Bonus XP: ${bonusXp}`);
     }
     
-    const totalXp = baseXp + bonusXp;
+    // Additional correct answer bonus (separate from streak)
+    let correctBonus = 0;
+    if (correct) {
+      correctBonus = Math.floor(newStreak * 5); // 5 XP per streak day for correct answers
+    }
+    
+    const totalXp = baseXp + bonusXp + correctBonus;
     
     // Update user stats
     const bestStreak = Math.max(user.bestDailyStreak, newStreak);
