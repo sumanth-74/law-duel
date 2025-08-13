@@ -35,6 +35,14 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 13, 2025)
 
+### Question Pool System for Instant Serving
+- **Pre-Generation Pool**: Questions now pre-generated in background for instant serving during duels
+- **Zero Latency**: Eliminated OpenAI generation delay during live duels - questions served instantly from pool
+- **Smart Batching**: Efficient generation in small batches (3 at a time) to avoid API rate limits
+- **Progressive Loading**: Prioritizes common difficulties (1-2) first, then generates higher difficulties
+- **Auto-Refill**: Pool automatically maintains 5 questions per difficulty level per subject
+- **Fallback Protection**: Direct generation backup if pool is empty, ensuring 100% reliability
+
 ### VS Mode Progressive Difficulty System
 - **Unified Question Generation**: VS mode (live duels and friend challenges) now uses OpenAI-generated questions with progressive difficulty
 - **Difficulty Progression**: Questions increase in difficulty every 2 rounds (Rounds 1-2: D1, 3-4: D2, 5-6: D3, 7: D4)

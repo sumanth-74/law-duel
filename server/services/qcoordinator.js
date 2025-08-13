@@ -13,35 +13,42 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false, di
   try {
     console.log(`🎯 getQuestion called: subject=${subject}, forceNew=${forceNew}, difficulty=${difficulty}, excludeIds=${excludeIds.length}`);
     
-    // For competitive duels, ALWAYS generate fresh questions from OpenAI - NO FALLBACKS ALLOWED
-    if (forceNew) {
-      console.log(`🔥 FORCE NEW = TRUE - Generating COMPLETELY FRESH OpenAI question for duel in ${subject} at difficulty ${difficulty}`);
+    // For competitive duels, use pre-generated pool for INSTANT serving
+    if (forceNew && difficulty) {
+      console.log(`⚡ Using question pool for instant serving: ${subject} D${difficulty}`);
+      
+      try {
+        const { getPooledQuestion } = await import('./questionPool.js');
+        const pooledQuestion = await getPooledQuestion(subject, difficulty, excludeIds);
+        
+        if (pooledQuestion && validateQuestion(pooledQuestion)) {
+          console.log(`✅ Instant question served from pool: "${pooledQuestion.stem.substring(0, 50)}..."`);
+          return pooledQuestion;
+        }
+      } catch (poolError) {
+        console.error(`Pool failed, falling back to direct generation:`, poolError.message);
+        // Fall through to direct generation as backup
+      }
+      
+      // Backup: Direct generation if pool fails
+      console.log(`🔥 Pool empty, generating fresh question for ${subject} at difficulty ${difficulty}`);
       
       for (let attempt = 1; attempt <= 3; attempt++) {
         try {
-          console.log(`🎯 Attempt ${attempt}: Calling robust generator for ${subject} with difficulty ${difficulty}...`);
+          console.log(`🎯 Attempt ${attempt}: Direct generation for ${subject} with difficulty ${difficulty}...`);
           const { generateFreshQuestion } = await import('./robustGenerator.js');
           const freshQuestion = await generateFreshQuestion(subject, difficulty);
           
           if (freshQuestion && validateQuestion(freshQuestion)) {
-            console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
-            console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
-            console.log(`✅ Difficulty ${difficulty} question generated with QID: ${freshQuestion.qid}`);
+            console.log(`✅ Fresh question generated: "${freshQuestion.stem.substring(0, 50)}..."`);
             return freshQuestion;
-          } else {
-            console.log(`❌ Attempt ${attempt} failed validation, retrying...`);
-            if (attempt === 3) {
-              throw new Error("Failed validation on all 3 attempts");
-            }
           }
         } catch (openaiError) {
-          console.error(`❌ Attempt ${attempt} failed for duel ${subject}:`, openaiError.message);
+          console.error(`❌ Attempt ${attempt} failed:`, openaiError.message);
           if (attempt === 3) {
-            // If we absolutely cannot generate after 3 attempts, throw error instead of fallback
-            throw new Error(`Unable to generate fresh question after 3 attempts: ${openaiError.message}`);
+            throw new Error(`Unable to generate question: ${openaiError.message}`);
           }
-          // Wait a bit before retrying
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise(resolve => setTimeout(resolve, 500));
         }
       }
     }

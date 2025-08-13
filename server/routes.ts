@@ -54,6 +54,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // Pool status endpoint - check pre-generated questions
+  app.get("/api/pool-status", async (req, res) => {
+    try {
+      const { getPoolStatus } = await import("./services/questionPool.js");
+      const status = getPoolStatus();
+      
+      // Calculate totals
+      let totalQuestions = 0;
+      for (const subject in status) {
+        for (const difficulty in status[subject]) {
+          totalQuestions += status[subject][difficulty];
+        }
+      }
+      
+      return res.json({
+        status,
+        totalQuestions,
+        message: totalQuestions > 0 ? "Questions ready for instant serving!" : "Pool still generating..."
+      });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  });
 
   // Fresh question generation endpoint - always generates new questions
   app.get("/question", async (req, res) => {
@@ -101,6 +125,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Initialize services
   await initializeQuestionCoordinator();
+  
+  // Start pre-generating questions for instant serving
+  const { getQuestionPool } = await import("./services/questionPool.js");
+  getQuestionPool();
   await initializeLeaderboard();
   
   // Initialize real-time leaderboard updates
