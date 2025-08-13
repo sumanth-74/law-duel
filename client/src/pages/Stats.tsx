@@ -34,7 +34,7 @@ export default function Stats() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <Link href="/home">
+            <Link href="/">
               <Button variant="ghost" size="sm" className="text-purple-300 hover:text-purple-200">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Game

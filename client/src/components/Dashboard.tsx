@@ -167,7 +167,14 @@ export function Dashboard({ user, onQuickMatch }: DashboardProps) {
               <h4 className="font-semibold mb-4">Profile</h4>
               <div className="flex items-center space-x-4">
                 <AvatarRenderer 
-                  avatarData={user.avatarData}
+                  avatarData={user.avatarData && typeof user.avatarData === 'object' && 'props' in user.avatarData 
+                    ? user.avatarData as { props: string[]; base: string; palette: string; archetypeId?: string; customLabel?: string; }
+                    : {
+                        props: [],
+                        base: 'default',
+                        palette: 'default'
+                      }
+                  }
                   level={user.level}
                   size={80}
                 />
