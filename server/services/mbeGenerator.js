@@ -107,7 +107,15 @@ CRITICAL MBE STANDARDS YOU MUST FOLLOW:
    - They confuse majority/minority rules
    NOT because they're factually absurd
 
-5. **${subject}-SPECIFIC FOCUS on ${finalTopic}**:
+5. **EXPLANATION REQUIREMENTS**:
+   - State the black letter law with precision
+   - Cite relevant cases or statutes (e.g., "Under *International Shoe*, minimum contacts require...")
+   - Explain WHY each wrong answer is wrong - the specific legal error
+   - Include a "Bar Exam Tip" or "Common Trap" that helps students
+   - Use the IRAC method: Issue, Rule, Application, Conclusion
+   - Make it educational - students should learn the entire concept
+
+6. **${subject}-SPECIFIC FOCUS on ${finalTopic}**:
 ${subject === 'Civil Procedure' ? `
    - Test federal rules: FRCP, jurisdiction (SMJ, PJ), venue, Erie doctrine
    - Include procedural posture: motion to dismiss, summary judgment, discovery disputes
@@ -137,7 +145,7 @@ ${subject === 'Torts' ? `
    - Include duty, breach, causation, damages, comparative fault
    - Apply Restatement rules and special duties` : ''}
 
-6. **Randomly place correct answer** at position A, B, C, or D (use Math.random())
+7. **Randomly place correct answer** at position A, B, C, or D (use Math.random())
 
 ${randomStyle} involving ${finalTopic}${subtopicText}${ruleText}.
 
@@ -151,12 +159,12 @@ Output ONLY this JSON structure:
     "Complete sentence option D with distinct language..."
   ],
   "correctAnswer": "A" or "B" or "C" or "D" (randomly distributed),
-  "explanation": "The correct answer is [X] because [state the controlling rule]. Here, [apply rule to facts]. The other options are incorrect because [explain why each distractor fails].",
+  "explanation": "COMPREHENSIVE EXPLANATION (200+ words): Start with the controlling rule and its source (case law, statute, or common law principle). Then apply it step-by-step to these specific facts, explaining why certain facts are legally significant. Address each distractor, explaining the specific legal error or misconception it represents. Include relevant exceptions, minority rules, or related doctrines that bar takers often confuse. End with a memorable takeaway that helps students remember this principle.",
   "rationales": [
-    "Option A is [correct/incorrect] because [specific legal reasoning]...",
-    "Option B is [correct/incorrect] because [specific legal reasoning]...",
-    "Option C is [correct/incorrect] because [specific legal reasoning]...", 
-    "Option D is [correct/incorrect] because [specific legal reasoning]..."
+    "Option A: [If correct, explain the complete legal analysis. If incorrect, identify the specific legal error - wrong rule, misapplication, inapplicable exception, etc.]",
+    "Option B: [Explain why this specific legal theory does or doesn't apply to these facts, referencing the key factual elements]",
+    "Option C: [Identify the legal doctrine being tested and explain why it succeeds or fails under these circumstances]", 
+    "Option D: [Explain the legal reasoning, including any policy considerations or practical implications]"
   ]
 }`;
 
@@ -166,7 +174,7 @@ Output ONLY this JSON structure:
       messages: [
         {
           role: "system",
-          content: "You are a bar exam expert who writes questions for the NCBE. Create questions that match actual MBE standards with complex fact patterns, nuanced legal distinctions, and high-quality distractors. Every question must test application of law to facts, not mere recall. Output only valid JSON."
+          content: "You are a bar exam expert and legal educator who writes questions for the NCBE. Create questions that match actual MBE standards with complex fact patterns and nuanced legal distinctions. Your explanations must TEACH the law comprehensively - include black letter law, important exceptions, common student mistakes, and memory aids. Make the explanations so thorough that a student learns the entire legal concept from reading them. Output only valid JSON."
         },
         {
           role: "user",
@@ -176,7 +184,8 @@ Output ONLY this JSON structure:
       response_format: { 
         type: "json_object"
       },
-      temperature: 0.8,  // Slightly higher for more creative fact patterns
+      temperature: 0.7,  // Balanced for creativity and accuracy
+      max_tokens: 2000,  // Allow for detailed explanations
     });
 
     const jsonText = response.choices[0].message.content;
