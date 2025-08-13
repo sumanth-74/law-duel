@@ -352,52 +352,74 @@ async function runDuel(wss, roomCode, players, subject) {
     }
   }
 
-  // End duel
-  const winner = match.scores[0] > match.scores[1] ? 0 : 1;
+  // End duel - determine winner based on who got more questions correct
+  const winner = match.scores[0] > match.scores[1] ? 0 : 
+                 match.scores[1] > match.scores[0] ? 1 : 
+                 -1; // -1 for tie
   
-  // Calculate Elo rating changes - Per North Star (K=24)
-  const K = 24;
+  // Calculate XP changes - winner gains XP, loser loses XP
+  const baseXP = 50; // Base XP for winning
   const player1 = await storage.getUserById(players[0].profile?.id);
   const player2 = await storage.getUserById(players[1].profile?.id);
   
-  const rating1 = player1?.points || 1200;
-  const rating2 = player2?.points || 1200;
+  const currentXP1 = player1?.points || 1200;
+  const currentXP2 = player2?.points || 1200;
   
-  const expected1 = 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
-  const expected2 = 1 / (1 + Math.pow(10, (rating1 - rating2) / 400));
+  // Calculate XP changes based on winner/loser and score difference
+  let xpChange1 = 0;
+  let xpChange2 = 0;
   
-  const actual1 = winner === 0 ? 1 : 0;
-  const actual2 = winner === 1 ? 1 : 0;
+  if (winner === 0) {
+    // Player 1 wins
+    xpChange1 = baseXP + (match.scores[0] * 10); // Bonus XP per correct answer
+    xpChange2 = -Math.max(20, Math.floor(baseXP / 2)); // Loser loses XP
+  } else if (winner === 1) {
+    // Player 2 wins
+    xpChange1 = -Math.max(20, Math.floor(baseXP / 2)); // Loser loses XP
+    xpChange2 = baseXP + (match.scores[1] * 10); // Bonus XP per correct answer
+  } else {
+    // Tie - both get small XP bonus
+    xpChange1 = 15;
+    xpChange2 = 15;
+  }
   
-  const ratingChange1 = Math.round(K * (actual1 - expected1));
-  const ratingChange2 = Math.round(K * (actual2 - expected2));
-  
-  // Update player ratings
+  // Update player XP
   if (player1) {
+    const newXP1 = Math.max(0, currentXP1 + xpChange1); // Never go below 0
     await storage.updateUserStats(player1.id, { 
-      points: rating1 + ratingChange1 
+      points: newXP1 
     });
-    await updateWeeklyLadder(player1.id, ratingChange1, winner === 0);
+    await updateWeeklyLadder(player1.id, xpChange1, winner === 0);
   }
   
   if (player2) {
+    const newXP2 = Math.max(0, currentXP2 + xpChange2); // Never go below 0
     await storage.updateUserStats(player2.id, { 
-      points: rating2 + ratingChange2 
+      points: newXP2 
     });
-    await updateWeeklyLadder(player2.id, ratingChange2, winner === 1);
+    await updateWeeklyLadder(player2.id, xpChange2, winner === 1);
   }
   
   const finalData = {
     winner,
     scores: match.scores,
     roomCode,
+    xpChanges: {
+      player1: xpChange1,
+      player2: xpChange2
+    },
+    newXP: {
+      player1: Math.max(0, currentXP1 + xpChange1),
+      player2: Math.max(0, currentXP2 + xpChange2)
+    },
+    // Keep legacy fields for compatibility
     ratingChanges: {
-      player1: ratingChange1,
-      player2: ratingChange2
+      player1: xpChange1,
+      player2: xpChange2
     },
     newRatings: {
-      player1: rating1 + ratingChange1,
-      player2: rating2 + ratingChange2
+      player1: Math.max(0, currentXP1 + xpChange1),
+      player2: Math.max(0, currentXP2 + xpChange2)
     }
   };
 
@@ -589,35 +611,49 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     }
   }
 
-  // End duel
-  const winner = match.scores[0] > match.scores[1] ? 0 : 1;
+  // End duel - determine winner based on who got more questions correct
+  const winner = match.scores[0] > match.scores[1] ? 0 : 
+                 match.scores[1] > match.scores[0] ? 1 : 
+                 -1; // -1 for tie
   
-  // Calculate Elo rating changes for human vs bot - Per North Star (K=24)
-  const K = 24;
+  // Calculate XP changes for human vs bot
+  const baseXP = 50; // Base XP for winning
   const humanPlayer = await storage.getUser(humanWs.profile?.id);
   
-  const humanRating = humanPlayer?.points || 1200;
-  const botRating = 1200; // Bots always at 1200
+  const currentXP = humanPlayer?.points || 1200;
   
-  const expected = 1 / (1 + Math.pow(10, (botRating - humanRating) / 400));
-  const actual = winner === 0 ? 1 : 0;
+  // Calculate XP changes based on winner/loser
+  let xpChange = 0;
   
-  const ratingChange = Math.round(K * (actual - expected));
+  if (winner === 0) {
+    // Human wins - gain XP based on correct answers
+    xpChange = baseXP + (match.scores[0] * 10);
+  } else if (winner === 1) {
+    // Human loses - lose some XP
+    xpChange = -Math.max(20, Math.floor(baseXP / 2));
+  } else {
+    // Tie - small XP bonus
+    xpChange = 15;
+  }
   
-  // Update human player rating and weekly ladder
+  // Update human player XP and weekly ladder
+  const newXP = Math.max(0, currentXP + xpChange); // Never go below 0
   if (humanPlayer) {
     await storage.updateUserStats(humanPlayer.id, { 
-      points: humanRating + ratingChange 
+      points: newXP 
     });
-    await updateWeeklyLadder(humanPlayer.id, ratingChange, winner === 0);
+    await updateWeeklyLadder(humanPlayer.id, xpChange, winner === 0);
   }
   
   const finalData = {
     winner,
     scores: match.scores,
     roomCode,
-    yourRatingChange: ratingChange,
-    yourNewRating: humanRating + ratingChange
+    yourXPChange: xpChange,
+    yourNewXP: newXP,
+    // Keep legacy fields for compatibility
+    yourRatingChange: xpChange,
+    yourNewRating: newXP
   };
 
   if (humanWs.readyState === 1) {

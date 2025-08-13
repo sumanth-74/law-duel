@@ -7,6 +7,9 @@ import { AtticusCat } from './AtticusCat';
 import { FeedbackChip, MatchSummaryChips } from './FeedbackChip';
 import type { User, QuestionData, DuelResultData, DuelFinishedData } from '@shared/schema';
 
+// Match the server's MATCH_QUESTIONS constant
+const MATCH_QUESTIONS = 5;
+
 interface DuelArenaProps {
   user: User;
   opponent: User;
@@ -148,7 +151,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         handleQuestionResult(payload);
         break;
 
-      case 'duel:finished':
+      case 'duel:end':
         handleDuelFinished(payload);
         break;
 
@@ -262,32 +265,46 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   };
 
   const handleDuelFinished = async (finishedData: any) => {
+    console.log('Duel finished with data:', finishedData);
+    
     setDuelState(prev => ({
       ...prev,
       isFinished: true,
       finalResult: finishedData
     }));
 
-    const won = finishedData.winnerId === user.id;
-    const pointsChange = finishedData.pointChanges.player1;
-    const xpGained = finishedData.xpGained.player1;
+    // Determine if player won (0 = player1 won, 1 = player2 won, -1 = tie)
+    const playerIndex = duelState.opponentProfile ? 0 : 0; // Player is always index 0 in arena view
+    const won = finishedData.winner === playerIndex;
+    const tied = finishedData.winner === -1;
     
-    // Update user stats on server with competitive point system
-    try {
-      await fetch(`/api/users/${user.id}/stats`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ won, xpGained, pointsChange })
-      });
-    } catch (error) {
-      console.error("Failed to update user stats:", error);
+    // Get XP changes from the new system
+    const xpChange = finishedData.yourXPChange || finishedData.yourRatingChange || 0;
+    const newXP = finishedData.yourNewXP || finishedData.yourNewRating || 0;
+    
+    // Update local user data to reflect new XP
+    if (user) {
+      const updatedUser = {
+        ...user,
+        points: newXP
+      };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
     }
     
-    announceForScreenReader(
-      won 
-        ? `Duel complete! You won and gained ${pointsChange} points and ${xpGained} XP. Level up when you reach the next 100-point milestone!`
-        : `Duel complete! You lost ${Math.abs(pointsChange)} points but gained ${xpGained} XP. Keep fighting to earn your points back!`
-    );
+    // Announce result with XP changes
+    if (tied) {
+      announceForScreenReader(
+        `Duel complete! It's a tie! You gained ${xpChange} XP. Your total XP is now ${newXP}.`
+      );
+    } else if (won) {
+      announceForScreenReader(
+        `Duel complete! You won and gained ${xpChange} XP! Your total XP is now ${newXP}.`
+      );
+    } else {
+      announceForScreenReader(
+        `Duel complete! You lost ${Math.abs(xpChange)} XP. Your total XP is now ${newXP}. Keep fighting to earn it back!`
+      );
+    }
   };
 
   const startTimer = (deadlineTs: number) => {
@@ -691,68 +708,83 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         {duelState.isFinished && duelState.finalResult && (
           <div className="text-center space-y-6">
             <div className="text-4xl font-cinzel font-bold text-arcane">
-              {duelState.finalResult.winnerId === user.id ? "VICTORY!" : "DEFEAT"}
+              {duelState.finalResult.winner === 0 ? "VICTORY!" : 
+               duelState.finalResult.winner === 1 ? "DEFEAT" : "DRAW"}
             </div>
             
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-arcane/10 rounded-lg">
                 <h4 className="font-bold text-arcane">Final Score</h4>
                 <p className="text-2xl font-cinzel">
-                  {duelState.finalResult.finalScores.player1} - {duelState.finalResult.finalScores.player2}
+                  {duelState.finalResult.scores ? 
+                    `${duelState.finalResult.scores[0]} - ${duelState.finalResult.scores[1]}` : 
+                    "0 - 0"}
                 </p>
               </div>
               
-              <div className="p-4 bg-success/10 rounded-lg">
-                <h4 className="font-bold text-success">XP Gained</h4>
-                <p className="text-xl text-success">+{duelState.finalResult.xpGained.player1}</p>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${duelState.finalResult.pointChanges.player1 >= 0 ? "bg-success/10" : "bg-danger/10"}`}>
-                <h4 className={`font-bold ${duelState.finalResult.pointChanges.player1 >= 0 ? "text-success" : "text-danger"}`}>
-                  Points {duelState.finalResult.pointChanges.player1 >= 0 ? "Gained" : "Lost"}
+              <div className={`p-4 rounded-lg ${
+                (duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 
+                  ? "bg-success/10" : "bg-danger/10"
+              }`}>
+                <h4 className={`font-bold ${
+                  (duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 
+                    ? "text-success" : "text-danger"
+                }`}>
+                  XP {(duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 ? "Gained" : "Lost"}
                 </h4>
-                <p className={`text-xl ${duelState.finalResult.pointChanges.player1 >= 0 ? "text-success" : "text-danger"}`}>
-                  {duelState.finalResult.pointChanges.player1 >= 0 ? "+" : ""}{duelState.finalResult.pointChanges.player1}
+                <p className={`text-xl ${
+                  (duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 
+                    ? "text-success" : "text-danger"
+                }`}>
+                  {(duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 ? "+" : ""}
+                  {duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0}
                 </p>
               </div>
             </div>
             
-            {(duelState.finalResult as any).competitiveDetails && (
-              <div className="p-4 bg-muted/50 rounded-lg text-sm space-y-2">
-                <h4 className="font-bold">Competitive Breakdown:</h4>
-                <div className="flex justify-between">
-                  <span>Correct Answers ({(duelState.finalResult as any).competitiveDetails.correctAnswers}/10):</span>
-                  <span className="text-success">+{(duelState.finalResult as any).competitiveDetails.basePoints} pts</span>
-                </div>
-                {(duelState.finalResult as any).competitiveDetails.winBonus > 0 && (
-                  <div className="flex justify-between">
-                    <span>Victory Bonus:</span>
-                    <span className="text-success">+{(duelState.finalResult as any).competitiveDetails.winBonus} pts</span>
-                  </div>
-                )}
-                {(duelState.finalResult as any).competitiveDetails.lossePenalty < 0 && (
-                  <div className="flex justify-between">
-                    <span>Defeat Penalty:</span>
-                    <span className="text-danger">{(duelState.finalResult as any).competitiveDetails.lossePenalty} pts</span>
-                  </div>
-                )}
-                <div className="border-t pt-2 flex justify-between font-bold">
-                  <span>Total Change:</span>
-                  <span className={duelState.finalResult.pointChanges.player1 >= 0 ? "text-success" : "text-danger"}>
-                    {duelState.finalResult.pointChanges.player1 >= 0 ? "+" : ""}{duelState.finalResult.pointChanges.player1} pts
-                  </span>
-                </div>
-                <p className="text-xs text-muted mt-2">
-                  Level up every 100 points! Keep dueling to climb the ranks.
-                </p>
+            <div className="p-4 bg-muted/50 rounded-lg text-sm space-y-2">
+              <h4 className="font-bold">Match Summary:</h4>
+              
+              {/* Show correct answers and XP breakdown */}
+              <div className="flex justify-between">
+                <span>Correct Answers:</span>
+                <span className="text-arcane">
+                  {duelState.finalResult.scores ? duelState.finalResult.scores[0] : 0}/{MATCH_QUESTIONS}
+                </span>
               </div>
-            )}
+              
+              <div className="border-t pt-2 flex justify-between font-bold">
+                <span>Total XP Change:</span>
+                <span className={
+                  (duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 
+                    ? "text-success" : "text-danger"
+                }>
+                  {(duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0) >= 0 ? "+" : ""}
+                  {duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0} XP
+                </span>
+              </div>
+              
+              <div className="flex justify-between text-xs">
+                <span>New Total XP:</span>
+                <span className="text-arcane font-bold">
+                  {duelState.finalResult.yourNewXP || duelState.finalResult.yourNewRating || 0}
+                </span>
+              </div>
+              
+              <p className="text-xs text-muted mt-2">
+                {duelState.finalResult.winner === 0 
+                  ? "Great job! Keep winning to earn more XP!" 
+                  : duelState.finalResult.winner === 1
+                  ? "Don't give up! Practice makes perfect."
+                  : "A tie! Both players fought well."}
+              </p>
+            </div>
             
             {/* Add Elo and Mastery Summary */}
             <MatchSummaryChips
-              totalXP={duelState.finalResult.xpGained.player1}
+              totalXP={Math.abs(duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0)}
               masteryChanges={[]} // Will be populated when integrated with subtopic tracking
-              eloChange={duelState.finalResult.pointChanges.player1} // Using points as Elo
+              eloChange={duelState.finalResult.yourXPChange || duelState.finalResult.yourRatingChange || 0}
             />
             
             <div className="flex gap-4 justify-center">
