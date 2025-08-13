@@ -203,7 +203,6 @@ export class ProgressionService {
       .update(playerSubjectStats)
       .set({
         masteryPoints: newPoints,
-        masteryLevel: newLevel,
         updatedAt: new Date(),
       })
       .where(and(
@@ -238,7 +237,6 @@ export class ProgressionService {
           .update(playerSubjectStats)
           .set({
             masteryPoints: flooredPoints,
-            masteryLevel: this.getMasteryLevel(flooredPoints),
             lastDecayDate: now,
             updatedAt: now,
           })

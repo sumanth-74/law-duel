@@ -248,6 +248,34 @@ export const DIFFICULTY_LEVELS = {
   DIVINE: { level: 10, multiplier: 10.0, minCorrect: 12000 }
 } as const;
 
+// Mastery thresholds for progression calculations
+export const MASTERY_THRESHOLDS = [
+  0,     // Level 0: Novice
+  100,   // Level 1: Apprentice
+  250,   // Level 2: Practitioner
+  500,   // Level 3: Journeyman
+  1000,  // Level 4: Expert
+  2000,  // Level 5: Master
+  3500,  // Level 6: Grandmaster
+  6000,  // Level 7: Sage
+  10000, // Level 8: Legend
+  15000  // Level 9: Supreme
+] as const;
+
+// Roman numerals for mastery levels
+export const MASTERY_NUMERALS = [
+  "0",   // Novice
+  "I",   // Apprentice
+  "II",  // Practitioner
+  "III", // Journeyman
+  "IV",  // Expert
+  "V",   // Master
+  "VI",  // Grandmaster
+  "VII", // Sage
+  "VIII",// Legend
+  "IX"   // Supreme
+] as const;
+
 // Victory condition - must achieve Supreme in all 7 MBE subjects
 export const VICTORY_REQUIREMENTS = {
   subjectsRequired: 7, // All MBE subjects

@@ -7,27 +7,27 @@
     "points": 3850,
     "totalWins": 71,
     "totalLosses": 5,
-    "lastActive": "2025-08-12T16:06:52.533Z"
+    "lastActive": "2025-08-13T02:29:46.502Z"
   },
   {
     "id": "bot_robert_williams",
     "username": "RobertWilliams",
     "displayName": "Robert Williams",
-    "level": 19,
-    "points": 3797,
+    "level": 20,
+    "points": 3700,
     "totalWins": 67,
-    "totalLosses": 8,
-    "lastActive": "2025-08-13T01:43:10.926Z"
+    "totalLosses": 6,
+    "lastActive": "2025-08-12T23:14:04.946Z"
   },
   {
     "id": "bot_victoria_chen",
     "username": "VictoriaChen",
     "displayName": "Victoria Chen",
-    "level": 18,
-    "points": 3509,
-    "totalWins": 63,
+    "level": 19,
+    "points": 3450,
+    "totalWins": 62,
     "totalLosses": 8,
-    "lastActive": "2025-08-13T01:28:10.924Z"
+    "lastActive": "2025-08-12T22:28:57.183Z"
   },
   {
     "id": "bot_sarah_patel",
@@ -37,7 +37,7 @@
     "points": 3200,
     "totalWins": 56,
     "totalLosses": 9,
-    "lastActive": "2025-08-12T17:09:25.683Z"
+    "lastActive": "2025-08-12T21:00:25.120Z"
   },
   {
     "id": "bot_emma_thompson",
@@ -47,7 +47,7 @@
     "points": 3100,
     "totalWins": 52,
     "totalLosses": 6,
-    "lastActive": "2025-08-12T17:18:05.044Z"
+    "lastActive": "2025-08-12T07:05:01.775Z"
   },
   {
     "id": "bot_rachel_kim",
@@ -57,17 +57,17 @@
     "points": 2950,
     "totalWins": 49,
     "totalLosses": 7,
-    "lastActive": "2025-08-13T00:37:01.777Z"
+    "lastActive": "2025-08-12T15:57:12.748Z"
   },
   {
     "id": "bot_alexandra_carter",
     "username": "AlexandraCarter",
     "displayName": "Alexandra Carter",
     "level": 15,
-    "points": 2887,
-    "totalWins": 48,
+    "points": 2850,
+    "totalWins": 47,
     "totalLosses": 8,
-    "lastActive": "2025-08-13T01:23:10.923Z"
+    "lastActive": "2025-08-12T13:22:56.706Z"
   },
   {
     "id": "bot_david_torres",
@@ -77,17 +77,17 @@
     "points": 2650,
     "totalWins": 42,
     "totalLosses": 11,
-    "lastActive": "2025-08-12T04:26:32.866Z"
+    "lastActive": "2025-08-12T12:33:46.974Z"
   },
   {
     "id": "bot_marcus_wong",
     "username": "MarcusWong",
     "displayName": "Marcus Wong",
-    "level": 13,
-    "points": 2445,
-    "totalWins": 39,
+    "level": 12,
+    "points": 2400,
+    "totalWins": 38,
     "totalLosses": 12,
-    "lastActive": "2025-08-13T01:43:10.926Z"
+    "lastActive": "2025-08-12T19:59:46.916Z"
   },
   {
     "id": "bot_carlos_mendez",
@@ -97,7 +97,7 @@
     "points": 2300,
     "totalWins": 35,
     "totalLosses": 13,
-    "lastActive": "2025-08-12T23:41:01.307Z"
+    "lastActive": "2025-08-12T10:39:59.823Z"
   },
   {
     "id": "bot_james_richardson",
@@ -107,7 +107,7 @@
     "points": 2100,
     "totalWins": 32,
     "totalLosses": 15,
-    "lastActive": "2025-08-12T11:36:39.268Z"
+    "lastActive": "2025-08-12T22:01:26.900Z"
   },
   {
     "id": "bot_priya_sharma",
@@ -117,6 +117,6 @@
     "points": 1850,
     "totalWins": 28,
     "totalLosses": 18,
-    "lastActive": "2025-08-12T01:20:09.746Z"
+    "lastActive": "2025-08-12T15:24:46.405Z"
   }
 ]
