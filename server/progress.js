@@ -1,7 +1,7 @@
 // Progress tracking service - records all attempts with idempotency
 import fs from 'fs';
 import path from 'path';
-import { normalizeLabel, SUBJECTS, getSubjectForSubtopic } from './taxonomy.js';
+import { normalizeLabel, SUBJECTS, getSubjectForSubtopic, getSubtopicsForSubject } from './taxonomy.js';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const PROGRESS_FILE = path.join(DATA_DIR, 'progress.json');
@@ -66,7 +66,8 @@ class ProgressService {
   initializeUserProgress() {
     const progress = {};
     
-    for (const [subject, subtopics] of Object.entries(SUBJECTS)) {
+    // Initialize all subjects with their granular subtopics
+    for (const subject of Object.keys(SUBJECTS)) {
       progress[subject] = {
         overall: {
           attempts: 0,
@@ -77,7 +78,9 @@ class ProgressService {
         subtopics: {}
       };
       
-      for (const subtopic of subtopics) {
+      // Get all subtopics including granular areas (e.g., "Jurisdiction/Federal Question")
+      const allSubtopics = getSubtopicsForSubject(subject);
+      for (const subtopic of allSubtopics) {
         progress[subject].subtopics[subtopic] = {
           attempts: 0,
           correct: 0,

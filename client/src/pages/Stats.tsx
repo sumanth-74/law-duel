@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MasteryProgress } from '@/components/MasteryProgress';
 import SubtopicProgress from '@/components/SubtopicProgress';
+import { DetailedSubtopics } from '@/components/DetailedSubtopics';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Trophy, TrendingUp, BarChart3, Clock, BookOpen, Eye, Share2, Shield, Users } from 'lucide-react';
@@ -230,7 +231,12 @@ export default function Stats() {
           </TabsContent>
 
           <TabsContent value="subtopics" className="space-y-6">
-            {!isViewingOtherUser && <SubtopicProgress />}
+            {!isViewingOtherUser && (
+              <>
+                <DetailedSubtopics />
+                <SubtopicProgress />
+              </>
+            )}
           </TabsContent>
 
           <TabsContent value="performance" className="space-y-6">
