@@ -9,24 +9,24 @@ export async function initializeQuestionCoordinator() {
   console.log("Question coordinator initialized");
 }
 
-export async function getQuestion(subject, excludeIds = [], forceNew = false) {
+export async function getQuestion(subject, excludeIds = [], forceNew = false, difficulty = null) {
   try {
-    console.log(`🎯 getQuestion called: subject=${subject}, forceNew=${forceNew}, excludeIds=${excludeIds.length}`);
+    console.log(`🎯 getQuestion called: subject=${subject}, forceNew=${forceNew}, difficulty=${difficulty}, excludeIds=${excludeIds.length}`);
     
     // For competitive duels, ALWAYS generate fresh questions from OpenAI - NO FALLBACKS ALLOWED
     if (forceNew) {
-      console.log(`🔥 FORCE NEW = TRUE - Generating COMPLETELY FRESH OpenAI question for duel in ${subject}`);
+      console.log(`🔥 FORCE NEW = TRUE - Generating COMPLETELY FRESH OpenAI question for duel in ${subject} at difficulty ${difficulty}`);
       
       for (let attempt = 1; attempt <= 3; attempt++) {
         try {
-          console.log(`🎯 Attempt ${attempt}: Calling robust generator for ${subject}...`);
+          console.log(`🎯 Attempt ${attempt}: Calling robust generator for ${subject} with difficulty ${difficulty}...`);
           const { generateFreshQuestion } = await import('./robustGenerator.js');
-          const freshQuestion = await generateFreshQuestion(subject);
+          const freshQuestion = await generateFreshQuestion(subject, difficulty);
           
           if (freshQuestion && validateQuestion(freshQuestion)) {
             console.log(`✅ Fresh OpenAI question validated: "${freshQuestion.stem.substring(0, 50)}..."`);
             console.log(`✅ Fresh question correctIndex: ${freshQuestion.correctIndex}, choices: ${freshQuestion.choices.length}`);
-            console.log(`✅ SUCCESSFULLY returning fresh OpenAI question with QID: ${freshQuestion.qid}`);
+            console.log(`✅ Difficulty ${difficulty} question generated with QID: ${freshQuestion.qid}`);
             return freshQuestion;
           } else {
             console.log(`❌ Attempt ${attempt} failed validation, retrying...`);

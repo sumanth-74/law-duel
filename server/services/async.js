@@ -127,6 +127,7 @@ class AsyncDuels {
       ],
       scores: { [userId]: 0, [opponent.id]: 0 },
       round: 1,
+      difficulty: 1, // Start at difficulty 1 like VS mode
       turns: [],
       status: 'active',
       winnerId: null,
@@ -173,23 +174,29 @@ class AsyncDuels {
     if (!match || match.status !== 'active') return;
 
     try {
-      // Generate question for this round
-      const question = questionBank.getCachedQuestion(match.subject);
+      // Progressive difficulty: increases every 2 rounds like VS mode
+      match.difficulty = Math.min(Math.floor((match.round + 1) / 2), 10);
+      console.log(`📈 Async Duel Round ${match.round}: Difficulty level ${match.difficulty}`);
+      
+      // Use the same question generation as VS mode with OpenAI and difficulty
+      const { getQuestion } = await import('./qcoordinator.js');
+      const question = await getQuestion(match.subject, [], true, match.difficulty);
       
       if (!question) {
-        console.error('Failed to generate question for match:', matchId);
+        console.error('Failed to generate OpenAI question for async match:', matchId);
         return;
       }
 
       const turn = {
-        qid: question.id,
+        qid: question.qid || question.id,
         stem: question.stem,
         choices: question.choices,
+        difficulty: match.difficulty,
         deadlineTs: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
         answers: {},
         revealed: false,
         correctIndex: question.correctIndex,
-        explanation: question.explanation
+        explanation: question.explanationLong || question.explanation
       };
 
       match.turns.push(turn);

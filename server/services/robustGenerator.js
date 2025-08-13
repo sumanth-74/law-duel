@@ -62,21 +62,42 @@ function ruleHint(subject, topic) {
   return map[`${subject}:${topic}`] || `${topic} — test the controlling black-letter rule`;
 }
 
-// Build a strong prompt with freshness nonce
-function buildPrompt(subject, topic, rule) {
+// Build a strong prompt with freshness nonce and difficulty
+function buildPrompt(subject, topic, rule, difficulty = 1) {
   const nonce = crypto.randomBytes(6).toString("hex");
+  
+  // Difficulty modifiers similar to solo challenges
+  const difficultyDescriptions = {
+    1: "introductory level with clear fact patterns and straightforward legal principles",
+    2: "intermediate level with moderate complexity and some nuance",
+    3: "advanced level requiring detailed analysis of competing legal principles",
+    4: "expert level with multiple legal issues and complex fact patterns",
+    5: "bar exam level with sophisticated reasoning and subtle distinctions",
+    6: "appellate level with intricate facts and competing interpretations",
+    7: "Supreme Court level with constitutional implications and policy considerations",
+    8: "law review level with cutting-edge legal theory and novel applications",
+    9: "judicial level with extremely complex multi-issue scenarios",
+    10: "mastery level with the most challenging legal reasoning possible"
+  };
+  
+  const difficultyDesc = difficultyDescriptions[Math.min(difficulty, 10)] || difficultyDescriptions[5];
+  
   return `
-Generate an original MBE-style multiple-choice question.
+Generate an original MBE-style multiple-choice question at ${difficultyDesc}.
 
 REQUIREMENTS:
 - Subject: ${subject}
 - Topic: ${topic} 
 - Rule to test: ${rule}
+- Difficulty Level: ${difficulty}/10 - ${difficultyDesc}
 - EXACTLY 4 answer choices (no more, no less)
 - One correct answer
-- Fact pattern: 120-180 words
-- Professional legal writing
+- Fact pattern: ${difficulty <= 3 ? '100-140' : difficulty <= 6 ? '120-180' : '160-200'} words
+- Professional legal writing appropriate for difficulty level ${difficulty}
 - No "all/none of the above"
+${difficulty >= 5 ? '- Include subtle distinctions between answer choices' : ''}
+${difficulty >= 7 ? '- Incorporate multiple legal doctrines or exceptions' : ''}
+${difficulty >= 9 ? '- Test edge cases and minority rules' : ''}
 
 RESPONSE FORMAT (JSON only):
 {
@@ -91,12 +112,14 @@ RESPONSE FORMAT (JSON only):
   "correctIndex": 0,
   "explanation": "Brief explanation stating the correct answer and key rule",
   "explanationLong": "DETAILED 4-7 sentence legal analysis that: (1) States the correct answer and controlling legal rule, (2) Explains WHY this answer is correct with specific references to the facts, (3) Explains why EACH wrong answer is incorrect, pointing out the specific legal error or misapplication in each one. Be thorough and accurate in your legal reasoning.",
-  "topic": "${topic}"
+  "topic": "${topic}",
+  "difficulty": ${difficulty}
 }
 
 CRITICAL: 
 - Return exactly 4 choices in the choices array
 - The explanationLong MUST be comprehensive and legally accurate
+- Match the complexity to difficulty level ${difficulty}
 - Cite specific legal rules and explain their application to the facts
 - Address why each wrong answer fails
 Freshness token: ${nonce}`;
@@ -150,13 +173,13 @@ function normalizeChoices(raw) {
   return cleaned;
 }
 
-export async function generateFreshQuestion(subject) {
+export async function generateFreshQuestion(subject, difficulty = 1) {
   try {
     // Map to canonical subject name
     const canonicalSubject = SUBJECT_MAP[subject] || subject;
     const topic = randomTopic(canonicalSubject);
     const rule = ruleHint(canonicalSubject, topic);
-    const prompt = buildPrompt(canonicalSubject, topic, rule);
+    const prompt = buildPrompt(canonicalSubject, topic, rule, difficulty);
 
     // Retry up to 3 times for novelty/validity
     let item, err;
@@ -269,6 +292,7 @@ export async function generateFreshQuestion(subject) {
       correctIndex: item.correctIndex,
       explanation: item.explanation || "See explanation above.",
       explanationLong: item.explanationLong, // Full explanation required
+      difficulty: item.difficulty || difficulty || 1,
       timeLimit: 60000, // 60 seconds for duels
       timeLimitSec: 60, // Enforce 60s
       deadlineTs: Date.now() + 60000

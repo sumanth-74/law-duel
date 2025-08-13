@@ -183,6 +183,7 @@ async function runDuel(wss, roomCode, players, subject) {
     players,
     subject,
     round: 0,
+    difficulty: 1, // Start at difficulty 1
     scores: [0, 0],
     usedQuestions: [],
     seen: new Set() // fingerprints of stems served in THIS duel
@@ -194,12 +195,15 @@ async function runDuel(wss, roomCode, players, subject) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
     
     match.round = round;
+    // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
+    match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
     
     try {
+      console.log(`📈 Round ${round}: Difficulty level ${match.difficulty}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
       let question, err;
       for (let tries = 0; tries < 4; tries++) {
-        question = await getQuestion(subject, match.usedQuestions, true);
+        question = await getQuestion(subject, match.usedQuestions, true, match.difficulty);
         
         // Check if we've seen this stem before in this duel
         const { fingerprintStem } = await import('./robustGenerator.js');
@@ -229,6 +233,7 @@ async function runDuel(wss, roomCode, players, subject) {
         qid: question.qid,
         subject: question.subject, // Include subject from question, not user selection
         round,
+        difficulty: match.difficulty, // Include difficulty level
         stem: question.stem,
         choices: normalizedChoices,
         timeLimit: 60000, // Always 60 seconds for duels
@@ -323,6 +328,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     bot,
     subject,
     round: 0,
+    difficulty: 1, // Start at difficulty 1
     scores: [0, 0],
     usedQuestions: [],
     seen: new Set() // fingerprints of stems served in THIS duel
@@ -334,12 +340,15 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
     
     match.round = round;
+    // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
+    match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
     
     try {
+      console.log(`📈 Bot Duel Round ${round}: Difficulty level ${match.difficulty}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
       let question, err;
       for (let tries = 0; tries < 4; tries++) {
-        question = await getQuestion(subject, match.usedQuestions, true);
+        question = await getQuestion(subject, match.usedQuestions, true, match.difficulty);
         
         // Check if we've seen this stem before in this duel
         const { fingerprintStem } = await import('./robustGenerator.js');
@@ -369,6 +378,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         qid: question.qid,
         subject: question.subject, // Include subject from question, not user selection
         round,
+        difficulty: match.difficulty, // Include difficulty level
         stem: question.stem,
         choices: normalizedChoices,
         timeLimit: 60000, // Always 60 seconds for duels

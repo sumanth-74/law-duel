@@ -35,6 +35,13 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 13, 2025)
 
+### VS Mode Progressive Difficulty System
+- **Unified Question Generation**: VS mode (live duels and friend challenges) now uses OpenAI-generated questions with progressive difficulty
+- **Difficulty Progression**: Questions increase in difficulty every 2 rounds (Rounds 1-2: D1, 3-4: D2, 5-6: D3, 7: D4)
+- **OpenAI Integration**: Enhanced question generator with 10 difficulty levels from introductory to mastery level
+- **Friend Challenges Updated**: Async duels now also use the same progressive difficulty system as live duels
+- **Consistent Experience**: Both Solo and VS modes now share the same difficulty progression mechanics
+
 ### MBE Subtopic Tracking System
 - **Comprehensive Progress Tracking**: Added granular tracking for all MBE subjects and subtopics (70+ legal areas)
 - **Hard-Won Progress**: Proficiency scores increase slowly (0.5% per correct answer) to reflect true mastery
