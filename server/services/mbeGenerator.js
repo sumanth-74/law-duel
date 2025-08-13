@@ -79,24 +79,85 @@ export async function generateMBEItem({ subject: rawSubject, topic, subtopic, ru
   const randomStyle = questionStyles[Math.floor(Math.random() * questionStyles.length)];
   
   const prompt = `
-You are drafting an original **MBE-style** question for the subject **${subject}** ONLY.
-- The issue tested **must** be squarely within **${subject}**; do not rely on other subjects.
-- Topic focus: **${finalTopic}**. If you must mention other law, keep it minimal and not outcome-determinative.
-- Single best answer, exactly 4 options (A–D). Fact pattern 120–180 words.
-- Include rationales for each option and a 3–6 sentence explanation stating the controlling rule.
-- National law only (FRE/FRCP/UCC Art. 2/federal con law as relevant to ${subject}). 
-- No "all/none of the above." 
-- CRITICAL: Randomly distribute the correct answer across A, B, C, and D options.
+Create a PROFESSIONAL BAR EXAM QUALITY question for **${subject}** that matches actual MBE standards.
 
-${randomStyle} testing ${finalTopic}${subtopicText}${ruleText}.
+CRITICAL MBE STANDARDS YOU MUST FOLLOW:
+1. **Fact Pattern (150-200 words)**: Write a detailed, realistic scenario with:
+   - Named parties (Alice, Bob, Corp X, State Y)
+   - Specific dates, amounts, locations
+   - Multiple legal issues embedded naturally
+   - Procedural posture if relevant
+   - Facts that test subtle distinctions in the law
+   
+2. **Question Stem**: Ask for the "most likely" outcome, "best argument", or "court's ruling"
+   - Never use "which is correct" or simple recall questions
+   - Focus on application and analysis, not memorization
 
-Output ONLY JSON in this exact format:
+3. **Answer Choices**: Each option must be:
+   - Complete sentences starting with different structures
+   - 15-30 words long
+   - Legally plausible but distinguishable
+   - Testing different legal theories or exceptions
+   - NO obvious throwaway answers
+
+4. **Quality Distractors**: Wrong answers should be wrong because:
+   - They apply the wrong legal standard
+   - They misapply the correct rule to these facts  
+   - They reference an inapplicable exception
+   - They confuse majority/minority rules
+   NOT because they're factually absurd
+
+5. **${subject}-SPECIFIC FOCUS on ${finalTopic}**:
+${subject === 'Civil Procedure' ? `
+   - Test federal rules: FRCP, jurisdiction (SMJ, PJ), venue, Erie doctrine
+   - Include procedural posture: motion to dismiss, summary judgment, discovery disputes
+   - Reference specific rules: 12(b)(6), Rule 56, 28 USC 1331/1332` : ''}
+${subject === 'Constitutional Law' ? `
+   - Test constitutional provisions and landmark cases
+   - Include state action, standing, scrutiny levels
+   - Reference specific tests: Lemon test, Central Hudson, Matthews v. Eldridge` : ''}
+${subject === 'Contracts' ? `
+   - Test formation, performance, breach, remedies under common law and UCC Article 2
+   - Include consideration, conditions, warranties, damages
+   - Apply majority rules unless testing minority positions` : ''}
+${subject === 'Criminal Law' || subject === 'Criminal Procedure' ? `
+   - Test mens rea, actus reus, defenses, constitutional protections
+   - Include specific crimes: homicide variations, theft crimes, inchoate offenses
+   - Apply Fourth, Fifth, Sixth Amendment standards` : ''}
+${subject === 'Evidence' ? `
+   - Test FRE rules: relevance (401-403), character (404-405), hearsay (801-807)
+   - Include authentication, best evidence, privileges
+   - Apply Crawford doctrine for confrontation clause` : ''}
+${subject === 'Property' ? `
+   - Test estates, future interests, concurrent ownership, landlord-tenant
+   - Include recording acts, easements, covenants, takings
+   - Apply RAP, marketable title, warranty deeds` : ''}
+${subject === 'Torts' ? `
+   - Test negligence elements, intentional torts, strict liability, defenses
+   - Include duty, breach, causation, damages, comparative fault
+   - Apply Restatement rules and special duties` : ''}
+
+6. **Randomly place correct answer** at position A, B, C, or D (use Math.random())
+
+${randomStyle} involving ${finalTopic}${subtopicText}${ruleText}.
+
+Output ONLY this JSON structure:
 {
-  "factPattern": "Your fact pattern here...",
-  "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
-  "correctAnswer": "A" or "B" or "C" or "D",
-  "explanation": "Detailed explanation here",
-  "rationales": ["Why A is right/wrong", "Why B is right/wrong", "Why C is right/wrong", "Why D is right/wrong"]
+  "factPattern": "Detailed fact pattern here with named parties, specific facts, and embedded legal issues...",
+  "options": [
+    "Complete sentence option A starting with unique structure...",
+    "Complete sentence option B with different opening words...", 
+    "Complete sentence option C using varied phrasing...",
+    "Complete sentence option D with distinct language..."
+  ],
+  "correctAnswer": "A" or "B" or "C" or "D" (randomly distributed),
+  "explanation": "The correct answer is [X] because [state the controlling rule]. Here, [apply rule to facts]. The other options are incorrect because [explain why each distractor fails].",
+  "rationales": [
+    "Option A is [correct/incorrect] because [specific legal reasoning]...",
+    "Option B is [correct/incorrect] because [specific legal reasoning]...",
+    "Option C is [correct/incorrect] because [specific legal reasoning]...", 
+    "Option D is [correct/incorrect] because [specific legal reasoning]..."
+  ]
 }`;
 
   try {
@@ -105,7 +166,7 @@ Output ONLY JSON in this exact format:
       messages: [
         {
           role: "system",
-          content: "You are an expert legal educator creating high-quality MBE questions. Generate professional, challenging questions with detailed explanations. Output only valid JSON."
+          content: "You are a bar exam expert who writes questions for the NCBE. Create questions that match actual MBE standards with complex fact patterns, nuanced legal distinctions, and high-quality distractors. Every question must test application of law to facts, not mere recall. Output only valid JSON."
         },
         {
           role: "user",
@@ -115,7 +176,7 @@ Output ONLY JSON in this exact format:
       response_format: { 
         type: "json_object"
       },
-      temperature: 0.7,
+      temperature: 0.8,  // Slightly higher for more creative fact patterns
     });
 
     const jsonText = response.choices[0].message.content;
