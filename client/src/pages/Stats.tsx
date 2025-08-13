@@ -15,10 +15,12 @@ import { AvatarRenderer } from '@/components/AvatarRenderer';
 export default function Stats() {
   const { user: currentUser } = useAuth();
   const { userId } = useParams() as { userId?: string };
-  const [activeTab, setActiveTab] = useState('mastery');
   
   // If userId is provided, fetch that user's public stats
   const isViewingOtherUser = userId && userId !== currentUser?.id;
+  
+  // Default to subtopics tab if viewing own stats, mastery if viewing others
+  const [activeTab, setActiveTab] = useState(isViewingOtherUser ? 'mastery' : 'subtopics');
   
   const { data: publicStats, isLoading } = useQuery({
     queryKey: ['/api/stats/user', userId],

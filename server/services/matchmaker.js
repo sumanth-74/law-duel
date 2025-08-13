@@ -4,6 +4,7 @@ import { getQuestion } from "./qcoordinator.js";
 import { storage } from "../storage.js";
 import { getWeaknessTargetedQuestions, logTargeting } from "./weaknessTargeting.js";
 import { updateWeeklyLadder } from "./weeklyLadder.js";
+import { subtopicProgressService } from "./subtopicProgressService.js";
 
 // North Star configuration: All modes use 5 questions
 const MATCH_QUESTIONS = 5;
@@ -289,6 +290,22 @@ async function runDuel(wss, roomCode, players, subject) {
         
         if (correct) match.scores[i]++;
         
+        // Track subtopic progress for human players (not bots)
+        if (ws.profile?.id && !ws.isBot) {
+          try {
+            await subtopicProgressService.recordAttempt(
+              ws.profile.id,
+              question.subject,
+              question.stem,
+              question.explanation,
+              correct,
+              match.difficulty // Pass current difficulty level
+            );
+          } catch (error) {
+            console.error('Error recording subtopic progress:', error);
+          }
+        }
+        
         results.push({
           playerId: i,
           choice: answer.choice,
@@ -490,6 +507,22 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       
       if (humanCorrect) match.scores[0]++;
       if (botCorrect) match.scores[1]++;
+      
+      // Track subtopic progress for human player
+      if (humanWs.profile?.id) {
+        try {
+          await subtopicProgressService.recordAttempt(
+            humanWs.profile.id,
+            question.subject,
+            question.stem,
+            question.explanation,
+            humanCorrect,
+            match.difficulty // Pass current difficulty level
+          );
+        } catch (error) {
+          console.error('Error recording subtopic progress:', error);
+        }
+      }
 
       const results = [
         {

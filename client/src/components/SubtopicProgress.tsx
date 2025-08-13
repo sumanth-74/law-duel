@@ -40,13 +40,13 @@ export default function SubtopicProgress() {
   const [selectedSubject, setSelectedSubject] = useState<string>('Civ Pro');
   
   // Fetch subtopic progress data
-  const { data: progressData, isLoading: progressLoading } = useQuery({
+  const { data: progressData, isLoading: progressLoading } = useQuery<Record<string, SubjectProgress>>({
     queryKey: ['/api/stats/subtopics'],
     queryFn: () => apiRequest('GET', '/api/stats/subtopics')
   });
 
   // Fetch study recommendations
-  const { data: recommendations, isLoading: recsLoading } = useQuery({
+  const { data: recommendations, isLoading: recsLoading } = useQuery<StudyRecommendation[]>({
     queryKey: ['/api/stats/recommendations'],
     queryFn: () => apiRequest('GET', '/api/stats/recommendations')
   });
