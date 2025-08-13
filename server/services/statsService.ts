@@ -289,9 +289,14 @@ export class StatsService {
       .select()
       .from(users)
       .orderBy(desc(users.overallElo))
-      .limit(limit);
+      .limit(limit * 2); // Get extra users to account for filtering
 
-    return usersList.map((user, index) => {
+    // Filter out users with zero points (default ELO is 1200) or who haven't played
+    const activeUsers = usersList.filter(user => 
+      user.points > 0 || user.totalQuestionsAnswered > 0
+    );
+
+    return activeUsers.slice(0, limit).map((user, index) => {
       const { password, email, ...publicUser } = user;
       const overallAccuracy = user.totalQuestionsAnswered > 0 
         ? (user.totalCorrectAnswers / user.totalQuestionsAnswered) * 100 
@@ -322,9 +327,14 @@ export class StatsService {
       .innerJoin(users, eq(users.id, playerSubjectStats.userId))
       .where(eq(playerSubjectStats.subject, subject))
       .orderBy(desc(playerSubjectStats.masteryPoints))
-      .limit(limit);
+      .limit(limit * 2); // Get extra to account for filtering
 
-    return results.map((result, index) => {
+    // Filter out users with zero activity in this subject
+    const activeResults = results.filter(result => 
+      result.stats.questionsAnswered > 0 || result.userData.points > 0
+    );
+
+    return activeResults.slice(0, limit).map((result, index) => {
       const { password, email, ...publicUser } = result.userData;
       const accuracy = result.stats.questionsAnswered > 0
         ? (result.stats.correctAnswers / result.stats.questionsAnswered) * 100
