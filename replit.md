@@ -26,7 +26,7 @@ Preferred communication style: Simple, everyday language.
 - **Tier Milestones**: Visible tiers (Novice to Archon) with short-term progression goals
 - **Streamlined onboarding**: Direct signup to avatar creation flow for immediate engagement
 - **Streamlined UI**: Removed redundant "View Rankings" link, leaderboard serves as primary rankings display
-- **Populated leaderboard**: 15+ competitive bot players make platform feel active and engaging
+- **Populated leaderboard**: 12 competitive bot players with actual points make platform feel active (no zero-point players)
 - **Solo Challenge Mode**: Progressive difficulty system with 3 lives, monetization via life restoration ($0.99)
 - **Practice Mode Redesign**: Transformed from bot duels to progressive solo challenges with increasing difficulty
 - **Game Mode Structure**: Two main modes - Solo Mode (single player with lives) and VS Mode (multiplayer with Live Duel and Friend Challenge)
@@ -141,3 +141,33 @@ The application is a monorepo utilizing TypeScript for type safety across client
 
 ### WebSocket and Real-time Features
 - **ws**: WebSocket library.
+
+## North Star Implementation (August 13, 2025 - Latest Update)
+
+### Core Game Requirements
+- **5-Question Matches**: All game modes use exactly 5 questions (MATCH_QUESTIONS constant)
+- **25-Second Timers**: Server-authoritative timing with automatic answer locking
+- **Weakness Targeting**: 3 of 5 questions target player's weakest subtopics
+- **Instant Feedback**: Chips display "+12 XP · Evidence/Hearsay · Mastery +3" after each answer
+- **Elo Rating System**: K=24 factor with rating changes displayed on result screens
+- **Weekly Ladder**: Top 50 global players tracked by ISO week (Monday-Sunday)
+
+### Adaptive Difficulty System
+- **Dynamic Difficulty**: Questions get progressively harder based on player mastery
+- **Mastery-Based Scaling**: Maps player proficiency (0-100%) to difficulty levels (1-10)
+- **Smart Targeting**: Weakness questions served at appropriate difficulty for learning
+- **Progressive Challenge**: Non-weakness questions served at slightly higher difficulty
+
+### Public Profiles & Stats
+- **Public Profile URLs**: `/stats/:userId` shows any user's public statistics
+- **Profile Features**: Avatar, Elo rating, win rate, accuracy, daily streak display
+- **Subject Mastery Bars**: Visual progress indicators for each MBE subject
+- **Share & Challenge**: Direct profile sharing and friend challenge buttons
+- **Privacy Controls**: Tabs disabled for sensitive data when viewing others
+
+### OpenAI Integration
+- **Fresh Questions**: All questions generated via OpenAI with proper validation
+- **Topic Tagging**: Questions tagged with subject, subtopic, and difficulty
+- **Quality Gates**: Schema validation, 4 choices, clear explanations required
+- **No Duplicates**: Fingerprinting ensures no repeated questions within matches
+- **Fallback Protection**: Cached questions serve as backup if generation fails

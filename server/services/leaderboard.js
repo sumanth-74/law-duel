@@ -18,7 +18,8 @@ export async function initializeLeaderboard() {
       
       // Check if we need to seed with bots for a more active appearance
       const leaderboard = await readLeaderboard();
-      if (leaderboard.length < 15) {
+      // Only seed if we have fewer than 12 players (all our bots have points)
+      if (leaderboard.length < 12) {
         await seedLeaderboardWithBots();
       }
     } catch {
@@ -377,7 +378,7 @@ export async function getLeaderboard(limit = 20) {
     const leaderboard = await readLeaderboard();
     return leaderboard
       .filter(player => !player.id.startsWith('sb_') && player.points > 0) // Exclude stealth bots and zero-point players
-      .slice(0, limit);
+      .slice(0, Math.min(limit, 12)); // Cap at 12 to avoid showing zero-point players
   } catch (error) {
     console.error('Failed to get leaderboard:', error);
     return [];

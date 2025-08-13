@@ -17,6 +17,10 @@ export function getWeaknessTargetedQuestions(userId, subject, totalQuestions = 5
   // Get player's study recommendations (weakest areas)
   const recommendations = subtopicProgressService.getStudyRecommendations(userId);
   
+  // Get player's overall mastery to determine adaptive difficulty
+  const progress = subtopicProgressService.getDetailedProgress(userId);
+  const overallMastery = calculateOverallMastery(progress);
+  
   // Filter recommendations by subject if not mixed
   let weakAreas = recommendations;
   if (subject !== 'Mixed') {
@@ -45,11 +49,15 @@ export function getWeaknessTargetedQuestions(userId, subject, totalQuestions = 5
         ) || 'Contracts';
       }
       
+      // Adaptive difficulty based on overall mastery
+      const adaptiveDifficulty = getAdaptiveDifficulty(overallMastery, weakness.proficiencyScore);
+      
       targets.push({
         subject: subjectKey,
         subtopic: weakness.subtopic,
         targetType: 'weakness',
-        proficiency: weakness.proficiencyScore
+        proficiency: weakness.proficiencyScore,
+        difficulty: adaptiveDifficulty
       });
     } else {
       // No weakness data, use random
@@ -74,15 +82,61 @@ export function getWeaknessTargetedQuestions(userId, subject, totalQuestions = 5
       : subject;
     
     const randomSubtopic = getRandomSubtopic(targetSubject);
+    const mediumProficiency = 70 + Math.random() * 30;
+    
+    // Harder questions for remaining slots based on mastery
+    const adaptiveDifficulty = getAdaptiveDifficulty(overallMastery, mediumProficiency);
+    
     targets.push({
       subject: targetSubject,
       subtopic: randomSubtopic?.name || 'General',
       targetType: 'medium',
-      proficiency: 70 + Math.random() * 30
+      proficiency: mediumProficiency,
+      difficulty: Math.min(adaptiveDifficulty + 1, 10) // Slightly harder for non-weakness questions
     });
   }
   
   return targets;
+}
+
+/**
+ * Calculate overall mastery from detailed progress
+ */
+function calculateOverallMastery(progress) {
+  if (!progress.subjects || progress.subjects.length === 0) return 30;
+  
+  let totalProficiency = 0;
+  let count = 0;
+  
+  progress.subjects.forEach(subject => {
+    subject.subtopics.forEach(subtopic => {
+      totalProficiency += subtopic.proficiencyScore;
+      count++;
+    });
+  });
+  
+  return count > 0 ? totalProficiency / count : 30;
+}
+
+/**
+ * Get adaptive difficulty based on user's mastery level
+ * Per spec: Questions get progressively harder as players improve
+ */
+function getAdaptiveDifficulty(overallMastery, subtopicMastery) {
+  // Average the overall and specific mastery
+  const effectiveMastery = (overallMastery + subtopicMastery) / 2;
+  
+  // Map mastery to difficulty (1-10 scale)
+  if (effectiveMastery < 20) return 1;  // Beginner
+  if (effectiveMastery < 30) return 2;  // Novice
+  if (effectiveMastery < 40) return 3;  // Intermediate 
+  if (effectiveMastery < 50) return 4;  // Competent
+  if (effectiveMastery < 60) return 5;  // Bar exam level
+  if (effectiveMastery < 70) return 6;  // Advanced
+  if (effectiveMastery < 80) return 7;  // Expert
+  if (effectiveMastery < 90) return 8;  // Professional
+  if (effectiveMastery < 95) return 9;  // Master
+  return 10; // Grandmaster
 }
 
 /**

@@ -371,25 +371,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const limit = parseInt(req.query.limit as string) || 20;
       
-      // Get real players from database
-      const realPlayers = await storage.getTopPlayers(limit);
+      // Use the leaderboard service which properly filters zero-point players
+      const { getLeaderboard } = await import("./services/leaderboard.js");
+      const leaderboard = await getLeaderboard(Math.min(limit, 12)); // Cap at 12 to avoid zero-point players
       
-      // Load bot players from leaderboard.json
-      const leaderboardPath = path.join(process.cwd(), 'data', 'leaderboard.json');
-      let botPlayers = [];
-      try {
-        const leaderboardData = await fs.readFile(leaderboardPath, 'utf-8');
-        botPlayers = JSON.parse(leaderboardData);
-      } catch (err) {
-        console.log('Could not load bot leaderboard data');
-      }
-      
-      // Combine and sort all players by points
-      const allPlayers = [...realPlayers, ...botPlayers]
-        .sort((a, b) => b.points - a.points)
-        .slice(0, limit);
-      
-      res.json(allPlayers);
+      res.json(leaderboard);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch leaderboard", error: error.message });
     }

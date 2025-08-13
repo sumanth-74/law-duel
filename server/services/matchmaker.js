@@ -213,9 +213,8 @@ async function runDuel(wss, roomCode, players, subject) {
       // Use weakness targeting for this round
       const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
       const targetSubject = targetInfo?.subject || subject;
-      const targetDifficulty = targetInfo?.targetType === 'weakness' ? 
-        Math.min(2, match.difficulty) : // Easier questions for weaknesses
-        match.difficulty;
+      // Use adaptive difficulty from weakness targeting (based on user mastery)
+      const targetDifficulty = targetInfo?.difficulty || match.difficulty;
       
       console.log(`📈 Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.targetType || 'normal'}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
@@ -417,9 +416,8 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       // Use weakness targeting for this round
       const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
       const targetSubject = targetInfo?.subject || subject;
-      const targetDifficulty = targetInfo?.targetType === 'weakness' ? 
-        Math.min(2, match.difficulty) : // Easier questions for weaknesses
-        match.difficulty;
+      // Use adaptive difficulty from weakness targeting (based on user mastery)
+      const targetDifficulty = targetInfo?.difficulty || match.difficulty;
       
       console.log(`📈 Bot Duel Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.targetType || 'normal'}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
