@@ -6,67 +6,99 @@ export const MBE_TOPICS = {
       'jurisdiction': {
         name: 'Jurisdiction',
         areas: [
-          'Subject-matter jurisdiction (federal question, diversity, supplemental)',
-          'Personal jurisdiction (traditional bases, long-arm statutes, minimum contacts)',
-          'Removal & remand'
+          'Subject matter jurisdiction',
+          'Federal question jurisdiction',
+          'Diversity jurisdiction',
+          'Supplemental jurisdiction'
+        ]
+      },
+      'personal_jurisdiction': {
+        name: 'Personal Jurisdiction',
+        areas: [
+          'Minimum contacts',
+          'Specific vs. general jurisdiction',
+          'Long-arm statutes'
         ]
       },
       'venue': {
-        name: 'Venue and Transfer',
+        name: 'Venue and Forum Non Conveniens',
         areas: [
           'Proper venue rules',
-          'Forum non conveniens'
+          'Forum non conveniens',
+          'Transfer of venue'
+        ]
+      },
+      'service': {
+        name: 'Service of Process and Notice',
+        areas: [
+          'Service requirements',
+          'Notice requirements',
+          'Waiver of service'
         ]
       },
       'pleadings': {
         name: 'Pleadings',
         areas: [
           'Complaint requirements',
-          'Rule 12 motions',
-          'Answer and amendments'
+          'Answer requirements',
+          'Amendments',
+          'Rule 11 sanctions'
         ]
       },
       'joinder': {
         name: 'Joinder',
         areas: [
-          'Joinder of claims and parties',
-          'Impleader, intervention, interpleader',
+          'Parties and claims',
+          'Intervention',
+          'Interpleader',
           'Class actions'
         ]
       },
-      'pretrial': {
-        name: 'Pretrial Procedures',
+      'discovery': {
+        name: 'Discovery',
         areas: [
-          'Discovery scope, devices, sanctions'
+          'Scope of discovery',
+          'Privileges',
+          'Work product',
+          'Discovery sanctions'
         ]
       },
-      'motions': {
-        name: 'Motions',
+      'summary_judgment': {
+        name: 'Summary Judgment and JMOL',
         areas: [
-          'Summary judgment',
-          'Judgment as a matter of law (JMOL) & renewed JMOL',
-          'Default judgment'
+          'Summary judgment standards',
+          'Judgment as a matter of law',
+          'Renewed JMOL'
         ]
       },
       'trial': {
-        name: 'Trial and Post-Trial',
+        name: 'Trial Process',
         areas: [
-          'Jury trial right',
-          'Verdicts, relief, post-trial motions'
+          'Jury selection',
+          'Evidence presentation',
+          'Verdicts'
         ]
       },
-      'appellate': {
-        name: 'Appellate Review',
+      'appeals': {
+        name: 'Appeals',
         areas: [
-          'Final judgment rule, interlocutory appeals',
+          'Final judgment rule',
+          'Interlocutory appeals',
           'Standards of review'
         ]
       },
       'preclusion': {
-        name: 'Preclusion',
+        name: 'Res Judicata and Collateral Estoppel',
         areas: [
           'Claim preclusion (res judicata)',
           'Issue preclusion (collateral estoppel)'
+        ]
+      },
+      'erie': {
+        name: 'Erie Doctrine',
+        areas: [
+          'State vs. federal law',
+          'Substantive vs. procedural'
         ]
       }
     }
@@ -75,42 +107,88 @@ export const MBE_TOPICS = {
     name: 'Constitutional Law',
     subtopics: {
       'judicial_review': {
-        name: 'Judicial Review',
+        name: 'Judicial Review and Justiciability',
         areas: [
-          'Justiciability (standing, ripeness, mootness, political question)'
+          'Standing',
+          'Ripeness',
+          'Mootness',
+          'Political question doctrine',
+          'Adequate and independent state grounds'
         ]
       },
       'separation_powers': {
         name: 'Separation of Powers',
         areas: [
-          'Congressional, executive, judicial powers',
+          'Congressional powers',
+          'Executive powers',
+          'Judicial powers',
           'Checks and balances'
         ]
       },
       'federalism': {
         name: 'Federalism',
         areas: [
+          'Commerce Clause',
+          'Dormant Commerce Clause',
           'Preemption',
-          'Dormant commerce clause',
-          'Privileges and immunities',
-          '10th Amendment limits (anti-commandeering)'
+          'Privileges and Immunities'
         ]
       },
       'individual_rights': {
         name: 'Individual Rights',
         areas: [
-          'State action requirement',
-          'Due Process (procedural & substantive)',
-          'Equal Protection',
-          'Takings Clause',
-          'Contract Clause'
+          'State action doctrine',
+          'Incorporation doctrine'
         ]
       },
-      'first_amendment': {
-        name: 'First Amendment',
+      'due_process': {
+        name: 'Due Process',
         areas: [
-          'Freedom of speech, press, association',
-          'Religion (Establishment Clause, Free Exercise Clause)'
+          'Procedural due process',
+          'Substantive due process',
+          'Economic liberties',
+          'Fundamental rights'
+        ]
+      },
+      'equal_protection': {
+        name: 'Equal Protection',
+        areas: [
+          'Rational basis review',
+          'Intermediate scrutiny',
+          'Strict scrutiny',
+          'Suspect classifications'
+        ]
+      },
+      'first_amendment_speech': {
+        name: 'First Amendment - Speech',
+        areas: [
+          'Content-based vs. content-neutral',
+          'Public forums',
+          'Commercial speech',
+          'Symbolic speech'
+        ]
+      },
+      'first_amendment_religion': {
+        name: 'First Amendment - Religion',
+        areas: [
+          'Establishment Clause',
+          'Free Exercise Clause',
+          'Religious Freedom Restoration Act'
+        ]
+      },
+      'takings': {
+        name: 'Takings Clause',
+        areas: [
+          'Public use requirement',
+          'Regulatory takings',
+          'Exactions'
+        ]
+      },
+      'contracts_clause': {
+        name: 'Contracts Clause',
+        areas: [
+          'Impairment of contracts',
+          'Public vs. private contracts'
         ]
       }
     }
@@ -121,119 +199,186 @@ export const MBE_TOPICS = {
       'formation': {
         name: 'Formation',
         areas: [
-          'Offer, acceptance, consideration',
-          'Defenses (capacity, mistake, fraud, duress, unconscionability)'
+          'Offer and acceptance',
+          'Consideration',
+          'Mailbox rule',
+          'Mirror image rule'
+        ]
+      },
+      'defenses': {
+        name: 'Defenses to Formation',
+        areas: [
+          'Capacity',
+          'Mistake',
+          'Fraud and misrepresentation',
+          'Duress and undue influence',
+          'Unconscionability'
         ]
       },
       'statute_frauds': {
         name: 'Statute of Frauds',
         areas: [
-          'Covered contracts, exceptions'
+          'Contracts within the statute',
+          'Satisfaction methods',
+          'Part performance exception'
         ]
       },
-      'interpretation': {
-        name: 'Interpretation and Parol Evidence Rule',
-        areas: []
-      },
-      'performance': {
-        name: 'Performance',
+      'parol_evidence': {
+        name: 'Parol Evidence Rule',
         areas: [
-          'Conditions (express, implied, constructive)',
-          'Substantial performance'
+          'Integration',
+          'Exceptions to the rule'
+        ]
+      },
+      'conditions': {
+        name: 'Conditions and Performance',
+        areas: [
+          'Express conditions',
+          'Implied conditions',
+          'Constructive conditions',
+          'Excuse of conditions'
         ]
       },
       'breach': {
         name: 'Breach',
         areas: [
           'Material vs. minor breach',
-          'Anticipatory repudiation'
+          'Anticipatory repudiation',
+          'Adequate assurance'
         ]
       },
       'remedies': {
         name: 'Remedies',
         areas: [
-          'Expectation, reliance, restitution',
+          'Expectation damages',
+          'Reliance damages',
+          'Restitution',
           'Specific performance',
-          'UCC remedies'
+          'Liquidated damages'
         ]
       },
       'third_party': {
-        name: 'Third-Party Issues',
+        name: 'Third-Party Rights',
         areas: [
           'Third-party beneficiaries',
-          'Assignment and delegation'
+          'Assignment of rights',
+          'Delegation of duties'
         ]
       },
-      'ucc_article2': {
-        name: 'UCC Article 2',
+      'ucc': {
+        name: 'UCC Article 2 (Sales)',
         areas: [
-          'Formation, firm offers, modification',
-          'Risk of loss',
+          'Merchant rules',
+          'Battle of the forms',
+          'Perfect tender rule',
           'Warranties',
-          'Seller\'s and buyer\'s remedies'
+          'Risk of loss'
         ]
       }
     }
   },
   'Crim': {
-    name: 'Criminal Law & Procedure',
+    name: 'Criminal Law/Procedure',
     subtopics: {
       'homicide': {
         name: 'Homicide',
         areas: [
-          'Murder (degrees, felony murder)',
-          'Manslaughter (voluntary, involuntary)'
+          'Common law murder',
+          'First-degree murder',
+          'Felony murder',
+          'Voluntary manslaughter',
+          'Involuntary manslaughter'
         ]
       },
-      'other_crimes': {
-        name: 'Other Crimes',
+      'crimes_against_person': {
+        name: 'Crimes Against the Person',
         areas: [
-          'Theft (larceny, embezzlement, false pretenses, robbery)',
-          'Burglary, arson',
-          'Assault, battery, kidnapping, rape',
-          'Inchoate offenses (attempt, solicitation, conspiracy)'
+          'Assault and battery',
+          'Kidnapping',
+          'Rape and sexual assault'
+        ]
+      },
+      'crimes_against_property': {
+        name: 'Crimes Against Property',
+        areas: [
+          'Larceny',
+          'Embezzlement',
+          'False pretenses',
+          'Robbery',
+          'Burglary',
+          'Arson'
+        ]
+      },
+      'inchoate': {
+        name: 'Inchoate Crimes',
+        areas: [
+          'Attempt',
+          'Solicitation',
+          'Conspiracy'
+        ]
+      },
+      'accomplice': {
+        name: 'Accomplice Liability',
+        areas: [
+          'Principals and accessories',
+          'Scope of liability'
         ]
       },
       'defenses': {
         name: 'Defenses',
         areas: [
-          'Self-defense, defense of others, property',
-          'Insanity, intoxication, duress, necessity',
-          'Mistake of fact/law'
+          'Self-defense',
+          'Defense of others',
+          'Defense of property',
+          'Insanity',
+          'Intoxication',
+          'Duress',
+          'Necessity',
+          'Mistake'
         ]
       },
       'fourth_amendment': {
         name: 'Fourth Amendment',
         areas: [
-          'Search and seizure, warrants, exceptions',
-          'Exclusionary rule, fruit of the poisonous tree'
+          'Search and seizure',
+          'Warrant requirements',
+          'Exceptions to warrant requirement',
+          'Exclusionary rule'
         ]
       },
       'fifth_amendment': {
         name: 'Fifth Amendment',
         areas: [
           'Miranda rights',
+          'Self-incrimination',
           'Double jeopardy'
         ]
       },
       'sixth_amendment': {
         name: 'Sixth Amendment',
         areas: [
-          'Right to counsel, confrontation'
+          'Right to counsel',
+          'Right to speedy trial',
+          'Right to jury trial',
+          'Confrontation clause'
         ]
       },
-      'pretrial_crim': {
-        name: 'Pretrial',
+      'pretrial_proceedings': {
+        name: 'Pretrial Proceedings',
         areas: [
-          'Identification procedures',
-          'Bail, preliminary hearings'
+          'Arrest and detention',
+          'Initial appearance',
+          'Preliminary hearing',
+          'Grand jury',
+          'Bail'
         ]
       },
-      'trial_crim': {
-        name: 'Trial',
+      'guilty_pleas': {
+        name: 'Guilty Pleas and Plea Bargaining',
         areas: [
-          'Jury rights',
-          'Plea bargaining'
+          'Voluntariness',
+          'Plea negotiations',
+          'Withdrawal of pleas'
         ]
       }
     }
@@ -244,49 +389,83 @@ export const MBE_TOPICS = {
       'relevance': {
         name: 'Relevance',
         areas: [
-          'Logical and legal relevance',
-          'Rule 403 balancing'
+          'Logical relevance',
+          'Legal relevance',
+          'Rule 403 balancing test',
+          'Limited admissibility'
         ]
       },
       'character': {
         name: 'Character Evidence',
         areas: [
-          'Civil vs. criminal',
-          'Methods of proving character'
+          'Character evidence in civil cases',
+          'Character evidence in criminal cases',
+          'Methods of proving character',
+          'Habit and routine practice'
         ]
       },
       'impeachment': {
         name: 'Impeachment',
         areas: [
           'Prior inconsistent statements',
-          'Bias, prior convictions'
+          'Bias and interest',
+          'Prior convictions',
+          'Character for truthfulness',
+          'Rehabilitation'
         ]
       },
       'hearsay': {
         name: 'Hearsay',
         areas: [
-          'Definition, exclusions (801(d))',
-          'Exceptions (803, 804, 807)'
+          'Definition of hearsay',
+          'Non-hearsay statements',
+          'Present sense impression',
+          'Excited utterance',
+          'Business records',
+          'Dying declarations',
+          'Statements against interest',
+          'Former testimony'
+        ]
+      },
+      'confrontation': {
+        name: 'Confrontation Clause',
+        areas: [
+          'Crawford doctrine',
+          'Testimonial vs. non-testimonial'
+        ]
+      },
+      'opinion': {
+        name: 'Opinion Testimony',
+        areas: [
+          'Lay opinion',
+          'Expert testimony',
+          'Daubert standard',
+          'Basis of expert opinion'
         ]
       },
       'privileges': {
         name: 'Privileges',
         areas: [
-          'Attorney-client, spousal, doctor-patient'
+          'Attorney-client privilege',
+          'Spousal privileges',
+          'Doctor-patient privilege',
+          'Waiver of privilege'
         ]
       },
       'authentication': {
-        name: 'Authentication & Best Evidence Rule',
-        areas: []
+        name: 'Authentication and Best Evidence',
+        areas: [
+          'Authentication requirements',
+          'Best evidence rule',
+          'Secondary evidence',
+          'Summaries'
+        ]
       },
       'judicial_notice': {
         name: 'Judicial Notice',
-        areas: []
-      },
-      'opinion': {
-        name: 'Opinion Testimony',
         areas: [
-          'Lay vs. expert'
+          'Facts subject to judicial notice',
+          'Effect of judicial notice'
         ]
       }
     }
@@ -294,110 +473,225 @@ export const MBE_TOPICS = {
   'Property': {
     name: 'Real Property',
     subtopics: {
-      'ownership': {
-        name: 'Ownership',
+      'estates': {
+        name: 'Present Estates and Future Interests',
         areas: [
-          'Present estates',
-          'Future interests (remainders, executory interests)',
+          'Fee simple absolute',
+          'Fee simple determinable',
+          'Fee simple subject to condition subsequent',
+          'Life estates',
+          'Remainders',
+          'Executory interests',
           'Rule Against Perpetuities'
         ]
       },
       'concurrent': {
         name: 'Concurrent Estates',
         areas: [
-          'Joint tenancy, tenancy in common, tenancy by the entirety'
+          'Joint tenancy',
+          'Tenancy in common',
+          'Tenancy by the entirety',
+          'Rights and duties of co-tenants'
         ]
       },
       'landlord_tenant': {
         name: 'Landlord-Tenant Law',
         areas: [
-          'Lease types, tenant and landlord duties',
-          'Assignment, sublease'
+          'Types of tenancies',
+          'Landlord duties',
+          'Tenant duties',
+          'Assignment vs. sublease',
+          'Eviction'
         ]
       },
       'easements': {
-        name: 'Easements, Covenants, Servitudes',
-        areas: []
-      },
-      'real_estate_contracts': {
-        name: 'Real Estate Contracts',
+        name: 'Easements',
         areas: [
-          'Statute of Frauds, marketable title',
-          'Equitable conversion'
+          'Creation of easements',
+          'Scope of easements',
+          'Termination of easements',
+          'Licenses',
+          'Profits'
+        ]
+      },
+      'covenants': {
+        name: 'Real Covenants and Equitable Servitudes',
+        areas: [
+          'Creation requirements',
+          'Running with the land',
+          'Enforcement',
+          'Termination'
+        ]
+      },
+      'sales': {
+        name: 'Real Estate Sales',
+        areas: [
+          'Contract of sale',
+          'Marketable title',
+          'Equitable conversion',
+          'Closing'
         ]
       },
       'deeds': {
         name: 'Deeds',
         areas: [
-          'Types, delivery, covenants of title'
+          'Types of deeds',
+          'Delivery requirements',
+          'Title covenants',
+          'Merger doctrine'
         ]
       },
       'mortgages': {
         name: 'Mortgages',
         areas: [
-          'Lien theory vs. title theory',
-          'Foreclosure'
+          'Creation',
+          'Rights and duties',
+          'Foreclosure',
+          'Redemption'
         ]
       },
       'recording': {
-        name: 'Recording',
+        name: 'Recording Acts',
         areas: [
-          'Notice, race, race-notice statutes'
+          'Notice statutes',
+          'Race statutes',
+          'Race-notice statutes',
+          'Chain of title'
         ]
       },
       'adverse_possession': {
         name: 'Adverse Possession',
-        areas: []
+        areas: [
+          'Elements',
+          'Tacking',
+          'Disability provisions'
+        ]
+      },
+      'zoning': {
+        name: 'Zoning',
+        areas: [
+          'Non-conforming uses',
+          'Variances',
+          'Special use permits'
+        ]
       }
     }
   },
   'Torts': {
     name: 'Torts',
     subtopics: {
-      'intentional': {
-        name: 'Intentional Torts',
+      'intentional_person': {
+        name: 'Intentional Torts to Person',
         areas: [
-          'Battery, assault, false imprisonment, IIED',
-          'Trespass to land/chattels, conversion'
+          'Battery',
+          'Assault',
+          'False imprisonment',
+          'Intentional infliction of emotional distress'
         ]
       },
-      'defenses_torts': {
-        name: 'Defenses',
+      'intentional_property': {
+        name: 'Intentional Torts to Property',
         areas: [
-          'Consent, self-defense, necessity'
+          'Trespass to land',
+          'Trespass to chattels',
+          'Conversion'
+        ]
+      },
+      'defenses_intentional': {
+        name: 'Defenses to Intentional Torts',
+        areas: [
+          'Consent',
+          'Self-defense',
+          'Defense of others',
+          'Defense of property',
+          'Necessity'
         ]
       },
       'negligence': {
         name: 'Negligence',
         areas: [
-          'Duty, breach, causation, damages',
-          'Special duties (landowners, professionals)',
+          'Duty',
+          'Breach',
+          'Actual causation',
+          'Proximate causation',
+          'Damages'
+        ]
+      },
+      'special_duties': {
+        name: 'Special Duty Rules',
+        areas: [
+          'Premises liability',
+          'Negligent infliction of emotional distress',
+          'Professional malpractice',
           'Negligence per se',
           'Res ipsa loquitur'
+        ]
+      },
+      'defenses_negligence': {
+        name: 'Defenses to Negligence',
+        areas: [
+          'Contributory negligence',
+          'Comparative negligence',
+          'Assumption of risk',
+          'Immunities'
         ]
       },
       'strict_liability': {
         name: 'Strict Liability',
         areas: [
           'Abnormally dangerous activities',
-          'Animals'
+          'Wild animals',
+          'Domestic animals'
         ]
       },
       'products_liability': {
         name: 'Products Liability',
         areas: [
-          'Negligence, strict liability, warranty'
+          'Manufacturing defects',
+          'Design defects',
+          'Warning defects',
+          'Defenses'
         ]
       },
-      'defamation_privacy': {
-        name: 'Defamation & Privacy Torts',
-        areas: []
-      },
-      'miscellaneous': {
-        name: 'Miscellaneous',
+      'vicarious_liability': {
+        name: 'Vicarious Liability',
         areas: [
-          'Vicarious liability',
-          'Joint and several liability'
+          'Respondeat superior',
+          'Independent contractors',
+          'Joint ventures'
+        ]
+      },
+      'nuisance': {
+        name: 'Nuisance',
+        areas: [
+          'Private nuisance',
+          'Public nuisance',
+          'Remedies'
+        ]
+      },
+      'defamation': {
+        name: 'Defamation',
+        areas: [
+          'Libel vs. slander',
+          'Constitutional limitations',
+          'Privileges'
+        ]
+      },
+      'privacy': {
+        name: 'Privacy Torts',
+        areas: [
+          'Intrusion',
+          'Appropriation',
+          'Public disclosure of private facts',
+          'False light'
+        ]
+      },
+      'economic_torts': {
+        name: 'Economic Torts',
+        areas: [
+          'Misrepresentation',
+          'Interference with contract',
+          'Interference with prospective advantage'
         ]
       }
     }

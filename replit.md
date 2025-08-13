@@ -35,6 +35,20 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 13, 2025)
 
+### Comprehensive MBE Subtopic Implementation
+- **Detailed Subtopic Structure**: Implemented full MBE subtopic breakdown with 75+ specific legal areas
+- **Civil Procedure**: 12 subtopics including Jurisdiction, Personal Jurisdiction, Venue, Service of Process, Pleadings, Joinder, Discovery, Summary Judgment, Trial Process, Appeals, Res Judicata, and Erie Doctrine
+- **Constitutional Law**: 10 subtopics covering Judicial Review, Separation of Powers, Federalism, Individual Rights, Due Process, Equal Protection, First Amendment (Speech & Religion), Takings, and Contracts Clause
+- **Contracts**: 9 subtopics including Formation, Defenses, Statute of Frauds, Parol Evidence, Conditions, Breach, Remedies, Third-Party Rights, and UCC Article 2
+- **Criminal Law/Procedure**: 11 subtopics covering Homicide, Crimes Against Person/Property, Inchoate Crimes, Accomplice Liability, Defenses, Fourth/Fifth/Sixth Amendment, Pretrial, and Guilty Pleas
+- **Evidence**: 9 subtopics including Relevance, Character Evidence, Impeachment, Hearsay, Confrontation Clause, Opinion Testimony, Privileges, Authentication, and Judicial Notice
+- **Real Property**: 11 subtopics covering Estates, Concurrent Ownership, Landlord-Tenant, Easements, Covenants, Sales, Deeds, Mortgages, Recording Acts, Adverse Possession, and Zoning
+- **Torts**: 13 subtopics including Intentional Torts, Defenses, Negligence, Special Duties, Strict Liability, Products Liability, Vicarious Liability, Nuisance, Defamation, Privacy, and Economic Torts
+- **Granular Area Tracking**: Each subtopic contains specific legal areas (e.g., Jurisdiction includes Federal Question, Diversity, Supplemental)
+- **Stats Integration**: Subtopics are displayed in user stats with progress tracking and proficiency scores
+
+## Recent Changes (August 13, 2025)
+
 ### Question Pool System for Instant Serving
 - **Pre-Generation Pool**: Questions now pre-generated in background for instant serving during duels
 - **Zero Latency**: Eliminated OpenAI generation delay during live duels - questions served instantly from pool

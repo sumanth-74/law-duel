@@ -1,0 +1,69 @@
+One core loop for all modes (Solo, Live, Friend, Daily):
+Start match → 5 questions → instant feedback after each → end screen with XP, mastery gains, rank change, and a big Rematch button.
+
+Question quality & relevance:
+
+Generate or fetch MBE-style questions with a clear rule + short explanation.
+
+Each question is tagged to Subject + Subtopic + Difficulty (natural names are fine).
+
+Target weaknesses: pick at least 3/5 from the player’s lowest subtopics; the rest medium/hard mix.
+
+No repeats in a match. If generation fails, pull a bank question.
+
+Timer 25s; lock answers on submit.
+
+Visible progress that feels like leveling up:
+After every question, show a small popup chip:
+
++12 XP · Evidence → Hearsay +3 Mastery
+At match end, show a clear summary card:
+
+Level badge with XP bar and “+60 XP (Streak +10)”
+
+Mastery changes: top 3 subtopics with green ↑ or red ↓
+
+Accuracy this match and lifetime
+
+Next milestone: “+40 XP to Level 3 · Unlock ‘Phoenix Counsel’ title”
+
+Friends & ranking (make wins matter):
+
+Live/Friend matches update a simple Elo rating and Weekly Ladder.
+
+On the result screen show: “You +14 rating (1242 → 1256).”
+
+Leaderboard tabs: Friends | School | Global (weekly + all-time).
+
+Streaks & daily compulsion:
+
+Daily Casefile = tougher themed set with double XP.
+
+Streak banner on home: “Day 3 · Keep it to earn +10% XP today.”
+
+Stats that drive the next match:
+
+Keep per-subtopic mastery on a 0–100 scale.
+
+On answer: update attempted/correct, adjust mastery a little up/down.
+
+Next match selection must use these stats to aim at weaknesses.
+
+UX polish that sells the upgrade:
+
+Tiny win animation on correct; subtle shake on wrong.
+
+Big Rematch and Share Win buttons on the result screen.
+
+Always show the XP bar under the username on the dashboard.
+
+Acceptance tests (don’t ship until these pass)
+Progress is felt: After a 5-question Solo match with 3 correct, the player sees +XP, at least one subtopic ↑, and the level bar moves.
+
+Friends matter: Two users complete a Live Duel; winner’s rating goes up (>+10), loser’s goes down, and both see changes on the Weekly Ladder.
+
+Weakness targeting works: If a user is weak in Hearsay, at least 3/5 questions in Solo are Hearsay until mastery rises; after 3 wins, the mix shifts.
+
+One-line product rule (keep at the top of the codebase)
+“Every match must teach, reward, and rank: good questions tied to my weakest topics, visible stats that rise immediately, and wins that move my place on a ladder.”
+
