@@ -15,7 +15,7 @@ export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
   const [timeframe, setTimeframe] = useState<'weekly' | 'alltime'>('weekly');
 
   const { data: players = [], isLoading, error } = useQuery<User[]>({
-    queryKey: ['/api/leaderboard', { limit, timeframe }],
+    queryKey: [`/api/leaderboard?limit=${limit}`], // Proper query string
     refetchInterval: realTimeData ? 60000 : 30000, // Slower refresh when real-time is available
     enabled: !realTimeData || realTimeData.length === 0, // Disable API when real-time data is available
   });
@@ -90,7 +90,7 @@ export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
               </div>
             ))}
           </div>
-        ) : players.length === 0 ? (
+        ) : displayPlayers.length === 0 ? (
           <div className="text-center text-muted py-8" data-testid="leaderboard-empty">
             No players on the leaderboard yet. Be the first to compete!
           </div>
@@ -108,7 +108,7 @@ export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
           </div>
         )}
         
-        {players.length >= limit && (
+        {displayPlayers.length >= limit && (
           <div className="text-center mt-4">
             <Button variant="outline" size="sm" data-testid="button-view-full-leaderboard">
               View Full Leaderboard

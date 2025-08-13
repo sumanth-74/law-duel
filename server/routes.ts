@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import session from "express-session";
 import MemoryStore from "memorystore";
 import path from "path";
+import fs from "fs/promises";
 import { storage } from "./storage";
 import { registerSchema, loginSchema } from "@shared/schema";
 import { statsService } from "./services/statsService";
@@ -259,8 +260,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/leaderboard", async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 20;
-      const players = await storage.getTopPlayers(limit);
-      res.json(players);
+      
+      // Get real players from database
+      const realPlayers = await storage.getTopPlayers(limit);
+      
+      // Load bot players from leaderboard.json
+      const leaderboardPath = path.join(process.cwd(), 'data', 'leaderboard.json');
+      let botPlayers = [];
+      try {
+        const leaderboardData = await fs.readFile(leaderboardPath, 'utf-8');
+        botPlayers = JSON.parse(leaderboardData);
+      } catch (err) {
+        console.log('Could not load bot leaderboard data');
+      }
+      
+      // Combine and sort all players by points
+      const allPlayers = [...realPlayers, ...botPlayers]
+        .sort((a, b) => b.points - a.points)
+        .slice(0, limit);
+      
+      res.json(allPlayers);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch leaderboard", error: error.message });
     }
