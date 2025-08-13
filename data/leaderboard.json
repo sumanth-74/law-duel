@@ -51,9 +51,9 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 18,
-    "points": 3491,
+    "points": 3525,
     "totalWins": 63,
-    "totalLosses": 8,
+    "totalLosses": 9,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#F5DEB3",
@@ -66,7 +66,7 @@
       ],
       "accessoryColor": "#E6E6FA"
     },
-    "lastActive": "2025-08-13T20:12:46.206Z"
+    "lastActive": "2025-08-13T22:06:02.507Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -189,9 +189,9 @@
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 13,
-    "points": 2455,
+    "points": 2465,
     "totalWins": 38,
-    "totalLosses": 13,
+    "totalLosses": 14,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#ffdbac",
@@ -202,16 +202,16 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-13T20:07:46.208Z"
+    "lastActive": "2025-08-13T21:56:02.507Z"
   },
   {
     "id": "bot_verdict_viper",
     "username": "VerdictViper",
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
-    "level": 13,
-    "points": 2300,
-    "totalWins": 35,
+    "level": 12,
+    "points": 2337,
+    "totalWins": 36,
     "totalLosses": 13,
     "avatarData": {
       "baseModel": "male",
@@ -225,7 +225,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-12T20:16:57.582Z"
+    "lastActive": "2025-08-13T22:01:02.507Z"
   },
   {
     "id": "bot_objection_hero",
@@ -256,8 +256,8 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 10,
-    "points": 1850,
-    "totalWins": 28,
+    "points": 1868,
+    "totalWins": 29,
     "totalLosses": 18,
     "avatarData": {
       "baseModel": "female",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-12T23:16:43.969Z"
+    "lastActive": "2025-08-13T21:56:02.507Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",
