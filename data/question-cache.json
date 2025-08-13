@@ -56,6 +56,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755099928075,
       "generatedAt": 1755099868076
+    },
+    {
+      "qid": "fresh_openai_1755100168692_e9a1fb00",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A city council passed an ordinance that prohibits any outdoor public assembly without a permit. The ordinance requires applicants to provide a detailed description of the event, including the expected number of participants and the purpose of the assembly. A local activist group challenges the ordinance, arguing it violates their First Amendment rights. Which of the following is the most likely outcome of the challenge?",
+      "choices": [
+        "The ordinance is unconstitutional because it constitutes a prior restraint on free speech.",
+        "The ordinance is constitutional as it serves a compelling government interest.",
+        "The ordinance is constitutional because it is a reasonable time, place, and manner restriction.",
+        "The ordinance is unconstitutional because it discriminates against political speech."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the ordinance is constitutional because it is a reasonable time, place, and manner restriction.",
+      "explanationLong": "The correct answer is that the ordinance is constitutional because it is a reasonable time, place, and manner restriction. The Supreme Court has established that government can impose regulations on public assembly as long as they are content-neutral, narrowly tailored to serve a significant government interest, and leave open ample alternative channels for communication. In this case, the ordinance applies to all public assemblies without regard to content and serves the significant interests of public safety and order. Answer A is incorrect because while prior restraints are generally disfavored, this ordinance does not prohibit speech outright; it merely regulates the manner of assembly. Answer C is wrong because the ordinance applies equally to all types of assemblies, not just political speech, thus it does not discriminate. Finally, answer D is misleading; while the ordinance serves a government interest, it is the reasonableness of the restriction that determines its constitutionality, not the compelling interest standard which applies to content-based restrictions.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100228692,
+      "generatedAt": 1755100168692
+    },
+    {
+      "qid": "fresh_openai_1755100167849_f9f87976",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A state passes a law requiring all citizens to present a government-issued photo ID before voting. The law is challenged in court on the grounds that it violates the Voting Rights Act. What is the most likely outcome of this challenge?",
+      "choices": [
+        "The law is constitutional as long as the state provides free photo IDs to all citizens.",
+        "The law is unconstitutional because it discriminates against minority voters.",
+        "The law is constitutional because states have the authority to regulate their own voting procedures.",
+        "The law is unconstitutional because it imposes an undue burden on the right to vote."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the law is constitutional because states have the authority to regulate their own voting procedures, as long as they do not violate federal law.",
+      "explanationLong": "The correct answer is that the law is constitutional because states have the authority to regulate their own voting procedures. Under the U.S. Constitution, states have the power to determine the manner in which elections are conducted, including voter identification requirements, as long as these do not infringe on the Voting Rights Act. In this case, while the law may impose some burden, it does not inherently discriminate against any group unless proven otherwise. The first answer is incorrect because while undue burdens are a consideration, the law does not impose such a burden if it allows for reasonable access to IDs. The third answer is incorrect because merely requiring ID does not, in itself, constitute discrimination unless it is shown to disproportionately affect a protected class. The fourth answer is misleading; while providing free IDs may mitigate concerns, the law's constitutionality does not solely depend on this provision but rather on the state's authority to regulate voting procedures.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100227849,
+      "generatedAt": 1755100167849
+    },
+    {
+      "qid": "fresh_openai_1755100169367_019a96a2",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A state legislature passes a law that requires all businesses to close by 8 PM to reduce noise in residential areas. A local bar challenges the law, arguing that it violates their right to due process under the Fourteenth Amendment. What is the most likely outcome of the challenge?",
+      "choices": [
+        "The law is unconstitutional because it discriminates against businesses operating in residential areas.",
+        "The law is constitutional under the police power of the state to regulate businesses for the public welfare.",
+        "The law is unconstitutional because it infringes on the First Amendment right to freedom of speech.",
+        "The law is unconstitutional because it violates the bar's right to due process as a property interest."
+      ],
+      "correctIndex": 1,
+      "explanation": "The law is constitutional under the police power of the state to regulate businesses for the public welfare.",
+      "explanationLong": "The correct answer is that the law is constitutional under the police power of the state to regulate businesses for the public welfare. States have broad authority to enact laws that promote the health, safety, and general welfare of their citizens, and regulating business hours to mitigate noise is a valid exercise of this power. The bar's challenge based on due process is unlikely to succeed because the law does not deprive the bar of any fundamental rights or property without due process; it merely imposes a reasonable regulation. The first incorrect answer misapplies due process by failing to recognize that economic regulations are typically upheld unless they are arbitrary or irrational. The third answer incorrectly asserts a First Amendment violation; the law does not target speech but rather regulates business hours. Lastly, the fourth answer incorrectly claims discrimination against businesses; the law applies uniformly to all businesses in the state, thus not violating equal protection principles.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100229368,
+      "generatedAt": 1755100169368
     }
   ],
   "Property": [
@@ -115,6 +172,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755099927051,
       "generatedAt": 1755099867051
+    },
+    {
+      "qid": "fresh_openai_1755100174592_b572d0ed",
+      "subject": "Property",
+      "topic": "Easements",
+      "stem": "Alice owns a parcel of land adjacent to Bob’s property. Bob has been using a path that crosses Alice’s land to access a public road for over 10 years. Alice has never objected to Bob’s use of the path. Recently, Alice decided to put up a fence blocking Bob's access. Bob claims he has a right to continue using the path. What is the most likely outcome if Bob asserts his claim?",
+      "choices": [
+        "Bob does not have an easement because Alice never granted permission for his use of the path.",
+        "Bob has an easement by necessity because he needs access to the public road.",
+        "Bob has an easement by prescription because he used the path openly and continuously for more than 10 years.",
+        "Bob has a license to use the path, which can be revoked by Alice at any time."
+      ],
+      "correctIndex": 2,
+      "explanation": "Bob has an easement by prescription due to his continuous and open use of the path for over 10 years.",
+      "explanationLong": "The correct answer is that Bob has an easement by prescription because he has used the path openly, continuously, and without objection from Alice for more than the statutory period of 10 years. Under the law, an easement by prescription arises when a party uses another's land in a manner that is continuous, open, and adverse to the owner's interests. In this case, Alice's lack of objection strengthens Bob's claim. The first incorrect answer states that Bob does not have an easement because Alice never granted permission, but this misinterprets the nature of prescriptive easements, where permission is not required. The third answer incorrectly suggests that Bob has an easement by necessity; such easements apply only when a landlocked property requires access to a road, which is not the situation here. Lastly, the fourth option claims Bob has a license, which is revocable and does not grant any permanent rights to use the land, contradicting the nature of a prescriptive easement that grants a right of use that cannot be revoked once established.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100234592,
+      "generatedAt": 1755100174592
+    },
+    {
+      "qid": "fresh_openai_1755100168577_947201ea",
+      "subject": "Property",
+      "topic": "Estates",
+      "stem": "Alice conveys her property to Bob 'for life, then to Charlie.' After Bob's death, Charlie conveys the property to David. Bob passes away, and Charlie has not yet died. What is the status of the property now?",
+      "choices": [
+        "The property is owned by Charlie for life.",
+        "The property is owned by Charlie in fee simple.",
+        "The property is owned by Bob's estate.",
+        "The property is owned by David in fee simple."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that the property is owned by Charlie for life. Bob holds a life estate, and upon his death, the property will revert to Charlie as the life tenant.",
+      "explanationLong": "The correct answer is that the property is owned by Charlie for life. Bob holds a life estate, which means he has the right to use and enjoy the property during his lifetime. Upon Bob's death, the property passes to Charlie, who has a remainder interest. Since Charlie is still alive, he holds a life estate in the property, which means he has the right to occupy it until his death. The other options are incorrect because: (1) The property is not owned by Charlie in fee simple, as he only has a life estate at this point (Answer A). (2) David cannot own the property in fee simple because he received it from Charlie, who only has a life estate (Answer B). (3) Bob's estate does not have an interest in the property after his death, as the property passed to Charlie (Answer C). Therefore, the only correct answer is that Charlie owns the property for life.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100228577,
+      "generatedAt": 1755100168577
+    },
+    {
+      "qid": "fresh_openai_1755100170225_cff6ddc8",
+      "subject": "Property",
+      "topic": "Recording Acts",
+      "stem": "Alice owns a parcel of land. On January 1, she sells the land to Bob but does not record the deed. On January 15, Alice sells the same land to Carol and records her deed the same day. Carol had no knowledge of the prior sale to Bob. On January 20, Bob records his deed. Who has superior title to the land?",
+      "choices": [
+        "Carol, because she was a bona fide purchaser without notice.",
+        "Both, because they both have valid deeds.",
+        "Neither, because Alice did not have the authority to sell the land.",
+        "Bob, because he recorded his deed first."
+      ],
+      "correctIndex": 0,
+      "explanation": "Carol has superior title because she is a bona fide purchaser for value without notice and recorded her deed before Bob.",
+      "explanationLong": "The correct answer is Carol, because she is a bona fide purchaser (BFP) who took the property without notice of Bob's prior claim and recorded her deed first. Under the race-notice recording statute, a BFP is protected against prior unrecorded interests if they record first and lack notice of those interests. Bob, although he recorded his deed, did so after Carol had already recorded hers, making Carol's claim superior. The incorrect answers are as follows: (1) Bob's claim is invalid because he had notice of the sale to Carol when he recorded on January 20, and thus he is not a BFP. (3) The claim that neither has title fails because both have valid deeds; Alice had the authority to sell unless there are other factors not stated here. (4) The assertion that both have valid deeds misapplies the race-notice rule, as only one can hold superior title at a time based on the recording and notice status.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100230225,
+      "generatedAt": 1755100170225
     }
   ],
   "Civ Pro": [
@@ -174,6 +288,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755099929298,
       "generatedAt": 1755099869299
+    },
+    {
+      "qid": "fresh_openai_1755100174047_0ea54019",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "Alice, a resident of State A, sues Bob, a resident of State B, in federal court for breach of contract. The amount in controversy is $75,000. Bob argues that the case should be dismissed for lack of subject matter jurisdiction. Which of the following is the most accurate statement regarding the jurisdictional issue?",
+      "choices": [
+        "The federal court has subject matter jurisdiction under diversity jurisdiction because the parties are from different states and the amount in controversy exceeds $75,000.",
+        "The federal court has subject matter jurisdiction under federal question jurisdiction due to the nature of the breach of contract claim.",
+        "The federal court lacks subject matter jurisdiction because the amount in controversy does not exceed $100,000.",
+        "The federal court lacks subject matter jurisdiction because Alice and Bob are both citizens of the United States."
+      ],
+      "correctIndex": 0,
+      "explanation": "The federal court has subject matter jurisdiction under diversity jurisdiction because the parties are from different states and the amount in controversy exceeds $75,000.",
+      "explanationLong": "The correct answer is the first choice, which explains that the federal court has subject matter jurisdiction under diversity jurisdiction. Under 28 U.S.C. § 1332, federal courts have jurisdiction over civil actions between citizens of different states where the amount in controversy exceeds $75,000. Here, Alice is a resident of State A and Bob is a resident of State B, satisfying the diversity requirement, and the amount in controversy is $75,000, which meets the threshold. The second choice is incorrect because it misapplies the concept of citizenship; both parties being U.S. citizens does not negate diversity jurisdiction as long as they are from different states. The third choice is incorrect because breach of contract claims generally do not present a federal question unless they arise under federal law; therefore, federal question jurisdiction under 28 U.S.C. § 1331 does not apply here. The fourth choice is also incorrect because the amount in controversy is indeed $75,000, which exceeds the jurisdictional minimum for diversity jurisdiction, not $100,000.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100234047,
+      "generatedAt": 1755100174048
+    },
+    {
+      "qid": "fresh_openai_1755100169250_4c384c76",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a federal district court, Plaintiff sues Defendant for breach of contract, alleging damages of $75,000. The complaint was properly served, but Defendant failed to respond within the required time frame. Plaintiff then filed a motion for default judgment. Which of the following is TRUE regarding the default judgment?",
+      "choices": [
+        "Plaintiff must prove damages to the court even if a default judgment is entered.",
+        "The court can only grant a default judgment if the amount in controversy exceeds $100,000.",
+        "Defendant can later contest the default judgment without showing good cause.",
+        "The court will automatically grant the default judgment without a hearing."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that Plaintiff must prove damages to the court even if a default judgment is entered, as per Rule 55 of the Federal Rules of Civil Procedure.",
+      "explanationLong": "The correct answer is that Plaintiff must prove damages to the court even if a default judgment is entered. Under Federal Rule of Civil Procedure 55(b), when a party seeks a default judgment, the court must ensure that the plaintiff proves the amount of damages, as the default itself does not automatically establish the amount of damages. The other options are incorrect: Option 0 is wrong because the court does not automatically grant a default judgment without assessing the damages; a hearing may be required. Option 2 is incorrect because Defendant cannot contest a default judgment without demonstrating good cause for the failure to respond, as per Rule 55(c). Lastly, Option 3 is incorrect because there is no minimum amount in controversy requirement for default judgments; the jurisdictional threshold of $75,000 is sufficient for federal diversity jurisdiction, but it does not limit the court's ability to enter a default judgment based on the pleaded amount.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100229250,
+      "generatedAt": 1755100169250
+    },
+    {
+      "qid": "fresh_openai_1755100172821_fea972ee",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a negligence lawsuit, Plaintiff filed a complaint against Defendant in federal district court based on diversity jurisdiction, claiming damages of $75,000. Defendant, a citizen of California, moved to dismiss the case, arguing that the amount in controversy did not meet the jurisdictional threshold. After reviewing the complaint, the court found that Plaintiff's claims included both economic and non-economic damages. What is the correct ruling regarding the court's jurisdiction?",
+      "choices": [
+        "The court lacks jurisdiction because the amount in controversy is not clearly stated.",
+        "The court has jurisdiction only if Plaintiff can prove the amount in controversy at trial.",
+        "The court has jurisdiction because the amount in controversy exceeds $75,000.",
+        "The court lacks jurisdiction because Defendant is a citizen of California."
+      ],
+      "correctIndex": 2,
+      "explanation": "The court has jurisdiction because the amount in controversy exceeds $75,000, which meets the requirements for diversity jurisdiction.",
+      "explanationLong": "The correct answer is that the court has jurisdiction because the amount in controversy exceeds $75,000. Under 28 U.S.C. § 1332, federal courts have diversity jurisdiction when the parties are citizens of different states and the amount in controversy exceeds $75,000. In this case, Plaintiff is asserting a claim for $75,000, which satisfies the threshold requirement for jurisdiction. The second option is incorrect because the amount in controversy is stated in the complaint, and the court is obligated to accept the plaintiff's good faith allegations unless it is clear to a legal certainty that the amount is not met. The third option is also incorrect because the burden of proof regarding the amount in controversy does not shift to the plaintiff at trial; it is determined at the time of filing based on the allegations in the complaint. Lastly, the fourth option is incorrect because diversity jurisdiction does not require that the defendant be from a different state than the plaintiff; it only requires that the parties be citizens of different states, which is satisfied here as the plaintiff is not a citizen of California.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100232821,
+      "generatedAt": 1755100172821
     }
   ],
   "Evidence": [
@@ -233,6 +404,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755099932381,
       "generatedAt": 1755099872381
+    },
+    {
+      "qid": "fresh_openai_1755100174234_e2f2ad16",
+      "subject": "Evidence",
+      "topic": "Hearsay 801–807",
+      "stem": "During a robbery trial, the prosecution calls a witness who testifies that she saw the defendant commit the robbery. The witness had previously identified the defendant in a police lineup shortly after the robbery occurred. The defense objects to the witness's testimony about the lineup identification, arguing that it constitutes hearsay. How should the court rule on the objection?",
+      "choices": [
+        "The court should sustain the objection because the witness's identification was not made in court.",
+        "The court should sustain the objection because the prior identification is an out-of-court statement offered for the truth of the matter asserted.",
+        "The court should overrule the objection because the witness's prior identification is not considered hearsay under FRE 801(d)(1)(C).",
+        "The court should overrule the objection because the witness's testimony is merely corroborative of other evidence."
+      ],
+      "correctIndex": 2,
+      "explanation": "The court should overrule the objection because the witness's prior identification is not considered hearsay under FRE 801(d)(1)(C).",
+      "explanationLong": "The correct answer is that the court should overrule the objection because the witness's prior identification is admissible as non-hearsay under FRE 801(d)(1)(C). This rule states that a prior identification made by a witness is not considered hearsay if the witness testifies and is subject to cross-examination concerning the statement. In this case, the witness testified in court and identified the defendant, fulfilling the requirements of the rule. The first incorrect answer suggests that the identification is hearsay, which misinterprets the nature of prior identifications as exceptions to the hearsay rule. The second incorrect answer incorrectly assumes that the identification was made out of court and therefore cannot be used, failing to recognize that FRE 801(d)(1)(C) specifically provides for such identifications. The third incorrect answer misapplies the hearsay rule by suggesting that an out-of-court identification is inherently inadmissible without considering the specific exception provided by the rule. Lastly, the fourth incorrect choice mischaracterizes the nature of the evidence, as corroborative evidence does not negate the admissibility of the prior identification under the hearsay rules.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100234234,
+      "generatedAt": 1755100174234
+    },
+    {
+      "qid": "fresh_openai_1755100167616_08baf596",
+      "subject": "Evidence",
+      "topic": "Privileges",
+      "stem": "During a criminal trial, the defendant's attorney attempts to introduce a statement made by the defendant to his therapist during a counseling session. The prosecution objects, arguing that the statement is inadmissible. Which of the following is the most likely outcome regarding the admissibility of the statement?",
+      "choices": [
+        "The statement is admissible because it is relevant to the defendant's mental state.",
+        "The statement is inadmissible as hearsay.",
+        "The statement is admissible because it is a declaration against interest.",
+        "The statement is inadmissible due to the therapist-client privilege."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is that the statement is inadmissible due to the therapist-client privilege, which protects confidential communications between a therapist and a patient.",
+      "explanationLong": "The correct answer is that the statement is inadmissible due to the therapist-client privilege. This privilege is designed to encourage open communication between patients and therapists, thus protecting those communications from disclosure in court. In this case, the defendant's statement to his therapist falls under this privilege, making it inadmissible as evidence. The first answer is incorrect because a declaration against interest does not apply here; this privilege is specifically designed for confidential communications, not declarations that would be self-incriminating. The third option is also incorrect because while a defendant's mental state might be relevant, the privilege still protects the statement from being disclosed. Lastly, the fourth answer is wrong because the statement is not hearsay; it is a privileged communication rather than an out-of-court statement offered for the truth of the matter asserted. Thus, the therapist-client privilege is the controlling rule here.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100227616,
+      "generatedAt": 1755100167616
+    },
+    {
+      "qid": "fresh_openai_1755100173048_bdda1f1f",
+      "subject": "Evidence",
+      "topic": "Relevance 401/403",
+      "stem": "During a trial for theft, the prosecution seeks to introduce evidence that the defendant had previously been convicted of shoplifting. The defendant argues that this evidence should be excluded because it is not relevant to the current charge. Under the rules of evidence, should the court admit this prior conviction?",
+      "choices": [
+        "Yes, because prior convictions are always admissible in criminal cases.",
+        "Yes, because it shows a pattern of behavior that is relevant to the current charge.",
+        "No, because the prior conviction does not relate directly to the specific act of theft being charged.",
+        "No, because the prejudicial effect of the prior conviction outweighs its probative value."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is 'No, because the prejudicial effect of the prior conviction outweighs its probative value.' This is based on Rule 403, which allows for exclusion of relevant evidence if its probative value is substantially outweighed by the danger of unfair prejudice.",
+      "explanationLong": "The correct answer is 'No, because the prejudicial effect of the prior conviction outweighs its probative value.' Under Rule 401, evidence is relevant if it makes a fact of consequence more or less probable. However, under Rule 403, relevant evidence may be excluded if its probative value is substantially outweighed by the danger of unfair prejudice. In this case, the prior conviction for shoplifting may unfairly suggest to the jury that the defendant has a propensity to commit theft, leading to prejudice rather than a fair assessment of the current charges. The other choices are incorrect because: (1) 'Yes, because it shows a pattern of behavior that is relevant to the current charge' misapplies the relevance standard, as past behavior does not necessarily indicate current guilt; (2) 'Yes, because prior convictions are always admissible in criminal cases' is incorrect because admissibility is subject to the balancing test of Rule 403; (3) 'No, because the prior conviction does not relate directly to the specific act of theft being charged' is a misinterpretation, as the focus should be on the prejudicial impact rather than direct relevance to the act.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100233048,
+      "generatedAt": 1755100173048
     }
   ],
   "Torts": [
@@ -292,6 +520,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755099931958,
       "generatedAt": 1755099871958
+    },
+    {
+      "qid": "fresh_openai_1755100171610_e82335ee",
+      "subject": "Torts",
+      "topic": "Defamation",
+      "stem": "A local newspaper published an article stating that John, a well-known community leader, was under investigation for embezzling funds from a charity he managed. The article cited an anonymous source but did not provide any evidence to support the claim. John was never charged with any crime and the investigation was later found to be baseless. John claims the article harmed his reputation. What is the likely outcome of John's defamation claim against the newspaper?",
+      "choices": [
+        "John will not prevail because the statement was an opinion, not a fact.",
+        "John will prevail because the newspaper failed to verify the truth of the statement.",
+        "John will not prevail because he is a public figure and must prove actual malice.",
+        "John will prevail because the statement was false and damaging."
+      ],
+      "correctIndex": 2,
+      "explanation": "John is likely to lose because he is a public figure and must prove actual malice to succeed in a defamation claim.",
+      "explanationLong": "The correct answer is that John will not prevail because he is a public figure and must prove actual malice to succeed in a defamation claim. In defamation cases involving public figures, the plaintiff must demonstrate that the defendant made the false statement with knowledge of its falsity or with reckless disregard for the truth (New York Times Co. v. Sullivan). In this case, the newspaper cited an anonymous source, which could indicate they were acting on information they believed to be true, thus making it difficult for John to prove actual malice. The first answer is incorrect because, although the statement was false and damaging, John's status as a public figure raises the burden of proof. The second answer is wrong because the statement is factual in nature, not merely opinion; it asserts that John was under investigation for a crime. The fourth answer is misleading as it suggests that failure to verify the statement alone constitutes malice, which is not sufficient to meet the legal standard without proof of actual malice.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100231610,
+      "generatedAt": 1755100171610
+    },
+    {
+      "qid": "fresh_openai_1755100177308_81d9770c",
+      "subject": "Torts",
+      "topic": "Strict Liability",
+      "stem": "A farmer owns a large, aggressive bull that he keeps in a fenced pasture. One day, the bull escapes through a broken fence and charges onto a nearby road, injuring a passing cyclist. The cyclist sues the farmer for the injuries sustained. Which of the following statements is true regarding the farmer's liability?",
+      "choices": [
+        "The farmer is strictly liable for the injuries caused by the bull because he owned a wild animal.",
+        "The farmer is not liable because he took reasonable steps to maintain the fence.",
+        "The farmer is strictly liable for the injuries because the bull had a history of aggression.",
+        "The farmer is liable only if it can be shown that he was negligent in supervising the bull."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that the farmer is strictly liable for the injuries caused by the bull because he owned a wild animal. Under strict liability, a defendant is liable for harm caused by certain types of animals, particularly those that are wild or inherently dangerous.",
+      "explanationLong": "The correct answer is that the farmer is strictly liable for the injuries caused by the bull because he owned a wild animal. Under the doctrine of strict liability, an owner of a wild animal is liable for injuries caused by that animal regardless of the precautions taken. Here, the bull is considered a wild animal, and its escape and subsequent attack on the cyclist create strict liability on the part of the farmer. Answer B is incorrect because the farmer's reasonable steps to maintain the fence do not negate liability; strict liability does not depend on the owner's conduct. Answer C is incorrect because while the bull's history of aggression may be relevant to negligence claims, it is not necessary to establish strict liability for wild animals. Answer D is also incorrect because strict liability does not require a showing of negligence; the mere fact of ownership of a wild animal is enough to impose liability for any resulting injuries.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100237308,
+      "generatedAt": 1755100177308
+    },
+    {
+      "qid": "fresh_openai_1755100170045_723496de",
+      "subject": "Torts",
+      "topic": "Vicarious Liability",
+      "stem": "During a company-sponsored retreat, employee Alice was driving a company vehicle to a team-building exercise when she negligently ran a red light and collided with another car, injuring its driver. The injured driver sues the company for damages. Which of the following statements is true regarding the company’s liability for Alice's actions?",
+      "choices": [
+        "The company is not vicariously liable because Alice was attending a social event.",
+        "The company is vicariously liable because Alice was driving a company vehicle.",
+        "The company is vicariously liable for Alice's actions because she was acting within the scope of her employment.",
+        "The company is not vicariously liable because Alice was not performing her job duties at the time of the accident."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the company is vicariously liable for Alice's actions because she was acting within the scope of her employment during the incident.",
+      "explanationLong": "The correct answer is that the company is vicariously liable for Alice's actions because she was acting within the scope of her employment. Under the doctrine of vicarious liability, an employer can be held responsible for the negligent acts of an employee if those acts occur within the course and scope of employment. In this case, Alice was driving a company vehicle to a work-related team-building exercise, which constitutes an activity related to her employment. Therefore, her negligence in running the red light is attributed to the company. The second choice is incorrect because Alice was indeed performing a work-related task at the time of the accident, thus fulfilling the 'scope of employment' requirement. The third choice is misleading because while driving a company vehicle is a factor, the key issue is whether she was acting within the scope of her employment, which she was. The fourth choice fails because attending a company-sponsored retreat is not merely a social event; it is a work-related function, which further supports the company's vicarious liability.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100230045,
+      "generatedAt": 1755100170045
     }
   ],
   "Contracts": [
@@ -351,6 +636,179 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755099935792,
       "generatedAt": 1755099875792
+    },
+    {
+      "qid": "fresh_openai_1755100172411_a3155add",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "A homeowner entered into a written contract with a contractor to renovate her kitchen. The contract specified that the total cost would be $15,000 and included a detailed description of the work to be done. After the contract was signed, the homeowner claimed that the contractor verbally promised to include additional work on the kitchen's plumbing for an extra $3,000. When the contractor refused to perform the additional work without a change order, the homeowner sought to introduce the verbal promise as evidence in a lawsuit. Which of the following is true concerning the homeowner's ability to introduce this evidence?",
+      "choices": [
+        "The homeowner cannot introduce the verbal promise because the contract is fully integrated.",
+        "The homeowner can introduce the verbal promise because it clarifies the written contract.",
+        "The homeowner cannot introduce the verbal promise because it contradicts the written terms.",
+        "The homeowner can introduce the verbal promise because it constitutes a collateral agreement."
+      ],
+      "correctIndex": 0,
+      "explanation": "The homeowner cannot introduce the verbal promise because the contract is fully integrated.",
+      "explanationLong": "The correct answer is that the homeowner cannot introduce the verbal promise because the contract is fully integrated. Under the parol evidence rule, if a written contract is determined to be fully integrated, it precludes the introduction of prior or contemporaneous oral agreements that contradict or modify the written terms. Here, the written contract explicitly details the work to be done and the total cost, indicating that it is a complete agreement. The verbal promise regarding additional plumbing work is thus inadmissible as it serves to modify the contract's terms. The first answer is incorrect because the verbal promise does not merely clarify the contract; it adds a new term, which is not permissible under the parol evidence rule. The third answer fails because a collateral agreement must not contradict the main contract, and here the verbal promise does contradict the written terms. The fourth answer is also inaccurate; while it is true that the verbal promise contradicts the written contract, the primary issue is that the contract is fully integrated, which is the reason it cannot be admitted at all.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100232411,
+      "generatedAt": 1755100172411
+    },
+    {
+      "qid": "fresh_openai_1755100154026_18b33a9f",
+      "subject": "Contracts",
+      "topic": "Defenses",
+      "stem": "Alice, a professional photographer, entered into a contract with Bob to provide photography services for his wedding. The contract stipulated that Alice would provide her services for a fee of $2,000, and the wedding was scheduled for June 15. Two weeks before the wedding, Bob learned that Alice had been diagnosed with a serious illness that would prevent her from fulfilling the contract. Bob attempted to find another photographer but was unable to secure one on such short notice. On June 10, Bob informed Alice that he would not be paying her the agreed fee. If Alice sues Bob for breach of contract, which of the following defenses is most likely to be successful for Bob?",
+      "choices": [
+        "Bob can argue that Alice's illness constitutes an impossibility of performance.",
+        "Bob can claim that he was not aware of the contract's terms when he canceled.",
+        "Bob can assert that Alice's illness was foreseeable and therefore she should have made alternative arrangements.",
+        "Bob can argue that he was acting in good faith by seeking another photographer."
+      ],
+      "correctIndex": 0,
+      "explanation": "Bob's defense of impossibility of performance is valid due to Alice's serious illness preventing her from fulfilling the contract.",
+      "explanationLong": "The correct answer is that Bob can argue that Alice's illness constitutes an impossibility of performance. Under contract law, a party may be excused from performance if an unforeseen event renders performance impossible. Alice's illness qualifies as such an event, as it directly prevents her from providing the contracted services. The other options are incorrect: (1) Bob’s claim of ignorance regarding the contract terms is irrelevant; he is bound by the contract he signed. (2) The foreseeability of Alice's illness does not negate the impossibility defense; unforeseen events are typically what invoke this doctrine. (3) While Bob may have sought another photographer, his actions do not negate his obligation under the original contract until he properly terminates it; good faith does not excuse breach of contract. Thus, Bob’s strongest defense lies in the doctrine of impossibility due to Alice’s illness.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100214026,
+      "generatedAt": 1755100154026
+    },
+    {
+      "qid": "fresh_openai_1755100177252_a25935dd",
+      "subject": "Contracts",
+      "topic": "Offer/Acceptance",
+      "stem": "Alice, a graphic designer, sends an email to Bob, a small business owner, offering to create a logo for Bob’s new restaurant for $500. Bob replies the next day, stating he is 'interested' but wants to negotiate the price. Later, Bob calls Alice and verbally agrees to pay $400 for the logo. Alice, however, had already accepted another job and informs Bob that she cannot work on his project. Which of the following statements is true regarding the formation of a contract between Alice and Bob?",
+      "choices": [
+        "Alice's initial email constituted a binding offer that Bob accepted when he expressed interest.",
+        "Alice's acceptance of another job invalidated any potential contract with Bob.",
+        "No contract was formed because Bob's response was a counteroffer.",
+        "Alice and Bob formed a contract when Bob verbally agreed to pay $400 for the logo."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that no contract was formed because Bob's response was a counteroffer, which rejected Alice's original offer.",
+      "explanationLong": "The correct answer is that no contract was formed because Bob's response was a counteroffer, which rejected Alice's original offer. Under contract law, an offer can be revoked before acceptance, and a mere expression of interest does not constitute acceptance. Bob's statement that he wanted to negotiate the price effectively altered the terms of Alice's original offer, thus creating a counteroffer rather than an acceptance. Therefore, Alice’s original offer was not accepted, and no contract was formed. The first answer is incorrect because Bob's verbal agreement at $400 was a counteroffer, not an acceptance of Alice's initial offer. The third answer is incorrect because Alice's initial email was an offer, but it was not accepted; it was countered by Bob. The fourth answer misapplies the law as Alice's acceptance of another job does not invalidate a contract that was never formed due to the counteroffer.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100237252,
+      "generatedAt": 1755100177252
+    }
+  ],
+  "Crim": [
+    {
+      "qid": "fresh_openai_1755099866754_07b5b0a7",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Alex, in a fit of rage, pushes Jamie, causing Jamie to fall and sustain a minor injury. Jamie had previously threatened Alex, stating that he would 'get him' if they ever crossed paths again. When the police arrived, Alex claimed he was acting in self-defense. Which of the following is true regarding Alex's potential criminal liability?",
+      "choices": [
+        "Alex's defense of self-defense is valid because Jamie had previously threatened him.",
+        "Alex is liable for aggravated assault because he pushed Jamie with the intent to harm.",
+        "Alex is not liable for any crime as he acted in self-defense.",
+        "Alex may be liable for battery since he intentionally caused physical harm to Jamie."
+      ],
+      "correctIndex": 3,
+      "explanation": "Alex may be liable for battery since he intentionally caused physical harm to Jamie by pushing him.",
+      "explanationLong": "The correct answer is that Alex may be liable for battery since he intentionally caused physical harm to Jamie. Under the law, battery is defined as the intentional infliction of harmful or offensive contact with another person. In this case, Alex's act of pushing Jamie clearly constitutes such contact, resulting in injury. The self-defense claim is not valid here because self-defense requires an imminent threat of harm, which Jamie's prior threats do not constitute in the moment of the push. The first answer is incorrect because Alex's self-defense claim does not absolve him of liability for battery, as he did not face an immediate threat at the time he acted. The third answer is also incorrect because while past threats can be relevant to a self-defense claim, they do not justify the use of force unless there is an immediate threat of harm. Lastly, the fourth answer is incorrect because aggravated assault requires a higher degree of intent to cause serious bodily harm, which is not supported by the facts presented; Alex's push, while harmful, does not meet this threshold. Thus, the most accurate conclusion is that Alex may be liable for battery.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099926754,
+      "generatedAt": 1755099866754
+    },
+    {
+      "qid": "fresh_openai_1755099958741_55db5e79",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Alex, frustrated with his neighbor's constant noise complaints, throws a rock at the neighbor's window, shattering it. Alex did not intend to hit the neighbor but wanted to express his anger. Which of the following is the most accurate assessment of Alex's legal culpability?",
+      "choices": [
+        "Alex is guilty of criminal mischief because he caused damage to the neighbor's property.",
+        "Alex is guilty of assault because throwing a rock at someone constitutes an attempted battery.",
+        "Alex is not guilty because he did not intend to hit the neighbor.",
+        "Alex is not guilty because the rock did not hit the neighbor."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alex is guilty of criminal mischief as he intentionally caused damage to property, regardless of intent to harm a person.",
+      "explanationLong": "The correct answer is that Alex is guilty of criminal mischief because he intentionally caused damage to his neighbor's property by throwing the rock. The legal rule for criminal mischief requires that a person intentionally damages another's property, which Alex did, regardless of whether he intended to hit the neighbor. The second choice is incorrect because the lack of intent to harm the neighbor does not negate the intent to damage property. The third choice is incorrect because while throwing a rock could constitute an attempted battery, Alex's actions are more appropriately classified as criminal mischief due to the damage caused to the property. Finally, the fourth choice is incorrect because Alex's guilt does not depend on whether the rock hit the neighbor; it is sufficient that he intended to damage the property, which he did when he threw the rock at the window.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100018741,
+      "generatedAt": 1755099958742
+    },
+    {
+      "qid": "fresh_openai_1755099865424_773e117e",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Alex and Jordan confront each other in a public park. In a fit of rage, Alex shoves Jordan, causing him to stumble and fall, resulting in a minor injury. Alex then leaves the scene. Which of the following is the most accurate characterization of Alex's actions?",
+      "choices": [
+        "Alex committed simple assault by intentionally causing apprehension of harmful contact.",
+        "Alex committed battery because he made physical contact with Jordan.",
+        "Alex committed no crime as the shove was not intended to cause harm.",
+        "Alex committed aggravated assault due to the injury caused."
+      ],
+      "correctIndex": 1,
+      "explanation": "Alex committed battery because he made physical contact with Jordan, which constitutes the unlawful application of force.",
+      "explanationLong": "The correct answer is that Alex committed battery because he made physical contact with Jordan. Battery is defined as the unlawful application of force to another person, which includes any physical contact that is harmful or offensive. In this case, Alex's shove constitutes such contact, regardless of whether he intended to cause injury. The first option is incorrect because aggravated assault typically involves a serious injury or the use of a weapon, which is not present here. The second option mischaracterizes the situation; while Alex's actions may have caused apprehension, the legal definition of simple assault does not apply here as there was actual contact. The third option is incorrect because it fails to recognize that the shove, despite not being intended to cause serious harm, still qualifies as battery due to the physical contact involved.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099925424,
+      "generatedAt": 1755099865424
+    },
+    {
+      "qid": "fresh_openai_1755100171757_bba5c954",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Tom threatens to kill Jerry while holding a baseball bat. Jerry, fearing for his life, runs away and calls the police. Tom, realizing the seriousness of his words, puts the bat down and does not follow Jerry. Later, Tom is arrested for making a threat. What charge is most likely to be upheld against Tom?",
+      "choices": [
+        "Terroristic threats",
+        "Assault in the second degree",
+        "Attempted murder",
+        "No crime was committed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tom's actions constitute a terroristic threat as he made a credible threat to Jerry's life, causing fear of imminent harm.",
+      "explanationLong": "The correct answer is 'Terroristic threats.' Under most jurisdictions, a person commits a terroristic threat when they threaten to commit a violent act with the intent to terrorize another or to cause evacuation of a building. Tom's threats made Jerry fear for his life, thus satisfying the legal definition of a terroristic threat. 'Assault in the second degree' is incorrect because, while Tom threatened Jerry, he did not make physical contact or attempt to do so, which is required for assault. 'Attempted murder' is also incorrect; Tom did not take any substantial steps toward executing the threat of murder as he did not pursue Jerry or attempt to harm him. Finally, 'No crime was committed' is incorrect because Tom's verbal threat, coupled with his possession of the bat, constituted a criminal act under the terroristic threats statute, regardless of whether he followed through with any physical action.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100231758,
+      "generatedAt": 1755100171758
+    },
+    {
+      "qid": "fresh_openai_1755100166866_d768668d",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Alex grabs a baseball bat and swings it at Jamie, missing but causing Jamie to fall back in fear. Jamie suffers a broken wrist while trying to escape the situation. Which of the following is the most accurate statement regarding Alex's potential criminal liability?",
+      "choices": [
+        "Alex did not commit any crime because Jamie's injury was accidental.",
+        "Alex committed assault because he attempted to cause physical harm to Jamie.",
+        "Alex did not commit assault since he did not make contact with Jamie.",
+        "Alex committed battery because he intended to cause harmful contact."
+      ],
+      "correctIndex": 1,
+      "explanation": "Alex committed assault as he attempted to cause physical harm to Jamie, which created a reasonable apprehension of imminent harm.",
+      "explanationLong": "The correct answer is that Alex committed assault because he attempted to cause physical harm to Jamie, which created a reasonable apprehension of imminent harm. Under criminal law, assault is defined as an intentional act that creates a reasonable apprehension of imminent harmful or offensive contact. Here, Alex's act of swinging the bat at Jamie, even without contact, instilled fear and apprehension of harm. The first wrong answer, stating that Alex did not commit assault since he did not make contact, is incorrect because contact is not required for an assault claim; the focus is on the apprehension created. The third answer incorrectly identifies the act as battery; battery requires actual contact, which did not occur. Lastly, the fourth answer misapplies the law by suggesting that Jamie's injury being accidental negates liability; however, the injury resulted from a lawful act committed in an unlawful manner, establishing Alex's culpability. Therefore, the legal definitions and facts align with the conclusion that Alex is liable for assault.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100226866,
+      "generatedAt": 1755100166867
+    },
+    {
+      "qid": "fresh_openai_1755100165845_543be67b",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument at a bar, Alex and Jamie exchanged insults. In a moment of anger, Alex pushed Jamie, causing Jamie to stumble and fall, resulting in a minor injury. If the prosecution charges Alex with assault, what is the most likely outcome?",
+      "choices": [
+        "Alex will not be convicted of assault because he acted in self-defense.",
+        "Alex will not be convicted of assault because the injury was minor and unintentional.",
+        "Alex will be convicted of assault because the push was a reckless act.",
+        "Alex will be convicted of assault because he intentionally pushed Jamie."
+      ],
+      "correctIndex": 3,
+      "explanation": "Alex will likely be convicted of assault because he intentionally pushed Jamie, which constitutes the requisite intent for the offense.",
+      "explanationLong": "The correct answer is that Alex will be convicted of assault because he intentionally pushed Jamie. Under criminal law, assault can be established through an intentional act that causes apprehension of harmful or offensive contact. Here, Alex's intentional push constitutes such an act. The minor injury does not negate the assault charge, as the focus is on the intent to cause offensive contact rather than the extent of the injury. The second choice is incorrect because assault can occur without significant injury if there is intent. The third choice fails because, while reckless acts can constitute assault, the facts indicate that Alex's act was intentional, not merely reckless. The fourth option is incorrect because there is no indication that Jamie posed an immediate threat to Alex, which is a requirement for a valid self-defense claim. Thus, Alex's actions do not meet the criteria for self-defense.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100225845,
+      "generatedAt": 1755100165845
     }
   ]
 }

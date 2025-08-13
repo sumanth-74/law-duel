@@ -1,0 +1,318 @@
+1. Civil Procedure
+Jurisdiction
+
+Subject-matter jurisdiction (federal question, diversity, supplemental)
+
+Personal jurisdiction (traditional bases, long-arm statutes, minimum contacts)
+
+Removal & remand
+
+Venue and Transfer
+
+Proper venue rules
+
+Forum non conveniens
+
+Pleadings
+
+Complaint requirements, Rule 12 motions, answer, amendments
+
+Joinder
+
+Joinder of claims and parties
+
+Impleader, intervention, interpleader
+
+Class actions
+
+Pretrial Procedures
+
+Discovery scope, devices, sanctions
+
+Motions
+
+Summary judgment
+
+Judgment as a matter of law (JMOL) & renewed JMOL
+
+Default judgment
+
+Trial and Post-Trial
+
+Jury trial right
+
+Verdicts, relief, post-trial motions
+
+Appellate Review
+
+Final judgment rule, interlocutory appeals
+
+Standards of review
+
+Preclusion
+
+Claim preclusion (res judicata)
+
+Issue preclusion (collateral estoppel)
+
+2. Constitutional Law
+Judicial Review
+
+Justiciability (standing, ripeness, mootness, political question)
+
+Separation of Powers
+
+Congressional, executive, judicial powers
+
+Checks and balances
+
+Federalism
+
+Preemption
+
+Dormant commerce clause
+
+Privileges and immunities
+
+10th Amendment limits (anti-commandeering)
+
+Individual Rights
+
+State action requirement
+
+Due Process (procedural & substantive)
+
+Equal Protection
+
+Takings Clause
+
+Contract Clause
+
+First Amendment
+
+Freedom of speech, press, association
+
+Religion (Establishment Clause, Free Exercise Clause)
+
+3. Contracts
+Formation
+
+Offer, acceptance, consideration
+
+Defenses (capacity, mistake, fraud, duress, unconscionability)
+
+Statute of Frauds
+
+Covered contracts, exceptions
+
+Interpretation and Parol Evidence Rule
+
+Performance
+
+Conditions (express, implied, constructive)
+
+Substantial performance
+
+Breach
+
+Material vs. minor breach
+
+Anticipatory repudiation
+
+Remedies
+
+Expectation, reliance, restitution
+
+Specific performance
+
+UCC remedies
+
+Third-Party Issues
+
+Third-party beneficiaries
+
+Assignment and delegation
+
+UCC Article 2
+
+Formation, firm offers, modification
+
+Risk of loss
+
+Warranties
+
+Seller’s and buyer’s remedies
+
+4. Criminal Law & Procedure
+Criminal Law
+Homicide
+
+Murder (degrees, felony murder)
+
+Manslaughter (voluntary, involuntary)
+
+Other Crimes
+
+Theft (larceny, embezzlement, false pretenses, robbery)
+
+Burglary, arson
+
+Assault, battery, kidnapping, rape
+
+Inchoate offenses (attempt, solicitation, conspiracy)
+
+Defenses
+
+Self-defense, defense of others, property
+
+Insanity, intoxication, duress, necessity
+
+Mistake of fact/law
+
+Criminal Procedure
+Fourth Amendment
+
+Search and seizure, warrants, exceptions
+
+Exclusionary rule, fruit of the poisonous tree
+
+Fifth Amendment
+
+Miranda rights
+
+Double jeopardy
+
+Sixth Amendment
+
+Right to counsel, confrontation
+
+Pretrial
+
+Identification procedures
+
+Bail, preliminary hearings
+
+Trial
+
+Jury rights
+
+Plea bargaining
+
+5. Evidence
+Relevance
+
+Logical and legal relevance
+
+Rule 403 balancing
+
+Character Evidence
+
+Civil vs. criminal
+
+Methods of proving character
+
+Impeachment
+
+Prior inconsistent statements
+
+Bias, prior convictions
+
+Hearsay
+
+Definition, exclusions (801(d))
+
+Exceptions (803, 804, 807)
+
+Privileges
+
+Attorney-client, spousal, doctor-patient
+
+Authentication & Best Evidence Rule
+
+Judicial Notice
+
+Opinion Testimony
+
+Lay vs. expert
+
+6. Real Property
+Ownership
+
+Present estates
+
+Future interests (remainders, executory interests)
+
+Rule Against Perpetuities
+
+Concurrent Estates
+
+Joint tenancy, tenancy in common, tenancy by the entirety
+
+Landlord-Tenant Law
+
+Lease types, tenant and landlord duties
+
+Assignment, sublease
+
+Easements, Covenants, Servitudes
+
+Real Estate Contracts
+
+Statute of Frauds, marketable title
+
+Equitable conversion
+
+Deeds
+
+Types, delivery, covenants of title
+
+Mortgages
+
+Lien theory vs. title theory
+
+Foreclosure
+
+Recording
+
+Notice, race, race-notice statutes
+
+Adverse Possession
+
+7. Torts
+Intentional Torts
+
+Battery, assault, false imprisonment, IIED
+
+Trespass to land/chattels, conversion
+
+Defenses
+
+Consent, self-defense, necessity
+
+Negligence
+
+Duty, breach, causation, damages
+
+Special duties (landowners, professionals)
+
+Negligence per se
+
+Res ipsa loquitur
+
+Strict Liability
+
+Abnormally dangerous activities
+
+Animals
+
+Products Liability
+
+Negligence, strict liability, warranty
+
+Defamation & Privacy Torts
+
+Miscellaneous
+
+Vicarious liability
+
+Joint and several liability

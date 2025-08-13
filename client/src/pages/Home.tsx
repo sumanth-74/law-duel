@@ -672,10 +672,6 @@ export default function Home() {
                       <Heart className="w-4 h-4 text-red-400 fill-red-400" />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-indigo-300">Continue Cost</span>
-                    <Badge className="bg-green-600/30 text-green-200 border-green-500/50">$0.99</Badge>
-                  </div>
                 </div>
                 <Button 
                   onClick={() => {

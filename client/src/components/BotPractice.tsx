@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Heart, Flame, Trophy, Crown, CreditCard } from 'lucide-react';
+import { ArrowLeft, Heart, Flame, Trophy, Crown } from 'lucide-react';
 import LawDuelLogo from '@/components/LawDuelLogo';
+import MonetizationModal from '@/components/MonetizationModal';
 
 const SUBJECTS = [
   'Mixed Questions',
@@ -292,10 +293,6 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
                 <Crown className="w-4 h-4 text-purple-400" />
                 Higher difficulty = more points
               </li>
-              <li className="flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-green-400" />
-                Continue after game over with payment
-              </li>
             </ul>
           </div>
 
@@ -445,123 +442,70 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
     );
   }
 
-  // GAME OVER STATE - Show final score and monetization option
+  // GAME OVER STATE - Show final score and option to continue
   if (gameState === 'game-over') {
     return (
-      <Card className="w-full max-w-2xl mx-auto bg-panel border-white/10">
-        <CardHeader className="text-center">
-          <div className="mb-4">
-            <Crown className="w-16 h-16 mx-auto text-mystic-gold" />
-          </div>
-          <CardTitle className="text-3xl text-arcane font-cinzel">
-            Challenge Complete!
-          </CardTitle>
-          <p className="text-muted text-sm mt-2">
-            You made it through {challenge?.round || 0} rounds
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6 text-center">
-          <div className="bg-mystic-gold/10 border border-mystic-gold/30 p-6 rounded-lg">
-            <div className="text-4xl font-bold text-mystic-gold mb-2">
-              {challenge?.score || 0}
+      <>
+        <Card className="w-full max-w-2xl mx-auto bg-panel border-white/10">
+          <CardHeader className="text-center">
+            <div className="mb-4">
+              <Crown className="w-16 h-16 mx-auto text-mystic-gold" />
             </div>
-            <div className="text-sm text-muted">Final Score</div>
-          </div>
-
-          <div className="bg-panel-2 border border-white/10 p-4 rounded-lg">
-            <h3 className="font-semibold text-arcane mb-2">Challenge Over</h3>
-            <p className="text-sm text-muted mb-4">
-              You've used all 3 lives for today. Come back tomorrow for a fresh challenge, or continue now with a small purchase.
+            <CardTitle className="text-3xl text-arcane font-cinzel">
+              Challenge Complete!
+            </CardTitle>
+            <p className="text-muted text-sm mt-2">
+              You made it through {challenge?.round || 0} rounds
             </p>
-          </div>
+          </CardHeader>
+          <CardContent className="space-y-6 text-center">
+            <div className="bg-mystic-gold/10 border border-mystic-gold/30 p-6 rounded-lg">
+              <div className="text-4xl font-bold text-mystic-gold mb-2">
+                {challenge?.score || 0}
+              </div>
+              <div className="text-sm text-muted">Final Score</div>
+            </div>
 
-          <div className="space-y-3">
-            <Button 
-              onClick={handleContinueWithPayment}
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
-              size="lg"
-              data-testid="button-continue-payment"
-            >
-              <CreditCard className="w-4 h-4 mr-2" />
-              Continue with 3 Fresh Lives ($0.99)
-            </Button>
-            <Button 
-              onClick={() => setGameState('setup')}
-              variant="outline" 
-              className="w-full border-white/20 text-muted hover:bg-white/5"
-              size="lg"
-              data-testid="button-new-challenge"
-            >
-              Start New Challenge Tomorrow
-            </Button>
-            <Button 
-              onClick={onBack} 
-              variant="ghost" 
-              className="w-full text-muted hover:bg-white/5"
-              size="lg"
-              data-testid="button-back-menu"
-            >
-              Back to Menu
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="bg-panel-2 border border-white/10 p-4 rounded-lg">
+              <h3 className="font-semibold text-arcane mb-2">Out of Lives!</h3>
+              <p className="text-sm text-muted mb-4">
+                You've used all 3 lives. Great effort!
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button 
+                onClick={handleContinueWithPayment}
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                size="lg"
+                data-testid="button-continue-payment"
+              >
+                Continue Challenge
+              </Button>
+              <Button 
+                onClick={onBack} 
+                variant="outline" 
+                className="w-full border-white/20 text-muted hover:bg-white/5"
+                size="lg"
+                data-testid="button-back-menu"
+              >
+                Back to Menu
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Monetization Modal - only shows when user chooses to continue */}
+        <MonetizationModal
+          isOpen={showMonetization}
+          onClose={() => setShowMonetization(false)}
+          onSuccess={handlePaymentSuccess}
+          challengeId={challenge?.id || ''}
+        />
+      </>
     );
   }
 
-  // MONETIZATION MODAL
-  return (
-    <>
-      <Dialog open={showMonetization} onOpenChange={setShowMonetization}>
-        <DialogContent className="bg-panel border-white/10 max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-arcane font-cinzel text-xl">
-              Continue Your Challenge
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-green-500" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Restore Your Lives</h3>
-              <p className="text-sm text-muted">
-                Get 3 fresh lives and continue your challenge right where you left off.
-              </p>
-            </div>
-            
-            <div className="bg-green-500/10 border border-green-500/30 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-green-400">$0.99</div>
-              <div className="text-sm text-muted">One-time purchase</div>
-            </div>
-
-            <div className="space-y-2">
-              <Button 
-                onClick={handlePaymentSuccess}
-                className="w-full bg-green-600 hover:bg-green-700"
-                size="lg"
-              >
-                Purchase & Continue
-              </Button>
-              <Button 
-                onClick={() => setShowMonetization(false)}
-                variant="outline"
-                className="w-full border-white/20"
-                size="lg"
-              >
-                Maybe Later
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Fallback when dialog state is inconsistent */}
-      <Card className="w-full max-w-2xl mx-auto bg-panel border-white/10">
-        <CardContent className="p-8 text-center">
-          <p className="text-muted">Loading challenge...</p>
-        </CardContent>
-      </Card>
-    </>
-  );
+  // This shouldn't be reached - all states are handled above
+  return null;
 }
