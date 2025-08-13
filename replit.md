@@ -8,7 +8,7 @@ Law Duel is a competitive legal education game where players engage in 1v1 duels
 
 Preferred communication style: Simple, everyday language.
 
-**UX Requirements (Updated 2025-01-12):**
+**UX Requirements (Updated 2025-01-13):**
 - **Game focus**: Law Duel is a competitive legal education game, not just a study tool
 - **Direct signup**: Users can register directly on landing page with username only
 - **Avatar creation**: Account creation leads directly to character/avatar creation
@@ -27,6 +27,8 @@ Preferred communication style: Simple, everyday language.
 - **Daily Quests**: 3 rotating goals with cosmetic rewards and XP bursts
 - **Tier Milestones**: Visible tiers (Novice to Archon) with short-term progression goals
 - **Streamlined onboarding**: Direct signup to avatar creation flow for immediate engagement
+- **Streamlined UI**: Removed redundant "View Rankings" link, leaderboard serves as primary rankings display
+- **Populated leaderboard**: 15+ competitive bot players make platform feel active and engaging
 
 ## System Architecture
 

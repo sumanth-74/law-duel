@@ -18,7 +18,7 @@ export async function initializeLeaderboard() {
       
       // Check if we need to seed with bots for a more active appearance
       const leaderboard = await readLeaderboard();
-      if (leaderboard.length < 5) {
+      if (leaderboard.length < 15) {
         await seedLeaderboardWithBots();
       }
     } catch {
@@ -112,6 +112,46 @@ async function seedLeaderboardWithBots() {
       points: 2300,
       totalWins: 35,
       totalLosses: 13,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_victoria_chen',
+      username: 'VictoriaChen',
+      displayName: 'Victoria Chen',
+      level: 19,
+      points: 3450,
+      totalWins: 62,
+      totalLosses: 8,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_michael_oconnor',
+      username: 'MichaelOConnor',
+      displayName: "Michael O'Connor",
+      level: 21,
+      points: 3850,
+      totalWins: 71,
+      totalLosses: 5,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_priya_sharma',
+      username: 'PriyaSharma',
+      displayName: 'Priya Sharma',
+      level: 10,
+      points: 1850,
+      totalWins: 28,
+      totalLosses: 18,
+      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'bot_robert_williams',
+      username: 'RobertWilliams',
+      displayName: 'Robert Williams',
+      level: 20,
+      points: 3700,
+      totalWins: 67,
+      totalLosses: 6,
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     }
   ];
