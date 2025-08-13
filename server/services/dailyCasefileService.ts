@@ -228,22 +228,47 @@ export class DailyCasefileService {
 
   // Shuffle answer choices and update correct index
   private shuffleChoices(questionData: any): any {
-    const choices = [...questionData.choices];
-    const correctChoice = choices[questionData.correctIndex];
+    // Handle both mbeItem format (with rationales) and simple format
+    const originalChoices = questionData.choices || questionData.options;
+    const originalCorrectIndex = questionData.correctIndex !== undefined ? questionData.correctIndex : 0;
+    const originalRationales = questionData.optionRationales || questionData.rationales;
     
-    // Simple shuffle
-    for (let i = choices.length - 1; i > 0; i--) {
+    // Create array of items with their original indices
+    const items = originalChoices.map((choice: string, index: number) => ({
+      choice,
+      rationale: originalRationales ? (originalRationales[index] || originalRationales[index.toString()]) : null,
+      originalIndex: index,
+      isCorrect: index === originalCorrectIndex
+    }));
+    
+    // Fisher-Yates shuffle to ensure proper randomization
+    for (let i = items.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [choices[i], choices[j]] = [choices[j], choices[i]];
+      [items[i], items[j]] = [items[j], items[i]];
     }
     
-    // Find new correct index
-    const newCorrectIndex = choices.findIndex(choice => choice === correctChoice);
+    // Extract shuffled data and find new correct index
+    const shuffledChoices = items.map((item: any) => item.choice);
+    const newCorrectIndex = items.findIndex((item: any) => item.isCorrect);
+    
+    // Build shuffled rationales if they exist
+    let shuffledRationales: any = null;
+    if (originalRationales) {
+      shuffledRationales = {};
+      items.forEach((item: any, newIndex: number) => {
+        if (item.rationale) {
+          shuffledRationales[newIndex.toString()] = item.rationale;
+        }
+      });
+    }
+    
+    console.log(`🎲 Shuffled daily question: original correct was ${originalCorrectIndex} (${String.fromCharCode(65 + originalCorrectIndex)}), new correct is ${newCorrectIndex} (${String.fromCharCode(65 + newCorrectIndex)})`);
     
     return {
       ...questionData,
-      choices,
-      correctIndex: newCorrectIndex
+      choices: shuffledChoices,
+      correctIndex: newCorrectIndex,
+      ...(shuffledRationales && { optionRationales: shuffledRationales })
     };
   }
 
