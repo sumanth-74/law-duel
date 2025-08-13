@@ -113,6 +113,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100229368,
       "generatedAt": 1755100169368
+    },
+    {
+      "qid": "fresh_openai_1755100334537_30c726c9",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "The city of Springfield has enacted an ordinance that prohibits all forms of public speech in its parks, citing a need to maintain public order and safety. A group of local activists wishes to hold a peaceful demonstration in one of the parks to promote environmental awareness. They challenge the ordinance in court. What is the likely outcome of their challenge?",
+      "choices": [
+        "The ordinance is constitutional because it applies equally to all speech, regardless of content.",
+        "The ordinance is constitutional because the city has a legitimate interest in maintaining public order.",
+        "The ordinance is unconstitutional as it broadly prohibits speech in a public forum without sufficient justification.",
+        "The ordinance is unconstitutional because it does not provide for a permit system for public demonstrations."
+      ],
+      "correctIndex": 2,
+      "explanation": "The ordinance is unconstitutional as it broadly prohibits speech in a public forum without sufficient justification.",
+      "explanationLong": "The correct answer is that the ordinance is unconstitutional as it broadly prohibits speech in a public forum without sufficient justification. Under the First Amendment, public parks are considered traditional public forums where free speech is highly protected. The city must demonstrate a compelling interest and that the restrictions are narrowly tailored to serve that interest, which it has not done in this case. Answer choice 1 is correct because the blanket prohibition lacks the required justification. Answer choice 2 is incorrect because while maintaining order is a legitimate interest, it does not justify an outright ban on speech. Answer choice 3 is incorrect as well; even if the ordinance applies equally to all speech, it still must meet the strict scrutiny standard in public forums, which it fails to do. Finally, answer choice 4 is misleading; while a permit system could be a reasonable regulation, it does not address the fundamental issue that the ordinance itself is an unconstitutional prior restraint on free speech.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100394537,
+      "generatedAt": 1755100334537
+    },
+    {
+      "qid": "fresh_openai_1755100322887_99838ed8",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A state legislature enacts a law that requires all public school students to recite a specific patriotic pledge at the beginning of each school day. The law does not allow any exemptions for students who, for religious or personal reasons, choose not to participate. A group of parents files a lawsuit against the state, arguing that the law violates the Establishment Clause of the First Amendment. What is the likely outcome of the lawsuit?",
+      "choices": [
+        "The law is unconstitutional because it violates the Free Exercise Clause.",
+        "The law is unconstitutional because it coerces students to engage in a religious exercise.",
+        "The law is constitutional because it does not favor one religion over another.",
+        "The law is constitutional because it promotes patriotism among students."
+      ],
+      "correctIndex": 1,
+      "explanation": "The law is unconstitutional because it coerces students to engage in a religious exercise.",
+      "explanationLong": "The correct answer is that the law is unconstitutional because it coerces students to engage in a religious exercise. Under the Establishment Clause of the First Amendment, the government cannot compel individuals to participate in religious activities, and this law mandates participation in a pledge that has been viewed as a form of religious expression. The coercion of students without allowing exemptions for personal or religious beliefs violates principles established in cases such as *Engel v. Vitale*, where the Supreme Court ruled against mandated prayer in schools. The second answer is incorrect because promoting patriotism does not justify the infringement on individual rights, especially when it comes to religious freedoms. The third answer fails because the law's coercive nature is not mitigated by the absence of favoritism toward a specific religion; the issue lies in the compulsion itself. Lastly, the fourth answer is incorrect as it misapplies the Free Exercise Clause; the primary issue here is coercion rather than free exercise, although both clauses are relevant to the overall analysis.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100382887,
+      "generatedAt": 1755100322888
+    },
+    {
+      "qid": "fresh_openai_1755100326877_71c9012f",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "During a heated election season, a state legislature passes a law that prohibits any political advertisements from being broadcast within 60 days of an election. The law is intended to reduce misinformation and promote fair campaigning. A political action committee (PAC) challenges the law, arguing that it violates the First Amendment's protection of free speech. Which of the following is most likely to be the outcome of this challenge?",
+      "choices": [
+        "The law is unconstitutional because it does not provide any exceptions for factually accurate advertisements.",
+        "The law is unconstitutional because it restricts political speech during a critical time for public discourse.",
+        "The law is constitutional because the state has a compelling interest in preventing misinformation.",
+        "The law is constitutional because it applies equally to all political advertisements."
+      ],
+      "correctIndex": 1,
+      "explanation": "The law is unconstitutional because it restricts political speech during a critical time for public discourse, violating the First Amendment.",
+      "explanationLong": "The correct answer is that the law is unconstitutional because it restricts political speech during a critical time for public discourse. Under the First Amendment, political speech is afforded the highest level of protection, particularly during elections when voters need access to diverse viewpoints. The law's broad prohibition on advertising within 60 days of an election is likely to be viewed as a substantial burden on free speech rights, lacking a compelling justification that would withstand strict scrutiny. The second choice is incorrect because, although states can regulate speech, they must show that their interests are compelling and that the law is narrowly tailored, which this law fails to do. The third option misapplies the equal treatment principle; even if the law applies equally, it still must not infringe on free speech rights. Lastly, the fourth choice is incorrect because the unconstitutionality of the law does not hinge solely on the absence of exceptions for accurate advertisements; rather, the law's timing and scope itself represents a broad infringement of First Amendment rights.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100386877,
+      "generatedAt": 1755100326877
     }
   ],
   "Property": [
@@ -229,6 +286,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100230225,
       "generatedAt": 1755100170225
+    },
+    {
+      "qid": "fresh_openai_1755100323164_a1e63371",
+      "subject": "Property",
+      "topic": "Estates",
+      "stem": "Alice owned a parcel of land and decided to convey it to Bob 'for life.' After Bob's death, Alice specified that the property should go to Carol. Upon Bob's death, Carol claims ownership of the property. What type of estate does Bob hold in the property?",
+      "choices": [
+        "A fee simple determinable",
+        "A remainder interest",
+        "A life estate",
+        "A fee simple absolute"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bob holds a life estate in the property, which is a present interest that lasts for the duration of his life.",
+      "explanationLong": "The correct answer is that Bob holds a life estate. A life estate is an estate that lasts for the life of the grantee, in this case, Bob. Upon Bob's death, the property will transfer to Carol, who has a remainder interest contingent on Bob's life estate. The conveyance 'for life' clearly indicates that Bob's interest is limited to his lifetime, fulfilling the requirement for a life estate. The incorrect answers are as follows: (1) A fee simple absolute grants complete ownership and would not limit the estate to Bob's life; hence, it does not apply here. (2) A fee simple determinable involves a condition that could terminate the estate automatically upon the occurrence of a specified event, which is not present in this conveyance. (3) A remainder interest is not an estate held by Bob; it is Carol's future interest that will take effect after Bob's life estate ends. Therefore, the only accurate characterization of Bob's interest is a life estate.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100383164,
+      "generatedAt": 1755100323164
+    },
+    {
+      "qid": "fresh_openai_1755100324492_2bc37feb",
+      "subject": "Property",
+      "topic": "Recording Acts",
+      "stem": "Alice owns a parcel of land and conveys it to Bob in a written deed. Bob does not record the deed immediately. Later, Alice conveys the same parcel of land to Charlie, who is unaware of Bob's interest and records his deed first. Which party has superior title to the property?",
+      "choices": [
+        "Alice, because she conveyed the property to both Bob and Charlie.",
+        "Bob, because he had possession of the property before Charlie recorded his deed.",
+        "Charlie, because he recorded his deed first and had no notice of Bob's interest.",
+        "Bob, because he was the first to receive the deed from Alice."
+      ],
+      "correctIndex": 2,
+      "explanation": "Charlie has superior title because he is a bona fide purchaser (BFP) who recorded first and had no notice of Bob's interest.",
+      "explanationLong": "The correct answer is Charlie, as he is a bona fide purchaser (BFP) who recorded his deed first and had no notice of Bob's prior interest. Under the race-notice recording statute, a BFP who takes without notice of a prior interest and records first will prevail over prior unrecorded interests. Here, Charlie's lack of notice regarding Bob's deed allows him to claim superior title despite Bob's earlier acquisition. Bob's failure to record his deed means he cannot protect his interest against Charlie, who did record. The other answer options are incorrect: (1) Bob does not have superior title simply because he received the deed first; he failed to record it, thus losing his rights under the race-notice statute. (2) Alice cannot claim title because she conveyed the property to two parties; her action does not grant her superior rights. (3) Bob's possession before Charlie's recording does not confer superior title under the race-notice rule, as possession alone does not defeat Charlie's recorded interest.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100384492,
+      "generatedAt": 1755100324492
+    },
+    {
+      "qid": "fresh_openai_1755100322586_0a003e59",
+      "subject": "Property",
+      "topic": "Recording Acts",
+      "stem": "Alice and Bob enter into a contract for the sale of Alice's land. After executing the contract, Alice sells the same land to Charlie, who is a bona fide purchaser (BFP) and does not know about the contract with Bob. Charlie promptly records his deed. Bob, unaware of Charlie's transaction, later records his contract with Alice. Who has superior rights to the property?",
+      "choices": [
+        "Bob has superior rights because he made a prior contract with Alice.",
+        "Charlie has superior rights because he recorded first and is a bona fide purchaser without notice.",
+        "Bob has superior rights because he recorded his contract after Alice's sale to Charlie.",
+        "Alice retains superior rights because she sold to Charlie after the contract with Bob."
+      ],
+      "correctIndex": 1,
+      "explanation": "Charlie has superior rights as a bona fide purchaser who recorded first.",
+      "explanationLong": "The correct answer is that Charlie has superior rights because he is a bona fide purchaser (BFP) who recorded his deed first without notice of Bob's prior contract with Alice. Under the race-notice statute, a BFP who records first has priority over any subsequent purchasers who do not have notice of prior interests. In this case, Charlie's lack of notice of Bob's contract and his timely recording give him superior rights. Bob's position is weakened because he did not record before Charlie and lacks the status of a BFP. The second answer is incorrect because Bob's recording after Charlie does not give him rights superior to Charlie's. The third answer incorrectly suggests that Alice retains any rights; she cannot convey good title to Charlie after contracting with Bob. The fourth answer is also incorrect because simply having a prior contract does not confer superior rights unless it is recorded before the subsequent purchaser's deed, which did not happen here.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100382586,
+      "generatedAt": 1755100322586
     }
   ],
   "Civ Pro": [
@@ -345,6 +459,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100232821,
       "generatedAt": 1755100172821
+    },
+    {
+      "qid": "fresh_openai_1755100324143_5c24c6e0",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a federal civil lawsuit, Plaintiff files a complaint against Defendant in the wrong district court due to a miscalculation of the proper venue. After Defendant raises the issue of improper venue in their answer, Plaintiff seeks to amend the complaint to file in the correct district. Which of the following statements is true regarding the amendment and venue in this scenario?",
+      "choices": [
+        "The amendment will be denied because the original complaint was filed in the wrong venue.",
+        "Plaintiff must demonstrate that the original venue was improper to amend the complaint.",
+        "Plaintiff can amend the complaint to change the venue to the correct district without any limitations.",
+        "Defendant can object to the amendment based on the doctrine of laches."
+      ],
+      "correctIndex": 1,
+      "explanation": "Plaintiff must demonstrate that the original venue was improper to amend the complaint.",
+      "explanationLong": "The correct answer is that Plaintiff must demonstrate that the original venue was improper to amend the complaint. Under 28 U.S.C. § 1446(b)(3), if a case is filed in an improper venue, a party may amend their pleadings to correct the venue issue, but must show the initial complaint was filed incorrectly. The first option is incorrect because while Plaintiff may amend, they cannot do so without addressing the initial venue issue. The third option is incorrect as the doctrine of laches applies to equitable defenses and does not pertain to procedural venue issues. The fourth option is misleading because while the original complaint was indeed filed in the wrong venue, the amendment procedure allows for correction if proper grounds are established, thus denying the amendment solely based on the initial error is not accurate.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100384143,
+      "generatedAt": 1755100324143
+    },
+    {
+      "qid": "fresh_openai_1755100326789_6cd8e642",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a diversity case, Plaintiff, a citizen of State A, sues Defendant, a citizen of State B, for breach of contract in a federal district court. The amount in controversy exceeds $75,000. After the complaint is filed, Defendant moves to dismiss the case for lack of personal jurisdiction, arguing that he does not have sufficient contacts with State A. Which of the following is the most likely outcome of Defendant's motion to dismiss?",
+      "choices": [
+        "The motion to dismiss will be denied because the amount in controversy exceeds $75,000.",
+        "The motion to dismiss will be granted if Defendant can prove he has no business or personal ties to State A.",
+        "The motion to dismiss will be denied if Defendant's activities in State A are sufficient to establish minimum contacts.",
+        "The motion to dismiss will be granted because Defendant has no contacts with State A."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the motion to dismiss will be denied if Defendant's activities in State A are sufficient to establish minimum contacts, which is necessary for personal jurisdiction.",
+      "explanationLong": "The correct answer is that the motion to dismiss will be denied if Defendant's activities in State A are sufficient to establish minimum contacts. Under the Due Process Clause, a court may exercise personal jurisdiction over a defendant if that defendant has established minimum contacts with the forum state, such that the exercise of jurisdiction does not offend traditional notions of fair play and substantial justice. In this scenario, if Defendant has engaged in activities in State A that create a substantial connection, personal jurisdiction would be appropriate. Answer A is incorrect because lack of contacts alone does not automatically grant a motion to dismiss; it depends on the nature and quality of those contacts. Answer B is incorrect because the amount in controversy is not relevant to personal jurisdiction but rather to subject matter jurisdiction. Finally, Answer D is incorrect because the burden is on Defendant to demonstrate a lack of minimum contacts, not just to prove a lack of business or personal ties. Thus, the correct answer emphasizes the requirement of minimum contacts for a denial of the motion to dismiss.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100386789,
+      "generatedAt": 1755100326790
+    },
+    {
+      "qid": "fresh_openai_1755100333408_389a5ef4",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a civil lawsuit concerning a breach of contract, Plaintiff files a complaint in a federal district court. Defendant moves to dismiss the complaint for lack of personal jurisdiction, arguing that he is a resident of another state and has not conducted any business in the state where the court is located. Plaintiff argues that Defendant has established sufficient minimum contacts with the forum state through a series of email communications and phone calls related to the contract negotiations. Which of the following is the most likely outcome regarding the motion to dismiss?",
+      "choices": [
+        "The court will grant the motion to dismiss because the Plaintiff did not serve Defendant properly.",
+        "The court will grant the motion to dismiss because Defendant is a resident of another state and has no physical presence in the forum state.",
+        "The court will deny the motion to dismiss because the breach of contract occurred in the forum state.",
+        "The court will deny the motion to dismiss because Defendant's email communications and phone calls establish minimum contacts with the forum state."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is that the court will deny the motion to dismiss because Defendant's email communications and phone calls establish minimum contacts with the forum state.",
+      "explanationLong": "The correct answer is (A). Under the Due Process Clause, a court may exercise personal jurisdiction over a defendant if the defendant has sufficient minimum contacts with the forum state that do not offend traditional notions of fair play and substantial justice. Here, Defendant's email communications and phone calls demonstrate purposeful availment of the forum state's laws, thus establishing minimum contacts. Answer (B) is incorrect because mere residency and lack of physical presence do not automatically preclude personal jurisdiction if minimum contacts exist. Answer (C) is incorrect because the location of the breach is not the sole factor; the nature of the contacts is crucial in determining jurisdiction. Finally, answer (D) is incorrect because the question does not provide any facts suggesting improper service of process; thus, the motion to dismiss on those grounds is unfounded.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100393408,
+      "generatedAt": 1755100333408
     }
   ],
   "Evidence": [
@@ -461,6 +632,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100233048,
       "generatedAt": 1755100173048
+    },
+    {
+      "qid": "fresh_openai_1755100328554_63c08cee",
+      "subject": "Evidence",
+      "topic": "Experts",
+      "stem": "In a personal injury lawsuit, the plaintiff presents an orthopedic surgeon as an expert witness to testify about the extent of the plaintiff's injuries and the necessary medical treatment. The defense attorney objects, arguing that the surgeon lacks expertise in the field of rehabilitation. How should the court rule on the objection?",
+      "choices": [
+        "Sustain the objection, as the surgeon is not a specialist in rehabilitation.",
+        "Overrule the objection, as any qualified expert can provide testimony relevant to the case.",
+        "Sustain the objection, as expert testimony must come from a practitioner in the exact field of the injury.",
+        "Overrule the objection, as the surgeon's general expertise in orthopedics qualifies him to testify about the injuries."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is to overrule the objection, as the orthopedic surgeon's expertise qualifies him to testify regarding the injuries and treatment.",
+      "explanationLong": "The correct answer is to overrule the objection, as the law allows an expert to testify if they possess knowledge, skill, experience, training, or education that qualifies them in the subject matter of the testimony. Here, the orthopedic surgeon has the relevant medical expertise to discuss the plaintiff's injuries and proposed treatment, even if he is not a specialist in rehabilitation. The objection is incorrect because it misapplies the standard for expert testimony, which does not require absolute specialization in every aspect of a case. The first choice is incorrect because the surgeon's qualifications in orthopedics are sufficient to provide relevant testimony. The third choice misstates the requirement for expert testimony by suggesting that only specialists in the exact field of injury can testify, which is not the law. The fourth choice is misleading as it implies any expert can testify about any area, which is not entirely accurate; the expert must still have relevant qualifications in the area of testimony.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100388554,
+      "generatedAt": 1755100328554
+    },
+    {
+      "qid": "fresh_openai_1755100330701_378a3e77",
+      "subject": "Evidence",
+      "topic": "Experts",
+      "stem": "In a personal injury lawsuit, the plaintiff seeks to introduce expert testimony regarding the psychological effects of the accident on her mental health. The expert, a licensed psychologist, has conducted extensive research on trauma but has never evaluated the plaintiff personally. The defense objects to the expert's testimony on the grounds of insufficient foundation. Which of the following is the most likely outcome regarding the admissibility of the expert's testimony?",
+      "choices": [
+        "The testimony is inadmissible because it lacks relevance to the plaintiff's specific case.",
+        "The testimony is inadmissible because the expert has not personally evaluated the plaintiff.",
+        "The testimony is admissible because the expert's research qualifies as reliable evidence.",
+        "The testimony is admissible as long as the expert's methods are generally accepted in the field."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is C: The testimony is admissible as long as the expert's methods are generally accepted in the field.",
+      "explanationLong": "The correct answer is C. Under the Daubert standard, expert testimony is admissible if it is based on reliable methods and principles that are generally accepted in the expert's field, even if the expert has not personally evaluated the plaintiff. In this case, the psychologist's extensive research indicates that her methods are likely accepted in the field of trauma psychology, thereby supporting her testimony's admissibility. Answer A is incorrect because mere research does not automatically qualify as reliable evidence without showing that it meets the Daubert criteria. Answer B is incorrect because an expert is not required to evaluate the plaintiff personally to provide testimony, as long as the testimony is grounded in reliable and relevant methodology. Answer D is incorrect because the testimony regarding psychological effects is relevant to the plaintiff's claim, particularly as it pertains to damages resulting from the accident.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100390701,
+      "generatedAt": 1755100330701
+    },
+    {
+      "qid": "fresh_openai_1755100329216_67181361",
+      "subject": "Evidence",
+      "topic": "Experts",
+      "stem": "In a personal injury lawsuit, the plaintiff intends to introduce testimony from an orthopedic surgeon who has not treated the plaintiff but has extensive experience in analyzing similar injuries. The defendant objects, arguing that the surgeon's testimony is not admissible because he lacks direct knowledge of the plaintiff's specific condition. How should the court rule on the admissibility of the surgeon's testimony?",
+      "choices": [
+        "The court should exclude the testimony because it does not meet the Daubert standard for scientific reliability.",
+        "The court should exclude the testimony because the surgeon has not treated the plaintiff and lacks firsthand knowledge.",
+        "The court should admit the testimony because the surgeon's expertise is relevant and can help the jury understand the medical issues.",
+        "The court should admit the testimony only if the surgeon reviews the plaintiff's medical records prior to testifying."
+      ],
+      "correctIndex": 2,
+      "explanation": "The court should admit the testimony because the surgeon's expertise is relevant and can help the jury understand the medical issues.",
+      "explanationLong": "The correct answer is that the court should admit the testimony because the orthopedic surgeon's expertise is relevant and can assist the jury in understanding the medical issues at hand. Under Federal Rule of Evidence 702, an expert may testify if their specialized knowledge will help the trier of fact understand the evidence or determine a fact in issue. The surgeon's extensive experience in analyzing similar injuries qualifies him to offer relevant opinions even without having treated the plaintiff directly. The first incorrect answer suggests excluding the testimony due to lack of firsthand knowledge, which misapplies the rule since expert testimony can be based on knowledge and experience, not solely personal treatment. The second incorrect answer unnecessarily limits the admissibility of expert testimony by requiring treatment, which is not a requirement under the rules. The third incorrect answer implies that a review of medical records is a prerequisite for admissibility, which is not a requirement under Rule 702 and could lead to the exclusion of valuable expert insights. Lastly, the fourth incorrect answer misapplies the Daubert standard, which pertains to scientific evidence rather than general expert testimony based on experience, thus failing to recognize the relevance of the surgeon's qualifications.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100389216,
+      "generatedAt": 1755100329216
     }
   ],
   "Torts": [
@@ -577,6 +805,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100230045,
       "generatedAt": 1755100170045
+    },
+    {
+      "qid": "fresh_openai_1755100325525_8ae76856",
+      "subject": "Torts",
+      "topic": "Privacy",
+      "stem": "Alice, a private citizen, discovered that her neighbor, Bob, had installed a hidden camera in her backyard, which recorded her private moments without her knowledge. Alice felt violated and decided to sue Bob for invasion of privacy. Which of the following statements is most accurate regarding Alice's potential claim?",
+      "choices": [
+        "Alice can successfully claim invasion of privacy because Bob's actions constitute an intrusion upon seclusion.",
+        "Alice's claim will fail because she did not consent to being recorded in a public place.",
+        "Alice can only claim invasion of privacy if she proves that Bob intended to harm her reputation.",
+        "Alice cannot claim invasion of privacy because she was in a public area of her backyard."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alice's claim is valid as Bob's hidden camera constitutes an intrusion upon seclusion, which is a recognized invasion of privacy.",
+      "explanationLong": "The correct answer is that Alice can successfully claim invasion of privacy because Bob's actions constitute an intrusion upon seclusion. The legal rule states that an invasion of privacy occurs when a person intentionally intrudes upon the solitude or seclusion of another in a way that is highly offensive to a reasonable person. In this case, Bob's installation of a hidden camera in Alice's backyard, an area where she has a reasonable expectation of privacy, clearly meets this definition. The incorrect answers fail for the following reasons: The second option is incorrect because a backyard is not a public area, and Alice had a reasonable expectation of privacy there. The third option is incorrect because the intent to harm her reputation is not required for an intrusion upon seclusion claim; the focus is on the act of intrusion itself. Lastly, the fourth option is wrong because Alice was not in a public place; her expectation of privacy in her backyard supports her claim regardless of consent to being recorded.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100385525,
+      "generatedAt": 1755100325525
+    },
+    {
+      "qid": "fresh_openai_1755100330264_b6548154",
+      "subject": "Torts",
+      "topic": "Products Liability",
+      "stem": "A consumer purchased a new brand of kitchen blender that was marketed as having a safety feature to prevent it from operating unless the lid was securely fastened. After using the blender for the first time, the lid came off during operation, causing severe injuries to the consumer. The consumer sued the manufacturer for a design defect, claiming the blender was unreasonably dangerous. The manufacturer argued that the blender was designed properly and that the consumer misused the product by not securing the lid. Under the risk-utility test, which of the following is the most likely outcome of the lawsuit?",
+      "choices": [
+        "The consumer will prevail because the blender's design did not adequately protect against the risk of injury.",
+        "The consumer will not prevail because the injuries were caused by the consumer's misuse of the blender.",
+        "The consumer will prevail because the blender was marketed with a safety feature that failed.",
+        "The consumer will not prevail because the manufacturer properly designed the blender according to industry standards."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that the consumer will prevail because the blender's design did not adequately protect against the risk of injury, failing the risk-utility test.",
+      "explanationLong": "The correct answer is that the consumer will prevail because the blender's design did not adequately protect against the risk of injury, as per the risk-utility test. This test evaluates whether the benefits of a product's design outweigh the risks of harm it poses. In this case, the blender's safety feature was ineffective, leading to serious injuries, suggesting that the design could be deemed unreasonably dangerous. The first wrong answer states that the manufacturer properly designed the blender according to industry standards, which does not absolve liability if the product is still unreasonably dangerous; merely adhering to standards does not guarantee safety. The second wrong answer incorrectly assumes that the consumer’s misuse is the sole cause of injury, but the design's inherent flaws are central to the liability claim. The third wrong answer overlooks the fact that the existence of a marketed safety feature does not negate the design defect; if the feature fails to function as intended, the design may still be considered defective. Thus, the consumer's claim is supported by the inadequacy of the design to prevent foreseeable harm.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100390264,
+      "generatedAt": 1755100330264
+    },
+    {
+      "qid": "fresh_openai_1755100331866_e8936ca7",
+      "subject": "Torts",
+      "topic": "Strict Liability",
+      "stem": "A farmer owns a large farm where he raises exotic animals, including a zebra. One day, the zebra escapes and runs into a nearby town, causing panic and injuring several people. The injured parties sue the farmer for damages. Which of the following statements is true regarding the farmer's potential liability under strict liability principles?",
+      "choices": [
+        "The farmer is not liable because he took reasonable steps to secure the zebra.",
+        "The farmer is strictly liable for the injuries caused by the zebra because it is a wild animal.",
+        "The farmer is not liable because the injuries occurred off his property.",
+        "The farmer is only liable if the zebra was known to be dangerous."
+      ],
+      "correctIndex": 1,
+      "explanation": "The farmer is strictly liable for injuries caused by the zebra because it is classified as a wild animal under strict liability principles.",
+      "explanationLong": "The correct answer is that the farmer is strictly liable for the injuries caused by the zebra because it is a wild animal. Under the doctrine of strict liability, owners of wild animals are held liable for any harm caused by those animals, regardless of whether the owner took reasonable precautions to prevent the escape or harm. In this case, the zebra's escape and subsequent injuries to the townspeople establish the farmer's strict liability. The first incorrect answer states that the farmer is not liable because he took reasonable steps to secure the zebra, which misapplies the strict liability rule; reasonable precautions do not negate liability for harm caused by wild animals. The second incorrect answer suggests liability depends on the zebra's known dangerousness, which is irrelevant since strict liability applies to wild animals regardless of their specific behavior. Lastly, the statement that the farmer is not liable because the injuries occurred off his property is also incorrect; strict liability applies irrespective of the location of the injury, particularly when a wild animal escapes and causes harm.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100391867,
+      "generatedAt": 1755100331867
     }
   ],
   "Contracts": [
@@ -809,6 +1094,63 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100225845,
       "generatedAt": 1755100165845
+    },
+    {
+      "qid": "fresh_openai_1755100322765_5187f659",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument at a local bar, Tom and Jerry exchange insults. In a moment of rage, Tom punches Jerry in the face, causing significant injury. Tom is charged with assault. At trial, Tom claims he acted in self-defense, stating that he felt threatened by Jerry's aggressive posture. What is the likely outcome of Tom's self-defense claim?",
+      "choices": [
+        "Tom's self-defense claim will fail because he did not attempt to retreat.",
+        "Tom's self-defense claim will succeed because he was justified in using force to protect himself.",
+        "Tom's self-defense claim will succeed because he perceived a threat from Jerry.",
+        "Tom's self-defense claim will fail because he initiated the confrontation."
+      ],
+      "correctIndex": 3,
+      "explanation": "Tom's self-defense claim will fail because he initiated the confrontation.",
+      "explanationLong": "The correct answer is that Tom's self-defense claim will fail because he initiated the confrontation. Under the law of self-defense, a person may use reasonable force to protect themselves from imminent harm; however, this right is typically not available to a person who provokes the attack. In this case, Tom initiated the confrontation by punching Jerry, which undermines his claim of self-defense. Answer choice A is incorrect because simply perceiving a threat does not justify the use of force if one is the aggressor. Answer choice C is incorrect for the same reason; justification for self-defense is negated when one initiates the combat. Finally, answer choice D is incorrect because the duty to retreat does not apply to all jurisdictions, and in any case, Tom's initiation of the conflict means he cannot claim self-defense regardless of whether he retreated or not.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100382765,
+      "generatedAt": 1755100322765
+    },
+    {
+      "qid": "fresh_openai_1755100322305_834e420d",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, Alex threatens to punch Jamie if Jamie does not leave the bar immediately. Jamie, feeling threatened, leaves and later reports the incident to the police. Alex is charged with assault. Which of the following is most likely to be a valid defense for Alex?",
+      "choices": [
+        "Alex did not intend to actually harm Jamie.",
+        "Alex was acting in self-defense.",
+        "Alex's threat was not credible enough to cause fear.",
+        "Alex was provoked by Jamie's actions."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that Alex did not intend to actually harm Jamie, which is a valid defense to assault.",
+      "explanationLong": "The correct answer is that Alex did not intend to actually harm Jamie. Under criminal law, assault requires the intent to cause apprehension of harmful or offensive contact. If Alex did not have the requisite intent to harm, then the charge may not stand. The first answer is correct because intent is a critical element of assault, and without it, the prosecution may not prove its case. The second answer is incorrect because self-defense is not applicable here; Alex was the initial aggressor and was not responding to an imminent threat. The third answer is also incorrect; the credibility of the threat does not negate intent; rather, it speaks to whether a reasonable person would feel threatened. Finally, the fourth answer fails because provocation does not excuse the threat made by Alex; it may reduce culpability in some contexts but does not negate the assault charge itself.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100382305,
+      "generatedAt": 1755100322305
+    },
+    {
+      "qid": "fresh_openai_1755100324515_2303a8be",
+      "subject": "Crim",
+      "topic": "General",
+      "stem": "During a heated argument, John threatens to kill his neighbor, Tom, while holding a baseball bat. Later, John swings the bat at Tom but misses. Tom, feeling threatened, calls the police. Which of the following statements is true regarding John's actions?",
+      "choices": [
+        "John committed assault because he attempted to strike Tom with the bat.",
+        "John did not commit assault because he did not make contact with Tom.",
+        "John did not commit assault because he was only expressing his anger verbally.",
+        "John committed assault because his threat to kill Tom constituted an immediate threat of harm."
+      ],
+      "correctIndex": 0,
+      "explanation": "John committed assault because he attempted to strike Tom with the bat, which constitutes an intentional act that creates a reasonable apprehension of imminent harm.",
+      "explanationLong": "The correct answer is that John committed assault because he attempted to strike Tom with the bat. Under criminal law, assault is defined as an intentional act that creates a reasonable apprehension of imminent harmful or offensive contact. Here, John's action of swinging the bat at Tom, regardless of whether contact was made, indicates an intent to cause harm and creates a reasonable apprehension in Tom. The first answer is correct because the attempt to strike Tom qualifies as assault. The second answer is incorrect because assault does not require actual contact; an attempt or threat that causes apprehension is sufficient. The third answer misapplies the law by conflating threats with the act of assault; while threatening language can be assault, it must be coupled with actions that cause apprehension, as John did by swinging the bat. The fourth answer is incorrect because expressing anger verbally, without any accompanying action that causes apprehension, does not meet the legal definition of assault.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755100384515,
+      "generatedAt": 1755100324515
     }
   ]
 }

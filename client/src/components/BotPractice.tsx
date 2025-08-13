@@ -222,14 +222,21 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
         throw new Error(error.message || 'Failed to restore lives');
       }
       
-      setChallenge(prev => ({ ...prev!, livesRemaining: 3 }));
+      // Restore lives while keeping all progress (score, difficulty, round)
+      const restoredChallenge = {
+        ...challenge!,
+        livesRemaining: 3
+      };
+      setChallenge(restoredChallenge);
       setGameState('playing');
       setShowMonetization(false);
-      await loadNextQuestion(challenge!);
+      
+      // Continue from current difficulty level
+      await loadNextQuestion(restoredChallenge);
       
       toast({
         title: "Lives Restored!",
-        description: "You can continue your challenge with 3 fresh lives.",
+        description: `Continuing from Round ${challenge?.round || 1} at Difficulty ${challenge?.difficulty || 1}`,
         variant: "default"
       });
     } catch (error: any) {
@@ -468,8 +475,14 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
 
             <div className="bg-panel-2 border border-white/10 p-4 rounded-lg">
               <h3 className="font-semibold text-arcane mb-2">Out of Lives!</h3>
-              <p className="text-sm text-muted mb-4">
-                You've used all 3 lives. Great effort!
+              <p className="text-sm text-muted mb-2">
+                Round reached: <span className="text-purple-300 font-bold">{challenge?.round || 0}</span>
+              </p>
+              <p className="text-sm text-muted mb-2">
+                Difficulty level: <span className="text-purple-300 font-bold">{challenge?.difficulty || 1}</span>
+              </p>
+              <p className="text-xs text-gray-400 italic">
+                Your progress is saved - continue from here with new lives!
               </p>
             </div>
 

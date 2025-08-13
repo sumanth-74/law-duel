@@ -136,21 +136,23 @@ export default function MonetizationModal({ isOpen, onClose, onSuccess, challeng
         <div className="space-y-6">
           <div className="text-center space-y-3">
             <p className="text-lg text-gray-300">
-              You've run out of lives in this Solo Challenge.
+              You've run out of lives, but your progress is saved!
             </p>
             <p className="text-sm text-gray-400">
-              Your score: <span className="text-purple-300 font-bold">Round {/* Will be passed as prop */}</span>
+              Continue playing from where you left off with 3 fresh lives.
             </p>
           </div>
 
           <div className="bg-purple-900/30 border border-purple-500/30 rounded-lg p-4">
             <h3 className="font-semibold text-purple-300 mb-2 flex items-center gap-2">
               <CreditCard className="w-5 h-5" />
-              Continue Playing?
+              Keep Your Progress!
             </h3>
-            <p className="text-sm text-gray-300 mb-3">
-              Restore 3 lives and keep your progress for just $0.99
-            </p>
+            <div className="text-sm text-gray-300 mb-3 space-y-1">
+              <p>✓ Continue from your current difficulty level</p>
+              <p>✓ Keep your score and round progress</p>
+              <p>✓ Get 3 fresh lives for just $0.99</p>
+            </div>
             
             {!clientSecret ? (
               <div className="space-y-3">

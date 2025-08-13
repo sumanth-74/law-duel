@@ -203,7 +203,7 @@ class SoloChallengeService {
     return nextQuestion;
   }
 
-  // Restore lives with payment (stub for monetization)
+  // Restore lives with payment - maintains all progress
   async restoreLives(challengeId) {
     const challenge = this.activeChallenges.get(challengeId);
     if (!challenge) {
@@ -211,12 +211,19 @@ class SoloChallengeService {
     }
 
     // In real implementation, verify payment here
+    // Restore lives while keeping score, difficulty, and round progress
     challenge.livesRemaining = 3;
-    challenge.isDailyComplete = false;
+    challenge.isDailyComplete = false; // Allow continued play
     
     await this.saveToFile();
     
-    return { success: true, livesRemaining: 3 };
+    return { 
+      success: true, 
+      livesRemaining: 3,
+      currentRound: challenge.round,
+      currentDifficulty: challenge.difficulty,
+      currentScore: challenge.score
+    };
   }
 
   // Helper to get question by ID (simplified for solo challenges)
