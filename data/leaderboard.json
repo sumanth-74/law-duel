@@ -4,9 +4,9 @@
     "username": "MBEDestroyer",
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
-    "level": 20,
-    "points": 3988,
-    "totalWins": 74,
+    "level": 21,
+    "points": 4036,
+    "totalWins": 75,
     "totalLosses": 5,
     "avatarData": {
       "baseModel": "male",
@@ -20,7 +20,7 @@
       ],
       "accessoryColor": "#DAA520"
     },
-    "lastActive": "2025-08-13T22:42:32.122Z"
+    "lastActive": "2025-08-13T23:47:13.310Z"
   },
   {
     "id": "bot_precedent_pro",
@@ -256,9 +256,9 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 10,
-    "points": 1888,
+    "points": 1938,
     "totalWins": 29,
-    "totalLosses": 19,
+    "totalLosses": 20,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#CD853F",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-13T23:18:44.167Z"
+    "lastActive": "2025-08-13T23:47:13.310Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",
