@@ -6,13 +6,14 @@ class QuestionPool {
   constructor() {
     this.pools = new Map(); // subject -> difficulty -> [questions]
     this.generating = new Set(); // Track what's being generated to avoid duplicates
-    this.MIN_POOL_SIZE = 2; // Minimum questions per difficulty level
-    this.TARGET_POOL_SIZE = 5; // Target pool size - reduced for efficiency
+    this.MIN_POOL_SIZE = 5; // Increased minimum questions per difficulty level
+    this.TARGET_POOL_SIZE = 10; // Increased target pool size for better availability
+    this.fallbackQuestions = new Map(); // Fallback cache for instant serving
     
     // Initialize pools for all subjects and difficulties
     this.initializePools();
     
-    // Start background generation
+    // Start background generation with aggressive pre-filling
     this.startBackgroundGeneration();
   }
   
@@ -29,13 +30,39 @@ class QuestionPool {
   async startBackgroundGeneration() {
     console.log('🚀 Starting question pool background generation...');
     
+    // Immediately generate critical questions for common difficulties
+    this.generateCriticalQuestions();
+    
     // Initial aggressive fill
     await this.fillAllPools();
     
-    // Then check every 30 seconds
+    // Then check every 20 seconds for faster refills
     setInterval(() => {
       this.fillAllPools();
-    }, 30000);
+    }, 20000);
+  }
+  
+  async generateCriticalQuestions() {
+    // Pre-generate questions for the most common subjects and difficulties
+    const criticalSubjects = ['Torts', 'Con Law', 'Crim', 'Contracts'];
+    const criticalDifficulties = [1, 2]; // Most common difficulties
+    
+    console.log('⚡ Pre-generating critical questions for instant serving...');
+    
+    const tasks = [];
+    for (const subject of criticalSubjects) {
+      for (const difficulty of criticalDifficulties) {
+        // Generate 3 questions immediately for each critical combination
+        tasks.push(
+          this.generateQuestionsForPool(subject, difficulty, 3)
+            .catch(err => console.error(`Critical generation failed for ${subject} D${difficulty}:`, err))
+        );
+      }
+    }
+    
+    // Wait for critical questions to be ready
+    await Promise.all(tasks);
+    console.log('✅ Critical questions ready for instant serving');
   }
   
   async fillAllPools() {
@@ -212,11 +239,21 @@ class QuestionPool {
     const available = pool.filter(q => !excludeIds.includes(q.qid));
     
     if (available.length === 0) {
-      console.log(`⚠️ Pool empty for ${normalizedSubject} D${difficulty}, generating emergency question...`);
-      // Emergency generation if pool is empty
+      console.log(`⚠️ Pool empty for ${normalizedSubject} D${difficulty}, using fallback...`);
+      
+      // Try fallback cache first (instant)
+      const fallback = await this.getFallbackQuestion(normalizedSubject, difficulty, excludeIds);
+      if (fallback) {
+        console.log(`✅ Using fallback question for instant serving`);
+        return this.shuffleAnswers(fallback);
+      }
+      
+      // Last resort: emergency generation (slow)
+      console.log(`🔥 Emergency generation for ${normalizedSubject} D${difficulty}...`);
       const question = await this.generateSingleQuestion(normalizedSubject, difficulty);
       if (question && this.validateQuestion(question)) {
-        // Shuffle answers before returning
+        // Cache for future use
+        this.addToFallbackCache(normalizedSubject, difficulty, question);
         return this.shuffleAnswers(question);
       }
       throw new Error(`Cannot generate question for ${normalizedSubject} difficulty ${difficulty}`);
@@ -244,6 +281,52 @@ class QuestionPool {
     
     // Shuffle answers before returning
     return this.shuffleAnswers(question);
+  }
+  
+  // Add to fallback cache
+  addToFallbackCache(subject, difficulty, question) {
+    const key = `${subject}-${difficulty}`;
+    if (!this.fallbackQuestions.has(key)) {
+      this.fallbackQuestions.set(key, []);
+    }
+    const cache = this.fallbackQuestions.get(key);
+    // Keep max 10 fallback questions per subject/difficulty
+    if (cache.length < 10) {
+      cache.push(question);
+    }
+  }
+  
+  // Get fallback question from cache
+  async getFallbackQuestion(subject, difficulty, excludeIds = []) {
+    const key = `${subject}-${difficulty}`;
+    const cache = this.fallbackQuestions.get(key) || [];
+    
+    // Try cached questions from storage as additional fallback
+    try {
+      const { storage } = await import('../storage.js');
+      const storedQuestion = await storage.getRandomQuestion(subject, excludeIds);
+      if (storedQuestion) {
+        return {
+          qid: `fallback_${storedQuestion.id}`,
+          subject: storedQuestion.subject,
+          stem: storedQuestion.stem,
+          choices: storedQuestion.choices,
+          correctIndex: storedQuestion.correctIndex,
+          explanation: storedQuestion.explanation,
+          difficulty: difficulty
+        };
+      }
+    } catch (error) {
+      console.error('Fallback storage fetch failed:', error);
+    }
+    
+    // Use cached questions
+    const available = cache.filter(q => !excludeIds.includes(q.qid));
+    if (available.length > 0) {
+      return available[Math.floor(Math.random() * available.length)];
+    }
+    
+    return null;
   }
   
   // Get pool status for monitoring
