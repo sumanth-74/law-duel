@@ -2,6 +2,7 @@ import { WebSocket } from "ws";
 import { makeStealthBot } from "./stealthbot.js";
 import { getQuestion } from "./qcoordinator.js";
 import { storage } from "../storage.js";
+import { getWeaknessTargetedQuestions, logTargeting } from "./weaknessTargeting.js";
 
 const queues = {
   'Civil Procedure': [],
@@ -157,7 +158,7 @@ function startDuelWithBot(wss, subject, humanWs, bot) {
   const matchData = {
     roomCode,
     subject,
-    bestOf: 7,
+    bestOf: 5,  // Changed from 7 to 5 per North Star requirements
     ranked: false,
     stake: 0,
     opponent: {
@@ -189,21 +190,34 @@ async function runDuel(wss, roomCode, players, subject) {
     seen: new Set() // fingerprints of stems served in THIS duel
   };
 
+  // Get weakness targeting for both players (use first player for targeting)
+  const player1Id = players[0].profile?.id || 'guest';
+  const questionTargets = getWeaknessTargetedQuestions(player1Id, subject, 5);
+  logTargeting(player1Id, questionTargets);
+  match.questionTargets = questionTargets;
+
   activeMatches.set(roomCode, match);
 
-  for (let round = 1; round <= 7; round++) {
-    if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
+  for (let round = 1; round <= 5; round++) {  // Changed to 5 questions per North Star
+    if (match.scores[0] >= 3 || match.scores[1] >= 3) break;  // First to 3 wins
     
     match.round = round;
     // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
     match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
     
     try {
-      console.log(`📈 Round ${round}: Difficulty level ${match.difficulty}`);
+      // Use weakness targeting for this round
+      const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
+      const targetSubject = targetInfo?.subject || subject;
+      const targetDifficulty = targetInfo?.targetType === 'weakness' ? 
+        Math.min(2, match.difficulty) : // Easier questions for weaknesses
+        match.difficulty;
+      
+      console.log(`📈 Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.targetType || 'normal'}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
       let question, err;
       for (let tries = 0; tries < 4; tries++) {
-        question = await getQuestion(subject, match.usedQuestions, true, match.difficulty);
+        question = await getQuestion(targetSubject, match.usedQuestions, true, targetDifficulty);
         
         // Check if we've seen this stem before in this duel
         const { fingerprintStem } = await import('./robustGenerator.js');
@@ -236,9 +250,9 @@ async function runDuel(wss, roomCode, players, subject) {
         difficulty: match.difficulty, // Include difficulty level
         stem: question.stem,
         choices: normalizedChoices,
-        timeLimit: 60000, // Always 60 seconds for duels
-        timeLimitSec: 60, // Enforce 60s
-        deadlineTs: Date.now() + 60000
+        timeLimit: 25000, // 25 seconds per North Star requirements
+        timeLimitSec: 25, // Enforce 25s
+        deadlineTs: Date.now() + 25000
       };
 
       players.forEach(ws => {
@@ -252,7 +266,7 @@ async function runDuel(wss, roomCode, players, subject) {
       playerAnswers.set(roomCode, answers);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 61000);
+        const timeout = setTimeout(resolve, 26000);
         
         const checkInterval = setInterval(() => {
           if (answers.size >= players.length) {
@@ -267,7 +281,7 @@ async function runDuel(wss, roomCode, players, subject) {
       const results = [];
       for (let i = 0; i < players.length; i++) {
         const ws = players[i];
-        const answer = answers.get(ws) || { choice: -1, timeMs: 60000 };
+        const answer = answers.get(ws) || { choice: -1, timeMs: 25000 };
         const correct = answer.choice === question.correctIndex;
         
         if (correct) match.scores[i]++;
@@ -334,21 +348,34 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     seen: new Set() // fingerprints of stems served in THIS duel
   };
 
+  // Get weakness targeting for the human player
+  const playerId = humanWs.profile?.id || 'guest';
+  const questionTargets = getWeaknessTargetedQuestions(playerId, subject, 5);
+  logTargeting(playerId, questionTargets);
+  match.questionTargets = questionTargets;
+
   activeMatches.set(roomCode, match);
 
-  for (let round = 1; round <= 7; round++) {
-    if (match.scores[0] >= 4 || match.scores[1] >= 4) break;
+  for (let round = 1; round <= 5; round++) {  // Changed to 5 questions per North Star
+    if (match.scores[0] >= 3 || match.scores[1] >= 3) break;  // First to 3 wins
     
     match.round = round;
     // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
     match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
     
     try {
-      console.log(`📈 Bot Duel Round ${round}: Difficulty level ${match.difficulty}`);
+      // Use weakness targeting for this round
+      const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
+      const targetSubject = targetInfo?.subject || subject;
+      const targetDifficulty = targetInfo?.targetType === 'weakness' ? 
+        Math.min(2, match.difficulty) : // Easier questions for weaknesses
+        match.difficulty;
+      
+      console.log(`📈 Bot Duel Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.targetType || 'normal'}`);
       // Try up to 4 times to get a fresh, valid, unseen question within this duel
       let question, err;
       for (let tries = 0; tries < 4; tries++) {
-        question = await getQuestion(subject, match.usedQuestions, true, match.difficulty);
+        question = await getQuestion(targetSubject, match.usedQuestions, true, targetDifficulty);
         
         // Check if we've seen this stem before in this duel
         const { fingerprintStem } = await import('./robustGenerator.js');
@@ -381,9 +408,9 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         difficulty: match.difficulty, // Include difficulty level
         stem: question.stem,
         choices: normalizedChoices,
-        timeLimit: 60000, // Always 60 seconds for duels
-        timeLimitSec: 60, // Enforce 60s
-        deadlineTs: Date.now() + 60000
+        timeLimit: 25000, // 25 seconds per North Star requirements
+        timeLimitSec: 25, // Enforce 25s
+        deadlineTs: Date.now() + 25000
       };
 
       if (humanWs.readyState === 1) {
@@ -397,7 +424,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       const botDecision = bot.decide(round, question.correctIndex);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 61000);
+        const timeout = setTimeout(resolve, 26000);
         
         const checkInterval = setInterval(() => {
           if (answers.size >= 1) {
@@ -409,7 +436,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       });
 
       // Process results
-      const humanAnswer = answers.get(humanWs) || { choice: -1, timeMs: 60000 };
+      const humanAnswer = answers.get(humanWs) || { choice: -1, timeMs: 25000 };
       const humanCorrect = humanAnswer.choice === question.correctIndex;
       const botCorrect = botDecision.idx === question.correctIndex;
       

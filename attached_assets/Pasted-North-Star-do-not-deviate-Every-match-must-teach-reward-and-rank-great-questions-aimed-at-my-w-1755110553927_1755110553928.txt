@@ -1,0 +1,67 @@
+North Star (do not deviate):
+Every match must teach, reward, and rank: great questions aimed at my weakest topics, instant visible gains (XP + Mastery), and wins that move a ladder.
+
+1) Match length
+Set a single config: MATCH_QUESTIONS = 5.
+
+All modes (Solo/Live/Friend/Daily) must use this constant.
+
+2) Weakness targeting (3 of 5)
+Compute player’s weakest subtopics from stats: lowest mastery (tie-break: lowest accuracy, then least recent).
+
+When building a match, force ≥3/5 questions from those weak subtopics; remaining 2 are medium/hard in any recent subject.
+
+Log the chosen subtopics per match.
+
+3) Instant feedback chips
+After each answer, show a small popup: +XP · Subject/Subtopic · Mastery +/−N.
+
+Server must return: xpGained, masteryDelta (before/after), and subject/subtopic for that question.
+
+Client displays it immediately; fades in <200ms.
+
+4) Timer = 25s, server-authoritative
+Per-question timer is 25 seconds on the server; client displays countdown from server ticks.
+
+First answer locks; late or duplicate answers ignored.
+
+5) No duplicate questions within a match
+Enforce on the server with a Set of served question IDs.
+
+If generator proposes a repeat, replace it before sending.
+
+Add a unit test: 1000 simulated matches → 0 repeats inside any single match.
+
+6) Elo rating shown on result screen (Live/Friend)
+Implement simple Elo: K=24; update both players at match end.
+
+Results screen must show: Rating +XX (old → new).
+
+Persist to user profile.
+
+7) Weekly Ladder (minimal)
+Create a weekly_ladder view keyed to ISO week (Mon–Sun).
+
+After each Live/Friend match, write rating change + wins/losses for that week.
+
+Add a Weekly tab that lists Top 50 Global (for now).
+
+Acceptance tests (block launch until all pass)
+5 questions: All modes use 5; never 10.
+
+Weakness targeting: With a seeded “weak in Hearsay” user, Solo delivers ≥3/5 Hearsay questions until mastery rises.
+
+Feedback chips: After each answer, the chip shows +XP and Mastery ±N for the correct subtopic; result screen shows XP bar moved and top 3 subtopic arrows.
+
+Timer: Questions auto-lock at 25s; late answers ignored; no desync between players.
+
+No duplicates: 20 matches in a row → 0 duplicate questions within any single match.
+
+Elo visible: Two users duel; winner sees Rating +10–20, loser sees negative; both persisted.
+
+Weekly ladder: After that duel, both appear on the Weekly tab with updated ratings.
+
+Definition of done:
+
+A player finishes a 5-question match and sees XP + Mastery move immediately; Live/Friend matches also move the ladder — every time, no duplicates, 25s timer, and weakness targeting is obvious.
+

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AvatarRenderer } from './AvatarRenderer';
 import { AtticusCat } from './AtticusCat';
+import { FeedbackChip, MatchSummaryChips } from './FeedbackChip';
 import type { User, QuestionData, DuelResultData, DuelFinishedData } from '@shared/schema';
 
 interface DuelArenaProps {
@@ -32,6 +33,14 @@ interface DuelState {
   showHint: boolean;
   showTrainingBanner: boolean;
   generatingQuestion: boolean; // Add loading state for OpenAI generation
+  showFeedbackChip: boolean; // For instant feedback display
+  feedbackData?: {
+    correct: boolean;
+    xpGained: number;
+    subject?: string;
+    subtopic?: string;
+    masteryChange?: number;
+  };
 }
 
 export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: DuelArenaProps) {
@@ -181,20 +190,40 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   };
 
   const handleQuestionResult = (resultData: any) => {
+    const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
+    const xpGained = isCorrect ? 12 : 3; // Base XP values
+    const masteryChange = isCorrect ? 0.5 : -0.25; // Mastery changes per North Star
+    
+    // Extract subject and subtopic from the question or result
+    const subject = resultData.subject || duelState.currentQuestion?.subject || 'Law';
+    const subtopic = resultData.subtopic || 'General';
+    
     setDuelState(prev => ({
       ...prev,
       showResult: true,
       lastResult: resultData,
       scores: resultData.scores || [0, 0],
-      waitingForOpponent: false
+      waitingForOpponent: false,
+      showFeedbackChip: true,
+      feedbackData: {
+        correct: isCorrect,
+        xpGained,
+        subject,
+        subtopic,
+        masteryChange
+      }
     }));
 
-    const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
     announceForScreenReader(
       isCorrect 
-        ? `Correct! You gained 10 XP. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
+        ? `Correct! You gained ${xpGained} XP. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
         : `Incorrect. The correct answer was ${String.fromCharCode(65 + resultData.correctIndex)}. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
     );
+    
+    // Hide feedback chip after delay
+    setTimeout(() => {
+      setDuelState(prev => ({ ...prev, showFeedbackChip: false }));
+    }, 100);
   };
 
   const handleDuelFinished = async (finishedData: any) => {
@@ -326,6 +355,16 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
 
   return (
     <Card className="panel" data-testid="duel-arena">
+      {/* Instant Feedback Chip */}
+      <FeedbackChip
+        show={duelState.showFeedbackChip}
+        correct={duelState.feedbackData?.correct || false}
+        xpGained={duelState.feedbackData?.xpGained || 0}
+        subject={duelState.feedbackData?.subject}
+        subtopic={duelState.feedbackData?.subtopic}
+        masteryChange={duelState.feedbackData?.masteryChange}
+      />
+      
       <CardContent className="p-6">
         {/* Opponent Info */}
         <div className="flex items-center justify-between mb-6">
@@ -593,6 +632,13 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
                 </p>
               </div>
             )}
+            
+            {/* Add Elo and Mastery Summary */}
+            <MatchSummaryChips
+              totalXP={duelState.finalResult.xpGained.player1}
+              masteryChanges={[]} // Will be populated when integrated with subtopic tracking
+              eloChange={duelState.finalResult.pointChanges.player1} // Using points as Elo
+            />
             
             <div className="flex gap-4 justify-center">
               <Button onClick={onDuelEnd} data-testid="button-home">

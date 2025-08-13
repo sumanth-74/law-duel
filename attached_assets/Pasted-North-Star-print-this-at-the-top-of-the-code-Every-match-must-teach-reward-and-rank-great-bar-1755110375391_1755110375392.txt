@@ -1,0 +1,55 @@
+North Star (print this at the top of the code):
+
+Every match must teach, reward, and rank: great bar-style questions aimed at my weakest topics, instant visible gains (XP + Mastery), and wins that move a ladder vs friends.
+
+Deliver exactly this (and nothing else)
+Core loop (all modes use it): Start → 5 questions → instant feedback after each → end screen shows XP gained, Mastery changes by subtopic, Rank change (if vs human) → big Rematch button.
+
+Question quality & targeting:
+
+Each question is real MBE style with a one-line rule + short explanation.
+
+Tag each Q with Subject and Subtopic (natural names are fine).
+
+3 of 5 questions must hit the player’s weakest subtopics; the rest medium/hard mix.
+
+No repeats inside a match. If AI generation fails, use a banked fallback.
+
+25s timer; first answer locks.
+
+Visible progress (must feel like leveling up):
+
+After each Q, show a popup chip like: “+12 XP · Evidence/Hearsay · Mastery +3”.
+
+Result screen shows: XP bar moved, top 3 subtopic arrows (↑/↓), match accuracy, and “+40 XP to Level 3”.
+
+Friends & ranking that matter:
+
+Live/Friend matches update a simple Elo rating and Weekly Ladder.
+
+Result screen shows: “Rating +14 (1242 → 1256)”.
+
+Streak hook:
+
+Daily Casefile gives bonus XP.
+
+Streak banner on home: “Day 3 – +10% XP today”.
+
+Out of scope for this milestone
+Cosmetics store, avatars, complex parties/guilds, async tournaments, fancy animations. Ship the loop first.
+
+Pass/Fail acceptance tests (must all pass)
+Progress felt: Play one Solo match, get 3/5 correct → XP bar moves, at least one Subtopic Mastery ↑, numbers update on the stats screen.
+
+Weakness targeting works: If a user is weak in Hearsay, ≥3/5 Solo questions are Hearsay until mastery rises; after 2–3 wins, the mix shifts away.
+
+Friends matter: Two users complete a Live Duel → winner’s rating increases (~+10–20), loser’s decreases, both visible on Weekly Ladder.
+
+No repeats: In 20 matches, 0 duplicate questions within any single match.
+
+Resilience: If AI question gen fails, match still completes using fallback questions.
+
+Definition of done (single sentence):
+
+A player finishes a 5-question match and sees better stats right away (XP bar + Mastery arrows), and in friend/live matches, the ladder moves—every time, without fail.
+
