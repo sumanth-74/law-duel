@@ -1,8 +1,8 @@
 [
   {
-    "id": "bot_michael_oconnor",
-    "username": "MichaelOConnor",
-    "displayName": "Michael O'Connor",
+    "id": "bot_mbe_destroyer",
+    "username": "MBEDestroyer",
+    "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
     "level": 21,
     "points": 3850,
@@ -20,12 +20,12 @@
       ],
       "accessoryColor": "#DAA520"
     },
-    "lastActive": "2025-08-12T22:27:42.133Z"
+    "lastActive": "2025-08-13T11:02:03.462Z"
   },
   {
-    "id": "bot_robert_williams",
-    "username": "RobertWilliams",
-    "displayName": "Robert Williams",
+    "id": "bot_precedent_pro",
+    "username": "PrecedentPro",
+    "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
     "level": 20,
     "points": 3700,
@@ -43,12 +43,12 @@
       ],
       "accessoryColor": "#8B0000"
     },
-    "lastActive": "2025-08-13T05:53:59.884Z"
+    "lastActive": "2025-08-13T03:44:37.681Z"
   },
   {
-    "id": "bot_victoria_chen",
-    "username": "VictoriaChen",
-    "displayName": "Victoria Chen",
+    "id": "bot_brief_sniper",
+    "username": "BriefSniper",
+    "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 19,
     "points": 3450,
@@ -66,12 +66,12 @@
       ],
       "accessoryColor": "#E6E6FA"
     },
-    "lastActive": "2025-08-13T13:39:19.587Z"
+    "lastActive": "2025-08-13T17:54:13.029Z"
   },
   {
-    "id": "bot_sarah_patel",
-    "username": "SarahPatel",
-    "displayName": "Sarah Patel",
+    "id": "bot_tort_master_x",
+    "username": "TortMasterX",
+    "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
     "level": 18,
     "points": 3200,
@@ -89,12 +89,12 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-13T11:42:00.502Z"
+    "lastActive": "2025-08-13T00:14:44.531Z"
   },
   {
-    "id": "bot_emma_thompson",
-    "username": "EmmaThompson",
-    "displayName": "Emma Thompson",
+    "id": "bot_gavel_crusher",
+    "username": "GavelCrusher",
+    "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 17,
     "points": 3100,
@@ -112,12 +112,12 @@
       ],
       "accessoryColor": "#FF1493"
     },
-    "lastActive": "2025-08-12T19:35:27.586Z"
+    "lastActive": "2025-08-13T02:07:19.585Z"
   },
   {
-    "id": "bot_rachel_kim",
-    "username": "RachelKim",
-    "displayName": "Rachel Kim",
+    "id": "bot_contracts_wizard",
+    "username": "ContractsWizard",
+    "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
     "level": 16,
     "points": 2950,
@@ -135,12 +135,12 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-12T22:41:42.339Z"
+    "lastActive": "2025-08-13T11:57:14.608Z"
   },
   {
-    "id": "bot_alexandra_carter",
-    "username": "AlexandraCarter",
-    "displayName": "Alexandra Carter",
+    "id": "bot_lawbeast_99",
+    "username": "LawBeast99",
+    "displayName": "LawBeast99",
     "lawSchool": "Harvard Law",
     "level": 15,
     "points": 2850,
@@ -158,12 +158,12 @@
       ],
       "accessoryColor": "#333333"
     },
-    "lastActive": "2025-08-12T21:56:54.357Z"
+    "lastActive": "2025-08-12T21:31:25.852Z"
   },
   {
-    "id": "bot_david_torres",
-    "username": "DavidTorres",
-    "displayName": "David Torres",
+    "id": "bot_justice_ninja",
+    "username": "JusticeNinja",
+    "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 14,
     "points": 2650,
@@ -181,12 +181,12 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-13T01:33:35.969Z"
+    "lastActive": "2025-08-13T06:45:37.839Z"
   },
   {
-    "id": "bot_marcus_wong",
-    "username": "MarcusWong",
-    "displayName": "Marcus Wong",
+    "id": "bot_legal_eagle_420",
+    "username": "LegalEagle420",
+    "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 12,
     "points": 2400,
@@ -202,12 +202,12 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-12T20:57:49.877Z"
+    "lastActive": "2025-08-13T04:46:07.491Z"
   },
   {
-    "id": "bot_carlos_mendez",
-    "username": "CarlosMendez",
-    "displayName": "Carlos Mendez",
+    "id": "bot_verdict_viper",
+    "username": "VerdictViper",
+    "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
     "level": 13,
     "points": 2300,
@@ -225,12 +225,12 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-12T23:11:56.813Z"
+    "lastActive": "2025-08-13T15:16:52.649Z"
   },
   {
-    "id": "bot_james_richardson",
-    "username": "JamesRichardson",
-    "displayName": "James Richardson",
+    "id": "bot_objection_hero",
+    "username": "ObjectionHero",
+    "displayName": "ObjectionHero",
     "lawSchool": "UChicago Law",
     "level": 11,
     "points": 2100,
@@ -248,12 +248,12 @@
       ],
       "accessoryColor": "#2F4F4F"
     },
-    "lastActive": "2025-08-13T17:52:40.350Z"
+    "lastActive": "2025-08-13T18:16:39.829Z"
   },
   {
-    "id": "bot_priya_sharma",
-    "username": "PriyaSharma",
-    "displayName": "Priya Sharma",
+    "id": "bot_statute_slayer",
+    "username": "StatuteSlayer",
+    "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 10,
     "points": 1850,
@@ -271,6 +271,6 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-13T13:38:07.450Z"
+    "lastActive": "2025-08-13T14:33:19.271Z"
   }
 ]

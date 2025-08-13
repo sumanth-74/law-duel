@@ -35,9 +35,9 @@ export async function initializeLeaderboard() {
 async function seedLeaderboardWithBots() {
   const botPlayers = [
     {
-      id: 'bot_alexandra_carter',
-      username: 'AlexandraCarter',
-      displayName: 'Alexandra Carter',
+      id: 'bot_lawbeast_99',
+      username: 'LawBeast99',
+      displayName: 'LawBeast99',
       lawSchool: 'Harvard Law',
       level: 15,
       points: 2850,
@@ -56,9 +56,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_marcus_wong',
-      username: 'MarcusWong',
-      displayName: 'Marcus Wong',
+      id: 'bot_legal_eagle_420',
+      username: 'LegalEagle420',
+      displayName: 'LegalEagle420',
       lawSchool: 'Yale Law',
       level: 12,
       points: 2400,
@@ -77,9 +77,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_sarah_patel',
-      username: 'SarahPatel',
-      displayName: 'Sarah Patel',
+      id: 'bot_tort_master_x',
+      username: 'TortMasterX',
+      displayName: 'TortMasterX',
       lawSchool: 'Golden Gate Law',
       level: 18,
       points: 3200,
@@ -98,9 +98,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_david_torres',
-      username: 'DavidTorres',
-      displayName: 'David Torres',
+      id: 'bot_justice_ninja',
+      username: 'JusticeNinja',
+      displayName: 'JusticeNinja',
       lawSchool: 'Columbia Law',
       level: 14,
       points: 2650,
@@ -119,9 +119,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_rachel_kim',
-      username: 'RachelKim',
-      displayName: 'Rachel Kim',
+      id: 'bot_contracts_wizard',
+      username: 'ContractsWizard',
+      displayName: 'ContractsWizard',
       lawSchool: 'NYU Law',
       level: 16,
       points: 2950,
@@ -140,9 +140,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_james_richardson',
-      username: 'JamesRichardson',
-      displayName: 'James Richardson',
+      id: 'bot_objection_hero',
+      username: 'ObjectionHero',
+      displayName: 'ObjectionHero',
       lawSchool: 'UChicago Law',
       level: 11,
       points: 2100,
@@ -161,9 +161,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_emma_thompson',
-      username: 'EmmaThompson',
-      displayName: 'Emma Thompson',
+      id: 'bot_gavel_crusher',
+      username: 'GavelCrusher',
+      displayName: 'GavelCrusher',
       lawSchool: 'UPenn Law',
       level: 17,
       points: 3100,
@@ -182,9 +182,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_carlos_mendez',
-      username: 'CarlosMendez',
-      displayName: 'Carlos Mendez',
+      id: 'bot_verdict_viper',
+      username: 'VerdictViper',
+      displayName: 'VerdictViper',
       lawSchool: 'Georgetown Law',
       level: 13,
       points: 2300,
@@ -203,9 +203,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_victoria_chen',
-      username: 'VictoriaChen',
-      displayName: 'Victoria Chen',
+      id: 'bot_brief_sniper',
+      username: 'BriefSniper',
+      displayName: 'BriefSniper',
       lawSchool: 'Duke Law',
       level: 19,
       points: 3450,
@@ -224,9 +224,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_michael_oconnor',
-      username: 'MichaelOConnor',
-      displayName: "Michael O'Connor",
+      id: 'bot_mbe_destroyer',
+      username: 'MBEDestroyer',
+      displayName: 'MBEDestroyer',
       lawSchool: 'Thomas Jefferson Law',
       level: 21,
       points: 3850,
@@ -245,9 +245,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_priya_sharma',
-      username: 'PriyaSharma',
-      displayName: 'Priya Sharma',
+      id: 'bot_statute_slayer',
+      username: 'StatuteSlayer',
+      displayName: 'StatuteSlayer',
       lawSchool: 'Berkeley Law',
       level: 10,
       points: 1850,
@@ -266,9 +266,9 @@ async function seedLeaderboardWithBots() {
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-      id: 'bot_robert_williams',
-      username: 'RobertWilliams',
-      displayName: 'Robert Williams',
+      id: 'bot_precedent_pro',
+      username: 'PrecedentPro',
+      displayName: 'PrecedentPro',
       lawSchool: 'Cooley Law School',
       level: 20,
       points: 3700,
