@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": "solo_4e74426c-d40c-43cb-9238-3fe1f3fc801d_1755056320402",
+    "userId": "4e74426c-d40c-43cb-9238-3fe1f3fc801d",
+    "subject": "Contracts",
+    "livesRemaining": 3,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-13T03:39:03.287Z",
+    "isDailyComplete": false,
+    "currentQuestionId": "fresh_openai_1755056343286_d9c88822"
+  },
+  {
+    "id": "solo_4e74426c-d40c-43cb-9238-3fe1f3fc801d_1755056718606",
+    "userId": "4e74426c-d40c-43cb-9238-3fe1f3fc801d",
+    "subject": "Torts",
+    "livesRemaining": 3,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-13T03:45:40.902Z",
+    "isDailyComplete": false,
+    "currentQuestionId": "fresh_openai_1755056740902_ff6cb575"
+  }
+]

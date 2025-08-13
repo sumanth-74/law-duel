@@ -70,9 +70,14 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
 
   const checkChallengeStatus = async () => {
     try {
-      const status = await apiRequest('/api/solo-challenge/status');
-      if (status.isDailyComplete) {
-        setGameState('game-over');
+      const response = await fetch('/api/solo-challenge/status', {
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const status = await response.json();
+        if (status.isDailyComplete) {
+          setGameState('game-over');
+        }
       }
     } catch (error) {
       // User hasn't started challenge yet, stay in setup
@@ -82,12 +87,19 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
   const startSoloChallenge = async () => {
     try {
       setGeneratingQuestion(true);
-      const challengeData = await apiRequest('/api/solo-challenge/start', {
+      const response = await fetch('/api/solo-challenge/start', {
         method: 'POST',
         body: JSON.stringify({ subject }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
       });
 
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to start solo challenge');
+      }
+
+      const challengeData = await response.json();
       setChallenge(challengeData.challenge);
       setCurrentQuestion(challengeData.question);
       setGameState('playing');
@@ -107,25 +119,32 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
 
     setIsSubmitting(true);
     try {
-      const response = await apiRequest('/api/solo-challenge/answer', {
+      const response = await fetch('/api/solo-challenge/answer', {
         method: 'POST',
         body: JSON.stringify({
           challengeId: challenge.id,
           questionId: currentQuestion.id,
           userAnswer: selectedAnswer
         }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
       });
 
-      setShowResult(response.result);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to submit answer');
+      }
+
+      const data = await response.json();
+      setShowResult(data.result);
       
       // Update challenge state
       const updatedChallenge = {
         ...challenge,
-        livesRemaining: Math.max(0, challenge.livesRemaining - response.result.livesLost),
+        livesRemaining: Math.max(0, challenge.livesRemaining - data.result.livesLost),
         round: challenge.round + 1,
-        score: challenge.score + response.result.pointsEarned,
-        difficulty: response.result.newDifficulty
+        score: challenge.score + data.result.pointsEarned,
+        difficulty: data.result.newDifficulty
       };
       setChallenge(updatedChallenge);
 
@@ -158,13 +177,20 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
   const loadNextQuestion = async (challengeState: SoloChallenge) => {
     try {
       setGeneratingQuestion(true);
-      const response = await apiRequest('/api/solo-challenge/next-question', {
+      const response = await fetch('/api/solo-challenge/next-question', {
         method: 'POST',
         body: JSON.stringify({ challengeId: challengeState.id }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
       });
       
-      setCurrentQuestion(response.question);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to load next question');
+      }
+      
+      const data = await response.json();
+      setCurrentQuestion(data);
       setGeneratingQuestion(false);
     } catch (error: any) {
       setGeneratingQuestion(false);
@@ -182,11 +208,17 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
 
   const handlePaymentSuccess = async () => {
     try {
-      const response = await apiRequest('/api/solo-challenge/restore-lives', {
+      const response = await fetch('/api/solo-challenge/restore-lives', {
         method: 'POST',
         body: JSON.stringify({ challengeId: challenge?.id }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to restore lives');
+      }
       
       setChallenge(prev => ({ ...prev!, livesRemaining: 3 }));
       setGameState('playing');
@@ -530,145 +562,5 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
         </CardContent>
       </Card>
     </>
-  );
-
-  if (gameState === 'result') {
-    const finalResult = showResult?.finalScores;
-    const winner = showResult?.winner;
-    
-    return (
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader className="text-center">
-          <div className="mb-4">
-            <Trophy className="w-16 h-16 mx-auto text-yellow-500" />
-          </div>
-          <CardTitle className="text-3xl text-purple-900 dark:text-purple-100 font-cinzel">
-            Practice Complete!
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{finalResult?.user || 0}</div>
-              <div className="text-sm text-blue-600">Your Score</div>
-            </div>
-            <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-red-600">{finalResult?.bot || 0}</div>
-              <div className="text-sm text-red-600">Bot Score</div>
-            </div>
-          </div>
-
-          <div className="text-center">
-            <Badge 
-              variant={winner === 'user' ? 'default' : winner === 'tie' ? 'secondary' : 'destructive'}
-              className="text-lg px-4 py-2"
-            >
-              {winner === 'user' ? '🎉 You Won!' : 
-               winner === 'tie' ? '🤝 Tie Game!' : 
-               '🤖 Bot Won!'}
-            </Badge>
-          </div>
-
-          <div className="space-y-3">
-            <Button 
-              onClick={resetPractice} 
-              className="w-full bg-purple-600 hover:bg-purple-700"
-              size="lg"
-            >
-              Practice Again
-            </Button>
-            <Button 
-              onClick={onBack} 
-              variant="outline" 
-              className="w-full"
-              size="lg"
-            >
-              Back to Menu
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Playing state
-  if (!currentQuestion || !practiceSession) return null;
-
-  return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div>
-              <CardTitle className="text-xl text-purple-900 dark:text-purple-100 font-cinzel">
-                Practice vs {practiceSession.opponent.username}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Question {currentQuestion.questionNumber} of {currentQuestion.totalQuestions} • {subject}
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <Badge variant="outline">You: {practiceSession.userScore}</Badge>
-            <Badge variant="outline">Bot: {practiceSession.botScore}</Badge>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {showResult ? (
-          <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className={`p-3 rounded ${showResult.isCorrect ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
-                <div className="font-semibold">Your Answer</div>
-                <div>{currentQuestion.choices[showResult.userAnswer]}</div>
-                <div className="text-sm">{showResult.isCorrect ? '✓ Correct' : '✗ Incorrect'}</div>
-              </div>
-              <div className={`p-3 rounded ${showResult.botCorrect ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
-                <div className="font-semibold">Bot Answer</div>
-                <div>{currentQuestion.choices[showResult.botAnswer]}</div>
-                <div className="text-sm">{showResult.botCorrect ? '✓ Correct' : '✗ Incorrect'}</div>
-              </div>
-            </div>
-            <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded">
-              <div className="font-semibold">Correct Answer: {currentQuestion.choices[showResult.correctAnswer]}</div>
-              <div className="text-sm mt-2">{showResult.explanation}</div>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="prose max-w-none">
-              <div className="text-lg leading-relaxed">{currentQuestion.stem}</div>
-            </div>
-            
-            <div className="space-y-3">
-              {currentQuestion.choices.map((choice, index) => (
-                <Button
-                  key={index}
-                  variant={selectedAnswer === index ? "default" : "outline"}
-                  className="w-full text-left justify-start p-4 h-auto whitespace-normal"
-                  onClick={() => setSelectedAnswer(index)}
-                  disabled={isSubmitting}
-                >
-                  <span className="font-medium mr-3">{String.fromCharCode(65 + index)}.</span>
-                  {choice}
-                </Button>
-              ))}
-            </div>
-
-            <Button 
-              onClick={submitAnswer}
-              disabled={selectedAnswer === null || isSubmitting}
-              className="w-full bg-purple-600 hover:bg-purple-700"
-              size="lg"
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Answer'}
-            </Button>
-          </>
-        )}
-      </CardContent>
-    </Card>
   );
 }
