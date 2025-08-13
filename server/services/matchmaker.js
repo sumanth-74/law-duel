@@ -293,14 +293,22 @@ async function runDuel(wss, roomCode, players, subject) {
         // Track subtopic progress for human players (not bots)
         if (ws.profile?.id && !ws.isBot) {
           try {
-            await subtopicProgressService.recordAttempt(
+            const progressResult = await subtopicProgressService.recordAttempt(
               ws.profile.id,
               question.subject,
               question.stem,
               question.explanation,
               correct,
-              match.difficulty // Pass current difficulty level
+              match.difficulty, // Pass current difficulty level
+              answer.timeMs,    // Time to answer
+              roomCode,         // Duel ID
+              question.qid      // Question ID
             );
+            
+            // Store progress result for inclusion in response
+            if (progressResult) {
+              ws.progressResult = progressResult;
+            }
           } catch (error) {
             console.error('Error recording subtopic progress:', error);
           }
@@ -320,12 +328,19 @@ async function runDuel(wss, roomCode, players, subject) {
         correctIndex: question.correctIndex,
         explanation: question.explanation,
         results,
-        scores: match.scores.slice()
+        scores: match.scores.slice(),
+        subject: question.subject
       };
 
       players.forEach(ws => {
         if (ws.readyState === 1) {
-          ws.send(JSON.stringify({ type: 'duel:result', payload: resultData }));
+          // Include the progress result for this player
+          const payload = { ...resultData };
+          if (ws.progressResult) {
+            payload.progressResult = ws.progressResult;
+            delete ws.progressResult; // Clear for next round
+          }
+          ws.send(JSON.stringify({ type: 'duel:result', payload }));
         }
       });
 
@@ -511,14 +526,22 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       // Track subtopic progress for human player
       if (humanWs.profile?.id) {
         try {
-          await subtopicProgressService.recordAttempt(
+          const progressResult = await subtopicProgressService.recordAttempt(
             humanWs.profile.id,
             question.subject,
             question.stem,
             question.explanation,
             humanCorrect,
-            match.difficulty // Pass current difficulty level
+            match.difficulty, // Pass current difficulty level
+            humanAnswer.timeMs, // Time to answer
+            roomCode,         // Duel ID
+            question.qid      // Question ID
           );
+          
+          // Store progress result for inclusion in response
+          if (progressResult) {
+            humanWs.progressResult = progressResult;
+          }
         } catch (error) {
           console.error('Error recording subtopic progress:', error);
         }
@@ -545,11 +568,17 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         correctIndex: question.correctIndex,
         explanation: question.explanation,
         results,
-        scores: match.scores.slice()
+        scores: match.scores.slice(),
+        subject: question.subject
       };
 
       if (humanWs.readyState === 1) {
-        humanWs.send(JSON.stringify({ type: 'duel:result', payload: resultData }));
+        const payload = { ...resultData };
+        if (humanWs.progressResult) {
+          payload.progressResult = humanWs.progressResult;
+          delete humanWs.progressResult; // Clear for next round
+        }
+        humanWs.send(JSON.stringify({ type: 'duel:result', payload }));
       }
 
       await new Promise(resolve => setTimeout(resolve, 3000));

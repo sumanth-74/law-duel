@@ -1,0 +1,112 @@
+LAW DUEL — Make It Live (one task, do exactly this)
+NORTH STAR (pin this at the top of the task):
+Every match must teach, reward, and rank: high-quality, OpenAI-sourced MBE questions → instant +XP / +Mastery per Subject/Subtopic → async wins that move a weekly ladder. No dupes, no desyncs, no lost progress.
+
+0) Preflight (don’t proceed until green)
+Ensure env vars exist: OPENAI_API_KEY, NODE_ENV=production, any DATABASE_URL.
+
+Run migrations/seed: npm run db:migrate && npm run db:seed (or Prisma equivalent).
+
+Create/cache dirs that the app expects (e.g., /data, /cache/questions).
+
+1) Canonical taxonomy (single source of truth)
+Add server/taxonomy.(ts|js) with this exact subject/subtopic set (can be the minimal set below; expand later).
+Evidence: Hearsay, Impeachment, Relevance, Privileges, Authentication
+Contracts: Formation, Parol Evidence, SOF, Conditions, Remedies
+Torts: Negligence, Strict Liability, Products, Defamation, Privacy
+Civ Pro: PJ, SMJ, Erie, Venue/Transfer, Preclusion
+Con Law: Speech, Equal Protection, Due Process, Takings, Religion
+Real Property: Estates, Future Interests, Recording, Mortgages, Landlord/Tenant
+Crim Law/Pro: Homicide, Inchoate/Accomplice, Fourth Amendment, Exclusionary, Fifth Amendment
+
+Implement normalizeLabel() + alias map (e.g., “Parol Evidence Rule” → “Parol Evidence”).
+
+2) Record subtopic progress at answer time
+Create server/progress.(ts|js) with idempotent:
+
+scss
+Copy
+Edit
+recordAttempt({ userId, duelId, questionId, subject, subtopic, difficulty, correct, msToAnswer, ts })
+Behavior: create row if missing; attempts++, correct++ if right; adjust mastery (0–100) by a small ± step scaled to difficulty; set lastSeenAt; write audit row.
+Guard by (userId, duelId, questionId) to avoid double counts.
+
+Call recordAttempt(...) from the single server handler that processes answers (Solo + Async + Live).
+
+3) OpenAI question generation with tags + cache
+Server-side only (client never calls OpenAI).
+
+Prompt must return STRICT JSON with: subject, subtopic, difficulty(1–10), prompt, choices[4], answerIndex, explanation(<120w), authority_hint.
+
+Validate JSON → normalize labels → reject if not in taxonomy → regenerate or fallback to bank.
+
+Cache by (subject, subtopic, difficulty); compute checksum to dedupe.
+
+No duplicate questions within a match (enforce server-side Set).
+
+4) Async Friend Duel parity
+Both players receive the same 5 questions (server picks; client can randomize order).
+
+Winner = most correct; tie = faster total time.
+
+Apply XP and Elo (K=24) on completion; write to Weekly Ladder (ISO week).
+
+5) Public stats & endpoints
+Endpoints (minimal):
+
+GET /api/stats/subtopics → all subjects with all subtopics, zeros included.
+
+GET /api/profile/:username → public snapshot: Level + XP, Elo, subject bars, top 5 subtopics, recent matches.
+
+Profiles default Public (settings toggle: Public / Friends-only / Private).
+
+Leaderboards pull only from public profiles.
+
+6) UI: progress must be visible immediately
+After each answer, server responds with: xpGained, subject, subtopic, masteryDelta, before, after.
+UI shows chip: +12 XP · Evidence/Hearsay · Mastery +3.
+
+Results screen: XP bar moved; top 3 subtopic arrows (↑/↓); “Rating +XX (old→new)” if vs human.
+
+Stats page: always render Subtopics tab (never hide for zeros).
+
+7) Daily Casefile & Streak (UTC)
+Reset at midnight UTC (already shown).
+
+Streak rule: play on consecutive UTC days → streak++; miss a day → reset to 1.
+
+Today’s attempt must not overwrite tomorrow’s streak.
+
+Acceptance checks (do not mark complete until ALL pass)
+Subtopics move immediately: Answer 1 Hearsay question → GET /api/stats/subtopics shows Evidence/Hearsay attempts=1 and mastery changed; Subtopics tab renders it without refresh hacks.
+
+Progress felt: Finish a 5-Q Solo with 3 correct → XP bar moved; at least one subtopic shows Mastery ↑ on results; same values visible on Stats after full page reload.
+
+Async works & ranks: A plays now, B later → both got the same 5; winner gains XP/Elo, loser loses; Weekly Ladder updates; both players’ subtopic stats reflect their own answers.
+
+No dupes in a match: Run 20 matches → 0 duplicate questions within any single match.
+
+Fresh but resilient: Temporarily block OpenAI → match still completes via cache/bank; audit log shows fallback.
+
+Public profile visible: Visit /profile/<your-username> from another account → level, Elo, subject bars, top 5 subtopics visible (unless privacy set to Private).
+
+Daily streak: Answer today; streak increments by 1; timer shows time until 00:00:00 UTC; tomorrow, play again → streak increments again.
+
+Definition of Done:
+
+Players get fresh, tagged OpenAI questions that adapt to weaknesses; answering immediately updates subtopic mastery/XP and shows it; async duels move a weekly ladder; public profiles show progress; no dupes, no desyncs, no lost data.
+
+(Optional) Quick smoke test commands
+If you have a local dev console:
+
+bash
+Copy
+Edit
+# Subtopic stats snapshot
+curl -s http://localhost:5000/api/stats/subtopics | jq .
+
+# Public profile
+curl -s http://localhost:5000/api/profile/<username> | jq .
+
+# Health
+curl -s http://localhost:5000/health | jq .

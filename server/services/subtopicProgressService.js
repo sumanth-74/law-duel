@@ -8,6 +8,8 @@ const DATA_FILE = path.join(process.cwd(), 'data', 'subtopic-progress.json');
 class SubtopicProgressService {
   constructor() {
     this.progressData = new Map();
+    this.attemptAudit = new Set(); // Track attempts to prevent duplicates
+    this.auditLog = []; // Detailed audit log for debugging
     this.loadFromFile();
   }
 
@@ -80,8 +82,19 @@ class SubtopicProgressService {
   }
 
   // Record a question attempt with subtopic tracking
-  async recordAttempt(userId, subject, questionText, explanation, isCorrect, difficulty = 'medium') {
+  async recordAttempt(userId, subject, questionText, explanation, isCorrect, difficulty = 'medium', msToAnswer = null, duelId = null, questionId = null) {
+    // Prevent duplicate recording for the same question in the same duel
+    if (duelId && questionId) {
+      const auditKey = `${userId}_${duelId}_${questionId}`;
+      if (this.attemptAudit?.has(auditKey)) {
+        console.log(`Skipping duplicate attempt: ${auditKey}`);
+        return null;
+      }
+      this.attemptAudit?.add(auditKey);
+    }
+    
     const progress = this.getUserProgress(userId);
+    const timestamp = new Date().toISOString();
     
     // Identify the subtopic from question content
     const subtopic = identifySubtopic(subject, questionText, explanation);
@@ -158,11 +171,41 @@ class SubtopicProgressService {
         subtopicScores.reduce((a, b) => a + b, 0) / subtopicScores.length;
     }
     
+    // Record audit entry for debugging
+    const auditEntry = {
+      userId,
+      duelId,
+      questionId,
+      subject,
+      subtopic,
+      difficulty,
+      correct: isCorrect,
+      msToAnswer,
+      timestamp,
+      proficiencyBefore: subtopic && progress[subject].subtopics[subtopic] 
+        ? progress[subject].subtopics[subtopic].proficiencyScore - (isCorrect ? increment : 0)
+        : 0,
+      proficiencyAfter: subtopic && progress[subject].subtopics[subtopic] 
+        ? progress[subject].subtopics[subtopic].proficiencyScore 
+        : 0
+    };
+    
+    this.auditLog.push(auditEntry);
+    
+    // Keep audit log size manageable (last 1000 entries)
+    if (this.auditLog.length > 1000) {
+      this.auditLog = this.auditLog.slice(-1000);
+    }
+    
     await this.saveToFile();
     
     return {
       subject,
       subtopic,
+      xpGained: isCorrect ? Math.floor(12 + difficulty * 2) : 2, // Base XP + difficulty bonus
+      masteryDelta: subtopic && progress[subject].subtopics[subtopic] ? increment : 0,
+      before: auditEntry.proficiencyBefore,
+      after: auditEntry.proficiencyAfter,
       newProficiency: progress[subject].subtopics[subtopic]?.proficiencyScore || 0,
       overallProficiency: progress[subject].overall.proficiencyScore
     };

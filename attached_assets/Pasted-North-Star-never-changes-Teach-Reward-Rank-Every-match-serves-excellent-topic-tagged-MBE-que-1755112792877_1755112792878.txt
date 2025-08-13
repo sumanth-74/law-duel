@@ -1,0 +1,99 @@
+North Star (never changes)
+Teach · Reward · Rank. Every match serves excellent, topic-tagged MBE questions; players see immediate XP + Subtopic Mastery gains; and wins move an async ladder. No dupes, no desyncs, no lost progress.
+
+Player Experience — Non-Negotiables
+✅ 5-question matches, 25s server timer, first answer locks.
+
+✅ Async duels: same 5 Qs for both; play-at-your-pace; winner = most correct (time tiebreak).
+
+✅ Weakness targeting: ≥ 3/5 from player’s weakest subtopics; difficulty adapts up/down.
+
+✅ Instant feedback chips after each Q: +XP · Subject/Subtopic · Mastery ±N.
+
+✅ Results screen: XP bar moved, top 3 subtopic arrows (↑/↓), accuracy, Elo delta.
+
+✅ Daily Casefile: resets midnight UTC; streak increments on consecutive days.
+
+✅ Public profiles & leaderboards (Friends/School/Global Weekly); no zero-point users; bots have fun gamertags + unique avatars.
+
+Questions & Content
+🎯 Quality: true MBE style; rule-first explanation (<120 words); 4 clean, mutually exclusive choices.
+
+🏷️ Tags: every Q carries Subject + Subtopic + Difficulty (1–10) from a canonical taxonomy.
+
+🔄 Freshness: OpenAI-generated server-side with JSON validation + cache; fallback bank if gen fails.
+
+🚫 No duplicates within a match (server-enforced).
+
+Progression & Stats
+📈 Mastery per subtopic (0–100) updated at answer time (idempotent by user/duel/question).
+
+⭐ XP & Level visible on dashboard + result screen.
+
+📊 Stats page always shows Subjects → Subtopics (including zeros); never hidden.
+
+🔒 Persistence: all progress stored server-side; survives logout/device changes.
+
+Ranking & Community
+📶 Elo for PvP/async friend duels (K≈24); result screen shows +XX (old→new).
+
+🏆 Weekly ladder (ISO week); scopes: Friends / School / Global.
+
+👤 Public profile (toggle: Public / Friends-only / Private) with Level, Elo, subject bars, top 5 subtopics, recent matches.
+
+System & Reliability
+🧠 Server-authoritative scoring/timers; clients never trust themselves.
+
+🧷 Idempotency on answer handling (no double counts on reconnect).
+
+🧩 Taxonomy single source with label normalization/aliases.
+
+🧭 Observability: audit each answer (user, duel, question, subject, subtopic, correct, ms, ts); logs for gen fallback.
+
+⚡ Performance: P95 event handling < 150 ms; websocket heartbeats drop ghosts in 5s.
+
+Acceptance Tests (block release until ALL green)
+Weakness targeting: Solo serves ≥3/5 from a known weak subtopic until mastery rises.
+
+Progress felt: After 3/5 correct, XP bar moves; at least one subtopic shows Mastery ↑ on result screen and on Stats after reload.
+
+Async parity: Two users play at different times; both get the same 5; Elo + ladder update; each user’s subtopic stats reflect their own answers.
+
+No dupes: 20 matches → 0 repeated questions within any single match.
+
+Resilient gen: Simulated OpenAI failure → match completes via cache/bank; audit shows fallback.
+
+Daily streak: Playing on consecutive UTC days increments; skipping resets to 1; timer targets 00:00:00 UTC.
+
+Public profile: /profile/:username shows Level, Elo, subject bars, top subtopics (unless set Private).
+
+Definition of Done:
+
+Answering a question immediately moves XP + Subtopic Mastery; async wins move Elo + Weekly ladder; quality questions are tagged and deduped; all progress persists.
+
+Guardrails — Not Now (keep scope tight)
+❌ Cosmetics store / marketplace
+
+❌ Guilds/parties/tournaments
+
+❌ Complex animations or sound packs
+
+❌ Multi-mode experiments beyond Solo / Async Friend (Live PvP optional later)
+
+30-Day Milestones (truth-or-dare deadlines)
+Week 1: Core loop stable; taxonomy; answer-time mastery; feedback chips; no dupes; OpenAI gen + cache + fallback; Stats/Subtopics render.
+Week 2: Async duels; Elo; Weekly ladder; public profiles; Daily Casefile + streak.
+Week 3: QA burn-down; observability; performance; bot polish (names/avatars); school/friends ladders.
+Week 4: Closed beta (20–50 users). Ship fixes. Target KPIs below.
+
+First-Beta KPIs (go/no-go targets)
+Activation (finish 1 match): ≥ 70%
+
+D2 return: ≥ 35%
+
+Avg questions/session: ≥ 10
+
+Async duel rematch rate: ≥ 25%
+
+Bug-free matches (no desync/dupe): 99%+
+

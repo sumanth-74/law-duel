@@ -42,13 +42,19 @@ export default function SubtopicProgress() {
   // Fetch subtopic progress data
   const { data: progressData, isLoading: progressLoading } = useQuery<Record<string, SubjectProgress>>({
     queryKey: ['/api/stats/subtopics'],
-    queryFn: () => apiRequest('GET', '/api/stats/subtopics')
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/stats/subtopics') as unknown;
+      return response as Record<string, SubjectProgress>;
+    }
   });
 
   // Fetch study recommendations
   const { data: recommendations, isLoading: recsLoading } = useQuery<StudyRecommendation[]>({
     queryKey: ['/api/stats/recommendations'],
-    queryFn: () => apiRequest('GET', '/api/stats/recommendations')
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/stats/recommendations') as unknown;
+      return response as StudyRecommendation[];
+    }
   });
 
   const subjects = ['Civ Pro', 'Con Law', 'Contracts', 'Crim', 'Evidence', 'Property', 'Torts'];
@@ -80,7 +86,7 @@ export default function SubtopicProgress() {
     );
   }
 
-  const currentSubjectData = progressData?.[selectedSubject] as SubjectProgress;
+  const currentSubjectData = progressData?.[selectedSubject];
 
   return (
     <div className="space-y-6">
@@ -143,7 +149,7 @@ export default function SubtopicProgress() {
         </TabsList>
 
         {subjects.map(subject => {
-          const subjectData = progressData?.[subject] as SubjectProgress;
+          const subjectData = progressData?.[subject];
           if (!subjectData) return null;
 
           return (

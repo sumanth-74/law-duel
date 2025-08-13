@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { questionBank } from '../questionBank.js';
 import { storage } from '../storage.js';
+import { subtopicProgressService } from './subtopicProgressService.js';
 
 const ASYNC_MATCHES_FILE = path.join(process.cwd(), 'data/async_matches.json');
 const ASYNC_QUEUE_FILE = path.join(process.cwd(), 'data/async_queue.json');
@@ -191,6 +192,7 @@ class AsyncDuels {
         qid: question.qid || question.id,
         stem: question.stem,
         choices: question.choices,
+        subject: question.subject || match.subject, // Store subject for progress tracking
         difficulty: match.difficulty,
         deadlineTs: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
         answers: {},
@@ -299,13 +301,34 @@ class AsyncDuels {
     // Mark turn as revealed
     currentTurn.revealed = true;
 
-    // Score the turn
+    // Score the turn and track subtopic progress
     const correctAnswers = [];
     const incorrectAnswers = [];
 
     for (const player of match.players) {
       const answer = currentTurn.answers[player.id];
-      if (answer && answer.idx === currentTurn.correctIndex) {
+      const isCorrect = answer && answer.idx === currentTurn.correctIndex;
+      
+      // Track subtopic progress for human players
+      if (!player.id.startsWith('bot_')) {
+        try {
+          await subtopicProgressService.recordAttempt(
+            player.id,
+            currentTurn.subject || match.subject,
+            currentTurn.stem,
+            currentTurn.explanation,
+            isCorrect,
+            currentTurn.difficulty || 1,
+            answer ? answer.ms : 60000, // Use 60s if no answer
+            matchId, // Use match ID as duel ID
+            currentTurn.qid // Question ID
+          );
+        } catch (error) {
+          console.error('Error recording subtopic progress in async duel:', error);
+        }
+      }
+      
+      if (isCorrect) {
         correctAnswers.push({ ...player, ...answer });
       } else {
         incorrectAnswers.push({ ...player, ...answer });
@@ -363,13 +386,53 @@ class AsyncDuels {
     const winnerId = match.winnerId;
     const loserId = match.players.find(p => p.id !== winnerId).id;
 
-    // Apply ladder points (+25/-25) only for human players
-    if (!winnerId.startsWith('bot_')) {
-      await storage.updateUserStats(winnerId, true, 50, 25); // Winner gets points + XP
-    }
+    // Calculate Elo rating changes - Per North Star (K=24)
+    const K = 24;
+    const winner = await storage.getUserById(winnerId.startsWith('bot_') ? null : winnerId);
+    const loser = await storage.getUserById(loserId.startsWith('bot_') ? null : loserId);
     
-    if (!loserId.startsWith('bot_')) {
-      await storage.updateUserStats(loserId, false, 25, -25); // Loser loses points, gets some XP
+    if (winner && loser) {
+      const winnerRating = winner.points || 1200;
+      const loserRating = loser.points || 1200;
+      
+      const expectedWinner = 1 / (1 + Math.pow(10, (loserRating - winnerRating) / 400));
+      const expectedLoser = 1 / (1 + Math.pow(10, (winnerRating - loserRating) / 400));
+      
+      const winnerChange = Math.round(K * (1 - expectedWinner));
+      const loserChange = Math.round(K * (0 - expectedLoser));
+      
+      // Apply Elo changes
+      await storage.updateUserStats(winnerId, { 
+        points: winnerRating + winnerChange 
+      });
+      
+      await storage.updateUserStats(loserId, { 
+        points: loserRating + loserChange 
+      });
+      
+      console.log(`🏆 Async Duel ${matchId} complete: Winner +${winnerChange} Elo, Loser ${loserChange} Elo`);
+    } else if (winner && !loser) {
+      // Bot match - human vs bot at 1200 rating
+      const humanRating = winner.points || 1200;
+      const botRating = 1200;
+      
+      const expected = 1 / (1 + Math.pow(10, (botRating - humanRating) / 400));
+      const ratingChange = Math.round(K * (1 - expected));
+      
+      await storage.updateUserStats(winnerId, { 
+        points: humanRating + ratingChange 
+      });
+    } else if (loser && !winner) {
+      // Human lost to bot
+      const humanRating = loser.points || 1200;
+      const botRating = 1200;
+      
+      const expected = 1 / (1 + Math.pow(10, (botRating - humanRating) / 400));
+      const ratingChange = Math.round(K * (0 - expected));
+      
+      await storage.updateUserStats(loserId, { 
+        points: humanRating + ratingChange 
+      });
     }
   }
 

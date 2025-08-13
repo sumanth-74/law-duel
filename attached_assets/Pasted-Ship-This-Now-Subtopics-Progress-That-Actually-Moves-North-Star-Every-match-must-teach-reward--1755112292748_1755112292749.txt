@@ -1,0 +1,87 @@
+Ship This Now — Subtopics + Progress That Actually Moves
+North Star:
+Every match must teach, reward, and rank: great MBE questions → visible +XP / +Mastery per Subject/Subtopic → async wins that move a ladder. No bugs, no repeats, no progress loss.
+
+1) Record subtopic progress at the exact moment of answer
+Create a server function and call it from the single server place that processes an answer (Solo + Async Friend + Live).
+
+Function (natural language contract):
+
+recordAttempt(userId, subjectName, subtopicName, difficulty, correct, msToAnswer, timestamp, duelId, questionId)
+
+Creates the subtopic record if missing.
+
+Increments attempts; if correct then correct++.
+
+Updates mastery (0–100) by a small step (±1–5) scaled by difficulty and recent accuracy.
+
+Saves lastSeenAt = timestamp.
+
+Idempotent: ignore duplicates for the same (userId, duelId, questionId).
+
+2) Persist it (don’t fake it)
+Use either a table or a JSON file—just pick one and always write to it.
+
+Minimal fields per (userId, subtopic):
+
+attempts, correct, accuracy (derived), mastery (0–100), lastSeenAt.
+
+Also write a per-question audit row so bugs are traceable:
+
+(userId, duelId, questionId, subject, subtopic, difficulty, correct, msToAnswer, ts).
+
+3) Serve it to the UI
+Add two endpoints:
+
+GET /api/stats/subtopics → returns all subjects with their subtopics, including zeros (so the UI can show empty bars).
+
+GET /api/profile/:username → public snapshot (level, Elo, subject bars, top 5 subtopics).
+
+4) Show it (make progress felt)
+During match: after each answer, the server response includes
+xpGained, subject, subtopic, masteryDelta, before, after.
+UI shows a chip like: +12 XP · Evidence/Hearsay · Mastery +3.
+
+Stats page: add a Subtopics tab that always renders a list for the current subject even if attempts = 0.
+
+Result screen: show top 3 subtopic arrows (↑/↓) this match.
+
+5) Async Friend Duels (your key mechanic)
+Both players get the same 5 questions (order randomized client-side).
+
+A submits now; B submits later. Winner = most correct; tie = faster total time.
+
+Apply XP and Elo (K=24). Show “Rating +14 (1242→1256)”.
+
+Write recordAttempt for each question as they answer (don’t wait for the round to finish).
+
+6) Fresh OpenAI questions (tagged + adaptive)
+Server generates or pulls cached questions.
+
+Each question must carry subject, subtopic, difficulty, explanation.
+
+Targeting rule: in Solo, ≥3/5 questions come from the user’s lowest-mastery subtopics; difficulty nudges up as mastery rises.
+
+No duplicates within a match. If gen fails, fallback to bank.
+
+7) Public stats (community feel)
+Profiles are public by default (toggle: Public / Friends-only / Private).
+
+Leaderboards pull only from public profiles.
+
+Acceptance Tests (block merge until green)
+Subtopics show up: Visit Stats → Subtopics after answering 1 question → you see that subtopic with attempts=1, correct=0/1 or 1/1, and a mastery value that moved from baseline.
+
+Progress is felt: Finish a 5-Q Solo with 3 correct → XP bar moves; at least one subtopic shows Mastery ↑ on the result screen; the same numbers appear on the Stats page after refresh/log-out/log-in.
+
+Async works: A plays now, B later → both saw the same 5 questions; winner gains XP/Elo, loser loses; Weekly ladder updates; both players’ subtopic stats reflect their own answers.
+
+No duplicates in a match: Run 20 matches → 0 repeated question IDs within any single match.
+
+Resilient gen: Force OpenAI failure → match still completes from cache/bank; audit log shows fallback.
+
+Public profile: Visit /profile/YourUsername from a different account → level, Elo, subject bars, and top 5 subtopics visible (unless privacy set to Private).
+
+Definition of Done:
+
+When I answer a question, my subtopic mastery moves immediately, my XP bar moves, async wins move the ladder, and anyone can view my progress. No dupes, no desyncs, no lost data.

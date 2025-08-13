@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Sparkles, Shield, Trophy, Target, Clock, Star } from 'lucide-react';
+import { MatchSummaryChips } from './FeedbackChip';
 
 interface DuelResultsProps {
   winner: boolean;
@@ -22,6 +23,13 @@ interface DuelResultsProps {
     pointsToNext: number;
   };
   memoryHook?: string;
+  progressChanges?: Array<{
+    subject: string;
+    subtopic: string;
+    change: number;
+  }>;
+  totalXpGained?: number;
+  eloChange?: number;
   onRematch: () => void;
   onNewOpponent: () => void;
   onClose: () => void;
@@ -35,6 +43,9 @@ export default function DuelResults({
   streakData,
   tierInfo,
   memoryHook,
+  progressChanges,
+  totalXpGained,
+  eloChange,
   onRematch,
   onNewOpponent,
   onClose
@@ -152,6 +163,20 @@ export default function DuelResults({
               <Progress 
                 value={Math.max(0, 100 - (tierInfo.pointsToNext / 100) * 100)} 
                 className="h-2"
+              />
+            </div>
+          )}
+
+          {/* Progress Summary */}
+          {(totalXpGained || progressChanges || eloChange !== undefined) && (
+            <div className="space-y-2">
+              <div className="text-sm font-semibold text-purple-300 text-center mb-2">
+                Match Progress Summary
+              </div>
+              <MatchSummaryChips 
+                totalXP={totalXpGained || 0}
+                masteryChanges={progressChanges || []}
+                eloChange={eloChange}
               />
             </div>
           )}

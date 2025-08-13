@@ -693,6 +693,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // === SUBTOPIC PROGRESS ROUTES ===
   
+  // Get public profile data for any user
+  app.get("/api/profile/:username", async (req: any, res) => {
+    try {
+      const { username } = req.params;
+      const user = await storage.getUserByUsername(username);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      // Get subject stats
+      const subjectStats = await storage.getSubjectStats(user.id);
+      
+      // Get subtopic progress
+      const { subtopicProgressService } = await import('./services/subtopicProgressService.js');
+      const progress = subtopicProgressService.getDetailedProgress(user.id);
+      
+      // Get top 5 subtopics by proficiency
+      const allSubtopics = [];
+      for (const [subject, data] of Object.entries(progress)) {
+        if (data.subtopics) {
+          for (const subtopic of data.subtopics) {
+            allSubtopics.push({
+              subject,
+              subtopic: subtopic.name,
+              proficiency: subtopic.proficiencyScore,
+              attempts: subtopic.questionsAttempted
+            });
+          }
+        }
+      }
+      
+      const topSubtopics = allSubtopics
+        .filter(s => s.attempts > 0)
+        .sort((a, b) => b.proficiency - a.proficiency)
+        .slice(0, 5);
+      
+      // Return public profile data
+      res.json({
+        username: user.username,
+        displayName: user.displayName,
+        level: user.level,
+        points: user.points, // Elo rating
+        avatarData: user.avatarData,
+        lawSchool: user.lawSchool,
+        dailyStreak: user.dailyStreak,
+        totalWins: user.totalWins,
+        totalLosses: user.totalLosses,
+        subjectStats,
+        topSubtopics,
+        joinedAt: user.createdAt
+      });
+    } catch (error: any) {
+      console.error("Error fetching public profile:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Get detailed subtopic progress for current user
   app.get("/api/stats/subtopics", requireAuth, async (req: any, res) => {
     try {

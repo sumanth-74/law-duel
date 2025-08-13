@@ -1,0 +1,103 @@
+Fix Subtopics End-to-End (do exactly this)
+1) Canonical taxonomy (single source of truth)
+Create server/taxonomy.ts (or .js):
+
+bash
+Copy
+Edit
+export const SUBJECTS = {
+  Evidence: ["Hearsay","Impeachment","Relevance","Privileges","Authentication"],
+  Contracts: ["Formation","Parol Evidence","SOF","Conditions","Remedies"],
+  Torts: ["Negligence","Strict Liability","Products","Defamation","Privacy"],
+  Civ Pro: ["PJ","SMJ","Erie","Venue/Transfer","Preclusion"],
+  Con Law: ["Speech","Equal Protection","Due Process","Takings","Religion"],
+  Real Property: ["Estates","Future Interests","Recording","Mortgages","Landlord/Tenant"],
+  Crim Law/Pro: ["Homicide","Inchoate/Accomplice","Fourth Amendment","Exclusionary","Fifth Amendment"]
+};
+export const normalize = (s) => {/* lower, trim, strip punctuation, map aliases like
+  "Statement Against Interest" -> "Hearsay", "Parol Evidence Rule" -> "Parol Evidence" */};
+Rule: All questions and all stats must use these exact labels (after normalize). If a tag doesn’t map, put it in "Unmapped" and log a warning.
+
+2) Record attempts at the moment of answer
+Create server/progress.ts:
+
+javascript
+Copy
+Edit
+/** idempotent by (userId, duelId, questionId) */
+export async function recordAttempt({userId, duelId, questionId, subject, subtopic, difficulty, correct, msToAnswer, ts}) {
+  const subj = normalize(subject), sub = normalize(subtopic);
+  ensureRow(userId, subj, sub);                   // create if missing
+  if (alreadyRecorded(userId, duelId, questionId)) return;
+
+  // update counts
+  incAttempts(userId, subj, sub);
+  if (correct) incCorrect(userId, subj, sub);
+
+  // simple mastery step (0..100)
+  const cur = getMastery(userId, subj, sub);
+  const K = 6 + Math.min(4, Math.floor(difficulty/2));
+  const expected = 0.6; // target accuracy
+  const delta = correct ? +K*(1-expected) : -K*(expected);
+  setMastery(userId, subj, sub, clamp(cur + delta, 0, 100));
+
+  writeAudit({userId, duelId, questionId, subj, sub, difficulty, correct, msToAnswer, ts});
+}
+Wire it in one place: wherever the server processes an answer (Solo + Async + Live), immediately call recordAttempt(...). Do not wait for the round to end.
+
+3) Persist (no faking)
+Use a table or a JSON file—pick one and stick to it.
+
+Per (userId, subject, subtopic) store:
+
+attempts, correct, mastery, lastSeenAt
+
+Also keep an audit table/file for every answered question.
+
+4) API that the UI can actually use
+Add:
+
+GET /api/stats/subtopics → returns every subject with all its subtopics, including zeroed rows so the UI can render bars even before attempts.
+
+GET /api/profile/:username → public snapshot (level, Elo, subject bars, top 5 subtopics).
+
+5) UI: never hide the Subtopics tab
+In Stats.tsx:
+
+Always render the Subtopics list for the selected subject.
+
+Remove guards like if (!data.length) return null.
+
+After each answer, show the chip from the server response:
++12 XP · Evidence/Hearsay · Mastery +3
+
+On results screen, show the top 3 subtopic deltas from that match.
+
+6) Question tags must match taxonomy
+Server generation must attach subject + subtopic from SUBJECTS.
+Add a post-gen check:
+
+If normalize(subject/subtopic) doesn’t exist in taxonomy → reject & regenerate (or remap via alias); never send unmapped tags to clients.
+
+7) Quick verification (run these)
+Play 1 question in Hearsay. Then hit:
+
+GET /api/stats/subtopics → expect Evidence/Hearsay: attempts=1, mastery>0.
+
+Reload Stats → Subtopics → see “Hearsay” with counts and a bar.
+
+Start an Async Friend Duel and answer 2 Qs → the same endpoint reflects both subtopics immediately (no wait for round end).
+
+Force gen failure → match still runs from cache; audit shows fallback.
+
+8) Common failure points to check now
+Mismatch labels (“Hearsay—Exceptions” vs “Hearsay”). Fix via normalize/aliases.
+
+Not writing because the data file/dir doesn’t exist. Create on startup.
+
+UI hides zeros. Always render with zeros.
+
+Idempotency missing → double counts on reconnect. Guard with (userId, duelId, questionId).
+
+Definition of done
+After I answer a question, /api/stats/subtopics and the Subtopics tab reflect that attempt within the same second, mastery nudges up/down, and the chip shows the same numbers. No tag mismatches, no missing rows, no hidden UI.
