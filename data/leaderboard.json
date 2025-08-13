@@ -14,10 +14,10 @@
     "username": "RobertWilliams",
     "displayName": "Robert Williams",
     "level": 19,
-    "points": 3751,
+    "points": 3797,
     "totalWins": 67,
-    "totalLosses": 7,
-    "lastActive": "2025-08-13T01:23:10.923Z"
+    "totalLosses": 8,
+    "lastActive": "2025-08-13T01:43:10.926Z"
   },
   {
     "id": "bot_victoria_chen",
@@ -83,11 +83,11 @@
     "id": "bot_marcus_wong",
     "username": "MarcusWong",
     "displayName": "Marcus Wong",
-    "level": 12,
-    "points": 2400,
-    "totalWins": 38,
+    "level": 13,
+    "points": 2445,
+    "totalWins": 39,
     "totalLosses": 12,
-    "lastActive": "2025-08-12T03:53:57.749Z"
+    "lastActive": "2025-08-13T01:43:10.926Z"
   },
   {
     "id": "bot_carlos_mendez",
