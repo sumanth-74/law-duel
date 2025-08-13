@@ -72,17 +72,9 @@ export function CharacterCreation({ isOpen, onClose, onCharacterCreated, editMod
         setDisplayName(existingUser.displayName);
         setLawSchool(existingUser.lawSchool || '');
         
-        // Find matching archetype if available
-        const userArchetype = data.archetypes?.find(arch => 
-          arch.label === existingUser.displayName
-        );
-        if (userArchetype) {
-          setSelectedArchetype(userArchetype.id);
-          setSelectedCategory(userArchetype.category);
-        } else {
-          setCustomMode(true);
-          setCustomAvatarData(existingUser.avatarData);
-        }
+        // Set custom mode with existing avatar data
+        setCustomMode(true);
+        setCustomAvatarData(existingUser.avatarData);
       }
     }
   }, [isOpen, editMode, existingUser]);
