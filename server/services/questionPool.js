@@ -6,8 +6,8 @@ class QuestionPool {
   constructor() {
     this.pools = new Map(); // subject -> difficulty -> [questions]
     this.generating = new Set(); // Track what's being generated to avoid duplicates
-    this.MIN_POOL_SIZE = 5; // Increased minimum questions per difficulty level
-    this.TARGET_POOL_SIZE = 10; // Increased target pool size for better availability
+    this.MIN_POOL_SIZE = 15; // Much larger pool for instant serving
+    this.TARGET_POOL_SIZE = 25; // Keep 25 questions ready at all times
     this.fallbackQuestions = new Map(); // Fallback cache for instant serving
     
     // Initialize pools for all subjects and difficulties
@@ -33,28 +33,28 @@ class QuestionPool {
     // Immediately generate critical questions for common difficulties
     this.generateCriticalQuestions();
     
-    // Initial aggressive fill
-    await this.fillAllPools();
+    // Initial aggressive fill - don't wait
+    this.fillAllPools();
     
-    // Then check every 20 seconds for faster refills
+    // Then check every 5 seconds for ultra-fast refills
     setInterval(() => {
       this.fillAllPools();
-    }, 20000);
+    }, 5000);
   }
   
   async generateCriticalQuestions() {
     // Pre-generate questions for the most common subjects and difficulties
-    const criticalSubjects = ['Torts', 'Con Law', 'Crim', 'Contracts'];
-    const criticalDifficulties = [1, 2]; // Most common difficulties
+    const criticalSubjects = ['Torts', 'Con Law', 'Crim', 'Contracts', 'Evidence', 'Property', 'Civ Pro'];
+    const criticalDifficulties = [1, 2, 3]; // Generate for more difficulties
     
     console.log('⚡ Pre-generating critical questions for instant serving...');
     
     const tasks = [];
     for (const subject of criticalSubjects) {
       for (const difficulty of criticalDifficulties) {
-        // Generate 3 questions immediately for each critical combination
+        // Generate 10 questions immediately for each critical combination
         tasks.push(
-          this.generateQuestionsForPool(subject, difficulty, 3)
+          this.generateQuestionsForPool(subject, difficulty, 10)
             .catch(err => console.error(`Critical generation failed for ${subject} D${difficulty}:`, err))
         );
       }
@@ -71,8 +71,8 @@ class QuestionPool {
     
     // Process subjects in batches to avoid overload
     for (const subject of subjects) {
-      // Only generate for difficulty 1 and 2 initially (most common)
-      for (let difficulty = 1; difficulty <= 2; difficulty++) {
+      // Generate for all difficulties 1-4 to ensure coverage
+      for (let difficulty = 1; difficulty <= 4; difficulty++) {
         const pool = this.pools.get(subject).get(difficulty);
         const needed = this.TARGET_POOL_SIZE - pool.length;
         

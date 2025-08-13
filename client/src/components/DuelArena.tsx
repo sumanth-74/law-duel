@@ -413,10 +413,10 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   if (!isVisible) return null;
 
   return (
-    <Card className="panel relative" data-testid="duel-arena">
+    <Card className="panel relative pt-20" data-testid="duel-arena">
       {/* Pokemon-style Avatar Displays in Corners */}
       {/* Opponent Avatar - Top Left */}
-      <div className={`absolute top-4 left-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer === duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
+      <div className={`absolute top-20 left-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer === duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
         <div className="bg-panel-2 border-2 border-danger/60 rounded-xl p-3 shadow-lg min-w-[220px]">
           <div className="flex items-center space-x-3">
             <AvatarRenderer
@@ -445,7 +445,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
       </div>
       
       {/* User Avatar - Top Right */}
-      <div className={`absolute top-4 right-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer !== duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
+      <div className={`absolute top-20 right-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer !== duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
         <div className="bg-panel-2 border-2 border-arcane/60 rounded-xl p-3 shadow-lg min-w-[220px]">
           <div className="flex items-center space-x-3">
             <div className="flex-1 text-right">
