@@ -172,6 +172,37 @@ class QuestionPool {
     );
   }
   
+  // Fisher-Yates shuffle for answer randomization
+  shuffleAnswers(question) {
+    // Create a deep copy to avoid modifying the original
+    const shuffled = {
+      ...question,
+      choices: [...question.choices]
+    };
+    
+    // Create array of indices [0, 1, 2, 3]
+    const indices = [0, 1, 2, 3];
+    
+    // Fisher-Yates shuffle the indices
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    // Reorder choices based on shuffled indices
+    const newChoices = indices.map(i => question.choices[i]);
+    
+    // Find new position of correct answer
+    const newCorrectIndex = indices.indexOf(question.correctIndex);
+    
+    shuffled.choices = newChoices;
+    shuffled.correctIndex = newCorrectIndex;
+    
+    console.log(`🎲 Shuffled answers: correct answer moved from position ${question.correctIndex} to position ${newCorrectIndex}`);
+    
+    return shuffled;
+  }
+
   // Get a question from the pool (instant, no generation)
   async getQuestion(subject, difficulty = 1, excludeIds = []) {
     const normalizedSubject = normalizeSubject(subject);
@@ -185,7 +216,8 @@ class QuestionPool {
       // Emergency generation if pool is empty
       const question = await this.generateSingleQuestion(normalizedSubject, difficulty);
       if (question && this.validateQuestion(question)) {
-        return question;
+        // Shuffle answers before returning
+        return this.shuffleAnswers(question);
       }
       throw new Error(`Cannot generate question for ${normalizedSubject} difficulty ${difficulty}`);
     }
@@ -210,7 +242,8 @@ class QuestionPool {
       });
     }
     
-    return question;
+    // Shuffle answers before returning
+    return this.shuffleAnswers(question);
   }
   
   // Get pool status for monitoring

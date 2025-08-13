@@ -150,6 +150,9 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   const handleNewQuestion = (questionData: QuestionData) => {
     console.log('Received question data:', questionData);
     
+    // Get time limit in seconds (handle both timeLimitSec and timeLimit fields)
+    const timeLimitSeconds = (questionData as any).timeLimitSec || Math.floor((questionData.timeLimit || 60000) / 1000);
+    
     // Clear any stale state and force fresh question display
     setDuelState(prev => ({
       ...prev,
@@ -161,17 +164,18 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           : []
       },
       round: questionData.round,
-      timeLeft: questionData.timeLimitSec || 60, // Use timeLimitSec from server
+      timeLeft: timeLimitSeconds, // Use calculated time limit
       selectedAnswer: undefined,
       showResult: false,
       waitingForOpponent: false,
       showHint: false,
       showTrainingBanner: false,
-      generatingQuestion: false // Clear loading state when question arrives
+      generatingQuestion: false, // Clear loading state when question arrives
+      questionStartTime: Date.now() // Track when question started for accurate timing
     }));
 
     // Use deadlineTs if available, otherwise calculate based on time limit
-    const deadline = questionData.deadlineTs || (Date.now() + (questionData.timeLimitSec || 60) * 1000);
+    const deadline = questionData.deadlineTs || (Date.now() + timeLimitSeconds * 1000);
     startTimer(deadline);
     announceForScreenReader(`Round ${questionData.round}. New question presented.`);
   };
@@ -257,6 +261,9 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   const handleAnswerSelect = (answerIndex: number) => {
     if (duelState.selectedAnswer !== undefined || duelState.timeLeft === 0) return;
 
+    // Calculate actual response time from when question started
+    const responseTimeMs = Date.now() - ((duelState as any).questionStartTime || Date.now());
+
     setDuelState(prev => ({
       ...prev,
       selectedAnswer: answerIndex,
@@ -270,7 +277,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         payload: {
           qid: duelState.currentQuestion?.qid,
           idx: answerIndex,
-          ms: (20 - duelState.timeLeft) * 1000
+          ms: Math.min(responseTimeMs, 60000) // Cap at 60 seconds
         }
       }));
     }
@@ -436,7 +443,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
             <div className="bg-panel-2 border border-white/10 rounded-xl p-6">
               <div className="flex items-start justify-between mb-4">
                 <h4 className="font-semibold text-lg" data-testid="question-header">
-                  {duelState.currentQuestion?.subject || duelState.subject} • Round {duelState.round}/10
+                  {(duelState.currentQuestion as any)?.subject || duelState.subject} • Round {duelState.round}/10
                 </h4>
                 <div className="flex items-center space-x-2">
                   <button 
@@ -556,23 +563,23 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
               </div>
             </div>
             
-            {duelState.finalResult.competitiveDetails && (
+            {(duelState.finalResult as any).competitiveDetails && (
               <div className="p-4 bg-muted/50 rounded-lg text-sm space-y-2">
                 <h4 className="font-bold">Competitive Breakdown:</h4>
                 <div className="flex justify-between">
-                  <span>Correct Answers ({duelState.finalResult.competitiveDetails.correctAnswers}/10):</span>
-                  <span className="text-success">+{duelState.finalResult.competitiveDetails.basePoints} pts</span>
+                  <span>Correct Answers ({(duelState.finalResult as any).competitiveDetails.correctAnswers}/10):</span>
+                  <span className="text-success">+{(duelState.finalResult as any).competitiveDetails.basePoints} pts</span>
                 </div>
-                {duelState.finalResult.competitiveDetails.winBonus > 0 && (
+                {(duelState.finalResult as any).competitiveDetails.winBonus > 0 && (
                   <div className="flex justify-between">
                     <span>Victory Bonus:</span>
-                    <span className="text-success">+{duelState.finalResult.competitiveDetails.winBonus} pts</span>
+                    <span className="text-success">+{(duelState.finalResult as any).competitiveDetails.winBonus} pts</span>
                   </div>
                 )}
-                {duelState.finalResult.competitiveDetails.lossePenalty < 0 && (
+                {(duelState.finalResult as any).competitiveDetails.lossePenalty < 0 && (
                   <div className="flex justify-between">
                     <span>Defeat Penalty:</span>
-                    <span className="text-danger">{duelState.finalResult.competitiveDetails.lossePenalty} pts</span>
+                    <span className="text-danger">{(duelState.finalResult as any).competitiveDetails.lossePenalty} pts</span>
                   </div>
                 )}
                 <div className="border-t pt-2 flex justify-between font-bold">
