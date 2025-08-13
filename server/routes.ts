@@ -1594,20 +1594,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const { type, payload } = message;
 
         switch (type) {
+          case 'presence:hello':
+            console.log('👋 Presence registration:', payload?.username);
+            // Register user presence
+            try {
+              const matchmakerModule = await import('./services/matchmaker.js');
+              matchmakerModule.registerPresence(ws, payload);
+            } catch (error) {
+              console.error('Failed to register presence:', error);
+            }
+            break;
+            
           case 'queue:join':
             console.log('🎯 Queue join request:', payload?.subject);
             // Import matchmaker and start matchmaking
-            const { startMatchmaking } = await import('./services/matchmaker.js');
-            startMatchmaking(wss, ws, payload);
+            try {
+              const matchmakerModule = await import('./services/matchmaker.js');
+              matchmakerModule.startMatchmaking(wss, ws, payload);
+            } catch (error) {
+              console.error('Failed to start matchmaking:', error);
+              ws.send(JSON.stringify({ 
+                type: 'error', 
+                payload: { message: 'Failed to start matchmaking' } 
+              }));
+            }
             break;
             
           case 'duel:answer':
             // Handled by matchmaker now, not the old system
-            // handleDuelAnswer(ws, payload);
+            try {
+              const matchmakerModule = await import('./services/matchmaker.js');
+              matchmakerModule.handleDuelAnswer(ws, payload);
+            } catch (error) {
+              console.error('Failed to handle duel answer:', error);
+            }
             break;
           
           case 'duel:hint':
             // Handle hint request (not implemented yet)
+            try {
+              const matchmakerModule = await import('./services/matchmaker.js');
+              matchmakerModule.handleHintRequest(ws, payload);
+            } catch (error) {
+              console.error('Failed to handle hint request:', error);
+            }
             break;
           
           default:
