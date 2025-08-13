@@ -78,7 +78,7 @@ export function startMatchmaking(wss, ws, payload) {
       return;
     }
     
-    console.log(`Starting bot match for player in ${normalizedSubject}`);
+    console.log(`Starting match for player in ${normalizedSubject}`);
     
     // Spawn stealth bot
     const player = ws.profile || { level: 1, points: 0, avatarData: { base: 'shadow_goblin', palette: '#5865f2', props: [] } };

@@ -467,9 +467,25 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
                   {String.fromCharCode(65 + duelState.lastResult.correctIndex)}
                 </span>
               </p>
-              <p className="text-sm text-muted">{duelState.lastResult.explanation}</p>
+              
+              {/* Atticus Says Explanation */}
+              <div className="bg-mystic-gold/10 border border-mystic-gold/30 rounded-xl p-4 mt-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-10 h-10 bg-mystic-gold rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6 fill-dark-bg">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3-9c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm6 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-3 5c1.66 0 3-1.34 3-3h-6c0 1.66 1.34 3 3 3z"/>
+                      <path d="M8 4c0-.55-.45-1-1-1s-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4zm10 0c0-.55-.45-1-1-1s-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-mystic-gold mb-1">Atticus Says:</p>
+                    <p className="text-sm text-gray-200">{duelState.lastResult.explanation}</p>
+                  </div>
+                </div>
+              </div>
+              
               {duelState.selectedAnswer === duelState.lastResult.correctIndex && (
-                <p className="text-success font-semibold">+10 XP</p>
+                <p className="text-success font-semibold mt-2">+10 XP</p>
               )}
             </div>
           </div>

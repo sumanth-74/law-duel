@@ -38,6 +38,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_alexandra_carter',
       username: 'AlexandraCarter',
       displayName: 'Alexandra Carter',
+      lawSchool: 'Harvard Law',
       level: 15,
       points: 2850,
       totalWins: 47,
@@ -48,6 +49,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_marcus_wong',
       username: 'MarcusWong',
       displayName: 'Marcus Wong',
+      lawSchool: 'Yale Law',
       level: 12,
       points: 2400,
       totalWins: 38,
@@ -58,6 +60,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_sarah_patel',
       username: 'SarahPatel',
       displayName: 'Sarah Patel',
+      lawSchool: 'Stanford Law',
       level: 18,
       points: 3200,
       totalWins: 56,
@@ -68,6 +71,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_david_torres',
       username: 'DavidTorres',
       displayName: 'David Torres',
+      lawSchool: 'Columbia Law',
       level: 14,
       points: 2650,
       totalWins: 42,
@@ -78,6 +82,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_rachel_kim',
       username: 'RachelKim',
       displayName: 'Rachel Kim',
+      lawSchool: 'NYU Law',
       level: 16,
       points: 2950,
       totalWins: 49,
@@ -88,6 +93,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_james_richardson',
       username: 'JamesRichardson',
       displayName: 'James Richardson',
+      lawSchool: 'UChicago Law',
       level: 11,
       points: 2100,
       totalWins: 32,
@@ -98,6 +104,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_emma_thompson',
       username: 'EmmaThompson',
       displayName: 'Emma Thompson',
+      lawSchool: 'UPenn Law',
       level: 17,
       points: 3100,
       totalWins: 52,
@@ -108,6 +115,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_carlos_mendez',
       username: 'CarlosMendez',
       displayName: 'Carlos Mendez',
+      lawSchool: 'Georgetown Law',
       level: 13,
       points: 2300,
       totalWins: 35,
@@ -118,6 +126,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_victoria_chen',
       username: 'VictoriaChen',
       displayName: 'Victoria Chen',
+      lawSchool: 'Duke Law',
       level: 19,
       points: 3450,
       totalWins: 62,
@@ -128,6 +137,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_michael_oconnor',
       username: 'MichaelOConnor',
       displayName: "Michael O'Connor",
+      lawSchool: 'Michigan Law',
       level: 21,
       points: 3850,
       totalWins: 71,
@@ -138,6 +148,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_priya_sharma',
       username: 'PriyaSharma',
       displayName: 'Priya Sharma',
+      lawSchool: 'Berkeley Law',
       level: 10,
       points: 1850,
       totalWins: 28,
@@ -148,6 +159,7 @@ async function seedLeaderboardWithBots() {
       id: 'bot_robert_williams',
       username: 'RobertWilliams',
       displayName: 'Robert Williams',
+      lawSchool: 'Virginia Law',
       level: 20,
       points: 3700,
       totalWins: 67,
@@ -244,7 +256,7 @@ export async function getLeaderboard(limit = 20) {
   try {
     const leaderboard = await readLeaderboard();
     return leaderboard
-      .filter(player => !player.id.startsWith('sb_')) // Exclude stealth bots (but keep display bots)
+      .filter(player => !player.id.startsWith('sb_') && player.points > 0) // Exclude stealth bots and zero-point players
       .slice(0, limit);
   } catch (error) {
     console.error('Failed to get leaderboard:', error);
