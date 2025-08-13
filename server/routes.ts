@@ -847,6 +847,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Combined daily casefile endpoint for easy access
+  app.get("/api/daily-casefile", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const result = await dailyCasefileService.getTodaysQuestion(userId);
+      res.json(result);
+    } catch (error) {
+      console.error("Error getting daily casefile:", error);
+      res.status(500).json({ message: "Failed to get daily casefile" });
+    }
+  });
+
   // === DUEL API ENDPOINTS ===
   
   // Duel state storage
