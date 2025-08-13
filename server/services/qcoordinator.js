@@ -72,6 +72,10 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false, di
     return getFallbackQuestion(subject);
   } catch (error) {
     console.error('Error getting question:', error);
+    // NEVER use fallback questions for competitive duels
+    if (forceNew) {
+      throw error; // Propagate error for duels - don't use fallback
+    }
     return getFallbackQuestion(subject);
   }
 }

@@ -1381,10 +1381,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await realTimeLeaderboard.updateAndBroadcast();
     }, 500);
     
-    // Immediately start a bot duel when client connects
-    setTimeout(() => {
-      startBotDuel(ws);
-    }, 1000);
+    // DISABLED: Old bot duel system - now using proper matchmaker
+    // setTimeout(() => {
+    //   startBotDuel(ws);
+    // }, 1000);
     
     ws.on('message', async (data) => {
       try {
@@ -1400,7 +1400,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             break;
             
           case 'duel:answer':
-            handleDuelAnswer(ws, payload);
+            // Handled by matchmaker now, not the old system
+            // handleDuelAnswer(ws, payload);
             break;
           
           case 'duel:hint':
@@ -1467,13 +1468,17 @@ function startBotDuel(ws: WebSocket) {
     }
   }));
 
-  // Send first question after a short delay
-  setTimeout(() => {
-    sendNextQuestion(ws);
-  }, 2000);
+  // DISABLED: Using matchmaker for all questions now
+  // setTimeout(() => {
+  //   sendNextQuestion(ws);
+  // }, 2000);
 }
 
 function sendNextQuestion(ws: WebSocket) {
+  // DISABLED: Old fallback system - all duels now use matchmaker with OpenAI
+  console.log('⚠️ WARNING: Old sendNextQuestion called - this should not happen!');
+  return;
+  
   const duelState = activeDuels.get(ws);
   if (!duelState) return;
 
@@ -1725,10 +1730,10 @@ function handleDuelAnswer(ws: WebSocket, payload: any) {
         activeDuels.delete(ws);
       }, 3000);
     } else {
-      // Send next question after a short delay
-      setTimeout(() => {
-        sendNextQuestion(ws);
-      }, 4000);
+      // DISABLED: Using matchmaker for all questions now
+      // setTimeout(() => {
+      //   sendNextQuestion(ws);
+      // }, 4000);
     }
   }, 1500);
 }
