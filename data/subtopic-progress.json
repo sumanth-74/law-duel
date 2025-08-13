@@ -1,1 +1,1977 @@
-{}
+{
+  "ef64d748-59df-424f-b451-781222328c95": {
+    "Civ Pro": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "jurisdiction": {
+          "name": "Jurisdiction",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Subject matter jurisdiction": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Federal question jurisdiction": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Diversity jurisdiction": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Supplemental jurisdiction": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "personal_jurisdiction": {
+          "name": "Personal Jurisdiction",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Minimum contacts": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Specific vs. general jurisdiction": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Long-arm statutes": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "venue": {
+          "name": "Venue and Forum Non Conveniens",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Proper venue rules": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Forum non conveniens": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Transfer of venue": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "service": {
+          "name": "Service of Process and Notice",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Service requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Notice requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Waiver of service": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "pleadings": {
+          "name": "Pleadings",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Complaint requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Answer requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Amendments": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rule 11 sanctions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "joinder": {
+          "name": "Joinder",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Parties and claims": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Intervention": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Interpleader": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Class actions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "discovery": {
+          "name": "Discovery",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Scope of discovery": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Privileges": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Work product": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Discovery sanctions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "summary_judgment": {
+          "name": "Summary Judgment and JMOL",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Summary judgment standards": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Judgment as a matter of law": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Renewed JMOL": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "trial": {
+          "name": "Trial Process",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Jury selection": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Evidence presentation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Verdicts": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "appeals": {
+          "name": "Appeals",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Final judgment rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Interlocutory appeals": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Standards of review": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "preclusion": {
+          "name": "Res Judicata and Collateral Estoppel",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Claim preclusion (res judicata)": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Issue preclusion (collateral estoppel)": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "erie": {
+          "name": "Erie Doctrine",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "State vs. federal law": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Substantive vs. procedural": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Con Law": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "judicial_review": {
+          "name": "Judicial Review and Justiciability",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Standing": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Ripeness": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Mootness": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Political question doctrine": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Adequate and independent state grounds": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "separation_powers": {
+          "name": "Separation of Powers",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Congressional powers": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Executive powers": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Judicial powers": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Checks and balances": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "federalism": {
+          "name": "Federalism",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Commerce Clause": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Dormant Commerce Clause": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Preemption": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Privileges and Immunities": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "individual_rights": {
+          "name": "Individual Rights",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "State action doctrine": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Incorporation doctrine": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "due_process": {
+          "name": "Due Process",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Procedural due process": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Substantive due process": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Economic liberties": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Fundamental rights": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "equal_protection": {
+          "name": "Equal Protection",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Rational basis review": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Intermediate scrutiny": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Strict scrutiny": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Suspect classifications": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "first_amendment_speech": {
+          "name": "First Amendment - Speech",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Content-based vs. content-neutral": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Public forums": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Commercial speech": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Symbolic speech": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "first_amendment_religion": {
+          "name": "First Amendment - Religion",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Establishment Clause": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Free Exercise Clause": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Religious Freedom Restoration Act": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "takings": {
+          "name": "Takings Clause",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Public use requirement": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Regulatory takings": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Exactions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "contracts_clause": {
+          "name": "Contracts Clause",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Impairment of contracts": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Public vs. private contracts": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Contracts": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "formation": {
+          "name": "Formation",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Offer and acceptance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Consideration": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Mailbox rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Mirror image rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "defenses": {
+          "name": "Defenses to Formation",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Capacity": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Mistake": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Fraud and misrepresentation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Duress and undue influence": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Unconscionability": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "statute_frauds": {
+          "name": "Statute of Frauds",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Contracts within the statute": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Satisfaction methods": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Part performance exception": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "parol_evidence": {
+          "name": "Parol Evidence Rule",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Integration": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Exceptions to the rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "conditions": {
+          "name": "Conditions and Performance",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Express conditions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Implied conditions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Constructive conditions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Excuse of conditions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "breach": {
+          "name": "Breach",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Material vs. minor breach": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Anticipatory repudiation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Adequate assurance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "remedies": {
+          "name": "Remedies",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Expectation damages": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Reliance damages": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Restitution": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Specific performance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Liquidated damages": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "third_party": {
+          "name": "Third-Party Rights",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Third-party beneficiaries": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Assignment of rights": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Delegation of duties": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "ucc": {
+          "name": "UCC Article 2 (Sales)",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Merchant rules": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Battle of the forms": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Perfect tender rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Warranties": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Risk of loss": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Crim": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "homicide": {
+          "name": "Homicide",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Common law murder": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "First-degree murder": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Felony murder": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Voluntary manslaughter": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Involuntary manslaughter": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "crimes_against_person": {
+          "name": "Crimes Against the Person",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Assault and battery": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Kidnapping": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rape and sexual assault": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "crimes_against_property": {
+          "name": "Crimes Against Property",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Larceny": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Embezzlement": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "False pretenses": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Robbery": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Burglary": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Arson": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "inchoate": {
+          "name": "Inchoate Crimes",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Attempt": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Solicitation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Conspiracy": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "accomplice": {
+          "name": "Accomplice Liability",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Principals and accessories": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Scope of liability": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "defenses": {
+          "name": "Defenses",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Self-defense": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Defense of others": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Defense of property": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Insanity": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Intoxication": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Duress": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Necessity": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Mistake": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "fourth_amendment": {
+          "name": "Fourth Amendment",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Search and seizure": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Warrant requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Exceptions to warrant requirement": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Exclusionary rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "fifth_amendment": {
+          "name": "Fifth Amendment",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Miranda rights": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Self-incrimination": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Double jeopardy": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "sixth_amendment": {
+          "name": "Sixth Amendment",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Right to counsel": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Right to speedy trial": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Right to jury trial": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Confrontation clause": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "pretrial_proceedings": {
+          "name": "Pretrial Proceedings",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Arrest and detention": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Initial appearance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Preliminary hearing": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Grand jury": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Bail": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "guilty_pleas": {
+          "name": "Guilty Pleas and Plea Bargaining",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Voluntariness": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Plea negotiations": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Withdrawal of pleas": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Evidence": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "relevance": {
+          "name": "Relevance",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Logical relevance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Legal relevance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rule 403 balancing test": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Limited admissibility": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "character": {
+          "name": "Character Evidence",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Character evidence in civil cases": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Character evidence in criminal cases": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Methods of proving character": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Habit and routine practice": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "impeachment": {
+          "name": "Impeachment",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Prior inconsistent statements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Bias and interest": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Prior convictions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Character for truthfulness": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rehabilitation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "hearsay": {
+          "name": "Hearsay",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Definition of hearsay": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Non-hearsay statements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Present sense impression": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Excited utterance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Business records": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Dying declarations": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Statements against interest": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Former testimony": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "confrontation": {
+          "name": "Confrontation Clause",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Crawford doctrine": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Testimonial vs. non-testimonial": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "opinion": {
+          "name": "Opinion Testimony",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Lay opinion": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Expert testimony": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Daubert standard": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Basis of expert opinion": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "privileges": {
+          "name": "Privileges",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Attorney-client privilege": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Spousal privileges": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Doctor-patient privilege": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Waiver of privilege": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "authentication": {
+          "name": "Authentication and Best Evidence",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Authentication requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Best evidence rule": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Secondary evidence": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Summaries": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "judicial_notice": {
+          "name": "Judicial Notice",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Facts subject to judicial notice": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Effect of judicial notice": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Property": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "estates": {
+          "name": "Present Estates and Future Interests",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Fee simple absolute": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Fee simple determinable": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Fee simple subject to condition subsequent": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Life estates": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Remainders": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Executory interests": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rule Against Perpetuities": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "concurrent": {
+          "name": "Concurrent Estates",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Joint tenancy": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Tenancy in common": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Tenancy by the entirety": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rights and duties of co-tenants": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "landlord_tenant": {
+          "name": "Landlord-Tenant Law",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Types of tenancies": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Landlord duties": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Tenant duties": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Assignment vs. sublease": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Eviction": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "easements": {
+          "name": "Easements",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Creation of easements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Scope of easements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Termination of easements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Licenses": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Profits": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "covenants": {
+          "name": "Real Covenants and Equitable Servitudes",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Creation requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Running with the land": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Enforcement": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Termination": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "sales": {
+          "name": "Real Estate Sales",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Contract of sale": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Marketable title": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Equitable conversion": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Closing": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "deeds": {
+          "name": "Deeds",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Types of deeds": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Delivery requirements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Title covenants": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Merger doctrine": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "mortgages": {
+          "name": "Mortgages",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Creation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Rights and duties": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Foreclosure": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Redemption": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "recording": {
+          "name": "Recording Acts",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Notice statutes": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Race statutes": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Race-notice statutes": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Chain of title": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "adverse_possession": {
+          "name": "Adverse Possession",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Elements": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Tacking": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Disability provisions": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "zoning": {
+          "name": "Zoning",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Non-conforming uses": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Variances": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Special use permits": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Torts": {
+      "overall": {
+        "questionsAttempted": 0,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": null
+      },
+      "subtopics": {
+        "intentional_person": {
+          "name": "Intentional Torts to Person",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Battery": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Assault": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "False imprisonment": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Intentional infliction of emotional distress": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "intentional_property": {
+          "name": "Intentional Torts to Property",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Trespass to land": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Trespass to chattels": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Conversion": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "defenses_intentional": {
+          "name": "Defenses to Intentional Torts",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Consent": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Self-defense": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Defense of others": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Defense of property": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Necessity": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "negligence": {
+          "name": "Negligence",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Duty": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Breach": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Actual causation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Proximate causation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Damages": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "special_duties": {
+          "name": "Special Duty Rules",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Premises liability": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Negligent infliction of emotional distress": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Professional malpractice": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Negligence per se": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Res ipsa loquitur": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "defenses_negligence": {
+          "name": "Defenses to Negligence",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Contributory negligence": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Comparative negligence": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Assumption of risk": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Immunities": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "strict_liability": {
+          "name": "Strict Liability",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Abnormally dangerous activities": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Wild animals": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Domestic animals": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "products_liability": {
+          "name": "Products Liability",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Manufacturing defects": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Design defects": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Warning defects": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Defenses": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "vicarious_liability": {
+          "name": "Vicarious Liability",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Respondeat superior": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Independent contractors": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Joint ventures": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "nuisance": {
+          "name": "Nuisance",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Private nuisance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Public nuisance": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Remedies": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "defamation": {
+          "name": "Defamation",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Libel vs. slander": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Constitutional limitations": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Privileges": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "privacy": {
+          "name": "Privacy Torts",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Intrusion": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Appropriation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Public disclosure of private facts": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "False light": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        },
+        "economic_torts": {
+          "name": "Economic Torts",
+          "questionsAttempted": 0,
+          "questionsCorrect": 0,
+          "proficiencyScore": 0,
+          "lastPracticed": null,
+          "streakCorrect": 0,
+          "areas": {
+            "Misrepresentation": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Interference with contract": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            },
+            "Interference with prospective advantage": {
+              "questionsAttempted": 0,
+              "questionsCorrect": 0
+            }
+          }
+        }
+      }
+    },
+    "Mixed Questions": {
+      "overall": {
+        "questionsAttempted": 5,
+        "questionsCorrect": 0,
+        "proficiencyScore": 0,
+        "lastPracticed": "2025-08-13T19:39:27.679Z"
+      },
+      "subtopics": {}
+    }
+  }
+}

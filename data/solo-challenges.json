@@ -58,5 +58,17 @@
     "startedAt": "2025-08-13T15:37:53.872Z",
     "isDailyComplete": false,
     "currentQuestionId": "fresh_openai_1755099661114_01ba3c42"
+  },
+  {
+    "id": "solo_ef64d748-59df-424f-b451-781222328c95_1755113851183",
+    "userId": "ef64d748-59df-424f-b451-781222328c95",
+    "subject": "Mixed Questions",
+    "livesRemaining": 1,
+    "round": 6,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-13T19:37:50.361Z",
+    "isDailyComplete": false,
+    "currentQuestionId": "fresh_openai_1755113993461_e68bb6e4"
   }
 ]

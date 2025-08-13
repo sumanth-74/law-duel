@@ -8,7 +8,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Heart, Flame, Trophy, Crown } from 'lucide-react';
 import LawDuelLogo from '@/components/LawDuelLogo';
-import MonetizationModal from '@/components/MonetizationModal';
+
 
 const SUBJECTS = [
   'Mixed Questions',
@@ -55,7 +55,7 @@ interface QuestionResult {
 
 export default function BotPractice({ onBack }: BotPracticeProps) {
   const { toast } = useToast();
-  const [gameState, setGameState] = useState<'setup' | 'playing' | 'result' | 'game-over' | 'monetization'>('setup');
+  const [gameState, setGameState] = useState<'setup' | 'playing' | 'result' | 'game-over'>('setup');
   const [subject, setSubject] = useState('Mixed Questions');
   const [challenge, setChallenge] = useState<SoloChallenge | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<SoloQuestion | null>(null);
@@ -63,7 +63,7 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
   const [showResult, setShowResult] = useState<QuestionResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatingQuestion, setGeneratingQuestion] = useState(false);
-  const [showMonetization, setShowMonetization] = useState(false);
+
 
   // Check existing challenge status on component mount
   useEffect(() => {
@@ -204,49 +204,7 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
     }
   };
 
-  const handleContinueWithPayment = () => {
-    setShowMonetization(true);
-  };
-
-  const handlePaymentSuccess = async () => {
-    try {
-      const response = await fetch('/api/solo-challenge/restore-lives', {
-        method: 'POST',
-        body: JSON.stringify({ challengeId: challenge?.id }),
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to restore lives');
-      }
-      
-      // Restore lives while keeping all progress (score, difficulty, round)
-      const restoredChallenge = {
-        ...challenge!,
-        livesRemaining: 3
-      };
-      setChallenge(restoredChallenge);
-      setGameState('playing');
-      setShowMonetization(false);
-      
-      // Continue from current difficulty level
-      await loadNextQuestion(restoredChallenge);
-      
-      toast({
-        title: "Lives Restored!",
-        description: `Continuing from Round ${challenge?.round || 1} at Difficulty ${challenge?.difficulty || 1}`,
-        variant: "default"
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to restore lives",
-        variant: "destructive"
-      });
-    }
-  };
+  // Remove payment functionality - lives are now free but limited
 
   // SETUP STATE - Choose subject and start challenge
   if (gameState === 'setup') {
@@ -290,7 +248,7 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
             <ul className="text-sm text-muted space-y-2">
               <li className="flex items-center gap-2">
                 <Heart className="w-4 h-4 text-red-400" />
-                You get 3 lives (wrong answers)
+                You get 5 lives (wrong answers)
               </li>
               <li className="flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-yellow-400" />
@@ -492,20 +450,15 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
               <p className="text-sm text-muted mb-2">
                 Difficulty level: <span className="text-purple-300 font-bold">{challenge?.difficulty || 1}</span>
               </p>
-              <p className="text-xs text-gray-400 italic">
-                Your progress is saved - continue from here with new lives!
-              </p>
+              <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-lg mt-3">
+                <p className="text-sm text-red-300 font-semibold">All 5 lives used!</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Come back tomorrow for 5 fresh lives. You'll need to wait 24 hours before playing again.
+                </p>
+              </div>
             </div>
 
             <div className="space-y-3">
-              <Button 
-                onClick={handleContinueWithPayment}
-                className="w-full bg-purple-600 hover:bg-purple-700"
-                size="lg"
-                data-testid="button-continue-payment"
-              >
-                Continue Challenge
-              </Button>
               <Button 
                 onClick={onBack} 
                 variant="outline" 
@@ -518,14 +471,6 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Monetization Modal - only shows when user chooses to continue */}
-        <MonetizationModal
-          isOpen={showMonetization}
-          onClose={() => setShowMonetization(false)}
-          onSuccess={handlePaymentSuccess}
-          challengeId={challenge?.id || ''}
-        />
       </>
     );
   }

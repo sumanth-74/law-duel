@@ -717,23 +717,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Restore lives with payment (monetization)
-  app.post('/api/solo-challenge/restore-lives', requireAuth, async (req: any, res) => {
-    try {
-      const { challengeId } = req.body;
-      
-      if (!challengeId) {
-        return res.status(400).json({ message: "challengeId is required" });
-      }
-
-      // In real implementation, verify payment here
-      const result = await soloChallengeService.restoreLives(challengeId);
-      res.json(result);
-    } catch (error: any) {
-      console.error("Error restoring lives:", error);
-      res.status(400).json({ message: error.message });
-    }
-  });
+  // Remove payment route - lives are now free but limited to 5 per 24 hours
 
   // === SUBTOPIC PROGRESS ROUTES ===
   

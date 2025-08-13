@@ -27,7 +27,7 @@ Preferred communication style: Simple, everyday language.
 - **Streamlined onboarding**: Direct signup to avatar creation flow for immediate engagement
 - **Streamlined UI**: Removed redundant "View Rankings" link, leaderboard serves as primary rankings display
 - **Populated leaderboard**: 12 competitive bot players with actual points make platform feel active (no zero-point players)
-- **Solo Challenge Mode**: Progressive difficulty system with 3 lives, monetization via life restoration ($0.99)
+- **Solo Challenge Mode**: Progressive difficulty system with 5 free lives, 24-hour cooldown after exhausting all lives
 - **Practice Mode Redesign**: Transformed from bot duels to progressive solo challenges with increasing difficulty
 - **Game Mode Structure**: Two main modes - Solo Mode (single player with lives) and VS Mode (multiplayer with Live Duel and Friend Challenge)
 - **Daily Casefile System**: Automated daily question generation with fresh content every 24 hours at midnight UTC

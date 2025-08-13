@@ -96,9 +96,9 @@
     "username": "GavelCrusher",
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
-    "level": 17,
-    "points": 3100,
-    "totalWins": 52,
+    "level": 16,
+    "points": 3145,
+    "totalWins": 53,
     "totalLosses": 6,
     "avatarData": {
       "baseModel": "female",
@@ -112,7 +112,7 @@
       ],
       "accessoryColor": "#FF1493"
     },
-    "lastActive": "2025-08-12T19:19:10.821Z"
+    "lastActive": "2025-08-13T19:40:48.266Z"
   },
   {
     "id": "bot_contracts_wizard",

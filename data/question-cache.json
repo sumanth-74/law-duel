@@ -1342,5 +1342,127 @@
       "deadlineTs": 1755100829260,
       "generatedAt": 1755100769260
     }
+  ],
+  "Mixed Questions": [
+    {
+      "qid": "fresh_openai_1755113982006_305256dd",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are neighbors. One day, Alice accidentally spills paint on Bob's driveway while painting her house. Bob asks Alice to pay for the cleanup costs, which total $200. Alice refuses, arguing that it was an accident and she should not be held liable. What is the likely outcome if Bob sues Alice for the cleanup costs?",
+      "choices": [
+        "Alice will not be liable because the spill was accidental and not intentional.",
+        "Alice will be liable for the cleanup costs because she caused the damage.",
+        "Bob cannot sue Alice because they are neighbors.",
+        "Bob is responsible for the cleanup costs since he did not prevent the damage."
+      ],
+      "correctIndex": 1,
+      "explanation": "Alice will be liable for the cleanup costs because she caused the damage.",
+      "explanationLong": "The correct answer is that Alice will be liable for the cleanup costs because she caused the damage. Under the law of negligence, a person can be held liable for damages caused by their actions, even if those actions were accidental, as long as the person had a duty to act reasonably. In this case, Alice's act of spilling paint on Bob's property constitutes a breach of her duty to avoid harming her neighbor's property. The other answers are incorrect: (1) Alice will not escape liability simply because the spill was accidental; negligence does not require intent. (2) Bob can absolutely sue Alice despite their neighborly relationship, as legal obligations exist regardless of personal ties. (3) Bob is not responsible for the cleanup costs; Alice's action directly caused the damage, making her liable, not Bob.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755114042006,
+      "generatedAt": 1755113982006
+    },
+    {
+      "qid": "fresh_openai_1755113981627_df1fed65",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alicia and Bob are neighbors. One day, Alicia's tree falls on Bob's fence during a storm, causing damage. Bob sues Alicia for the cost of repairs. Which of the following is the most likely outcome of Bob's lawsuit?",
+      "choices": [
+        "Alicia is liable for the damages because she owns the tree.",
+        "Alicia is liable only if she was negligent in maintaining the tree.",
+        "Alicia is not liable because the damage was caused by an act of God.",
+        "Bob cannot sue Alicia because the damage was accidental."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that Alicia is not liable because the damage was caused by an act of God, which in this case is the storm.",
+      "explanationLong": "The correct answer is that Alicia is not liable because the damage was caused by an act of God. Under the doctrine of strict liability for natural occurrences, property owners are typically not held liable for damages caused by natural disasters, such as storms, unless there is negligence involved. In this case, there is no indication that Alicia was negligent in the maintenance of her tree. Answer choice A is incorrect because ownership of the tree does not automatically make Alicia liable for damages caused by a natural disaster. Answer choice C mistakenly introduces the concept of negligence, which is not applicable here without evidence of Alicia's failure to maintain the tree properly. Lastly, answer choice D is wrong because Bob does have the right to sue for damages, but the outcome is determined by the circumstances surrounding the incident, which in this case exempts Alicia from liability due to the act of God defense.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755114041627,
+      "generatedAt": 1755113981627
+    },
+    {
+      "qid": "fresh_openai_1755113978508_40c36a8b",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are neighbors. One day, Alice's dog escapes from her yard and runs into Bob's yard, where it digs up Bob's flowers. Bob sees this and shouts at Alice to keep her dog away. Alice quickly retrieves her dog and pays for the flowers. Which of the following statements is true regarding Alice's potential liability for the damage caused by her dog?",
+      "choices": [
+        "Alice is liable for the damage because she did not prevent her dog from escaping.",
+        "Alice is strictly liable for the damage caused by her dog.",
+        "Alice is only liable if Bob can prove that she was negligent.",
+        "Alice is not liable because she promptly retrieved her dog."
+      ],
+      "correctIndex": 1,
+      "explanation": "Alice is strictly liable for the damage caused by her dog under the doctrine of strict liability for animal owners.",
+      "explanationLong": "The correct answer is that Alice is strictly liable for the damage caused by her dog. Under the doctrine of strict liability, an owner of a domestic animal is liable for any damage caused by that animal, regardless of whether the owner exercised reasonable care to prevent it (Restatement (Second) of Torts § 509). In this case, Alice's dog caused damage to Bob's flowers, and she is responsible for that damage. The other options are incorrect because: (1) Alice's prompt retrieval of her dog does not absolve her of liability; strict liability does not consider the owner's actions after the fact. (2) The assertion that Alice is not liable because she retrieved her dog fails to recognize the principle of strict liability. (3) Liability does not hinge on negligence in this context; strict liability applies regardless of Alice's care or lack thereof in preventing the escape of her dog.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755114038508,
+      "generatedAt": 1755113978508
+    },
+    {
+      "qid": "fresh_openai_1755114015786_d9cecde6",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are neighbors. One day, Alice notices that Bob's dog is digging up her garden. Frustrated, Alice decides to throw a rock at Bob's dog to scare it away. The rock accidentally hits Bob, causing him a minor injury. Bob sues Alice for battery. What is the likely outcome of Bob's lawsuit?",
+      "choices": [
+        "Bob will win because Alice acted recklessly.",
+        "Alice will win because Bob was trespassing in her garden.",
+        "Alice will win because she did not intend to hit Bob.",
+        "Bob will win because Alice intended to hit the dog."
+      ],
+      "correctIndex": 2,
+      "explanation": "Alice will win because she did not intend to hit Bob, which is a required element for battery.",
+      "explanationLong": "The correct answer is that Alice will win because she did not intend to hit Bob. In a battery claim, the plaintiff must prove that the defendant intended to cause harmful or offensive contact. Here, Alice's intention was to scare the dog, not to harm Bob. Therefore, she lacks the requisite intent for battery. The first choice is incorrect because Bob's injury was not the intended consequence of Alice's action. The second choice is wrong as well; while Alice's actions could be considered reckless, the standard for battery requires intent to cause harm, which is missing here. The fourth choice is also incorrect because Bob's presence in Alice's garden does not justify battery; property rights do not provide a defense against intentional torts unless there is provocation or self-defense involved.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755114075786,
+      "generatedAt": 1755114015786
+    },
+    {
+      "qid": "fresh_openai_1755114014933_5a26a38f",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are friends who frequently lend each other tools. One day, Alice borrows Bob's lawnmower and returns it damaged. Bob demands that Alice pay for the repairs. Alice refuses, claiming that she was not responsible because the lawnmower was already old. What legal principle governs Alice's liability for the damage to Bob's lawnmower?",
+      "choices": [
+        "Alice is liable for the full cost of repairs because she borrowed the lawnmower.",
+        "Alice is liable only if Bob can prove she was negligent.",
+        "Alice is not liable because the lawnmower was old and used.",
+        "Alice is not liable because she returned the lawnmower."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alice is liable for the full cost of repairs because she borrowed the lawnmower.",
+      "explanationLong": "The correct answer is that Alice is liable for the full cost of repairs because she borrowed the lawnmower. Under the law of bailments, a borrower of personal property is generally responsible for any damages that occur while in their possession, regardless of the pre-existing condition of the item. In this case, Alice borrowed Bob's lawnmower and is therefore responsible for its condition upon return, regardless of its age. The second choice is incorrect because the condition of the lawnmower prior to borrowing does not absolve Alice of responsibility for damages incurred during her possession. The third choice is also incorrect; while negligence can establish liability, it is not a prerequisite for liability in a bailment situation. Finally, the fourth choice is wrong because returning the lawnmower does not negate liability if it is returned damaged; Alice still owes for the repairs incurred due to her possession.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755114074933,
+      "generatedAt": 1755114014933
+    },
+    {
+      "qid": "fresh_openai_1755114015796_3489d1f2",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice is walking her dog in a public park when her dog runs off and knocks over a child, causing the child to fall and scrape her knee. The child's parents are upset and consider suing Alice for negligence. What is the most likely outcome of such a lawsuit?",
+      "choices": [
+        "Alice is not liable because she did not intend to harm the child.",
+        "Alice is liable only if the child was severely injured.",
+        "Alice is not liable because the incident occurred in a public park.",
+        "Alice is liable for negligence because she did not keep her dog on a leash."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alice is not liable for negligence because she did not intend to harm the child and was not acting with negligence.",
+      "explanationLong": "The correct answer is that Alice is not liable because she did not intend to harm the child. Under negligence law, a plaintiff must prove that the defendant owed a duty of care, breached that duty, and caused damages. Here, while Alice's dog caused a minor injury, there is no evidence that she was negligent or that her actions constituted a breach of duty. The mere fact that the incident occurred in a public park does not impose liability on Alice. Answer A is incorrect because liability for negligence requires more than just a failure to keep a dog leashed; it requires a showing of negligence in the context of the situation. Answer C is incorrect because the location alone does not determine liability; it depends on the actions taken. Answer D is also incorrect because negligence does not depend solely on the severity of the injury but rather on whether the duty of care was breached.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755114075796,
+      "generatedAt": 1755114015796
+    }
   ]
 }

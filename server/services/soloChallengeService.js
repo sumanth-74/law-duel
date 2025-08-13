@@ -41,10 +41,17 @@ class SoloChallengeService {
 
   // Start a new solo challenge
   async startChallenge(userId, subject) {
-    // Check if user has already completed challenge today
+    // Check if user has exhausted their lives and is in cooldown
     const existingChallenge = this.getTodaysChallenge(userId);
-    if (existingChallenge && existingChallenge.isDailyComplete) {
-      throw new Error('Daily challenge already completed. Try again tomorrow or purchase continuation.');
+    if (existingChallenge && existingChallenge.livesRemaining === 0) {
+      // Check if 24 hours have passed since they lost all lives
+      const lostAllLivesAt = new Date(existingChallenge.lostAllLivesAt || existingChallenge.startedAt);
+      const hoursSince = (Date.now() - lostAllLivesAt.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursSince < 24) {
+        const hoursRemaining = Math.ceil(24 - hoursSince);
+        throw new Error(`All lives lost! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`);
+      }
     }
 
     const challengeId = `solo_${userId}_${Date.now()}`;
@@ -56,12 +63,13 @@ class SoloChallengeService {
       id: challengeId,
       userId,
       subject,
-      livesRemaining: 3,
+      livesRemaining: 5, // Now 5 lives
       round: 1,
       score: 0,
       difficulty: 1,
       startedAt: new Date().toISOString(),
       isDailyComplete: false,
+      lostAllLivesAt: null,
       currentQuestionId: firstQuestion.id
     };
 
@@ -163,9 +171,10 @@ class SoloChallengeService {
       livesLost = 1;
       challenge.livesRemaining = Math.max(0, challenge.livesRemaining - 1);
       
-      // If no lives left, mark as complete
+      // If no lives left, mark when they lost all lives for 24-hour cooldown
       if (challenge.livesRemaining === 0) {
         challenge.isDailyComplete = true;
+        challenge.lostAllLivesAt = new Date().toISOString();
       }
     }
 
@@ -220,28 +229,7 @@ class SoloChallengeService {
     return nextQuestion;
   }
 
-  // Restore lives with payment - maintains all progress
-  async restoreLives(challengeId) {
-    const challenge = this.activeChallenges.get(challengeId);
-    if (!challenge) {
-      throw new Error('Challenge not found');
-    }
-
-    // In real implementation, verify payment here
-    // Restore lives while keeping score, difficulty, and round progress
-    challenge.livesRemaining = 3;
-    challenge.isDailyComplete = false; // Allow continued play
-    
-    await this.saveToFile();
-    
-    return { 
-      success: true, 
-      livesRemaining: 3,
-      currentRound: challenge.round,
-      currentDifficulty: challenge.difficulty,
-      currentScore: challenge.score
-    };
-  }
+  // Remove payment functionality - lives are now free but limited
 
   // Helper to get question by ID (simplified for solo challenges)
   async getQuestionById(questionId) {
@@ -266,7 +254,38 @@ class SoloChallengeService {
   // Get challenge status
   getChallengeStatus(userId) {
     const todaysChallenge = this.getTodaysChallenge(userId);
-    return todaysChallenge || { isDailyComplete: false };
+    
+    if (!todaysChallenge) {
+      return { isDailyComplete: false, canPlay: true };
+    }
+    
+    // If they have lives remaining, they can play
+    if (todaysChallenge.livesRemaining > 0) {
+      return { 
+        isDailyComplete: false, 
+        canPlay: true,
+        livesRemaining: todaysChallenge.livesRemaining,
+        currentRound: todaysChallenge.round
+      };
+    }
+    
+    // If no lives left, check if 24 hours have passed
+    const lostAllLivesAt = new Date(todaysChallenge.lostAllLivesAt || todaysChallenge.startedAt);
+    const hoursSince = (Date.now() - lostAllLivesAt.getTime()) / (1000 * 60 * 60);
+    
+    if (hoursSince >= 24) {
+      // 24 hours have passed, they can play again
+      return { isDailyComplete: false, canPlay: true };
+    }
+    
+    // Still in cooldown
+    const hoursRemaining = Math.ceil(24 - hoursSince);
+    return { 
+      isDailyComplete: true, 
+      canPlay: false,
+      hoursRemaining,
+      message: `All 5 lives used! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`
+    };
   }
 
   // Helper to get difficulty name
