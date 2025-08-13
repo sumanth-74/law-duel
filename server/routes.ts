@@ -1204,6 +1204,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to load cached questions into database
+  app.post("/api/admin/load-cached-questions", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { fileURLToPath } = await import('url');
+      
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
+      
+      const cacheFile = path.join(__dirname, '../data/question-cache.json');
+      const data = await fs.readFile(cacheFile, 'utf-8');
+      const cachedQuestions = JSON.parse(data);
+      
+      let totalLoaded = 0;
+      let duplicates = 0;
+      
+      for (const [subject, questions] of Object.entries(cachedQuestions)) {
+        for (const question of questions) {
+          try {
+            const existing = await storage.getQuestionsBySubject(subject, 1000);
+            const isDuplicate = existing.some((q: any) => q.stem === question.stem);
+            
+            if (!isDuplicate) {
+              await storage.createQuestion({
+                subject: question.subject || subject,
+                stem: question.stem,
+                choices: question.choices,
+                correctIndex: question.correctIndex,
+                explanation: question.explanation,
+                difficulty: question.difficulty || 'medium',
+                topic: question.topic || null,
+                subtopic: question.subtopic || null,
+                source: 'cached'
+              });
+              totalLoaded++;
+            } else {
+              duplicates++;
+            }
+          } catch (err) {
+            console.error(`Failed to load question: ${err.message}`);
+          }
+        }
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Loaded ${totalLoaded} questions into database, skipped ${duplicates} duplicates`
+      });
+    } catch (error) {
+      console.error("Error loading cached questions:", error);
+      res.status(500).json({ message: "Failed to load cached questions" });
+    }
+  });
+
   // === DUEL API ENDPOINTS ===
   
   // Duel state storage

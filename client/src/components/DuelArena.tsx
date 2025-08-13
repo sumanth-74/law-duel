@@ -408,7 +408,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     setTimeout(() => announcer.remove(), 3000);
   };
 
-  const timerProgress = duelState.timeLeft > 0 ? (duelState.timeLeft / 20) * 283 : 283;
+  const timerProgress = duelState.timeLeft > 0 ? (duelState.timeLeft / 60) * 283 : 283;
 
   if (!isVisible) return null;
 

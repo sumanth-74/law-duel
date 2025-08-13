@@ -5,8 +5,8 @@
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
     "level": 20,
-    "points": 3898,
-    "totalWins": 72,
+    "points": 3956,
+    "totalWins": 73,
     "totalLosses": 5,
     "avatarData": {
       "baseModel": "male",
@@ -20,7 +20,7 @@
       ],
       "accessoryColor": "#DAA520"
     },
-    "lastActive": "2025-08-13T22:23:10.821Z"
+    "lastActive": "2025-08-13T22:32:33.400Z"
   },
   {
     "id": "bot_precedent_pro",
@@ -28,8 +28,8 @@
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
     "level": 19,
-    "points": 3722,
-    "totalWins": 67,
+    "points": 3773,
+    "totalWins": 68,
     "totalLosses": 7,
     "avatarData": {
       "baseModel": "male",
@@ -43,7 +43,7 @@
       ],
       "accessoryColor": "#8B0000"
     },
-    "lastActive": "2025-08-13T21:39:40.050Z"
+    "lastActive": "2025-08-13T22:32:33.400Z"
   },
   {
     "id": "bot_brief_sniper",

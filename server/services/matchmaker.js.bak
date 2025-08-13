@@ -254,9 +254,9 @@ async function runDuel(wss, roomCode, players, subject) {
         difficulty: match.difficulty, // Include difficulty level
         stem: question.stem,
         choices: normalizedChoices,
-        timeLimit: 60000, // 60 seconds per user requirement
-        timeLimitSec: 60, // Enforce 60s
-        deadlineTs: Date.now() + 60000
+        timeLimit: 25000, // 25 seconds per North Star requirements
+        timeLimitSec: 25, // Enforce 25s
+        deadlineTs: Date.now() + 25000
       };
 
       players.forEach(ws => {
@@ -270,7 +270,7 @@ async function runDuel(wss, roomCode, players, subject) {
       playerAnswers.set(roomCode, answers);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 61000);
+        const timeout = setTimeout(resolve, 26000);
         
         const checkInterval = setInterval(() => {
           if (answers.size >= players.length) {
@@ -285,7 +285,7 @@ async function runDuel(wss, roomCode, players, subject) {
       const results = [];
       for (let i = 0; i < players.length; i++) {
         const ws = players[i];
-        const answer = answers.get(ws) || { choice: -1, timeMs: 60000 };
+        const answer = answers.get(ws) || { choice: -1, timeMs: 25000 };
         const correct = answer.choice === question.correctIndex;
         
         if (correct) match.scores[i]++;
@@ -510,9 +510,9 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         difficulty: match.difficulty, // Include difficulty level
         stem: question.stem,
         choices: normalizedChoices,
-        timeLimit: 60000, // 60 seconds per user requirement
-        timeLimitSec: 60, // Enforce 60s
-        deadlineTs: Date.now() + 60000
+        timeLimit: 25000, // 25 seconds per North Star requirements
+        timeLimitSec: 25, // Enforce 25s
+        deadlineTs: Date.now() + 25000
       };
 
       if (humanWs.readyState === 1) {
@@ -526,7 +526,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       const botDecision = bot.decide(round, question.correctIndex);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 61000);
+        const timeout = setTimeout(resolve, 26000);
         
         const checkInterval = setInterval(() => {
           if (answers.size >= 1) {
@@ -538,7 +538,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       });
 
       // Process results
-      const humanAnswer = answers.get(humanWs) || { choice: -1, timeMs: 60000 };
+      const humanAnswer = answers.get(humanWs) || { choice: -1, timeMs: 25000 };
       const humanCorrect = humanAnswer.choice === question.correctIndex;
       const botCorrect = botDecision.idx === question.correctIndex;
       
