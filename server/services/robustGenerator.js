@@ -89,12 +89,16 @@ RESPONSE FORMAT (JSON only):
     "Fourth answer option"
   ],
   "correctIndex": 0,
-  "explanation": "Brief explanation here",
-  "explanationLong": "Detailed 3-6 sentence legal analysis explaining the correct answer, applicable rules, and why other options are wrong",
+  "explanation": "Brief explanation stating the correct answer and key rule",
+  "explanationLong": "DETAILED 4-7 sentence legal analysis that: (1) States the correct answer and controlling legal rule, (2) Explains WHY this answer is correct with specific references to the facts, (3) Explains why EACH wrong answer is incorrect, pointing out the specific legal error or misapplication in each one. Be thorough and accurate in your legal reasoning.",
   "topic": "${topic}"
 }
 
-CRITICAL: Return exactly 4 choices in the choices array. Include both explanation and explanationLong fields. No additional text outside the JSON.
+CRITICAL: 
+- Return exactly 4 choices in the choices array
+- The explanationLong MUST be comprehensive and legally accurate
+- Cite specific legal rules and explain their application to the facts
+- Address why each wrong answer fails
 Freshness token: ${nonce}`;
 }
 
@@ -116,7 +120,7 @@ async function callOpenAI(prompt) {
       messages: [
         { 
           role: "system", 
-          content: "Return ONLY valid JSON matching this format: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[\"A\",\"B\",\"C\",\"D\"],\"correctIndex\":0,\"explanation\":\"...\",\"explanationLong\":\"Detailed 3-6 sentence legal analysis...\",\"topic\":\"...\"}" 
+          content: "You are an expert bar exam question writer and legal educator. Generate MBE-style questions with ACCURATE legal analysis. Your explanations must cite the correct legal rules and explain precisely why each answer is right or wrong. Return ONLY valid JSON with this exact structure: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[4 complete answer texts],\"correctIndex\":0-3,\"explanation\":\"brief rule statement\",\"explanationLong\":\"comprehensive 4-7 sentence analysis with accurate legal reasoning\",\"topic\":\"...\"}" 
         },
         { role: "user", content: prompt }
       ],

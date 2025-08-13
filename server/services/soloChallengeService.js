@@ -89,16 +89,20 @@ class SoloChallengeService {
   // Generate a question based on difficulty level
   async generateQuestion(subject, difficulty) {
     try {
-      // Use the question coordinator to get a fresh question
-      const { getQuestion } = await import('./qcoordinator.js');
-      const question = await getQuestion(subject, [], true); // Force new for solo challenges
+      // Use the question cache for instant questions
+      const questionCache = (await import('./questionCache.js')).default;
+      const question = await questionCache.getQuestion(subject, false); // Use cache for speed
+      
+      // Ensure we have a proper explanation
+      const explanation = question.explanationLong || question.explanation || 
+        `The correct answer is ${String.fromCharCode(65 + question.correctIndex)}. This question tests fundamental ${subject} principles.`;
       
       return {
-        id: question.qid || question.id,
+        id: question.qid || question.id || `solo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         stem: question.stem,
         choices: question.choices,
         correctAnswer: question.correctIndex,
-        explanation: question.explanation,
+        explanation: explanation,
         subject,
         difficulty,
         round: difficulty // Essentially the same for solo challenges

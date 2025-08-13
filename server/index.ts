@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { dailyCasefileService } from "./services/dailyCasefileService";
+import './services/questionCache.js'; // Initialize question cache for instant loading
 
 const app = express();
 app.use(express.json());
