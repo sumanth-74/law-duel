@@ -375,7 +375,54 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   if (!isVisible) return null;
 
   return (
-    <Card className="panel" data-testid="duel-arena">
+    <Card className="panel relative" data-testid="duel-arena">
+      {/* Pokemon-style Avatar Displays in Corners */}
+      {/* Opponent Avatar - Top Left */}
+      <div className="absolute top-4 left-4 z-20">
+        <div className="bg-panel-2 border-2 border-danger/60 rounded-xl p-3 shadow-lg min-w-[220px]">
+          <div className="flex items-center space-x-3">
+            <AvatarRenderer
+              avatarData={opponent.avatarData as any}
+              level={opponent.level}
+              size={48}
+            />
+            <div className="flex-1">
+              <h3 className="font-semibold text-sm text-white">{opponent.displayName}</h3>
+              <p className="text-xs text-danger">Lv.{opponent.level}</p>
+              <div className="mt-1 bg-black/60 rounded-full h-2.5 w-24 border border-white/20">
+                <div 
+                  className="bg-gradient-to-r from-green-500 to-green-400 h-full rounded-full transition-all" 
+                  style={{ width: '100%' }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* User Avatar - Top Right */}
+      <div className="absolute top-4 right-4 z-20">
+        <div className="bg-panel-2 border-2 border-arcane/60 rounded-xl p-3 shadow-lg min-w-[220px]">
+          <div className="flex items-center space-x-3">
+            <div className="flex-1 text-right">
+              <h3 className="font-semibold text-sm text-white">{user.displayName}</h3>
+              <p className="text-xs text-arcane">Lv.{user.level}</p>
+              <div className="mt-1 bg-black/60 rounded-full h-2.5 w-24 border border-white/20 ml-auto">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full transition-all" 
+                  style={{ width: '100%' }}
+                ></div>
+              </div>
+            </div>
+            <AvatarRenderer
+              avatarData={user.avatarData as any}
+              level={user.level}
+              size={48}
+            />
+          </div>
+        </div>
+      </div>
+      
       {/* Instant Feedback Chip */}
       {/* Feedback Chip for instant progress display */}
       <FeedbackChip
@@ -387,7 +434,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         masteryChange={duelState.feedbackData?.masteryChange}
       />
       
-      <CardContent className="p-6">
+      <CardContent className="p-6 pt-20">
         {/* Opponent Info */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
