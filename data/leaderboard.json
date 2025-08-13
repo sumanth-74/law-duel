@@ -33,11 +33,11 @@
     "id": "bot_sarah_patel",
     "username": "SarahPatel",
     "displayName": "Sarah Patel",
-    "level": 18,
-    "points": 3200,
-    "totalWins": 56,
+    "level": 17,
+    "points": 3218,
+    "totalWins": 57,
     "totalLosses": 9,
-    "lastActive": "2025-08-12T03:52:46.244Z"
+    "lastActive": "2025-08-13T03:56:53.087Z"
   },
   {
     "id": "bot_emma_thompson",
@@ -93,11 +93,11 @@
     "id": "bot_carlos_mendez",
     "username": "CarlosMendez",
     "displayName": "Carlos Mendez",
-    "level": 13,
-    "points": 2300,
-    "totalWins": 35,
+    "level": 12,
+    "points": 2345,
+    "totalWins": 36,
     "totalLosses": 13,
-    "lastActive": "2025-08-12T21:30:17.438Z"
+    "lastActive": "2025-08-13T03:56:53.087Z"
   },
   {
     "id": "bot_james_richardson",

@@ -22,5 +22,17 @@
     "startedAt": "2025-08-13T03:45:40.902Z",
     "isDailyComplete": false,
     "currentQuestionId": "fresh_openai_1755056740902_ff6cb575"
+  },
+  {
+    "id": "solo_ef64d748-59df-424f-b451-781222328c95_1755057255528",
+    "userId": "ef64d748-59df-424f-b451-781222328c95",
+    "subject": "Mixed Questions",
+    "livesRemaining": 2,
+    "round": 2,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-13T03:54:39.759Z",
+    "isDailyComplete": false,
+    "currentQuestionId": "fresh_openai_1755057279759_eee2f34e"
   }
 ]

@@ -136,15 +136,15 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
       }
 
       const data = await response.json();
-      setShowResult(data.result);
+      setShowResult(data);
       
       // Update challenge state
       const updatedChallenge = {
         ...challenge,
-        livesRemaining: Math.max(0, challenge.livesRemaining - data.result.livesLost),
+        livesRemaining: Math.max(0, challenge.livesRemaining - data.livesLost),
         round: challenge.round + 1,
-        score: challenge.score + data.result.pointsEarned,
-        difficulty: data.result.newDifficulty
+        score: challenge.score + data.pointsEarned,
+        difficulty: data.newDifficulty
       };
       setChallenge(updatedChallenge);
 
