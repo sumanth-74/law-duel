@@ -202,8 +202,10 @@ export default function DailyCasefile() {
                 <div className="text-xl font-bold text-purple-200">
                   {dailyData.timeToReset ? formatTimeToReset(dailyData.timeToReset) : '--:--:--'}
                 </div>
-                <div className="text-sm text-purple-400">Next Question</div>
-                <div className="text-xs text-purple-500 mt-1">New question daily at 12:00 AM UTC</div>
+                <div className="text-sm text-purple-400">Next Question In</div>
+                <div className="text-xs text-purple-500 mt-1">
+                  Resets daily at midnight UTC ({new Date().toLocaleTimeString('en-US', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' })} UTC now)
+                </div>
               </div>
             </div>
           </CardContent>
@@ -446,7 +448,10 @@ export default function DailyCasefile() {
           </p>
           {dailyData?.timeToReset && (
             <div className="text-sm text-slate-400">
-              Next question available in: {formatTimeToReset(dailyData.timeToReset)}
+              <div>Next question available in: {formatTimeToReset(dailyData.timeToReset)}</div>
+              <div className="text-xs text-slate-500 mt-1">
+                Resets daily at midnight UTC ({new Date().toLocaleTimeString('en-US', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' })} UTC now)
+              </div>
             </div>
           )}
         </CardContent>
