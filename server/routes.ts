@@ -1204,6 +1204,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to check question pool status
+  app.get("/api/admin/pool", async (req, res) => {
+    try {
+      const { getPoolManager } = await import('./services/questionPoolManager.js');
+      const poolManager = await getPoolManager();
+      const stats = poolManager.getPoolStats();
+      const health = await poolManager.checkPoolHealth();
+      
+      res.json({
+        stats,
+        health: health.stats,
+        needsGeneration: health.needsGeneration,
+        hoursOfSupply: Math.floor(stats.total / 20) // Rough estimate
+      });
+    } catch (error) {
+      console.error("Error getting pool stats:", error);
+      res.status(500).json({ message: "Failed to get pool stats" });
+    }
+  });
+
+  // Admin endpoint to enable/disable generation
+  app.post("/api/admin/gen/:action", async (req, res) => {
+    try {
+      const { action } = req.params;
+      const { getPoolManager } = await import('./services/questionPoolManager.js');
+      const poolManager = await getPoolManager();
+      
+      if (action === 'enable') {
+        poolManager.quotaExhausted = false;
+        res.json({ success: true, message: "Generation enabled" });
+      } else if (action === 'disable') {
+        poolManager.quotaExhausted = true;
+        res.json({ success: true, message: "Generation disabled" });
+      } else {
+        res.status(400).json({ message: "Invalid action" });
+      }
+    } catch (error) {
+      console.error("Error controlling generation:", error);
+      res.status(500).json({ message: "Failed to control generation" });
+    }
+  });
+
+  // Admin endpoint to get generation status
+  app.get("/api/admin/gen/status", async (req, res) => {
+    try {
+      const { getPoolManager } = await import('./services/questionPoolManager.js');
+      const poolManager = await getPoolManager();
+      
+      res.json({
+        quotaExhausted: poolManager.quotaExhausted,
+        dailyCalls: poolManager.dailyCalls,
+        resetTime: poolManager.getQuotaResetTime(),
+        generating: poolManager.generating
+      });
+    } catch (error) {
+      console.error("Error getting generation status:", error);
+      res.status(500).json({ message: "Failed to get generation status" });
+    }
+  });
+
+  // Admin endpoint to manually trigger generation for a specific subject/difficulty
+  app.post("/api/admin/gen/trigger", async (req, res) => {
+    try {
+      const { subject, difficultyBand, count } = req.body;
+      
+      if (!subject || !difficultyBand) {
+        return res.status(400).json({ message: "subject and difficultyBand are required" });
+      }
+      
+      const { getPoolManager } = await import('./services/questionPoolManager.js');
+      const poolManager = await getPoolManager();
+      
+      const generated = await poolManager.generateBatch(subject, difficultyBand, count || 10);
+      
+      res.json({
+        success: true,
+        message: `Generated ${generated} questions for ${subject}/${difficultyBand}`
+      });
+    } catch (error) {
+      console.error("Error triggering generation:", error);
+      res.status(500).json({ message: "Failed to trigger generation" });
+    }
+  });
+
   // Admin endpoint to load cached questions into database
   app.post("/api/admin/load-cached-questions", async (req, res) => {
     try {

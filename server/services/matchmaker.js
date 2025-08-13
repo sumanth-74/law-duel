@@ -5,6 +5,7 @@ import { storage } from "../storage.js";
 import { getWeaknessTargetedQuestions, logTargeting } from "./weaknessTargeting.js";
 import { updateWeeklyLadder } from "./weeklyLadder.js";
 import { progressService } from "../progress.js";
+import { getPoolManager } from "./questionPoolManager.js";
 
 // North Star configuration: All modes use 5 questions
 const MATCH_QUESTIONS = 5;
@@ -201,6 +202,17 @@ async function runDuel(wss, roomCode, players, subject) {
   logTargeting(player1Id, questionTargets);
   match.questionTargets = questionTargets;
 
+  // Reserve questions from pool
+  const poolManager = await getPoolManager();
+  const reservedQuestions = await poolManager.reserveQuestions(
+    player1Id,
+    roomCode,
+    subject,
+    MATCH_QUESTIONS,
+    questionTargets
+  );
+  match.reservedQuestions = reservedQuestions;
+
   activeMatches.set(roomCode, match);
 
   for (let round = 1; round <= MATCH_QUESTIONS; round++) {
@@ -211,36 +223,25 @@ async function runDuel(wss, roomCode, players, subject) {
     match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
     
     try {
-      // Use weakness targeting for this round
-      const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
-      const targetSubject = targetInfo?.subject || subject;
-      // Use adaptive difficulty from weakness targeting (based on user mastery)
-      const targetDifficulty = targetInfo?.difficulty || match.difficulty;
-      
-      console.log(`📈 Round ${round}: Subject ${targetSubject}, Difficulty ${targetDifficulty}, Target: ${targetInfo?.type || 'normal'}`);
-      // Try up to 4 times to get a fresh, valid, unseen question within this duel
-      let question, err;
-      for (let tries = 0; tries < 4; tries++) {
+      // Use pre-reserved question from pool (no OpenAI call during duel)
+      let question;
+      if (match.reservedQuestions && match.reservedQuestions[round - 1]) {
+        question = match.reservedQuestions[round - 1];
+        console.log(`📈 Round ${round}: Using reserved question from pool`);
+      } else {
+        // Fallback to old method if pool is empty (shouldn't happen)
+        console.warn('⚠️ No reserved questions, falling back to direct generation');
+        const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
+        const targetSubject = targetInfo?.subject || subject;
+        const targetDifficulty = targetInfo?.difficulty || match.difficulty;
         question = await getQuestion(targetSubject, match.usedQuestions, true, targetDifficulty);
-        
-        // Check if we've seen this stem before in this duel
-        const { fingerprintStem } = await import('./robustGenerator.js');
-        const fp = fingerprintStem(question.stem);
-        if (match.seen.has(fp)) {
-          err = "Seen in this duel";
-          continue;
-        }
-        
-        // Success - mark as seen and break
-        match.seen.add(fp);
-        break;
       }
       
       if (!question) {
-        throw new Error(err || "Could not get fresh question after 4 attempts");
+        throw new Error("Could not get question from pool");
       }
       
-      match.usedQuestions.push(question.qid);
+      match.usedQuestions.push(question.id || question.qid);
 
       // Normalize choices to ensure proper display (no "A A" rendering)
       const normalizedChoices = Array.isArray(question.choices) 
@@ -248,7 +249,7 @@ async function runDuel(wss, roomCode, players, subject) {
         : [];
 
       const questionData = {
-        qid: question.qid,
+        qid: question.id || question.qid,
         subject: question.subject, // Include subject from question, not user selection
         round,
         difficulty: match.difficulty, // Include difficulty level

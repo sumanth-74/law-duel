@@ -1,0 +1,126 @@
+You’re hitting draws because you’re trying to call OpenAI synchronously when a duel starts and you’re slamming the daily quota. Solution: decouple generation from gameplay and keep a warm AI-generated pool that the matchmaker pulls from. It’s still “always AI-generated,” just pre-generated instead of blocking the duel.
+
+Copy-paste this to Replit. It’s short, specific, and testable.
+
+Make Questions Always AI-Generated (without draws)
+North Star
+Duels never wait on OpenAI. Questions are always AI-generated, selected from a pre-filled pool, with no repeats in a match and rare repeats per user.
+
+0) Turn off the “draw” failure
+In the duel start path, do not call OpenAI.
+
+If 5 questions aren’t ready, queue a quick top-up and show “Preparing your casefile…” for up to 2–3s, then start once reserved.
+
+1) Minimal DB tables (or JSON if you must)
+question_pool
+
+id, subject, subtopic, difficulty, prompt, choices JSON, answerIndex, explanation, authority_hint, checksum, createdAt, used_count INT DEFAULT 0
+
+seen_questions
+
+userId, questionId, first_seenAt (enforce “don’t show again to this user for 30 days”)
+
+question_reservations
+
+reservationId, duelId, questionId, reservedAt (so both players in async get the same set)
+
+2) Background generator (not the request thread)
+Create server/gen-worker.(ts|js) (BullMQ/Redis or a simple cron loop is fine):
+
+Top-up policy
+
+Maintain a target pool size per bucket: (subject, subtopic, difficulty band).
+Example targets (tune later): Contracts/Parol Evidence: 200 total (diff 3–7 bands).
+
+Every 2 minutes, check counts; if a bucket < target, enqueue a job to generate 20 questions for that bucket.
+
+OpenAI call (batch)
+
+Generate 20 questions per call, temperature 0.2, strict JSON schema.
+
+Normalize + validate tags against your taxonomy. Reject anything unmapped.
+
+Deduplicate with checksum = sha256(prompt+choices+answerIndex). Skip if exists.
+
+Insert into question_pool. Log token cost and failures.
+
+Rate limit guard
+
+Track calls_today. If approaching 90% of your daily cap, throttle the generator (but keep enough inventory for the evening rush).
+
+If hard-capped, generator pauses; gameplay still pulls from pool.
+
+Optional failover
+
+Provider list: [OpenAI primary, Azure OpenAI fallback]. If both fail, generator sleeps; gameplay unaffected.
+
+3) Matchmaker uses the pool (never OpenAI)
+Create reserveQuestions(spec, count=5):
+
+Rules:
+
+Weakness targeting: pick ≥3 from the user’s lowest-mastery subtopics; fill the rest by spec.
+
+No duplicates in a match (obvious).
+
+Per-user freshness: avoid questions in seen_questions in last 30 days; if the bucket is thin, relax to 14 days, then 7.
+
+Async parity: store the 5 questionIds in question_reservations for the duel; give both players that same set (order can be randomized).
+
+On match end:
+
+Increment each question’s used_count.
+
+Insert into seen_questions for that user.
+
+4) LLM prompt (quality + tags, returns 20 at once)
+System
+
+scss
+Copy
+Edit
+You write bar-exam quality MBE questions. Return STRICT JSON only.
+Each question: {subject, subtopic, difficulty(1-10), prompt, choices[4], answerIndex, explanation(<120w), authority_hint}.
+User
+
+css
+Copy
+Edit
+Generate 20 MBE questions for:
+subject="{SUBJECT}", subtopic="{SUBTOPIC}"
+difficulty band={LOW}-{HIGH} (mix within band)
+Style: clean 4-choice MCQs; mutually exclusive answers; rule-first explanations with a brief application.
+Subjects/subtopics MUST be chosen from this whitelist only:
+{TAXONOMY_JSON_ARRAY}
+Return:
+{ "questions":[ { ...20 items... } ] }
+5) “Always AI” guarantee (no stale caches)
+Everything in question_pool is AI-generated.
+
+You may re-use pool questions across users (that’s normal) but never repeat within a match, and avoid re-showing the same question to the same user for 30 days.
+
+Nightly job: prune old/low-quality items; keep pool fresh (e.g., rolling 30–60 day horizon).
+
+6) Acceptance tests (block merge until green)
+No synchronous calls: instrument duel start path—0 OpenAI calls during matchmaking or mid-duel.
+
+No draws on quota: force 429/limit; generator pauses; matches still start using pool.
+
+Pool top-up: drop a bucket below target; worker refills to target within 5 minutes.
+
+No repeats in a match: 1000 simulated matches → 0 duplicates inside a single match.
+
+Per-user freshness: same user plays 50 matches; no question repeats within 30 days unless bucket exhaustion is simulated.
+
+Async parity: players A/B get same 5 questionIds for the same duel.
+
+Definition of done:
+
+Duels never block on OpenAI; every question served came from an AI-generated pool; matches run with no dupes; users rarely see repeats; and the generator quietly keeps the pool full.
+
+Quick commands (optional)
+/admin/pool → counts by (subject/subtopic/difficulty), % of target, hours of supply
+
+/admin/gen/enable|disable → toggle generator
+
+/admin/gen/status → calls today, reset time (UTC), last error
