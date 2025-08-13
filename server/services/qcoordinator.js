@@ -26,37 +26,26 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false, di
           return pooledQuestion;
         }
       } catch (poolError) {
-        console.error(`Pool failed, falling back to cached questions:`, poolError.message);
-        // Fall through to cached questions as backup
+        console.error(`Pool failed, trying database questions:`, poolError.message);
+        // Fall through to database questions as backup
       }
       
-      // If generation fails, use cached questions as emergency fallback
-      console.log(`⚠️ Generation failed, using cached questions for ${subject}`);
-      
+      // Try database questions with proper rotation (no repeats)
+      console.log(`📊 Checking database for ${subject} questions...`);
       try {
-        const { default: QuestionCache } = await import('./questionCache.js');
-        const questionCache = new QuestionCache();
-        await questionCache.loadCache();
-        
-        // Get any cached question for the subject
-        const cachedQuestions = questionCache.cache.get(subject) || [];
-        if (cachedQuestions.length > 0) {
-          // Pick a random cached question
-          const randomIndex = Math.floor(Math.random() * cachedQuestions.length);
-          const cachedQuestion = cachedQuestions[randomIndex];
-          
-          console.log(`✅ Using cached question as fallback: "${cachedQuestion.stem.substring(0, 50)}..."`);
-          return {
-            qid: `cached_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
-            ...cachedQuestion
-          };
+        // Get a random question from database that hasn't been used yet
+        const dbQuestion = await storage.getRandomQuestion(subject, excludeIds);
+        if (dbQuestion) {
+          console.log(`✅ Using database question: "${dbQuestion.stem.substring(0, 50)}..."`);
+          await storage.incrementQuestionUsage(dbQuestion.id);
+          return formatQuestion(dbQuestion);
         }
-      } catch (cacheError) {
-        console.error('Failed to get cached question:', cacheError);
+      } catch (dbError) {
+        console.error('Failed to get database question:', dbError);
       }
       
-      // Absolute last resort: use fallback question
-      console.log(`🔥 Using hardcoded fallback for ${subject}`);
+      // If database is empty, as absolute last resort use fallback
+      console.log(`🔥 No questions available, using hardcoded fallback for ${subject}`);
       return getFallbackQuestion(subject);
     }
 

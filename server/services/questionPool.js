@@ -30,30 +30,44 @@ class QuestionPool {
   async startBackgroundGeneration() {
     console.log('🚀 Starting question pool background generation...');
     
-    // Don't generate anything immediately - wait for rate limits to reset
-    console.log('⏸️ Delaying generation due to rate limits...');
+    // Check when quota resets (midnight UTC)
+    const now = new Date();
+    const resetTime = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+    const msUntilReset = resetTime.getTime() - now.getTime();
+    const hoursUntilReset = Math.floor(msUntilReset / (1000 * 60 * 60));
+    const minutesUntilReset = Math.floor((msUntilReset % (1000 * 60 * 60)) / (1000 * 60));
     
-    // Only start generation after 60 seconds to let rate limits reset
+    console.log(`⏰ OpenAI daily quota resets in ${hoursUntilReset}h ${minutesUntilReset}m (at midnight UTC)`);
+    console.log(`📊 Pausing all generation until quota resets to avoid wasting API calls`);
+    
+    // Wait until quota resets, then start generating
     setTimeout(() => {
-      console.log('📊 Starting slow generation after delay...');
-      // Generate just 1 question for each subject initially
-      const subjects = ['Torts', 'Con Law'];
-      subjects.forEach(subject => {
-        this.generateQuestionsForPool(subject, 1, 1)
-          .catch(err => console.log(`Skipping ${subject} due to rate limits`));
-      });
-    }, 60000);
-    
-    // Then check every 2 minutes to avoid rate limits
-    setInterval(() => {
-      // Try to generate 1 question for a random subject
-      const subjects = Object.keys(SUBJECTS);
-      const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
-      const randomDifficulty = Math.floor(Math.random() * 3) + 1;
+      console.log('✅ OpenAI quota has reset! Starting question generation...');
       
-      this.generateQuestionsForPool(randomSubject, randomDifficulty, 1)
-        .catch(err => console.log(`Skipping generation due to rate limits`));
-    }, 120000); // Every 2 minutes
+      // Start with modest generation
+      this.fillAllPools();
+      
+      // Then generate periodically
+      setInterval(() => {
+        this.fillAllPools();
+      }, 60000); // Every minute after reset
+    }, msUntilReset + 5000); // Add 5 seconds buffer after midnight
+    
+    // For now, log pool status
+    this.logPoolStatus();
+  }
+  
+  logPoolStatus() {
+    let totalQuestions = 0;
+    for (const [subject, difficulties] of this.pools.entries()) {
+      for (const [difficulty, questions] of difficulties.entries()) {
+        if (questions.length > 0) {
+          console.log(`📊 ${subject} D${difficulty}: ${questions.length} questions in pool`);
+          totalQuestions += questions.length;
+        }
+      }
+    }
+    console.log(`📊 Total questions in all pools: ${totalQuestions}`);
   }
   
   async generateCriticalQuestions() {
