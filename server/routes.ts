@@ -156,6 +156,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (existing) {
         return res.status(409).json({ message: "Username already taken" });
       }
+      
+      // Check if email is already registered
+      if (userData.email) {
+        const emailExists = await storage.getUserByEmail(userData.email);
+        if (emailExists) {
+          return res.status(409).json({ message: "Email already registered" });
+        }
+      }
 
       const user = await storage.createUser(userInsert);
       

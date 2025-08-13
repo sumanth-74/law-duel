@@ -43,6 +43,7 @@ export default function Signup() {
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
     displayName: '',
     password: '',
     confirmPassword: '',
@@ -53,14 +54,16 @@ export default function Signup() {
 
   const [step, setStep] = useState(1); // 1: Category selection, 2: Character selection
 
-  // Get username from URL params
+  // Get username and email from URL params
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const username = urlParams.get('username');
+    const email = urlParams.get('email');
     if (username) {
       setFormData(prev => ({
         ...prev,
         username,
+        email: email || '',
         displayName: username
       }));
     }
@@ -109,6 +112,7 @@ export default function Signup() {
         credentials: 'include',
         body: JSON.stringify({
           username: formData.username,
+          email: formData.email,
           displayName: formData.displayName,
           password: formData.password,
           confirmPassword: formData.confirmPassword,

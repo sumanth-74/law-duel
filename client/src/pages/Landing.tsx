@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function Landing() {
   const { toast } = useToast();
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -21,7 +22,7 @@ export default function Landing() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim()) return;
+    if (!username.trim() || !email.trim()) return;
     
     setIsSigningUp(true);
     try {
@@ -33,8 +34,8 @@ export default function Landing() {
       });
       
       if (checkResponse.ok) {
-        // Redirect to signup page with username
-        window.location.href = `/signup?username=${encodeURIComponent(username.trim())}`;
+        // Redirect to signup page with username and email
+        window.location.href = `/signup?username=${encodeURIComponent(username.trim())}&email=${encodeURIComponent(email.trim())}`;
       } else {
         const error = await checkResponse.json();
         toast({
@@ -142,11 +143,21 @@ export default function Landing() {
                     onChange={(e) => setUsername(e.target.value)}
                     className="bg-slate-800 border-purple-500/30 text-slate-200"
                     disabled={isSigningUp}
+                    required
+                  />
+                  <Input
+                    type="email"
+                    placeholder="Email (for account recovery)"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="bg-slate-800 border-purple-500/30 text-slate-200"
+                    disabled={isSigningUp}
+                    required
                   />
                   <Button 
                     type="submit"
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                    disabled={!username.trim() || isSigningUp}
+                    disabled={!username.trim() || !email.trim() || isSigningUp}
                   >
                     {isSigningUp ? 'Creating Account...' : 'Create Account & Avatar'}
                   </Button>
