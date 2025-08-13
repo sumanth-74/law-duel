@@ -4,9 +4,9 @@
     "username": "MBEDestroyer",
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
-    "level": 21,
-    "points": 3850,
-    "totalWins": 71,
+    "level": 20,
+    "points": 3898,
+    "totalWins": 72,
     "totalLosses": 5,
     "avatarData": {
       "baseModel": "male",
@@ -20,7 +20,7 @@
       ],
       "accessoryColor": "#DAA520"
     },
-    "lastActive": "2025-08-13T07:03:05.922Z"
+    "lastActive": "2025-08-13T22:23:10.821Z"
   },
   {
     "id": "bot_precedent_pro",
@@ -97,8 +97,8 @@
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 16,
-    "points": 3145,
-    "totalWins": 53,
+    "points": 3191,
+    "totalWins": 54,
     "totalLosses": 6,
     "avatarData": {
       "baseModel": "female",
@@ -112,16 +112,16 @@
       ],
       "accessoryColor": "#FF1493"
     },
-    "lastActive": "2025-08-13T19:40:48.266Z"
+    "lastActive": "2025-08-13T22:18:10.823Z"
   },
   {
     "id": "bot_contracts_wizard",
     "username": "ContractsWizard",
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
-    "level": 16,
-    "points": 2950,
-    "totalWins": 49,
+    "level": 15,
+    "points": 2966,
+    "totalWins": 50,
     "totalLosses": 7,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-13T16:04:25.096Z"
+    "lastActive": "2025-08-13T22:23:10.821Z"
   },
   {
     "id": "bot_lawbeast_99",

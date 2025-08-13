@@ -26,31 +26,38 @@ export async function getQuestion(subject, excludeIds = [], forceNew = false, di
           return pooledQuestion;
         }
       } catch (poolError) {
-        console.error(`Pool failed, falling back to direct generation:`, poolError.message);
-        // Fall through to direct generation as backup
+        console.error(`Pool failed, falling back to cached questions:`, poolError.message);
+        // Fall through to cached questions as backup
       }
       
-      // Backup: Direct generation if pool fails
-      console.log(`🔥 Pool empty, generating fresh question for ${subject} at difficulty ${difficulty}`);
+      // If generation fails, use cached questions as emergency fallback
+      console.log(`⚠️ Generation failed, using cached questions for ${subject}`);
       
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-          console.log(`🎯 Attempt ${attempt}: Direct generation for ${subject} with difficulty ${difficulty}...`);
-          const { generateFreshQuestion } = await import('./robustGenerator.js');
-          const freshQuestion = await generateFreshQuestion(subject, difficulty);
+      try {
+        const { default: QuestionCache } = await import('./questionCache.js');
+        const questionCache = new QuestionCache();
+        await questionCache.loadCache();
+        
+        // Get any cached question for the subject
+        const cachedQuestions = questionCache.cache.get(subject) || [];
+        if (cachedQuestions.length > 0) {
+          // Pick a random cached question
+          const randomIndex = Math.floor(Math.random() * cachedQuestions.length);
+          const cachedQuestion = cachedQuestions[randomIndex];
           
-          if (freshQuestion && validateQuestion(freshQuestion)) {
-            console.log(`✅ Fresh question generated: "${freshQuestion.stem.substring(0, 50)}..."`);
-            return freshQuestion;
-          }
-        } catch (openaiError) {
-          console.error(`❌ Attempt ${attempt} failed:`, openaiError.message);
-          if (attempt === 3) {
-            throw new Error(`Unable to generate question: ${openaiError.message}`);
-          }
-          await new Promise(resolve => setTimeout(resolve, 500));
+          console.log(`✅ Using cached question as fallback: "${cachedQuestion.stem.substring(0, 50)}..."`);
+          return {
+            qid: `cached_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
+            ...cachedQuestion
+          };
         }
+      } catch (cacheError) {
+        console.error('Failed to get cached question:', cacheError);
       }
+      
+      // Absolute last resort: use fallback question
+      console.log(`🔥 Using hardcoded fallback for ${subject}`);
+      return getFallbackQuestion(subject);
     }
 
     // SKIP storage lookup when forceNew is true - this was the bug!

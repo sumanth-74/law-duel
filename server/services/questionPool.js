@@ -6,8 +6,8 @@ class QuestionPool {
   constructor() {
     this.pools = new Map(); // subject -> difficulty -> [questions]
     this.generating = new Set(); // Track what's being generated to avoid duplicates
-    this.MIN_POOL_SIZE = 15; // Much larger pool for instant serving
-    this.TARGET_POOL_SIZE = 25; // Keep 25 questions ready at all times
+    this.MIN_POOL_SIZE = 3; // Reasonable pool size to avoid rate limits
+    this.TARGET_POOL_SIZE = 5; // Keep 5 questions ready at all times
     this.fallbackQuestions = new Map(); // Fallback cache for instant serving
     
     // Initialize pools for all subjects and difficulties
@@ -30,31 +30,45 @@ class QuestionPool {
   async startBackgroundGeneration() {
     console.log('🚀 Starting question pool background generation...');
     
-    // Immediately generate critical questions for common difficulties
-    this.generateCriticalQuestions();
+    // Don't generate anything immediately - wait for rate limits to reset
+    console.log('⏸️ Delaying generation due to rate limits...');
     
-    // Initial aggressive fill - don't wait
-    this.fillAllPools();
+    // Only start generation after 60 seconds to let rate limits reset
+    setTimeout(() => {
+      console.log('📊 Starting slow generation after delay...');
+      // Generate just 1 question for each subject initially
+      const subjects = ['Torts', 'Con Law'];
+      subjects.forEach(subject => {
+        this.generateQuestionsForPool(subject, 1, 1)
+          .catch(err => console.log(`Skipping ${subject} due to rate limits`));
+      });
+    }, 60000);
     
-    // Then check every 5 seconds for ultra-fast refills
+    // Then check every 2 minutes to avoid rate limits
     setInterval(() => {
-      this.fillAllPools();
-    }, 5000);
+      // Try to generate 1 question for a random subject
+      const subjects = Object.keys(SUBJECTS);
+      const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+      const randomDifficulty = Math.floor(Math.random() * 3) + 1;
+      
+      this.generateQuestionsForPool(randomSubject, randomDifficulty, 1)
+        .catch(err => console.log(`Skipping generation due to rate limits`));
+    }, 120000); // Every 2 minutes
   }
   
   async generateCriticalQuestions() {
     // Pre-generate questions for the most common subjects and difficulties
-    const criticalSubjects = ['Torts', 'Con Law', 'Crim', 'Contracts', 'Evidence', 'Property', 'Civ Pro'];
-    const criticalDifficulties = [1, 2, 3]; // Generate for more difficulties
+    const criticalSubjects = ['Torts', 'Con Law', 'Crim', 'Contracts'];
+    const criticalDifficulties = [1, 2]; // Only most common difficulties
     
     console.log('⚡ Pre-generating critical questions for instant serving...');
     
     const tasks = [];
     for (const subject of criticalSubjects) {
       for (const difficulty of criticalDifficulties) {
-        // Generate 10 questions immediately for each critical combination
+        // Generate only 2 questions immediately to avoid rate limits
         tasks.push(
-          this.generateQuestionsForPool(subject, difficulty, 10)
+          this.generateQuestionsForPool(subject, difficulty, 2)
             .catch(err => console.error(`Critical generation failed for ${subject} D${difficulty}:`, err))
         );
       }
