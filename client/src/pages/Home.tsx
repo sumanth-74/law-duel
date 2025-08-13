@@ -10,6 +10,7 @@ import { QuickMatch } from '@/components/QuickMatch';
 import { DuelArena } from '@/components/DuelArena';
 import { Leaderboard } from '@/components/Leaderboard';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
+import { StreakIndicator } from '@/components/StreakIndicator';
 import AsyncInbox from '@/components/AsyncInbox';
 import AsyncMatch from '@/components/AsyncMatch';
 import BotPractice from '@/components/BotPractice';
@@ -392,8 +393,13 @@ export default function Home() {
   if (gameMode === 'duel' && opponent && duelData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        {/* Persistent Logo and Gamer Tag - Top Bar */}
-        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between">
+        {/* Daily Streak at top */}
+        <div className="fixed top-4 left-4 right-4 z-50">
+          <StreakIndicator />
+        </div>
+        
+        {/* Persistent Logo and Gamer Tag - Below Streak */}
+        <div className="fixed top-20 left-4 right-4 z-50 flex items-center justify-between">
           <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
           <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
             @{character.username}
@@ -422,15 +428,20 @@ export default function Home() {
   if (gameMode === 'bot-practice') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        {/* Persistent Logo and Gamer Tag - Top Bar */}
-        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between">
+        {/* Daily Streak at top */}
+        <div className="fixed top-4 left-4 right-4 z-50">
+          <StreakIndicator />
+        </div>
+        
+        {/* Persistent Logo and Gamer Tag - Below Streak */}
+        <div className="fixed top-20 left-4 right-4 z-50 flex items-center justify-between">
           <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
           <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
             @{character.username}
           </Badge>
         </div>
         
-        <div className="pt-20 px-4">
+        <div className="pt-36 px-4">
           <BotPractice onBack={() => setGameMode('menu')} />
         </div>
       </div>
@@ -440,8 +451,13 @@ export default function Home() {
   if (gameMode === 'searching') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        {/* Persistent Logo and Gamer Tag - Top Bar */}
-        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between">
+        {/* Daily Streak at top */}
+        <div className="fixed top-4 left-4 right-4 z-50">
+          <StreakIndicator />
+        </div>
+        
+        {/* Persistent Logo and Gamer Tag - Below Streak */}
+        <div className="fixed top-20 left-4 right-4 z-50 flex items-center justify-between">
           <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
           <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
             @{character.username}
@@ -465,6 +481,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container max-w-4xl mx-auto py-8 px-4">
+        {/* Daily Streak Indicator - Always at the top */}
+        <div className="mb-6">
+          <StreakIndicator />
+        </div>
+        
         {/* Header with Logo and Persistent Gamer Tag */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-6">

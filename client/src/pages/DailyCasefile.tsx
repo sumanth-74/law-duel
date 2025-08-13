@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { CalendarDays, Clock, Trophy, Target, Flame, Star, Home } from 'lucide-react';
 import { apiRequest, queryClient } from '@/lib/queryClient';
+import { StreakIndicator } from '@/components/StreakIndicator';
 
 interface DailyQuestion {
   id: string;
@@ -336,6 +337,11 @@ export default function DailyCasefile() {
     
     return (
       <div className="max-w-4xl mx-auto p-6">
+        {/* Daily Streak Indicator at top */}
+        <div className="mb-6">
+          <StreakIndicator />
+        </div>
+        
         {/* Header with Timer */}
         <Card className="bg-black/40 border-purple-500/20 mb-6">
           <CardHeader>
