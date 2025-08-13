@@ -33,6 +33,7 @@ interface DuelState {
   showHint: boolean;
   showTrainingBanner: boolean;
   generatingQuestion: boolean; // Add loading state for OpenAI generation
+  showTransition: boolean; // Add transition state between questions
   showFeedbackChip: boolean; // For instant feedback display
   feedbackData?: {
     correct: boolean;
@@ -54,6 +55,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     hintsUsed: 0,
     showHint: false,
     showTrainingBanner: false,
+    showTransition: false,
     generatingQuestion: true // Start with loading state for initial question
   });
 
@@ -227,6 +229,22 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     setTimeout(() => {
       setDuelState(prev => ({ ...prev, showFeedbackChip: false }));
     }, 3500); // Match the chip display duration
+    
+    // Show transition state before next question
+    setTimeout(() => {
+      setDuelState(prev => ({
+        ...prev,
+        showResult: false,
+        showTransition: true,
+        currentQuestion: null,
+        selectedAnswer: undefined
+      }));
+      
+      // Clear transition after a brief moment
+      setTimeout(() => {
+        setDuelState(prev => ({ ...prev, showTransition: false }));
+      }, 1500);
+    }, 3000); // Wait 3 seconds before transitioning
   };
 
   const handleDuelFinished = async (finishedData: any) => {
@@ -464,8 +482,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           </div>
         )}
         
-        {/* Loading State - Generating Question */}
-        {duelState.generatingQuestion && !duelState.currentQuestion && (
+        {/* Loading State - Generating Question or Transitioning */}
+        {(duelState.generatingQuestion || duelState.showTransition) && !duelState.currentQuestion && (
           <div className="flex flex-col items-center justify-center py-16 mb-8">
             <div className="relative mb-6">
               <div className="w-16 h-16 border-4 border-arcane/20 border-t-arcane rounded-full animate-spin"></div>
@@ -474,8 +492,14 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
               </div>
             </div>
             <div className="text-center space-y-2">
-              <h3 className="text-xl font-semibold text-arcane">Generating Question</h3>
-              <p className="text-muted text-sm">Atticus is crafting a fresh {duelState.subject} question...</p>
+              <h3 className="text-xl font-semibold text-arcane">
+                {duelState.showTransition ? `Moving to Round ${duelState.round + 1}` : 'Generating Question'}
+              </h3>
+              <p className="text-muted text-sm">
+                {duelState.showTransition 
+                  ? 'Preparing next question...' 
+                  : `Atticus is crafting a fresh ${duelState.subject} question...`}
+              </p>
             </div>
           </div>
         )}
@@ -516,15 +540,22 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
                 key={index}
                 onClick={() => handleAnswerSelect(index)}
                 disabled={duelState.selectedAnswer !== undefined}
-                className={`text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[44px] flex items-center bg-transparent ${
+                className={`text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[60px] bg-transparent ${
                   duelState.selectedAnswer === index ? 'border-arcane bg-arcane/10' : ''
                 }`}
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  width: '100%',
+                  height: 'auto',
+                  whiteSpace: 'normal'
+                }}
                 data-testid={`answer-choice-${index}`}
               >
-                <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold mr-4 flex items-center justify-center text-sm">
+                <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold flex items-center justify-center text-sm flex-shrink-0">
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span>{choice}</span>
+                <span className="ml-4 text-sm leading-relaxed break-words">{choice}</span>
               </Button>
             ))}
           </div>

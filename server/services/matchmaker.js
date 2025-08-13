@@ -594,7 +594,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   
   // Calculate Elo rating changes for human vs bot - Per North Star (K=24)
   const K = 24;
-  const humanPlayer = await storage.getUserById(humanWs.profile?.id);
+  const humanPlayer = await storage.getUser(humanWs.profile?.id);
   
   const humanRating = humanPlayer?.points || 1200;
   const botRating = 1200; // Bots always at 1200
