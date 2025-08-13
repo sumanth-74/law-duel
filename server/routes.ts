@@ -1043,6 +1043,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/daily-question", requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;
+      
+      // Run cleanup on first request of the day
+      await dailyCasefileService.cleanupOldQuestions();
+      
       const result = await dailyCasefileService.getTodaysQuestion(userId);
       res.json(result);
     } catch (error) {
