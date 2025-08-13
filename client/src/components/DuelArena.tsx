@@ -42,6 +42,9 @@ interface DuelState {
     subtopic?: string;
     masteryChange?: number;
   };
+  userHP: number; // Pokemon-style HP tracking
+  opponentHP: number;
+  showAnswerAnimation: boolean; // Battle animation when selecting
 }
 
 export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: DuelArenaProps) {
@@ -56,7 +59,11 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     showHint: false,
     showTrainingBanner: false,
     showTransition: false,
-    generatingQuestion: true // Start with loading state for initial question
+    generatingQuestion: true, // Start with loading state for initial question
+    showFeedbackChip: false,
+    userHP: 100,
+    opponentHP: 100,
+    showAnswerAnimation: false
   });
 
   const timerRef = useRef<NodeJS.Timeout>();
@@ -193,6 +200,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
 
   const handleQuestionResult = (resultData: any) => {
     const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
+    const opponentCorrect = resultData.opponentAnswer === resultData.correctIndex;
     
     // Use progress data from server if available, otherwise use defaults
     const progressData = resultData.progressResult || {};
@@ -203,6 +211,10 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     const subject = progressData.subject || resultData.subject || duelState.currentQuestion?.subject || 'Law';
     const subtopic = progressData.subtopic || resultData.subtopic || 'General';
     
+    // Calculate HP damage (20 damage per wrong answer)
+    const userHPChange = isCorrect ? 0 : -20;
+    const opponentHPChange = opponentCorrect ? 0 : -20;
+    
     setDuelState(prev => ({
       ...prev,
       showResult: true,
@@ -210,6 +222,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
       scores: resultData.scores || [0, 0],
       waitingForOpponent: false,
       showFeedbackChip: true,
+      userHP: Math.max(0, prev.userHP + userHPChange),
+      opponentHP: Math.max(0, prev.opponentHP + opponentHPChange),
       feedbackData: {
         correct: isCorrect,
         xpGained,
@@ -314,11 +328,18 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     // Calculate actual response time from when question started
     const responseTimeMs = Date.now() - ((duelState as any).questionStartTime || Date.now());
 
+    // Trigger battle animation
     setDuelState(prev => ({
       ...prev,
       selectedAnswer: answerIndex,
-      waitingForOpponent: true
+      waitingForOpponent: true,
+      showAnswerAnimation: true
     }));
+
+    // Reset animation after effect
+    setTimeout(() => {
+      setDuelState(prev => ({ ...prev, showAnswerAnimation: false }));
+    }, 600);
 
     // Send answer to server
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
@@ -378,7 +399,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
     <Card className="panel relative" data-testid="duel-arena">
       {/* Pokemon-style Avatar Displays in Corners */}
       {/* Opponent Avatar - Top Left */}
-      <div className="absolute top-4 left-4 z-20">
+      <div className={`absolute top-4 left-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer === duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
         <div className="bg-panel-2 border-2 border-danger/60 rounded-xl p-3 shadow-lg min-w-[220px]">
           <div className="flex items-center space-x-3">
             <AvatarRenderer
@@ -388,11 +409,17 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
             />
             <div className="flex-1">
               <h3 className="font-semibold text-sm text-white">{opponent.displayName}</h3>
-              <p className="text-xs text-danger">Lv.{opponent.level}</p>
+              <p className="text-xs text-danger">Lv.{opponent.level} • HP: {duelState.opponentHP}/100</p>
               <div className="mt-1 bg-black/60 rounded-full h-2.5 w-24 border border-white/20">
                 <div 
-                  className="bg-gradient-to-r from-green-500 to-green-400 h-full rounded-full transition-all" 
-                  style={{ width: '100%' }}
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    duelState.opponentHP <= 30 
+                      ? 'bg-gradient-to-r from-red-600 to-red-500' 
+                      : duelState.opponentHP <= 50 
+                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-400'
+                      : 'bg-gradient-to-r from-green-500 to-green-400'
+                  }`}
+                  style={{ width: `${duelState.opponentHP}%` }}
                 ></div>
               </div>
             </div>
@@ -401,16 +428,22 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
       </div>
       
       {/* User Avatar - Top Right */}
-      <div className="absolute top-4 right-4 z-20">
+      <div className={`absolute top-4 right-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer !== duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
         <div className="bg-panel-2 border-2 border-arcane/60 rounded-xl p-3 shadow-lg min-w-[220px]">
           <div className="flex items-center space-x-3">
             <div className="flex-1 text-right">
               <h3 className="font-semibold text-sm text-white">{user.displayName}</h3>
-              <p className="text-xs text-arcane">Lv.{user.level}</p>
+              <p className="text-xs text-arcane">Lv.{user.level} • HP: {duelState.userHP}/100</p>
               <div className="mt-1 bg-black/60 rounded-full h-2.5 w-24 border border-white/20 ml-auto">
                 <div 
-                  className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full transition-all" 
-                  style={{ width: '100%' }}
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    duelState.userHP <= 30 
+                      ? 'bg-gradient-to-r from-red-600 to-red-500' 
+                      : duelState.userHP <= 50 
+                      ? 'bg-gradient-to-r from-yellow-500 to-yellow-400'
+                      : 'bg-gradient-to-r from-blue-500 to-blue-400'
+                  }`}
+                  style={{ width: `${duelState.userHP}%` }}
                 ></div>
               </div>
             </div>

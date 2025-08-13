@@ -27,10 +27,10 @@
     "username": "PrecedentPro",
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
-    "level": 20,
-    "points": 3700,
+    "level": 19,
+    "points": 3722,
     "totalWins": 67,
-    "totalLosses": 6,
+    "totalLosses": 7,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#FFE4B5",
@@ -43,7 +43,7 @@
       ],
       "accessoryColor": "#8B0000"
     },
-    "lastActive": "2025-08-13T17:32:27.615Z"
+    "lastActive": "2025-08-13T21:39:40.050Z"
   },
   {
     "id": "bot_brief_sniper",
