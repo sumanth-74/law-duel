@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { dailyCasefileService } from "./services/dailyCasefileService";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,34 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Daily cleanup and fresh question generation
+  const setupDailyTasks = () => {
+    // Run cleanup on startup
+    dailyCasefileService.cleanupOldQuestions();
+    
+    // Schedule daily cleanup at midnight UTC
+    const scheduleNextCleanup = () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+      tomorrow.setUTCHours(0, 5, 0, 0); // 5 minutes past midnight to ensure new day
+      
+      const timeUntilMidnight = tomorrow.getTime() - now.getTime();
+      
+      setTimeout(() => {
+        dailyCasefileService.cleanupOldQuestions();
+        log("🗓️ Daily question system: New day detected, ready for fresh questions");
+        scheduleNextCleanup(); // Schedule next cleanup
+      }, timeUntilMidnight);
+      
+      log(`📅 Next daily cleanup scheduled in ${Math.round(timeUntilMidnight / 1000 / 60 / 60)} hours`);
+    };
+    
+    scheduleNextCleanup();
+  };
+  
+  setupDailyTasks();
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

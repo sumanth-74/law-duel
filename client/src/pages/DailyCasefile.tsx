@@ -191,6 +191,7 @@ export default function DailyCasefile() {
                   {dailyData.timeToReset ? formatTimeToReset(dailyData.timeToReset) : '--:--:--'}
                 </div>
                 <div className="text-sm text-purple-400">Next Question</div>
+                <div className="text-xs text-purple-500 mt-1">New question daily at 12:00 AM UTC</div>
               </div>
             </div>
           </CardContent>

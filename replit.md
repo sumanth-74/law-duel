@@ -31,6 +31,8 @@ Preferred communication style: Simple, everyday language.
 - **Populated leaderboard**: 15+ competitive bot players make platform feel active and engaging
 - **Solo Challenge Mode**: Progressive difficulty system with 3 lives, monetization via life restoration ($0.99)
 - **Practice Mode Redesign**: Transformed from bot duels to progressive solo challenges with increasing difficulty
+- **Daily Casefile System**: Automated daily question generation with fresh content every 24 hours at midnight UTC
+- **Daily Question Rotation**: Questions automatically regenerate with cleanup system removing old questions after 7 days
 
 ## System Architecture
 
@@ -80,6 +82,9 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Solo Challenge System**: Progressive difficulty mode (1-10 levels), 3-lives mechanic, daily completion tracking, monetization through life restoration ($0.99)
 - **Difficulty Scaling**: Questions increase in complexity from introductory to Supreme Court level, with point rewards scaling by difficulty
 - **Monetization Strategy**: Pay-to-continue model when all lives are lost, allowing players to restore 3 lives and continue their challenge
+- **Daily Question System**: Automatic generation of fresh daily questions with OpenAI integration, topic rotation based on day of year
+- **Daily Question Management**: Automated cleanup system removes questions older than 7 days, with scheduled regeneration at midnight UTC
+- **Daily Streak Tracking**: User streaks with milestone bonuses, comprehensive attempt tracking and XP rewards (Updated 2025-08-13)
 
 ### Error Handling and Resilience
 - **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control

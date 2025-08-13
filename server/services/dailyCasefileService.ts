@@ -15,6 +15,37 @@ export class DailyCasefileService {
     return utcDate.toISOString().split('T')[0];
   }
 
+  // Clean up old daily questions (keep only last 7 days)
+  async cleanupOldQuestions(): Promise<void> {
+    try {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
+      const cutoffDate = sevenDaysAgo.toISOString().split('T')[0];
+      
+      await db.delete(dailyQuestions)
+        .where(sql`${dailyQuestions.dateUtc} < ${cutoffDate}`);
+        
+      console.log(`✅ Daily questions cleanup completed - removed questions older than ${cutoffDate}`);
+    } catch (error) {
+      console.error('❌ Failed to cleanup old daily questions:', error);
+    }
+  }
+
+  // Force regenerate today's question (admin function)
+  async regenerateTodaysQuestion(): Promise<DailyQuestion> {
+    const today = this.getTodayDateString();
+    
+    // Delete existing question for today
+    await db.delete(dailyQuestions)
+      .where(eq(dailyQuestions.dateUtc, today));
+    
+    // Generate new question
+    const newQuestion = await this.generateTodaysQuestion(today);
+    console.log(`✅ Regenerated daily question for ${today}: ${newQuestion.subject} - ${newQuestion.topic}`);
+    
+    return newQuestion;
+  }
+
   // Check if user has attempted today's question
   async hasUserAttemptedToday(userId: string): Promise<boolean> {
     const today = this.getTodayDateString();

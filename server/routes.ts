@@ -859,6 +859,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to regenerate today's question (for testing daily changes)
+  app.post("/api/admin/regenerate-daily", async (req, res) => {
+    try {
+      const newQuestion = await dailyCasefileService.regenerateTodaysQuestion();
+      res.json({ 
+        success: true, 
+        message: `New daily question generated: ${newQuestion.subject} - ${newQuestion.topic}`,
+        question: {
+          id: newQuestion.id,
+          subject: newQuestion.subject,
+          topic: newQuestion.topic,
+          dateUtc: newQuestion.dateUtc
+        }
+      });
+    } catch (error) {
+      console.error("Error regenerating daily question:", error);
+      res.status(500).json({ message: "Failed to regenerate daily question" });
+    }
+  });
+
   // === DUEL API ENDPOINTS ===
   
   // Duel state storage
