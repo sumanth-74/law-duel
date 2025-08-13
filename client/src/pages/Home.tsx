@@ -678,7 +678,7 @@ export default function Home() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => window.location.href = '/solo'}
+                  onClick={() => setGameMode('bot-practice')}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                   size="lg"
                 >
