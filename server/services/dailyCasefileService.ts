@@ -318,7 +318,10 @@ export class DailyCasefileService {
     const yesterdayStr = yesterday.toISOString().split('T')[0];
     
     let newStreak = 1; // Starting today's attempt
-    if (user.lastDailyDate === yesterdayStr) {
+    if (user.lastDailyDate === today) {
+      // Playing again today (shouldn't happen normally, but handle it)
+      newStreak = user.dailyStreak; // Keep existing streak
+    } else if (user.lastDailyDate === yesterdayStr) {
       // Consecutive day - continue streak
       newStreak = user.dailyStreak + 1;
     } else if (user.lastDailyDate && user.lastDailyDate !== today) {
