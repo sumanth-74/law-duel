@@ -486,6 +486,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // === SOLO CHALLENGE ROUTES ===
+  
+  // Import solo challenge service
+  const { soloChallengeService } = await import("./services/soloChallengeService.js");
+  
+  // Get solo challenge status
+  app.get('/api/solo-challenge/status', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const status = soloChallengeService.getChallengeStatus(userId);
+      res.json(status);
+    } catch (error: any) {
+      console.error("Error getting solo challenge status:", error);
+      res.status(500).json({ message: "Failed to get challenge status", error: error.message });
+    }
+  });
+
+  // Start a new solo challenge
+  app.post('/api/solo-challenge/start', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { subject } = req.body;
+      
+      if (!subject) {
+        return res.status(400).json({ message: "Subject is required" });
+      }
+
+      const result = await soloChallengeService.startChallenge(userId, subject);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error starting solo challenge:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Submit answer to solo challenge
+  app.post('/api/solo-challenge/answer', requireAuth, async (req: any, res) => {
+    try {
+      const { challengeId, questionId, userAnswer } = req.body;
+      
+      if (challengeId === undefined || questionId === undefined || userAnswer === undefined) {
+        return res.status(400).json({ message: "challengeId, questionId, and userAnswer are required" });
+      }
+
+      const result = await soloChallengeService.submitAnswer(challengeId, questionId, userAnswer);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error submitting solo challenge answer:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Get next question for solo challenge
+  app.post('/api/solo-challenge/next-question', requireAuth, async (req: any, res) => {
+    try {
+      const { challengeId } = req.body;
+      
+      if (!challengeId) {
+        return res.status(400).json({ message: "challengeId is required" });
+      }
+
+      const question = await soloChallengeService.getNextQuestion(challengeId);
+      res.json(question);
+    } catch (error: any) {
+      console.error("Error getting next solo challenge question:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Restore lives with payment (monetization)
+  app.post('/api/solo-challenge/restore-lives', requireAuth, async (req: any, res) => {
+    try {
+      const { challengeId } = req.body;
+      
+      if (!challengeId) {
+        return res.status(400).json({ message: "challengeId is required" });
+      }
+
+      // In real implementation, verify payment here
+      const result = await soloChallengeService.restoreLives(challengeId);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error restoring lives:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   // === ASYNC DUELS ROUTES (Friend Challenges Only) ===
 
   // Create async match with friend

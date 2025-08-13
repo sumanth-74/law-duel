@@ -2,7 +2,7 @@
 
 ## Overview
 
-Law Duel is a competitive legal education game where players engage in 1v1 duels using legal questions for bar exam preparation and law school finals. The application features character creation, quick matchmaking, real-time gameplay, and a leaderboard system. Players can choose from various law-themed archetypes (e.g., Trial Hawk, Constitutional Scholar, Corporate Counsel) with legal accessories like gavels, scales of justice, law books, briefcases, and diplomas. Characters gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure.
+Law Duel is a competitive legal education game where players engage in 1v1 duels using legal questions for bar exam preparation and law school finals. The application features character creation, quick matchmaking, real-time gameplay, a comprehensive leaderboard system, and progressive solo challenges. Players can choose from various law-themed archetypes (e.g., Trial Hawk, Constitutional Scholar, Corporate Counsel) with legal accessories like gavels, scales of justice, law books, briefcases, and diplomas. Characters gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure. The platform now includes monetized Solo Challenge mode with progressive difficulty, 3-lives system, and pay-to-continue mechanics.
 
 ## User Preferences
 
@@ -29,6 +29,8 @@ Preferred communication style: Simple, everyday language.
 - **Streamlined onboarding**: Direct signup to avatar creation flow for immediate engagement
 - **Streamlined UI**: Removed redundant "View Rankings" link, leaderboard serves as primary rankings display
 - **Populated leaderboard**: 15+ competitive bot players make platform feel active and engaging
+- **Solo Challenge Mode**: Progressive difficulty system with 3 lives, monetization via life restoration ($0.99)
+- **Practice Mode Redesign**: Transformed from bot duels to progressive solo challenges with increasing difficulty
 
 ## System Architecture
 
@@ -75,6 +77,9 @@ The application uses a monorepo structure with shared types and schemas between 
 - **Subject Flexibility**: Specific legal subjects or mixed question pools
 - **XP and Leveling**: Growth system with visual scaling based on character level (1 + 0.08 * level, capped at 1.8)
 - **Leaderboard System**: Points-based ranking with real-time stat updates and database synchronization
+- **Solo Challenge System**: Progressive difficulty mode (1-10 levels), 3-lives mechanic, daily completion tracking, monetization through life restoration ($0.99)
+- **Difficulty Scaling**: Questions increase in complexity from introductory to Supreme Court level, with point rewards scaling by difficulty
+- **Monetization Strategy**: Pay-to-continue model when all lives are lost, allowing players to restore 3 lives and continue their challenge
 
 ### Error Handling and Resilience
 - **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control
