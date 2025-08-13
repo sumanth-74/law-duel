@@ -3,6 +3,10 @@
 ## Overview
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
+## Recent Changes (Jan 9, 2025)
+- **Fixed UI overlay issue**: Reduced z-index of Law Duel logo and user tag from z-50 to z-10 to prevent covering DuelArena icons
+- **Fixed subtopicProgressService error**: Added proper import and corrected service reference in soloChallengeService.js to use progressService instead of undefined subtopicProgressService
+
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 

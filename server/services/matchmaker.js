@@ -549,17 +549,17 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       // Track subtopic progress for human player
       if (humanWs.profile?.id) {
         try {
-          const progressResult = await subtopicProgressService.recordAttempt(
-            humanWs.profile.id,
-            question.subject,
-            question.stem,
-            question.explanation,
-            humanCorrect,
-            match.difficulty, // Pass current difficulty level
-            humanAnswer.timeMs, // Time to answer
-            roomCode,         // Duel ID
-            question.qid      // Question ID
-          );
+          const progressResult = await progressService.recordAttempt({
+            userId: humanWs.profile.id,
+            duelId: roomCode,
+            questionId: question.qid,
+            subject: question.subject,
+            subtopic: question.subtopic || question.subject,
+            difficulty: match.difficulty,
+            correct: humanCorrect,
+            msToAnswer: humanAnswer.timeMs,
+            ts: Date.now()
+          });
           
           // Store progress result for inclusion in response
           if (progressResult) {

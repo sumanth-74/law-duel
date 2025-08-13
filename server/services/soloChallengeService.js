@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { initializeQuestionCoordinator } from './qcoordinator.js';
+import { progressService } from '../progress.js';
 
 const CHALLENGES_FILE = path.join(process.cwd(), 'data', 'solo-challenges.json');
 
@@ -187,15 +188,21 @@ class SoloChallengeService {
 
     // Track subtopic progress
     try {
-      const subtopicResult = await subtopicProgressService.recordAttempt(
-        challenge.userId,
-        challenge.subject,
-        question.question || question.stem || '',
-        question.explanation || '',
-        isCorrect,
-        this.getDifficultyName(challenge.difficulty)
-      );
-      console.log(`📊 Subtopic progress updated: ${subtopicResult.subject}/${subtopicResult.subtopic} - Proficiency: ${subtopicResult.newProficiency.toFixed(1)}%`);
+      const subtopicResult = await progressService.recordAttempt({
+        userId: challenge.userId,
+        duelId: `solo_${challengeId}`,
+        questionId: question.id || `solo_${Date.now()}`,
+        subject: challenge.subject,
+        subtopic: question.subtopic || challenge.subject,
+        difficulty: challenge.difficulty,
+        correct: isCorrect,
+        msToAnswer: 0, // Not tracked for solo mode
+        ts: Date.now()
+      });
+      
+      if (subtopicResult && subtopicResult.subtopic) {
+        console.log(`📊 Subtopic progress updated: ${subtopicResult.subject}/${subtopicResult.subtopic} - Proficiency: ${(subtopicResult.newProficiency || 0).toFixed(1)}%`);
+      }
     } catch (error) {
       console.error('Error tracking subtopic progress:', error);
     }

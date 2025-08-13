@@ -1,1 +1,1280 @@
-[]
+[
+  {
+    "id": "pool_1755127346101_uediublyg",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 1,
+    "stem": "In a federal court sitting in diversity, a plaintiff from State A sues a defendant from State B for negligence. The plaintiff's claims arise under a state statute from State A that imposes a higher standard of care than the common law. The defendant argues that the federal court should apply the common law standard instead of the state statute. What should the court do?",
+    "choices": [
+      "Dismiss the case for lack of jurisdiction since the state statute is not applicable.",
+      "Apply the common law standard because it is more favorable to the defendant.",
+      "Apply the state statute from State A as it governs the parties' rights and obligations.",
+      "Apply the federal common law since the case is in federal court."
+    ],
+    "correctIndex": 2,
+    "explanation": "The federal court must apply the state statute because of the Erie doctrine.",
+    "checksum": "74e24f6c4f8fd3c7d4af4b3de59f59c61a25939e2d3febd962092adead339536",
+    "createdAt": 1755127346101,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127367685_9jtfno8bl",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 1,
+    "stem": "Alice, a resident of Texas, sues Bob, a resident of Florida, in federal court for $75,000 for breach of contract. Bob argues that the federal court does not have subject matter jurisdiction over the case. What is the correct determination regarding subject matter jurisdiction in this case?",
+    "choices": [
+      "The federal court has subject matter jurisdiction because there is diversity of citizenship and the amount in controversy exceeds $75,000.",
+      "The federal court does not have subject matter jurisdiction because Alice and Bob are citizens of different states.",
+      "The federal court does not have subject matter jurisdiction because the amount in controversy is less than $100,000.",
+      "The federal court has subject matter jurisdiction because the case involves a federal question."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the federal court has subject matter jurisdiction due to diversity of citizenship and the amount in controversy exceeding $75,000.",
+    "checksum": "84ff649f11715a2d299c247982389b16126efc4c0484c687b3d4f42515654eed",
+    "createdAt": 1755127367685,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127389191_uknrtftyg",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 2,
+    "stem": "In a prior lawsuit, Plaintiff A sued Defendant B for breach of contract and lost. In that case, the court found that there was no valid contract between the parties. Now, Plaintiff A is suing Defendant B again, this time claiming fraud based on the same underlying facts related to the contract. Which of the following statements about the preclusion of Plaintiff A's fraud claim is correct?",
+    "choices": [
+      "Plaintiff A's fraud claim is barred by claim preclusion as it arises from the same transaction as the prior breach of contract claim.",
+      "Plaintiff A's fraud claim is barred by issue preclusion because the existence of a valid contract was determined in the prior case.",
+      "Plaintiff A's fraud claim is not barred because the fraud claim was not addressed in the prior lawsuit.",
+      "Plaintiff A can bring the fraud claim because it is a different cause of action than breach of contract."
+    ],
+    "correctIndex": 1,
+    "explanation": "Plaintiff A's fraud claim is barred by issue preclusion because the existence of a valid contract was determined in the prior case.",
+    "checksum": "c85767c81bf24bcfbd978ffdcba9f5817fc02b2fe164d630a42e04d09c4e8a11",
+    "createdAt": 1755127389191,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127408830_hn24f38ms",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 3,
+    "stem": "A plaintiff, a citizen of California, files a lawsuit in federal court against a defendant, a citizen of Nevada, seeking $75,000 in damages for breach of contract. The defendant moves to dismiss the case for lack of subject matter jurisdiction. What is the likely outcome of the motion?",
+    "choices": [
+      "The motion will be granted because the amount in controversy is insufficient.",
+      "The motion will be denied because there is diversity jurisdiction.",
+      "The motion will be granted because federal courts do not have jurisdiction over breach of contract cases.",
+      "The motion will be denied because the plaintiff is a citizen of the same state as the defendant."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the motion will be denied because there is diversity jurisdiction.",
+    "checksum": "a3b72d2db00b8e8f4fa4650c037feb0ffb96bb9f863c61c35e8c30ac87266846",
+    "createdAt": 1755127408830,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127429927_nt4t1qz1q",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 3,
+    "stem": "A plaintiff, a citizen of California, files a lawsuit in federal court against a defendant who is a citizen of Texas, claiming $75,000 in damages for breach of contract. The defendant moves to dismiss the case for lack of subject matter jurisdiction. Which of the following statements is true regarding the subject matter jurisdiction of this case?",
+    "choices": [
+      "The federal court lacks subject matter jurisdiction because the plaintiff and defendant are both from states that are not diverse.",
+      "The federal court has subject matter jurisdiction because the plaintiff is seeking damages for breach of contract, which is a federal question.",
+      "The federal court lacks subject matter jurisdiction because the amount in controversy does not exceed $100,000.",
+      "The federal court has subject matter jurisdiction because there is complete diversity of citizenship and the amount in controversy exceeds $75,000."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the federal court has subject matter jurisdiction due to complete diversity and the amount in controversy exceeding $75,000.",
+    "checksum": "d78203d83e2f7ce75c2984f111873a4d83529efc65feb3660240b83844a53085",
+    "createdAt": 1755127429927,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127447510_kkz1w1baz",
+    "subject": "Civil Procedure",
+    "topic": "Discovery",
+    "difficulty": 1,
+    "stem": "During a personal injury lawsuit, Plaintiff served Defendant with a request for production of documents related to any insurance policies that may cover the incident. Defendant responded by stating that he had no insurance policies. Plaintiff later learned that Defendant had an insurance policy that covered the incident but was not disclosed in the response. What is the best course of action for Plaintiff?",
+    "choices": [
+      "File a motion to compel disclosure of the insurance policy.",
+      "Seek sanctions against Defendant for the failure to disclose the policy.",
+      "Accept Defendant's response and proceed to trial.",
+      "Request a deposition of Defendant to inquire about the insurance policy."
+    ],
+    "correctIndex": 1,
+    "explanation": "Plaintiff should seek sanctions against Defendant for failing to disclose the insurance policy as it is relevant to the case.",
+    "checksum": "b69764879abc46641374a1a95a40e9b348a15e6c83b2ccd2f92bb4567b96d4d5",
+    "createdAt": 1755127447510,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127466530_4lnfssewh",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 5,
+    "stem": "In a prior lawsuit, Plaintiff sued Defendant for breach of contract and obtained a judgment in favor of the Defendant. Later, Plaintiff brings a new lawsuit against Defendant for fraud, alleging that Defendant misrepresented facts regarding the contract. Defendant moves to dismiss the fraud claim based on res judicata. Which of the following is the most accurate response regarding whether the fraud claim is barred by res judicata?",
+    "choices": [
+      "The fraud claim is barred because it arises from the same transaction as the breach of contract claim.",
+      "The fraud claim is barred because the judgment in the prior case was on the merits.",
+      "The fraud claim is not barred because the Plaintiff could not have brought it in the earlier case.",
+      "The fraud claim is not barred because it involves a different cause of action than the breach of contract claim."
+    ],
+    "correctIndex": 3,
+    "explanation": "The fraud claim is not barred because it involves a different cause of action than the breach of contract claim.",
+    "checksum": "8aa9c3e835910309f387c122761767b89d3a5e62d58ff6d04ae594e032714b1c",
+    "createdAt": 1755127466530,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127469793_wgrfh0b5o",
+    "subject": "Civil Procedure",
+    "topic": "Rule 56",
+    "difficulty": 2,
+    "stem": "In a negligence lawsuit, Plaintiff alleges that Defendant's failure to maintain a safe premises caused her injuries after she slipped on a wet floor. Defendant moves for summary judgment, providing evidence that the floor was wet due to an unexpected rainstorm and that they had a policy in place to regularly inspect the premises. Plaintiff counters with her testimony that she had seen the wet floor for over an hour before her fall and that no warning signs were posted. Which of the following is the most likely outcome of Defendant's motion for summary judgment?",
+    "choices": [
+      "The court will grant summary judgment for Plaintiff because Defendant failed to adequately warn about the wet floor.",
+      "The court will deny summary judgment for Defendant because Plaintiff's testimony creates a genuine dispute of material fact about the adequacy of Defendant's safety measures.",
+      "The court will grant summary judgment for Defendant because there is no genuine dispute of material fact regarding the unexpected nature of the rainstorm.",
+      "The court will deny summary judgment for Plaintiff because Defendant's evidence shows they followed reasonable safety protocols."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the court will deny summary judgment for Defendant because Plaintiff's testimony creates a genuine dispute of material fact.",
+    "checksum": "9abe3c2119ac5fc74de238a2a20348922a7df7b293fa457acc369006b1af5a1c",
+    "createdAt": 1755127469793,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127490730_6szhdmr43",
+    "subject": "Civil Procedure",
+    "topic": "Venue",
+    "difficulty": 4,
+    "stem": "A plaintiff, a resident of New York, files a personal injury lawsuit against a defendant, a corporation incorporated in Delaware with its principal place of business in New York. The incident giving rise to the lawsuit occurred in New Jersey. The defendant moves to dismiss the case for improper venue. Which of the following is the most accurate determination regarding the venue of this lawsuit?",
+    "choices": [
+      "The venue is improper in New York because the incident occurred in New Jersey, which is where the lawsuit should be filed.",
+      "The venue is proper in New Jersey because that is where the incident occurred, regardless of the parties' residency.",
+      "The venue is improper in Delaware because neither party resides there and the incident did not occur there.",
+      "The venue is proper in New York because the defendant's principal place of business is located there."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the venue is proper in New York because the defendant's principal place of business is located there.",
+    "checksum": "cb16a72490b89939abeac41d31ae23033acc0a61b822dc8740b6b120e86b6a8f",
+    "createdAt": 1755127490730,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127494053_sacccyf46",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 3,
+    "stem": "In a prior lawsuit, Plaintiff A sued Defendant B for breach of contract and lost. The court found that the contract was unenforceable due to a lack of consideration. Subsequently, Plaintiff A files a new lawsuit against Defendant B for fraud, claiming that B misrepresented the contract's enforceability to induce A to enter into it. Can A prevail in the second lawsuit?",
+    "choices": [
+      "Yes, because Plaintiff A did not have a full and fair opportunity to litigate the fraud claim in the first lawsuit.",
+      "No, because both claims arise from the same transaction or occurrence.",
+      "Yes, because the fraud claim is based on a different legal theory than the breach of contract claim.",
+      "No, because the issue of the contract's enforceability was already decided in the first lawsuit."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is 'No, because the issue of the contract's enforceability was already decided in the first lawsuit.' This is an application of issue preclusion.",
+    "checksum": "dc21afdb528ac740749603a196b6531802a669547725c968eac8898b8881b720",
+    "createdAt": 1755127494053,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127510153_dwgj83hlx",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 6,
+    "stem": "In a federal court sitting in diversity jurisdiction, Plaintiff sued Defendant for breach of contract, alleging damages of $100,000. The contract was governed by the law of State A, which has a statute of limitations of six years for breach of contract claims. However, Defendant moved to dismiss the case based on State B's statute of limitations of three years, claiming that the federal court should apply State B's rule as the forum state. Which of the following is the most appropriate ruling for the federal court? ",
+    "choices": [
+      "The court should apply State A's statute of limitations because it governs the contract.",
+      "The court should apply State B's statute of limitations because it is the forum state.",
+      "The court should apply the federal common law statute of limitations.",
+      "The court should dismiss the case based on the shorter statute of limitations of State B."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court should apply State A's statute of limitations because it governs the contract under Erie.",
+    "checksum": "7e41f45a166c1ab23b48d3348153a8086b74bd633dda80f8f726320737bd5fcd",
+    "createdAt": 1755127510153,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127511611_vf4f4c00a",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 1,
+    "stem": "Alice, a resident of California, sues Bob, a resident of Texas, in federal court for $75,000 for breach of contract. Bob argues that the case should be dismissed for lack of subject matter jurisdiction. What is the correct determination regarding subject matter jurisdiction in this case?",
+    "choices": [
+      "The federal court does not have subject matter jurisdiction because both parties must be residents of different states.",
+      "The federal court has subject matter jurisdiction because there is diversity of citizenship and the amount in controversy exceeds $75,000.",
+      "The federal court has subject matter jurisdiction because it is a federal question case.",
+      "The federal court does not have subject matter jurisdiction because the amount in controversy is not over $100,000."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the federal court has subject matter jurisdiction due to diversity of citizenship and the amount in controversy exceeding $75,000.",
+    "checksum": "3365b04a32b638443f7cb4041f0422686e18074db88af1dd530ee696a06cf0eb",
+    "createdAt": 1755127511611,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127532399_8pjf489ue",
+    "subject": "Civil Procedure",
+    "topic": "Rule 56",
+    "difficulty": 1,
+    "stem": "Alice, a homeowner, filed a lawsuit against Bob, a contractor, claiming that Bob failed to complete the renovation work as agreed. Bob filed a motion for summary judgment, arguing that there was no genuine dispute of material fact because Alice had not provided any evidence of the alleged incomplete work. Alice responded by stating that she had photographs of the unfinished renovations and emails discussing the issues. What is the likely outcome of Bob's motion for summary judgment?",
+    "choices": [
+      "Bob's motion will be granted because Alice has not provided sufficient evidence.",
+      "Bob's motion will be denied because the court cannot decide factual disputes on summary judgment.",
+      "Bob's motion will be denied because there is a genuine dispute of material fact.",
+      "Bob's motion will be granted because summary judgment is appropriate in all contract disputes."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that Bob's motion will be denied because there is a genuine dispute of material fact.",
+    "checksum": "c552735ac5f6979186e2a4fc8015a19736cd55953314c74d33758ebdbff6c94a",
+    "createdAt": 1755127532399,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127534954_9r0t423py",
+    "subject": "Civil Procedure",
+    "topic": "Rule 56",
+    "difficulty": 4,
+    "stem": "In a negligence lawsuit, Plaintiff alleges that Defendant's failure to maintain a safe environment caused a slip and fall accident in Defendant's store. Defendant moves for summary judgment, arguing that Plaintiff has not provided sufficient evidence of negligence. During discovery, Plaintiff submitted a witness affidavit stating that the floor was wet and unmarked, but did not provide any evidence of prior incidents or notice of the condition. Plaintiff counters that the wet floor was a common hazard. The court must determine whether there is a genuine dispute of material fact. What should the court decide?",
+    "choices": [
+      "Deny summary judgment because the witness affidavit creates a genuine issue of material fact regarding the condition of the floor.",
+      "Grant summary judgment in favor of Plaintiff as the common hazard doctrine applies.",
+      "Grant summary judgment in favor of Defendant because Plaintiff lacks evidence of negligence.",
+      "Deny summary judgment because the absence of prior incidents is irrelevant to the determination of negligence."
+    ],
+    "correctIndex": 0,
+    "explanation": "The court should deny summary judgment because the witness affidavit creates a genuine issue of material fact regarding the condition of the floor, which is essential to proving negligence.",
+    "checksum": "b8c06da548bf4afc8f303509c6ba0805a5bf6376507154f76dcb652fc03df0fd",
+    "createdAt": 1755127534955,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127562236_w5l4ydavt",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 5,
+    "stem": "Plaintiff, a citizen of California, files a lawsuit in federal court against Defendant, a citizen of New York, seeking $75,000 in damages for breach of contract. The contract was executed in New York, but the services were performed in California. Defendant moves to dismiss for lack of subject matter jurisdiction. Which of the following is the most accurate statement regarding the jurisdictional issue?",
+    "choices": [
+      "The federal court has subject matter jurisdiction because the contract was executed in New York, giving rise to federal question jurisdiction.",
+      "The federal court lacks subject matter jurisdiction because the amount in controversy does not exceed $100,000.",
+      "The federal court lacks subject matter jurisdiction because both parties are individuals and diversity jurisdiction requires a corporation.",
+      "The federal court has subject matter jurisdiction because complete diversity exists and the amount in controversy exceeds $75,000."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the federal court has subject matter jurisdiction due to complete diversity and an amount in controversy exceeding $75,000.",
+    "checksum": "843306ddb28ba54c4683cfe92b8db7ddc2849427f25347443aeef514719d4a1f",
+    "createdAt": 1755127562236,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127577531_aaxh2z1m1",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 9,
+    "stem": "In a federal district court, Plaintiff, a resident of State A, filed a lawsuit against Defendant 1, a corporation incorporated in State A, for breach of contract and against Defendant 2, a corporation incorporated in State B, for negligence. Defendant 1 filed a motion to dismiss for lack of personal jurisdiction, claiming that the court could not exercise jurisdiction over it due to its lack of sufficient contacts with State A, where the contract was formed. Meanwhile, Defendant 2 filed a motion to sever its case, arguing that the claims against it were unrelated to the claims against Defendant 1. Plaintiff seeks to join both defendants under Rule 20, asserting that they are part of the same transaction or occurrence. Which of the following is the most accurate determination regarding the joinder of the defendants?",
+    "choices": [
+      "The court should grant Defendant 1's motion to dismiss for lack of personal jurisdiction, thus preventing any joinder of claims against Defendant 2.",
+      "The court may allow the joinder of Defendant 2 but must sever the claims against Defendant 1 due to the lack of personal jurisdiction.",
+      "The court must grant the motion to sever since the claims against Defendant 1 and Defendant 2 do not arise out of the same transaction or occurrence.",
+      "The court must deny the motion to sever because both defendants are part of the same transaction or occurrence under Rule 20."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the court must deny the motion to sever because both defendants are part of the same transaction or occurrence under Rule 20.",
+    "checksum": "dc37db6ca81982ae24a6b9b63e8163c9758eea5f202293a3b9904188835dc3bb",
+    "createdAt": 1755127577531,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127586599_9d9ga9ktw",
+    "subject": "Civil Procedure",
+    "topic": "Rule 56",
+    "difficulty": 4,
+    "stem": "In a negligence lawsuit, Plaintiff claims Defendant's construction work caused a significant water leak in her home. Defendant moves for summary judgment, asserting that Plaintiff cannot prove a genuine dispute of material fact regarding causation because her expert witness’s report merely states that the leak 'could have' originated from the construction work. Plaintiff counters with testimony from a neighbor who observed the construction and noted that water started leaking shortly after it began. Which of the following is the most likely outcome of the summary judgment motion?",
+    "choices": [
+      "Summary judgment will be denied because Plaintiff's expert witness's report is sufficient to create a genuine dispute of material fact.",
+      "Summary judgment will be granted in favor of Defendant because the neighbor's testimony is hearsay and cannot be considered.",
+      "Summary judgment will be granted in favor of Defendant because Plaintiff's expert testimony is insufficient to establish causation.",
+      "Summary judgment will be denied because the neighbor's testimony creates a genuine dispute of material fact regarding causation."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that summary judgment will be denied because the neighbor's testimony creates a genuine dispute of material fact regarding causation.",
+    "checksum": "5864950baf43b3b4eb2aae888d7a7c1ace673b51ae5bfbcec0c743c26ff31ed1",
+    "createdAt": 1755127586599,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127599296_7cj9wtbcc",
+    "subject": "Civil Procedure",
+    "topic": "PJ",
+    "difficulty": 7,
+    "stem": "A national corporation, CorpX, is headquartered in State A and conducts substantial business across the United States, including a significant online retail operation. A consumer from State B, where CorpX has no physical presence, orders a product online. The product is defective and causes injuries to the consumer. The consumer files a lawsuit in State B against CorpX. CorpX moves to dismiss the case for lack of personal jurisdiction. Which of the following is the most likely outcome regarding the court's ability to exercise personal jurisdiction over CorpX?",
+    "choices": [
+      "The court will likely have personal jurisdiction over CorpX due to the effects of its conduct in State B, despite its lack of physical presence.",
+      "The court will lack personal jurisdiction over CorpX because the consumer did not establish that the injury arose directly from CorpX's activities in State B.",
+      "The court will lack personal jurisdiction over CorpX because the company has no physical presence in State B.",
+      "The court will likely have personal jurisdiction over CorpX because it purposefully availed itself of the market in State B through its online sales."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the court will likely have personal jurisdiction over CorpX due to its purposeful availment of the market in State B through online sales.",
+    "checksum": "40c0e06c5203f6a0cbc8a5c4d14a61ff95bd298fe8c1288d9f2a9f9bfb56beca",
+    "createdAt": 1755127599296,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127606890_yykqz51op",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 4,
+    "stem": "In a negligence lawsuit arising from a car accident, Plaintiff A sues Defendant B for damages. During discovery, Plaintiff A learns that Defendant B's vehicle collided with Plaintiff A's vehicle after being struck by Defendant C, who was driving recklessly. Plaintiff A seeks to amend the complaint to add Defendant C as a party. Which of the following statements is true regarding the joinder of Defendant C?",
+    "choices": [
+      "Plaintiff A must file a separate lawsuit against Defendant C because Defendant C's actions were independent of Defendant B's.",
+      "Plaintiff A cannot join Defendant C because the statute of limitations has expired on the claim against Defendant C.",
+      "Plaintiff A can join Defendant C as a necessary party because the claims arise from the same transaction or occurrence.",
+      "Plaintiff A can only join Defendant C if Defendant B consents to the joinder."
+    ],
+    "correctIndex": 2,
+    "explanation": "Plaintiff A can join Defendant C as a necessary party because the claims arise from the same transaction or occurrence.",
+    "checksum": "77345c72aea55ddbcd14b3fbf7e2cdb54ca188fe53474dc01a92602bccc022bc",
+    "createdAt": 1755127606890,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127619323_xbmk6hmfk",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 7,
+    "stem": "In a previous lawsuit, Plaintiff sued Defendant for breach of contract and lost. The court found that the contract was unenforceable due to lack of consideration. Subsequently, Plaintiff filed a new lawsuit against Defendant, this time claiming fraud in the inducement regarding the same contract. Defendant moves to dismiss the second lawsuit based on res judicata. Which of the following is the most likely outcome?",
+    "choices": [
+      "The court will deny Defendant's motion to dismiss because the fraud claim is a separate cause of action.",
+      "The court will grant Defendant's motion to dismiss because the fraud claim arises from the same transaction as the breach of contract claim.",
+      "The court will grant Defendant's motion to dismiss because the issue of consideration was already determined in the first lawsuit.",
+      "The court will deny Defendant's motion to dismiss because Plaintiff did not have a full and fair opportunity to litigate the fraud claim in the first lawsuit."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the court will grant Defendant's motion to dismiss because the fraud claim arises from the same transaction as the breach of contract claim.",
+    "checksum": "0be5a0e7f90823f2d79dd16f5fcbcd0f95530a7a2c711c38d1e691156b2d8fd4",
+    "createdAt": 1755127619323,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127633325_9qnmmsu3k",
+    "subject": "Civil Procedure",
+    "topic": "Venue",
+    "difficulty": 9,
+    "stem": "In a complex tort action involving multiple parties, Plaintiff, a resident of State A, sues Defendant, a company incorporated in State B with its principal place of business in State C, for negligence arising from an accident that occurred in State D. Additionally, Plaintiff joins a local contractor as a co-defendant, who is a resident of State D. The accident occurred while Plaintiff was on a business trip in State D. The contractor files a motion to dismiss for improper venue, arguing that the case should be transferred to State B, where Defendant is incorporated. Plaintiff argues that venue is proper in State D. Which of the following is the most accurate ruling on the motion to dismiss?",
+    "choices": [
+      "The motion to dismiss should be granted because the contractor's presence does not establish venue in State D.",
+      "The motion to dismiss should be granted because venue is improper in State D since Defendant is incorporated in State B.",
+      "The motion to dismiss should be denied, but the case should be transferred to State B since it is more convenient for the parties.",
+      "The motion to dismiss should be denied because venue is proper in State D due to the accident occurring there and the contractor's residency."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the motion to dismiss should be denied because venue is proper in State D due to the accident occurring there and the contractor's residency.",
+    "checksum": "3eb175acd8a006bba6220e5a57d778d734327d9dc1d24b28afdee484b11aa574",
+    "createdAt": 1755127633325,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127636286_brmcy6blt",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 5,
+    "stem": "In a diversity action in a federal court, a plaintiff from State A sues a defendant from State B for breach of contract. The contract was executed in State A, and the dispute over its terms arises under State A law. However, the federal court is located in State B, where the applicable statute of limitations for such claims is significantly shorter than that of State A. The federal judge is considering whether to apply the longer statute of limitations from State A or the shorter one from State B. Which statute should the court apply?",
+    "choices": [
+      "The court should apply the statute of limitations from State B because it is the forum state’s law.",
+      "The court should apply the statute of limitations from State B because the issue is procedural.",
+      "The court should apply the statute of limitations from State A because it is more favorable to the plaintiff.",
+      "The court should apply the statute of limitations from State A because it is the law governing the contract."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court should apply the statute of limitations from State B because it is the law of the forum state in a diversity case.",
+    "checksum": "927b21bb3d36a0abaf31a200b46f1e2d1db07731aa4660b7c133eb114d4caecd",
+    "createdAt": 1755127636286,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127653659_kqntadesw",
+    "subject": "Civil Procedure",
+    "topic": "Discovery",
+    "difficulty": 7,
+    "stem": "In a civil lawsuit alleging employment discrimination, the plaintiff seeks to discover internal communications from the defendant company regarding diversity training programs. The defendant claims that these communications are protected by the attorney-client privilege and the work product doctrine. The trial court rules that the communications are discoverable, reasoning that the privilege is waived because the company disclosed the information to non-attorneys. The defendant appeals. Which of the following is the most likely outcome of the appeal?",
+    "choices": [
+      "The appellate court will affirm the trial court's ruling because the defendant failed to demonstrate that the communications were made for the purpose of obtaining legal advice.",
+      "The appellate court will reverse the trial court's ruling because the work product doctrine protects documents prepared in anticipation of litigation, regardless of disclosure.",
+      "The appellate court will affirm the trial court's ruling because the attorney-client privilege is waived when communications are shared with third parties.",
+      "The appellate court will reverse the trial court's ruling because the defendant's disclosures to non-attorneys do not waive the attorney-client privilege in this context."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the appellate court will reverse the trial court's ruling because the defendant's disclosures to non-attorneys do not waive the attorney-client privilege in this context. The attorney-client privilege can still apply when communications are made to non-attorneys if those communications are intended to remain confidential and are related to legal advice.",
+    "checksum": "0f1d73119ff6fbb9a6432a26b15049f8930ebb4c4c802a3e8bf23310f76d183a",
+    "createdAt": 1755127653659,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127655171_8udj11cfx",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 5,
+    "stem": "In a prior lawsuit, Plaintiff A sued Defendant B for breach of contract and obtained a judgment in their favor. Subsequently, Plaintiff A filed a new lawsuit against Defendant B for fraud arising from the same set of facts that were underlying the breach of contract claim. Defendant B moves to dismiss the fraud claim based on res judicata. What is the likely outcome?",
+    "choices": [
+      "The court will grant the motion to dismiss because the fraud claim could have been raised in the prior lawsuit.",
+      "The court will deny the motion to dismiss because the fraud claim is a separate cause of action.",
+      "The court will grant the motion to dismiss because the fraud claim is barred by collateral estoppel.",
+      "The court will deny the motion to dismiss because the fraud claim involves different elements than the breach of contract claim."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court will grant the motion to dismiss because the fraud claim could have been raised in the prior lawsuit, thereby invoking the doctrine of res judicata.",
+    "checksum": "510515fb261ac738403f763ab675aca5af89620bc0c52ce9afe2654b2183e130",
+    "createdAt": 1755127655171,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127660864_opurbkd0l",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 9,
+    "stem": "In a federal district court, Plaintiff A sues Defendant B for breach of contract. During the proceedings, Plaintiff A discovers that Defendant B is not the only party potentially liable; specifically, Defendant C, who is not a party to the original action, allegedly induced B's breach. Plaintiff A seeks to amend the complaint to add Defendant C, asserting that the claims against both B and C arise from the same transaction or occurrence. However, Defendant B argues that the addition of Defendant C would destroy diversity jurisdiction since Defendant C is a citizen of the same state as Plaintiff A. Which of the following is the most accurate legal conclusion regarding Plaintiff A's ability to join Defendant C?",
+    "choices": [
+      "Plaintiff A may not join Defendant C because it would destroy diversity jurisdiction, and the court lacks subject matter jurisdiction over the amended claim.",
+      "Plaintiff A may join Defendant C only if the court determines that the joinder is necessary to grant complete relief among the parties.",
+      "Plaintiff A may join Defendant C, but only if the court allows the amendment before the trial date.",
+      "Plaintiff A may join Defendant C because the claims against both B and C arise from the same transaction or occurrence, and the amendment does not violate the rules of diversity jurisdiction."
+    ],
+    "correctIndex": 3,
+    "explanation": "Plaintiff A can join Defendant C because the claims arise from the same transaction, and the amendment does not violate diversity jurisdiction rules.",
+    "checksum": "5fb2e5b2c2f904cd0094d2a16d3af96e8db3ff9658e9f725321a089f5d465bfb",
+    "createdAt": 1755127660864,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127673825_d7n4rcc67",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 4,
+    "stem": "In a negligence action, Plaintiff sues Defendant for damages related to a car accident. During discovery, Plaintiff discovers that Defendant was also involved in a similar accident with another party, Party A, on the same day. Plaintiff seeks to amend the complaint to add Party A as a defendant, alleging that Party A's negligence contributed to the accident. Party A argues that it should not be joined because the claims are unrelated. What is the most likely outcome regarding the joinder of Party A?",
+    "choices": [
+      "Party A can be joined as a defendant because the claims arise from the same transaction or occurrence.",
+      "Party A can be joined as a defendant if the court finds that it will not unduly delay the proceedings.",
+      "Party A can be joined only if Plaintiff proves that Party A was negligent in the prior accident.",
+      "Party A cannot be joined because the claims are unrelated to Plaintiff's claim against Defendant."
+    ],
+    "correctIndex": 0,
+    "explanation": "Party A can be joined as a defendant because the claims arise from the same transaction or occurrence.",
+    "checksum": "0f99b2c85138dea9a2a4c9d08f9afb94411b5e30746a0527df7b5a22a6756ade",
+    "createdAt": 1755127673825,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127683220_sz2knw4xj",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 9,
+    "stem": "In a diversity action, Plaintiff (a resident of State A) sues Defendant (a resident of State B) in federal court under a federal question jurisdiction claim, alleging a violation of federal law. The parties also dispute a state law claim based on a tort that is governed by the law of State A. During pre-trial motions, Defendant moves to dismiss the state law claim for failure to state a claim under State A law, while simultaneously arguing that the federal court should apply State B’s tort law instead. The court must determine which law to apply. Which of the following is the most appropriate ruling for the court regarding the application of state law?",
+    "choices": [
+      "The court should apply State A law to the state law claim because it is the law of the forum state.",
+      "The court should apply federal common law to the state law claim as it involves a federal question.",
+      "The court should apply State A law to the state law claim because it is more substantive and relates to the plaintiff's home state.",
+      "The court should apply State B law to the state law claim because it is the law of the defendant's residence."
+    ],
+    "correctIndex": 0,
+    "explanation": "The court should apply State A law to the state law claim because it is the law of the forum state.",
+    "checksum": "a689cddf880ab9ab7787ee068d7a028c4990460d070b2704a319d5bb8519adfe",
+    "createdAt": 1755127683220,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127693060_a99rlhg2t",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 5,
+    "stem": "In a personal injury lawsuit, Plaintiff is suing Defendant for negligence after a car accident. During discovery, Plaintiff learns that Defendant's car had faulty brakes, which were manufactured by Company X. Plaintiff wants to join Company X as a defendant based on the theory of strict liability for the defective brakes. Which of the following statements regarding the joinder of Company X is correct?",
+    "choices": [
+      "Plaintiff can join Company X because the claims arise from the same transaction or occurrence as the original claim against Defendant.",
+      "Plaintiff cannot join Company X because the claims against Defendant and Company X do not share a common legal theory.",
+      "Plaintiff cannot join Company X because the statute of limitations for the claim against Company X has expired.",
+      "Plaintiff can join Company X only if the court has personal jurisdiction over Company X."
+    ],
+    "correctIndex": 0,
+    "explanation": "Plaintiff can join Company X because the claims arise from the same transaction or occurrence as the original claim against Defendant, satisfying the requirements for permissive joinder under Rule 20.",
+    "checksum": "626f87b012abbf482161043c0d01c859144eb41e17e4737be56363577e26eba3",
+    "createdAt": 1755127693060,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127703469_o6mkfwpr5",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 8,
+    "stem": "In a tort action, Plaintiff A sues Defendant B for negligence after a car accident. During discovery, Plaintiff A discovers that Defendant B was under the influence of a third party's drug, which he had obtained from Manufacturer C. Plaintiff A wants to add Manufacturer C as a defendant, claiming that the drug manufacturer bears some liability. Which of the following options correctly addresses whether Plaintiff A can join Manufacturer C in the lawsuit?",
+    "choices": [
+      "Plaintiff A cannot join Manufacturer C because the claims against Defendant B and Manufacturer C are not part of the same transaction or occurrence.",
+      "Plaintiff A can join Manufacturer C only if Manufacturer C is an indispensable party under Rule 19.",
+      "Plaintiff A can join Manufacturer C only if the statutes of limitations have not expired for claims against Manufacturer C.",
+      "Plaintiff A can join Manufacturer C because the claims against both Defendant B and Manufacturer C arise from the same transaction and occurrence."
+    ],
+    "correctIndex": 3,
+    "explanation": "Plaintiff A can join Manufacturer C due to the same transaction or occurrence rule under Rule 20.",
+    "checksum": "7f5b3b078b4578341a7466460eeb3825b8a17eed48a704d7a952604e54d03a22",
+    "createdAt": 1755127703469,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127704799_rdks8u9kk",
+    "subject": "Constitutional Law",
+    "topic": "Standing",
+    "difficulty": 3,
+    "stem": "A state environmental agency enacted a regulation limiting the amount of pollutants that can be discharged into a river. An environmental advocacy group, concerned about the river's health, wants to challenge the regulation in court. However, the group does not own property near the river and has not shown any direct harm from the regulation. Which of the following statements about the group's standing to sue is correct?",
+    "choices": [
+      "The group has standing because it represents the interests of the public in environmental protection.",
+      "The group lacks standing because it has not demonstrated a direct injury from the regulation.",
+      "The group lacks standing because it cannot prove that the regulation directly affects its members.",
+      "The group has standing because it can assert the rights of the river as a natural entity."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the group lacks standing because it has not demonstrated a direct injury from the regulation.",
+    "checksum": "3b8b7854f6acbd0e55defce8094eb42c12c0c8be45bfffaed8ec01fc651c215e",
+    "createdAt": 1755127704799,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127710336_ib3ax8fvm",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 5,
+    "stem": "Plaintiff, a citizen of Texas, sues Defendant, a citizen of California, in a federal district court for breach of contract, claiming $75,000 in damages. Defendant moves to dismiss for lack of subject matter jurisdiction. Which of the following is the most accurate statement regarding the federal court's subject matter jurisdiction in this case?",
+    "choices": [
+      "The court has subject matter jurisdiction under diversity jurisdiction because the amount in controversy exceeds $75,000 and the parties are citizens of different states.",
+      "The court lacks subject matter jurisdiction because the Defendant is a citizen of California and cannot be sued in a federal court.",
+      "The court has subject matter jurisdiction under federal question jurisdiction because the breach of contract involves a federal statute.",
+      "The court lacks subject matter jurisdiction because the Plaintiff's claim does not exceed $100,000."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court has subject matter jurisdiction under diversity jurisdiction, as the parties are from different states and the amount in controversy exceeds $75,000.",
+    "checksum": "2526090a0f302b0ba594bfa25906b431cc8b92c84a79e08f55463f47a1468ae2",
+    "createdAt": 1755127710336,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127718941_3rq0f7arb",
+    "subject": "Constitutional Law",
+    "topic": "Commerce Clause",
+    "difficulty": 1,
+    "stem": "A state passes a law that prohibits the sale of out-of-state vegetables to protect local farmers. A farmer from another state challenges this law, arguing it violates the Commerce Clause of the U.S. Constitution. What is the likely outcome of the challenge?",
+    "choices": [
+      "The law is constitutional because it does not affect the flow of interstate commerce.",
+      "The law is unconstitutional because it discriminates against interstate commerce.",
+      "The law is constitutional because states have the right to protect local industries.",
+      "The law is unconstitutional because it imposes an undue burden on interstate commerce."
+    ],
+    "correctIndex": 1,
+    "explanation": "The law is unconstitutional because it discriminates against interstate commerce.",
+    "checksum": "fea2368826d2ff510bcc8106a93a42727bcf5fb4888c86f29cec5786464f96b7",
+    "createdAt": 1755127718941,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127723672_pihxsszlu",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 9,
+    "stem": "In a diversity action in a federal court, Plaintiff, a resident of State A, sues Defendant, a resident of State B, for breach of contract. The contract was formed in State A and included a clause specifying that disputes would be governed by State A law. However, State B has a statute that limits damages for breach of contract to $100,000, while State A does not impose such a cap. Plaintiff seeks to recover $200,000 in damages. Before trial, Defendant moves to dismiss the case, arguing that the federal court should apply State B law under the Erie doctrine. What should the court decide regarding the applicable law?",
+    "choices": [
+      "The court should apply State B law because the breach occurred in State B, and the law of the place of breach governs the contract.",
+      "The court should apply State A law because the contract specifies it governs disputes, and the Erie doctrine favors the enforcement of contractual terms.",
+      "The court should apply State A law because applying State B's damage cap would violate the substantive rights of the Plaintiff under the Erie doctrine.",
+      "The court should apply State B law because the federal court must apply the law of the forum state, which is State B, including its statute limiting damages."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the court should apply State A law because the contract specifies it governs disputes, and the Erie doctrine favors the enforcement of contractual terms.",
+    "checksum": "d4e5a175823c0c112a10e6b333581521935773fd9236766163e954f42e744ccc",
+    "createdAt": 1755127723672,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127728376_f5en394qh",
+    "subject": "Civil Procedure",
+    "topic": "PJ",
+    "difficulty": 5,
+    "stem": "A New York corporation, headquartered in New York, enters into a contract with a California resident for the sale of goods. The contract specifies that the goods will be delivered to a warehouse in California. After a dispute arises regarding the delivery, the California resident sues the corporation in California state court. The corporation has never conducted business in California and has no physical presence there. Which of the following is true regarding the personal jurisdiction of the California court over the New York corporation?",
+    "choices": [
+      "The California court does not have personal jurisdiction over the New York corporation because it lacks sufficient minimum contacts with California.",
+      "The California court has personal jurisdiction over the New York corporation due to the long-arm statute allowing jurisdiction over out-of-state defendants.",
+      "The California court has personal jurisdiction over the New York corporation because the contract was performed in California.",
+      "The California court has personal jurisdiction over the New York corporation based on the corporation's foreseeable connection to California through the contract."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the California court has personal jurisdiction over the New York corporation based on the corporation's foreseeable connection to California through the contract.",
+    "checksum": "279f4777b7428066715c9c9963dac389fbae2fe8931440ac777f37bafb59ac6b",
+    "createdAt": 1755127728376,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127735144_bellwq7o3",
+    "subject": "Constitutional Law",
+    "topic": "Takings",
+    "difficulty": 1,
+    "stem": "A city plans to build a new public park on land that is currently owned by a private company. The city offers to purchase the land at fair market value, but the company refuses to sell. The city then decides to use its power of eminent domain to take the land for the park. Which of the following is true regarding this situation?",
+    "choices": [
+      "The city can only take the land if it has a specific plan for how the park will be developed.",
+      "The city must provide just compensation to the company for the land taken.",
+      "The city can take the land without compensating the company because it is for a public purpose.",
+      "The city cannot take the land because the company refused to sell."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the city must provide just compensation to the company for the land taken, as required by the Fifth Amendment.",
+    "checksum": "3041fffa18296e27ea06dad7ca6053131337b1182691e2d188d47f9992db85ed",
+    "createdAt": 1755127735144,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127742345_nik08lsgo",
+    "subject": "Civil Procedure",
+    "topic": "PJ",
+    "difficulty": 7,
+    "stem": "A New York resident, Alice, filed a lawsuit in federal court in California against a California corporation, Beta Co., for breach of contract. Alice had entered into a contract with Beta Co. while attending a conference in California, where she negotiated the terms in person. Beta Co. delivered goods to Alice in New York, and the contract specified New York law would govern disputes. Beta Co. has no offices, employees, or physical presence in New York. Can the federal court in California exercise personal jurisdiction over Beta Co.?",
+    "choices": [
+      "No, because Alice's claim arises from her contacts with California, not Beta Co.'s.",
+      "No, because Beta Co. lacks sufficient minimum contacts with New York since it does not conduct business there.",
+      "Yes, because Beta Co. has sufficient minimum contacts with New York due to the contract's governing law.",
+      "Yes, because the contract was negotiated in California, establishing personal jurisdiction under the 'effects test.'"
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that personal jurisdiction cannot be exercised over Beta Co. due to insufficient minimum contacts with New York.",
+    "checksum": "b57f74821bd3008dac58d84daccec90cbe65e6bc831fb479f167466cfd8d21f3",
+    "createdAt": 1755127742345,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127746754_xdvxrsvv7",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 4,
+    "stem": "In a personal injury lawsuit, Plaintiff A sues Defendant B for negligence after a car accident. Plaintiff A also wants to include Plaintiff C, who was a passenger in A's car and suffered injuries, as a co-plaintiff. Additionally, Defendant B wants to bring in Defendant D, the owner of the other car involved in the accident, as a third-party defendant, claiming that D's negligence contributed to the accident. Which of the following statements is correct regarding the joinder of parties?",
+    "choices": [
+      "Plaintiff A cannot join Plaintiff C as a co-plaintiff because their claims are not related to the same legal issue.",
+      "Plaintiff A can join Plaintiff C as a co-plaintiff because their claims arise from the same transaction or occurrence.",
+      "Defendant B can only bring in Defendant D if D was directly involved in the negligence claim against B.",
+      "Defendant B cannot join Defendant D as a third-party defendant because D is not a necessary party to the case."
+    ],
+    "correctIndex": 1,
+    "explanation": "Plaintiff A can join Plaintiff C as a co-plaintiff because both claims arise from the same transaction or occurrence, satisfying the requirements for joinder under Rule 20.",
+    "checksum": "ff00e55d4dfbfdc4a52886c6b8b295a33f7f53e30615d01dd9c7fabe9d22a09e",
+    "createdAt": 1755127746754,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127755674_r3unb7bcl",
+    "subject": "Constitutional Law",
+    "topic": "Speech",
+    "difficulty": 3,
+    "stem": "During a public rally, a speaker criticized the government for its handling of a recent natural disaster, calling the officials 'incompetent and corrupt.' Later, the government issued a statement condemning the speech, claiming it incited unrest and violated a local ordinance against hate speech. The speaker argues that their speech is protected under the First Amendment. Which of the following is the most accurate conclusion about the speaker's rights?",
+    "choices": [
+      "The speech is protected due to the speaker's right to express opinions about government officials.",
+      "The speech is protected as it addresses public concern and does not incite imminent lawless action.",
+      "The speech is not protected because it violates the local ordinance against hate speech.",
+      "The speech is not protected because it could potentially lead to public disorder."
+    ],
+    "correctIndex": 1,
+    "explanation": "The speech is protected as it addresses public concern and does not incite imminent lawless action.",
+    "checksum": "0c851f8155e0d08782862c3ec44e81f3d37e4740f855d923ce7e91550219893d",
+    "createdAt": 1755127755674,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127766405_g6hbgy5as",
+    "subject": "Civil Procedure",
+    "topic": "SMJ",
+    "difficulty": 7,
+    "stem": "A federal court is tasked with determining whether it has subject matter jurisdiction over a case brought by a New York corporation against a California citizen. The corporation claims damages of $500,000 for breach of contract. The California defendant argues that the court lacks jurisdiction because the amount in controversy does not meet the federal threshold and that diversity jurisdiction is not applicable as the parties are not completely diverse. Additionally, the defendant contends that the corporation's principal place of business is in California, which would negate diversity. Which of the following statements is correct regarding the federal court's subject matter jurisdiction?",
+    "choices": [
+      "The federal court lacks subject matter jurisdiction because both parties are citizens of California, negating complete diversity.",
+      "The federal court has subject matter jurisdiction based on a federal question since the case involves a breach of contract under federal law.",
+      "The federal court has subject matter jurisdiction based on diversity of citizenship because the amount in controversy exceeds $75,000 and the parties are diverse.",
+      "The federal court lacks subject matter jurisdiction because the amount in controversy does not exceed $500,000, which is below the federal threshold for diversity cases."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that the federal court has subject matter jurisdiction based on diversity of citizenship because the amount in controversy exceeds $75,000 and the parties are diverse.",
+    "checksum": "e893cbe6bcf45deced126056017727158c0c99db90ca417a6e4d08450f52c76b",
+    "createdAt": 1755127766405,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127770504_ijnmptokm",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 5,
+    "stem": "In a negligence action, Plaintiff files a lawsuit against Defendant A for an accident involving Plaintiff's vehicle. Subsequently, Plaintiff seeks to add Defendant B, the manufacturer of a part in the vehicle that allegedly malfunctioned, to the lawsuit. Defendant B argues that the addition is improper because it does not arise from the same transaction or occurrence as Plaintiff's claim against Defendant A. What should the court decide regarding the joinder of Defendant B?",
+    "choices": [
+      "The court should allow the joinder of Defendant B only if Plaintiff can prove that Defendant B was negligent in the manufacturing process.",
+      "The court should deny the joinder of Defendant B because it would complicate the case with unrelated issues.",
+      "The court should allow the joinder of Defendant B because both claims arise from the same transaction or occurrence involving the vehicle accident.",
+      "The court should deny the joinder of Defendant B because the claims against Defendant A and Defendant B are not related."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that the court should allow the joinder of Defendant B because both claims arise from the same transaction or occurrence involving the vehicle accident.",
+    "checksum": "84f811bdb04bc5c67497f64a2cdbfc98216a342b615f76231a5b16b605e04aee",
+    "createdAt": 1755127770504,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127774445_yvh1s06xb",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 1,
+    "stem": "A city council in Greenfield decides to prohibit all public demonstrations in city parks. This decision is made after several complaints about noise and litter from previous demonstrations. A local activist group plans to challenge this ordinance, arguing that it violates their First Amendment rights. Which of the following statements best describes whether the city council's action constitutes state action for purposes of the Constitution?",
+    "choices": [
+      "The city council's ordinance constitutes state action only if it was enacted with discriminatory intent.",
+      "The city council's ordinance does not constitute state action because it is based on complaints from citizens.",
+      "The city council's ordinance constitutes state action because it is a law enacted by a government entity.",
+      "The city council's ordinance does not constitute state action because it only regulates private conduct."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that the city council's ordinance constitutes state action as it is a law enacted by a governmental body.",
+    "checksum": "6b6c156b50f380c0ec7f0da0bd74f59c90b7495d87d6545a5c225829e1692849",
+    "createdAt": 1755127774445,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127789335_qrgkae977",
+    "subject": "Civil Procedure",
+    "topic": "Venue",
+    "difficulty": 8,
+    "stem": "A corporation, headquartered in California, is sued by a former employee for wrongful termination in a federal district court. The employee resides in Texas but was employed remotely while working for the corporation. The employee files the lawsuit in the federal district court in Texas, claiming that venue is proper under 28 U.S.C. § 1391(b)(1) because the corporation is a defendant. The corporation moves to dismiss the case for improper venue, arguing that it should have been filed in California. Which of the following correctly states the outcome of the corporation's motion?",
+    "choices": [
+      "The motion to dismiss will be denied because the employee's residence in Texas allows venue to be proper there under § 1391(b)(2).",
+      "The motion to dismiss will be denied because the employee's claims arise from activities that occurred in both California and Texas, making venue proper in either jurisdiction.",
+      "The motion to dismiss will be granted because the corporation is headquartered in California, establishing venue there under § 1391(b)(1).",
+      "The motion to dismiss will be granted because the employee's remote work does not establish venue in Texas under § 1391(b)(1) or (b)(2)."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the motion to dismiss will be denied because the employee's claims arise from activities that occurred in both California and Texas, making venue proper in either jurisdiction.",
+    "checksum": "985a5571a7ff975078149be60dc9f74aca54d7d3ff6f30cdfa2eed3f13a343a7",
+    "createdAt": 1755127789335,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127792797_ohl0efydk",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 4,
+    "stem": "In a personal injury lawsuit, Plaintiff A sues Defendant B for damages arising from a car accident. During discovery, Plaintiff A learns that Defendant B was working for Company C at the time of the accident and that Company C's negligence may also have contributed to the incident. Plaintiff A seeks to amend the complaint to add Company C as a defendant. However, Company C argues it should not be joined because it has a separate insurance policy and the issues of liability will complicate the trial. Which of the following is the most accurate statement regarding the amendment to add Company C as a defendant?",
+    "choices": [
+      "The court will likely permit the amendment because Company C's liability is related to Defendant B's conduct.",
+      "The court will likely deny the amendment because Company C has a separate insurance policy.",
+      "The court will likely permit the amendment only if Plaintiff A can prove that Company C was primarily at fault.",
+      "The court will likely deny the amendment because it complicates the trial with additional issues."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court will likely permit the amendment because Company C's liability is related to Defendant B's conduct, satisfying the requirements for joinder.",
+    "checksum": "cd27dd201dfb53aa6c4942fcdc05e4c223ce8067f3939fd5b4ce20ea1128ad53",
+    "createdAt": 1755127792797,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127794018_ht37g4mhw",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 2,
+    "stem": "A city council in a small town decides to prohibit all outdoor music events in public parks, citing noise complaints from nearby residents. A local band, known for its outdoor performances, challenges this decision in court, arguing that the ban violates their First Amendment rights. Which of the following is the most likely outcome regarding the applicability of the First Amendment to the city council's actions?",
+    "choices": [
+      "The First Amendment does not apply because the city council's action is a private decision, not state action.",
+      "The First Amendment applies because the city council is a government entity implementing a law.",
+      "The First Amendment applies only if the city council's ban is found to be content-based rather than content-neutral.",
+      "The First Amendment does not apply because the band is performing in a public park, which is not a traditional public forum."
+    ],
+    "correctIndex": 1,
+    "explanation": "The First Amendment applies because the city council is a government entity implementing a law.",
+    "checksum": "33ba25015a52dc0b36c69198d605b679e7ad0b77b6c51adc6af483d4083fe10b",
+    "createdAt": 1755127794018,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127810261_67xamb637",
+    "subject": "Civil Procedure",
+    "topic": "PJ",
+    "difficulty": 8,
+    "stem": "A New York corporation, incorporated and having its principal place of business in New York, has a longstanding contract with a California-based supplier for the provision of raw materials. After a dispute arises over the quality of the materials supplied, the New York corporation files a lawsuit against the supplier in New York state court. The supplier, who has never set foot in New York and conducts all its business in California, moves to dismiss the case for lack of personal jurisdiction. Which of the following statements is most accurate regarding the court's ability to exercise personal jurisdiction over the supplier?",
+    "choices": [
+      "The court can exercise personal jurisdiction over the supplier under the theory of specific jurisdiction since the dispute arises directly from the supplier's contract with a New York corporation.",
+      "The court can exercise personal jurisdiction over the supplier because the contract was made with a New York corporation, establishing a sufficient connection to New York.",
+      "The court cannot exercise personal jurisdiction over the supplier because the supplier lacks sufficient minimum contacts with New York, as it has no physical presence or business conducted there.",
+      "The court can exercise personal jurisdiction over the supplier based on the concept of general jurisdiction due to the supplier's continuous and systematic business dealings in California."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court can exercise personal jurisdiction over the supplier under the theory of specific jurisdiction since the dispute arises directly from the supplier's contract with a New York corporation.",
+    "checksum": "36a68afd2f1a4660a45cb69d1c9f4b004667d4bb95e38eda9eac2db6a400903c",
+    "createdAt": 1755127810261,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127811448_kbck4rh4a",
+    "subject": "Constitutional Law",
+    "topic": "Due Process",
+    "difficulty": 2,
+    "stem": "A city ordinance prohibits individuals from feeding stray animals in public parks, citing health and safety concerns. Sarah, a local resident, frequently feeds stray cats in a park near her home. After being warned several times, she is fined for violating the ordinance. Sarah challenges the fine, arguing that the ordinance violates her right to due process. Which of the following best describes the outcome of Sarah's challenge?",
+    "choices": [
+      "Sarah will likely prevail because the ordinance does not provide adequate notice of prohibited conduct.",
+      "Sarah will likely not prevail because the ordinance serves a legitimate government interest in public health.",
+      "Sarah will likely not prevail because she was warned before being fined, which satisfies due process requirements.",
+      "Sarah will likely prevail because the ordinance is overly broad and infringes on her freedom of speech."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that Sarah will likely prevail because the ordinance does not provide adequate notice of prohibited conduct. Due process requires that individuals have fair notice of what constitutes unlawful behavior.",
+    "checksum": "8c010b53baf0d2625074b4e79e004a4a882540cc806341a253172ada4f9f2359",
+    "createdAt": 1755127811448,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127815031_csdleosas",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 5,
+    "stem": "A plaintiff from State A files a lawsuit in federal court against a defendant from State B, claiming negligence under State A law. The federal court sits in diversity jurisdiction. The plaintiff seeks to apply a state law that sets a higher standard of care than the federal common law. The defendant argues that the federal court should apply federal common law instead of State A law. What should the federal court do?",
+    "choices": [
+      "Apply federal common law as the prevailing rule since the case involves a federal court.",
+      "Apply State A law only if it does not conflict with federal interests.",
+      "Apply State A law because it is the substantive law that governs the case under the Erie doctrine.",
+      "Apply federal common law because federal courts have the authority to create uniform rules in diversity cases."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is to apply State A law because under the Erie doctrine, federal courts sitting in diversity must apply the substantive law of the state in which they sit.",
+    "checksum": "030f67766a3663782aaafc3505f06c203973fad301b5c7cc03963cb567c23196",
+    "createdAt": 1755127815031,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127828315_hgluexlfm",
+    "subject": "Constitutional Law",
+    "topic": "Equal Protection",
+    "difficulty": 4,
+    "stem": "A city enacts a zoning ordinance that prohibits all group homes for individuals with disabilities in residential neighborhoods, while allowing similar facilities for other unrelated groups. A non-profit organization challenges the ordinance, arguing it violates the Equal Protection Clause of the Fourteenth Amendment. What is the most likely outcome of this challenge?",
+    "choices": [
+      "The ordinance is unconstitutional because it discriminates against individuals with disabilities.",
+      "The ordinance is unconstitutional only if the organization can prove intentional discrimination.",
+      "The ordinance is constitutional because zoning regulations are given broad deference by courts.",
+      "The ordinance is constitutional because it serves a legitimate governmental interest in maintaining neighborhood character."
+    ],
+    "correctIndex": 0,
+    "explanation": "The ordinance is unconstitutional because it discriminates against individuals with disabilities.",
+    "checksum": "db0921a6c7b5ea05d14d0b3c18b9139b99f6c30a46869bc5d3e6d21bfa1aba89",
+    "createdAt": 1755127828315,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127831485_gqoiyjkgx",
+    "subject": "Constitutional Law",
+    "topic": "Speech",
+    "difficulty": 2,
+    "stem": "During a public rally, a speaker criticized the government's handling of a recent policy, calling for immediate reforms. Following this, the police issued a permit revocation, claiming the speech could incite violence. The speaker argues that this action violates his First Amendment rights. Which of the following is the most accurate legal conclusion regarding the speaker's rights?",
+    "choices": [
+      "The speaker's First Amendment rights are violated because the speech did not incite imminent lawless action.",
+      "The speaker's First Amendment rights are not violated because the speech could reasonably incite violence.",
+      "The speaker's First Amendment rights are not violated because the police have broad discretion to regulate speech.",
+      "The speaker's First Amendment rights are violated because all public speech is protected under the First Amendment."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the speaker's First Amendment rights are violated because the speech did not incite imminent lawless action.",
+    "checksum": "60fcf94205720207fea93f4e97a792fe8a408fb7bbf75eb419dbcc335a5234cf",
+    "createdAt": 1755127831485,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127833416_i6x072p4r",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 5,
+    "stem": "In a previous lawsuit, Plaintiff A sued Defendant B for breach of contract and lost. The court ruled that B did not breach the contract because A failed to perform their obligations first. Later, A brings a new lawsuit against B, this time alleging fraud related to the same transaction. Can A successfully litigate this fraud claim?",
+    "choices": [
+      "Yes, if A can prove that the fraud claim involves new evidence that was not available in the first case.",
+      "No, because the fraud claim could have been raised in the prior breach of contract suit.",
+      "No, because A is barred from relitigating any issue that was or could have been raised in the first lawsuit.",
+      "Yes, because the fraud claim is based on different legal theories than the breach of contract claim."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that A cannot bring the fraud claim because it could have been raised in the prior lawsuit, invoking the principle of claim preclusion.",
+    "checksum": "f2f6ca039601c39e84f3b127e65ddaae25bfb72a0e5e29a5630a557adaaa1ac7",
+    "createdAt": 1755127833416,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127833561_9causgiii",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 7,
+    "stem": "A federal court in a diversity case is considering whether to apply a state statute that limits damages in personal injury claims. The statute, enacted by State X, provides that no plaintiff can recover more than $250,000 in noneconomic damages. The plaintiff, a resident of State Y, argues that the statute violates the constitutional right to a jury trial as guaranteed by the Seventh Amendment. The defendant, a corporation based in State X, contends that the statute is a substantive law that should be applied under the Erie doctrine. Which of the following is the most accurate application of the Erie doctrine in this scenario?",
+    "choices": [
+      "The federal court should apply the state statute only if it does not conflict with federal common law principles.",
+      "The federal court should refuse to apply the state statute as it violates the Seventh Amendment's guarantee of a jury trial.",
+      "The federal court can choose to apply the state statute but must also consider whether it serves a significant state interest.",
+      "The federal court should apply the state statute because it is substantive law that governs the parties' rights."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the federal court should apply the state statute because it is substantive law that governs the parties' rights under the Erie doctrine.",
+    "checksum": "942e003408e91531bd06574f9709a77891400888e1cbfabfabecf73a1f844e80",
+    "createdAt": 1755127833561,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127842193_ud206yy38",
+    "subject": "Civil Procedure",
+    "topic": "Discovery",
+    "difficulty": 4,
+    "stem": "In a personal injury lawsuit, Plaintiff served Defendant with interrogatories asking for all documents related to any prior accidents involving the same type of machinery that caused the injury. Defendant objected, arguing that the request was overly broad and not relevant. Plaintiff then filed a motion to compel, asserting that the prior accidents were relevant to show a pattern of negligence. The court granted the motion to compel but limited the request to accidents from the past five years. After complying, Defendant produced documents but withheld a report from a safety inspection that occurred three years prior, claiming it was protected by the work product doctrine. Plaintiff argues the report is discoverable. Which of the following statements is correct?",
+    "choices": [
+      "The report is not discoverable because it is irrelevant to the claims in the case.",
+      "The report is not discoverable because it was prepared in anticipation of litigation and is protected by the work product doctrine.",
+      "The report is discoverable because it relates to the same subject matter and is not a core work product.",
+      "The report is discoverable because the court limited the discovery to documents from the past five years."
+    ],
+    "correctIndex": 2,
+    "explanation": "The report is discoverable because it relates to the same subject matter and is not a core work product.",
+    "checksum": "04f25fda842831128e0435d72994326a03fa99f694dc6f72bd40be3630995469",
+    "createdAt": 1755127842193,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127849123_xpxntmtj0",
+    "subject": "Constitutional Law",
+    "topic": "Standing",
+    "difficulty": 5,
+    "stem": "A state enacted a law imposing a strict limit on the number of children a family can have, claiming it is necessary for public health and resource management. Jane, a resident of the state, is concerned that this law violates her constitutional rights. She wishes to challenge the law in court. However, she has not been fined or penalized under the law, nor has she had any children that would put her in violation of it. Which of the following statements best describes Jane's standing to sue?",
+    "choices": [
+      "Jane does not have standing because she has not suffered an actual injury or been affected by the law.",
+      "Jane has standing because the law is likely to affect her future decisions regarding family planning.",
+      "Jane has standing because she has a personal stake in the outcome of the case based on her concerns about her rights.",
+      "Jane does not have standing because her concerns are based on hypothetical future scenarios."
+    ],
+    "correctIndex": 0,
+    "explanation": "Jane does not have standing to sue because she has not suffered an actual injury under the law.",
+    "checksum": "e001b536a77a3b92b3c1a0dc985f213034adfa82a03ae4aba1586d3cba8af9aa",
+    "createdAt": 1755127849123,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127850679_k9j7pvcre",
+    "subject": "Constitutional Law",
+    "topic": "Speech",
+    "difficulty": 1,
+    "stem": "During a public rally, Sarah held up a sign that read, 'End Corruption Now!' and made a speech criticizing local government officials for their handling of public funds. A police officer approached her and asked her to take the sign down, claiming it was causing a disturbance. Sarah refused and continued to speak. Which of the following statements is true regarding Sarah's right to express her opinion at the rally?",
+    "choices": [
+      "Sarah's speech is not protected because it criticizes government officials.",
+      "The police officer can legally arrest Sarah for disturbing the peace due to her speech.",
+      "Sarah has a constitutional right to express her opinion without interference, as her speech is protected under the First Amendment.",
+      "Sarah can be required to take down her sign because it is considered 'offensive speech' under the First Amendment."
+    ],
+    "correctIndex": 2,
+    "explanation": "Sarah's speech is protected under the First Amendment as it expresses her opinion on a matter of public concern.",
+    "checksum": "010f3623b3b1eee25cdc59a682726aa702744f42308d9909113336c97c8fff57",
+    "createdAt": 1755127850679,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127856535_erxbjicbr",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 8,
+    "stem": "In a diversity action, Plaintiff, a resident of State A, sues Defendant, a resident of State B, in the federal district court for State A. The case involves a tort claim where the applicable state law provides for a different standard of care than the federal common law. The federal court, applying the Erie doctrine, must decide whether to apply the state law or the federal standard. Which of the following statements is the most accurate regarding the federal court's obligation under the Erie doctrine?",
+    "choices": [
+      "The federal court must apply the federal common law standard of care because the case arises under federal question jurisdiction.",
+      "The federal court must apply the state law standard of care because it directly relates to substantive rights.",
+      "The federal court may choose to apply either standard if it finds that both standards yield the same outcome.",
+      "The federal court may apply the federal common law standard of care if it determines that the state law is not sufficiently developed."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the federal court must apply the state law standard of care because it directly relates to substantive rights.",
+    "checksum": "6288c34582c852e632647b488586a81c304d0da8388c20cee96215c9a588b901",
+    "createdAt": 1755127856535,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127873726_k1ibymim0",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 4,
+    "stem": "A private university, which receives significant federal funding and has a close relationship with the state, expels a student for making a controversial speech on campus that criticized university administration. The student sues the university, claiming a violation of his First Amendment rights. Which of the following statements most accurately reflects the state action doctrine as it applies to this case?",
+    "choices": [
+      "The university's expulsion of the student does not constitute state action because it is a private institution and not subject to the First Amendment.",
+      "The university's expulsion of the student is state action because the state actively endorsed the university's policy on speech.",
+      "The university's expulsion of the student constitutes state action because it is performing a function traditionally reserved to the state.",
+      "The university's expulsion of the student constitutes state action due to its receipt of federal funding, which creates a nexus with the state."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that the university's expulsion constitutes state action because it is performing a function traditionally reserved to the state.",
+    "checksum": "890d3694ff96199bc66b71647b07d6ceeb4986734ccdfcef3a9e8119664e3cd3",
+    "createdAt": 1755127873726,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127875980_hlwl061xs",
+    "subject": "Constitutional Law",
+    "topic": "Standing",
+    "difficulty": 1,
+    "stem": "Emily, a resident of State A, is concerned about a new law passed by the state legislature that restricts the sale of certain types of books. She believes this law violates the First Amendment rights of authors and readers. Emily decides to file a lawsuit against the state to challenge the law. Which of the following best describes Emily's standing to sue?",
+    "choices": [
+      "Emily does not have standing because her concern is merely hypothetical.",
+      "Emily has standing because she is a taxpayer and the law uses taxpayer funds.",
+      "Emily does not have standing because she is not an author or a bookseller.",
+      "Emily has standing because she is a resident of State A and is directly affected by the law."
+    ],
+    "correctIndex": 3,
+    "explanation": "Emily has standing because she is a resident of State A and is directly affected by the law.",
+    "checksum": "746ca14acbe6bc02372ef916205cdd26b7f218c7ac966ebae90a73c6306797e6",
+    "createdAt": 1755127875980,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127879417_zss2ghd0v",
+    "subject": "Civil Procedure",
+    "topic": "Erie",
+    "difficulty": 8,
+    "stem": "In a diversity action, Plaintiff, a resident of State A, filed a tort claim against Defendant, a resident of State B, in federal court. The claim arises from an automobile accident that occurred in State A. Under State A law, the statute of limitations for tort claims is two years, while State B has a three-year statute. Plaintiff filed the complaint one year after the accident. In determining whether to apply the statute of limitations from State A or State B, which of the following is the most appropriate choice for the federal court under the Erie Doctrine?",
+    "choices": [
+      "The court should apply the federal common law statute of limitations, which is one year.",
+      "The court should apply State B's three-year statute of limitations, as it favors the defendant.",
+      "The court should apply State A's statute of limitations, but allow for equitable tolling based on Plaintiff's circumstances.",
+      "The court should apply State A's two-year statute of limitations, as it is the forum state's law."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the court should apply State A's two-year statute of limitations, as it is the forum state's law.",
+    "checksum": "afc02bbeda2f057164338be515206fb4738ab5e4e0d8ed84af4b9977ee4b697c",
+    "createdAt": 1755127879417,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127891500_42w3e1txb",
+    "subject": "Constitutional Law",
+    "topic": "Commerce Clause",
+    "difficulty": 6,
+    "stem": "A state enacts a law that prohibits the importation of goods made with certain materials in an effort to protect local industries. A manufacturer from another state challenges the law, arguing that it violates the Commerce Clause. The state argues that the law is a valid exercise of its police powers to protect local economic interests. Which of the following is the most likely outcome if the law is challenged in federal court?",
+    "choices": [
+      "The law is constitutional as it regulates purely local commerce and does not affect interstate trade.",
+      "The law is constitutional as it falls within the state's police powers to regulate local economic interests.",
+      "The law is unconstitutional because it imposes an undue burden on interstate commerce.",
+      "The law is unconstitutional because it discriminates against interstate commerce."
+    ],
+    "correctIndex": 3,
+    "explanation": "The law is unconstitutional because it discriminates against interstate commerce, violating the Commerce Clause.",
+    "checksum": "54bc31666f6b4f09b5213e08d40d9bea1db615f277167f1ee5af6ed5c7fc5e4e",
+    "createdAt": 1755127891500,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127893405_mzozy5ota",
+    "subject": "Constitutional Law",
+    "topic": "Standing",
+    "difficulty": 1,
+    "stem": "Maria, a resident of State A, believes that a new law passed by the State A legislature violates the First Amendment rights of its citizens. However, Maria has not been personally affected by the law and has not filed any complaint about it. Which of the following statements about Maria's standing to challenge the law in court is correct?",
+    "choices": [
+      "Maria does not have standing because she has not suffered any direct injury from the law.",
+      "Maria has standing because she is a citizen concerned about the law's impact on First Amendment rights.",
+      "Maria has standing because she resides in the state where the law was enacted.",
+      "Maria has standing to challenge the law based on her belief that it is unconstitutional."
+    ],
+    "correctIndex": 0,
+    "explanation": "Maria does not have standing because she has not suffered any direct injury from the law.",
+    "checksum": "c38c65d935dab1534151cc5d2520db4e313beae83e7a1ab2a14a81944375fd25",
+    "createdAt": 1755127893405,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127898220_6updtp7mg",
+    "subject": "Civil Procedure",
+    "topic": "Joinder",
+    "difficulty": 7,
+    "stem": "In a federal court, Plaintiff A files a lawsuit against Defendant B for breach of contract. In the same complaint, Plaintiff A seeks to join Defendant C, who allegedly contributed to the breach by providing faulty materials. Defendant C moves to dismiss the claims against them, arguing that they are not a necessary party under Rule 19. What should the court decide regarding the joinder of Defendant C?",
+    "choices": [
+      "Defendant C should not be joined because they are not indispensable to the resolution of the dispute between Plaintiff A and Defendant B.",
+      "Defendant C should be dismissed from the lawsuit as their presence would destroy diversity jurisdiction.",
+      "Defendant C should be joined as a necessary party because their presence is required for complete relief.",
+      "Defendant C should be joined because the claims against them arise out of the same transaction or occurrence as those against Defendant B."
+    ],
+    "correctIndex": 3,
+    "explanation": "Defendant C should be joined because the claims arise from the same transaction or occurrence.",
+    "checksum": "fff8c59921fba96b8bb0fd7433119e5b7db565f8588640cd9a83c778af1cd939",
+    "createdAt": 1755127898220,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127909720_7fhqh9jn3",
+    "subject": "Constitutional Law",
+    "topic": "Takings",
+    "difficulty": 1,
+    "stem": "A city enacts a new zoning law that prohibits any construction on a vacant lot owned by John. The law is aimed at preserving green space in the area. John is unable to build a house on his lot due to this regulation. Which of the following is true regarding John's situation?",
+    "choices": [
+      "John can challenge the zoning law on the grounds that it violates his right to due process.",
+      "John has not experienced a taking because the zoning law is a valid exercise of police power.",
+      "John has a valid claim for inverse condemnation because the city did not compensate him.",
+      "John has experienced a taking because he is unable to use his property."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that John has not experienced a taking because the zoning law is a valid exercise of police power.",
+    "checksum": "e92157c61c4f7cd61afbd77a9c14d429e350b8a965ec5589cfb5d236c993c206",
+    "createdAt": 1755127909720,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127911022_pkn5bf6lg",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 6,
+    "stem": "In a small town, a private homeowners' association (HOA) enforces a rule prohibiting the display of political signs in front yards. Jane, a resident, displays a sign supporting a political candidate, and the HOA fines her for violating the rule. Jane argues that the HOA's action constitutes state action, thus violating her First Amendment rights. The HOA counters that it is a private entity and its rules do not constitute state action. Which of the following is the most accurate interpretation of whether the HOA's enforcement of its rule constitutes state action?",
+    "choices": [
+      "The HOA's enforcement of its rule constitutes state action because it is a quasi-governmental entity regulating speech.",
+      "The HOA's enforcement does not constitute state action as it is a private organization acting independently of the state.",
+      "The HOA's rule constitutes state action because it was created with the approval of local government regulations.",
+      "The HOA's enforcement of its rule constitutes state action because it effectively serves a public function by regulating political speech."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that the HOA's enforcement does not constitute state action as it is a private organization acting independently of the state.",
+    "checksum": "fd215452c020e3d77534426844130213482db6cd52400a8b96de31f509f2703f",
+    "createdAt": 1755127911022,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127923699_maag0y71v",
+    "subject": "Civil Procedure",
+    "topic": "Preclusion",
+    "difficulty": 8,
+    "stem": "In a prior case, Plaintiff A sued Defendant B for breach of contract and won. The court ruled that the contract was valid and enforceable. Subsequently, Plaintiff A attempts to sue Defendant B again, this time claiming fraud related to the same contract, asserting that Defendant B knowingly misrepresented material facts. Defendant B moves to dismiss the fraud claim based on claim preclusion. Which of the following is the most accurate outcome regarding Defendant B's motion?",
+    "choices": [
+      "Defendant B's motion to dismiss will be granted only if the fraud claim could have been raised in the original breach of contract suit.",
+      "Defendant B's motion to dismiss will be denied because the fraud claim arises from a separate cause of action.",
+      "Defendant B's motion to dismiss will be granted because the fraud claim is precluded by the prior judgment.",
+      "Defendant B's motion to dismiss will be denied because the fraud claim is based on different facts than the breach of contract claim."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that Defendant B's motion to dismiss will be denied because the fraud claim arises from a separate cause of action.",
+    "checksum": "8078add124ac9aa58b9cf183afcd4fdee6e1d7b7b94b76ab6009db2e20003ff0",
+    "createdAt": 1755127923699,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127927642_d04hr03l8",
+    "subject": "Constitutional Law",
+    "topic": "Equal Protection",
+    "difficulty": 2,
+    "stem": "A city passes a zoning ordinance that restricts the number of homes that can be built in a predominantly Latino neighborhood, stating it is to preserve the 'character' of the area. A local advocacy group challenges the ordinance, claiming it violates the Equal Protection Clause of the Fourteenth Amendment. Which of the following is the most likely outcome of the challenge?",
+    "choices": [
+      "The ordinance is upheld because zoning regulations are generally given deference by courts.",
+      "The ordinance is upheld because the city has a legitimate interest in preserving neighborhood character.",
+      "The ordinance is struck down as it violates the Equal Protection Clause but only if it is proven to have a discriminatory intent.",
+      "The ordinance is struck down because it discriminates against a racial group without a compelling state interest."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the ordinance is struck down because it discriminates against a racial group without a compelling state interest.",
+    "checksum": "32a9d7bd343efa6f328063a60078fa80b820474b83484cfe8a9740c91b9480f2",
+    "createdAt": 1755127927643,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127928716_co8adb1zl",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 5,
+    "stem": "A private university, which receives substantial funding from the state, enacts a policy that prohibits students from forming political clubs on campus. A group of students, seeking to form a political club, argues that this policy violates their First Amendment rights. Considering the university's funding source and its policy, which of the following is the most accurate assessment regarding state action?",
+    "choices": [
+      "The university's policy is not state action because it is a private institution, regardless of state funding.",
+      "The university's policy is state action due to the significant public funding, which transforms its activities into state action.",
+      "The university's policy is not state action because it does not involve a traditional governmental function.",
+      "The university's policy is state action because it is a public institution receiving state funds."
+    ],
+    "correctIndex": 1,
+    "explanation": "The correct answer is that state funding transforms the university's activities into state action, implicating the First Amendment.",
+    "checksum": "fd2639f6ec65b41723e239b9c882bbffcb10b9584141431e0e06940aeff024c1",
+    "createdAt": 1755127928716,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127930770_m0fuz390f",
+    "subject": "Civil Procedure",
+    "topic": "Venue",
+    "difficulty": 9,
+    "stem": "A corporation headquartered in State A, with branches in States B and C, is sued by a former employee for wrongful termination in State D, where the employee resides. The corporation moves to dismiss the case for improper venue, arguing that the case should be brought in State A, where its headquarters are located. The employee contends that venue is appropriate in State D due to personal jurisdiction and the location of the events leading to the termination. Additionally, the employee asserts that the corporation’s branch in State C is also a proper venue. Which of the following is the most accurate determination regarding the proper venue for this case?",
+    "choices": [
+      "Venue is proper in both State C and State D, as the corporation has a branch in State C and the employee resides in State D.",
+      "Venue is only proper in State A because the corporation's headquarters is there, despite the employee's claims.",
+      "Venue is proper in State D because the employee resides there and the events occurred within that state.",
+      "Venue is improper in State D because the corporation's headquarters in State A is the only proper venue."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that venue is proper in State D due to the employee's residence and the events related to the termination occurring there.",
+    "checksum": "b9ab923d5885c1fafcfc1ebc25d8e772ee411110740eb046f5ec04ef0668a627",
+    "createdAt": 1755127930770,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127942567_mn913agf6",
+    "subject": "Constitutional Law",
+    "topic": "Due Process",
+    "difficulty": 1,
+    "stem": "Maria, a high school student, was suspended for three days after being accused of cheating on an exam. The school principal made this decision without giving Maria a chance to explain her side of the story or hold a hearing. Which constitutional principle was most likely violated in this situation?",
+    "choices": [
+      "Maria did not receive due process before being suspended.",
+      "Maria was not allowed to appeal the principal's decision.",
+      "Maria was not given adequate notice of the charges against her.",
+      "Maria was denied the right to free speech."
+    ],
+    "correctIndex": 0,
+    "explanation": "Maria's due process rights were violated because she was suspended without a fair hearing.",
+    "checksum": "048880b6d8ac7120c59b3c3a29fd2cb7500d96802ea01cef7368540cd7d283de",
+    "createdAt": 1755127942567,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127945862_8rc76mfyw",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 5,
+    "stem": "A private university, which receives significant funding from the state, decides to expel a student for protesting the university's policies on campus. The student claims that the expulsion violates her First Amendment rights. Which of the following statements most accurately describes the state action issue in this scenario?",
+    "choices": [
+      "The university is a state actor only if the expulsion was mandated by a state law.",
+      "The university is not a state actor because it is a private institution, regardless of its state funding.",
+      "The university is a state actor because its actions are closely intertwined with state functions.",
+      "The university is a state actor because it receives state funding and is subject to state regulations."
+    ],
+    "correctIndex": 3,
+    "explanation": "The correct answer is that the university is a state actor because it receives state funding and is subject to state regulations, which can create state action.",
+    "checksum": "f6e46b726a42a18f51a23a5da9ab40dfb0b224e5c986da1ae17a944c2f817483",
+    "createdAt": 1755127945862,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127947172_puj2eflmu",
+    "subject": "Constitutional Law",
+    "topic": "State Action",
+    "difficulty": 8,
+    "stem": "A local government enacted an ordinance prohibiting the operation of food trucks within 500 feet of any brick-and-mortar restaurant. The ordinance was purportedly aimed at protecting the local dining industry. A food truck operator, who primarily served low-income neighborhoods, challenged the ordinance in federal court, arguing that it violated the Equal Protection Clause and was a form of state action. Which of the following is the most accurate analysis under the state action doctrine?",
+    "choices": [
+      "The ordinance is state action because it serves a discriminatory purpose against the food truck industry, which is protected under the Equal Protection Clause.",
+      "The ordinance does not constitute state action since it only regulates private conduct and does not involve any government involvement.",
+      "The ordinance constitutes state action because it was enacted by a local government entity and directly impacts private businesses.",
+      "The ordinance does not constitute state action as it is a valid exercise of the local government's police powers to promote public welfare."
+    ],
+    "correctIndex": 2,
+    "explanation": "The correct answer is that the ordinance constitutes state action because it was enacted by a local government entity and directly impacts private businesses.",
+    "checksum": "69b2142a1c943f91780f3152e18464cd4a2ce921eac47874129bf89bad4ddb92",
+    "createdAt": 1755127947172,
+    "usedCount": 0
+  },
+  {
+    "id": "pool_1755127954144_0bkml3evt",
+    "subject": "Civil Procedure",
+    "topic": "Rule 56",
+    "difficulty": 7,
+    "stem": "A city council voted to deny a permit for a new construction project based on the potential environmental impact, citing a local ordinance. The construction company filed a lawsuit claiming the council's decision was arbitrary and capricious, and sought summary judgment under Rule 56, asserting that the council had not provided sufficient evidence to support its decision. In response, the council produced a report from an environmental expert. The company contends that the report does not establish a genuine dispute of material fact. Which of the following is the most likely outcome regarding the motion for summary judgment?",
+    "choices": [
+      "The court will deny the motion for summary judgment because the council's expert report creates a genuine dispute of material fact regarding the environmental impact.",
+      "The court will deny the motion for summary judgment based on the principle of deference to local government decisions in land use matters.",
+      "The court will grant the motion for summary judgment because the city council failed to provide adequate evidence to support its decision.",
+      "The court will grant the motion for summary judgment because the local ordinance does not allow for judicial review of the council's decision."
+    ],
+    "correctIndex": 0,
+    "explanation": "The correct answer is that the court will deny the motion for summary judgment because the council's expert report creates a genuine dispute of material fact.",
+    "checksum": "559a70c1f2302352439585623c2837916fa9894ef01762851678236e4ed5eeb4",
+    "createdAt": 1755127954144,
+    "usedCount": 0
+  }
+]
