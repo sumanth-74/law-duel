@@ -19,6 +19,7 @@ import streakManager from './services/streakManager.js';
 import asyncDuels from './services/async.js';
 import { dailyCasefileService } from './services/dailyCasefileService';
 import { emailTrackingService } from './services/emailTrackingService';
+import { chatbotService } from './services/chatbotService.js';
 
 // Initialize bot practice system
 import { BotPractice } from './services/botPractice.js';
@@ -1118,6 +1119,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error exporting email list:", error);
       res.status(500).json({ message: "Failed to export email list" });
+    }
+  });
+
+  // === CHATBOT ROUTES ===
+  
+  // Send message to AI study companion
+  app.post('/api/chatbot/message', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { message, context } = req.body;
+      
+      if (!message || typeof message !== 'string' || message.trim().length === 0) {
+        return res.status(400).json({ message: 'Message is required' });
+      }
+      
+      const response = await chatbotService.generateResponse(userId, message.trim(), context || {});
+      res.json(response);
+    } catch (error: any) {
+      console.error('Error generating chatbot response:', error);
+      res.status(500).json({ message: error.message || 'Failed to generate response' });
+    }
+  });
+  
+  // Clear conversation history
+  app.delete('/api/chatbot/history', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      chatbotService.clearHistory(userId);
+      res.json({ success: true, message: 'Conversation history cleared' });
+    } catch (error: any) {
+      console.error('Error clearing chatbot history:', error);
+      res.status(500).json({ message: 'Failed to clear history' });
+    }
+  });
+  
+  // Get suggested questions for current subject
+  app.get('/api/chatbot/suggestions', requireAuth, async (req: any, res) => {
+    try {
+      const subject = req.query.subject as string;
+      const suggestions = chatbotService.getSuggestedQuestions(subject);
+      res.json({ suggestions });
+    } catch (error: any) {
+      console.error('Error getting chatbot suggestions:', error);
+      res.status(500).json({ message: 'Failed to get suggestions' });
+    }
+  });
+  
+  // Get study tips for a specific subject
+  app.get('/api/chatbot/study-tips/:subject', requireAuth, async (req: any, res) => {
+    try {
+      const { subject } = req.params;
+      const tips = chatbotService.getStudyTips(subject);
+      res.json({ subject, tips });
+    } catch (error: any) {
+      console.error('Error getting study tips:', error);
+      res.status(500).json({ message: 'Failed to get study tips' });
     }
   });
 

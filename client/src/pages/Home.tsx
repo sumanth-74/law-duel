@@ -15,6 +15,7 @@ import AsyncInbox from '@/components/AsyncInbox';
 import AsyncMatch from '@/components/AsyncMatch';
 import BotPractice from '@/components/BotPractice';
 import LawDuelLogo from '@/components/LawDuelLogo';
+import { ChatbotButton } from '@/components/ChatbotButton';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -926,6 +927,12 @@ export default function Home() {
             }}
           />
         )}
+        
+        {/* Floating Chatbot Button */}
+        <ChatbotButton 
+          variant="floating"
+          currentSubject={gameSettings.subject !== 'Mixed Questions' ? gameSettings.subject : undefined}
+        />
       </div>
     </div>
   );
