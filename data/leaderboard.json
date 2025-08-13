@@ -13,21 +13,21 @@
     "id": "bot_robert_williams",
     "username": "RobertWilliams",
     "displayName": "Robert Williams",
-    "level": 20,
-    "points": 3700,
+    "level": 19,
+    "points": 3751,
     "totalWins": 67,
-    "totalLosses": 6,
-    "lastActive": "2025-08-12T05:37:12.072Z"
+    "totalLosses": 7,
+    "lastActive": "2025-08-13T01:23:10.923Z"
   },
   {
     "id": "bot_victoria_chen",
     "username": "VictoriaChen",
     "displayName": "Victoria Chen",
-    "level": 19,
-    "points": 3450,
-    "totalWins": 62,
+    "level": 18,
+    "points": 3509,
+    "totalWins": 63,
     "totalLosses": 8,
-    "lastActive": "2025-08-12T21:01:53.969Z"
+    "lastActive": "2025-08-13T01:28:10.924Z"
   },
   {
     "id": "bot_sarah_patel",
@@ -64,10 +64,10 @@
     "username": "AlexandraCarter",
     "displayName": "Alexandra Carter",
     "level": 15,
-    "points": 2850,
-    "totalWins": 47,
+    "points": 2887,
+    "totalWins": 48,
     "totalLosses": 8,
-    "lastActive": "2025-08-12T23:30:51.724Z"
+    "lastActive": "2025-08-13T01:23:10.923Z"
   },
   {
     "id": "bot_david_torres",

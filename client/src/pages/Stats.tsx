@@ -1,63 +1,25 @@
 import { useState } from 'react';
-import { useLocation, Link } from 'wouter';
-import { PlayerStats } from '@/components/PlayerStats';
-import { PublicLeaderboard } from '@/components/PublicLeaderboard';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Search, User, Trophy } from 'lucide-react';
+import { MasteryProgress } from '@/components/MasteryProgress';
 import { useAuth } from '@/hooks/useAuth';
+import { ArrowLeft, Trophy, TrendingUp, BarChart3, Clock } from 'lucide-react';
+import { Link } from 'wouter';
+import LawDuelLogo from '@/components/LawDuelLogo';
 
 export default function Stats() {
-  const [, setLocation] = useLocation();
   const { user } = useAuth();
-  const [searchUsername, setSearchUsername] = useState('');
-  const [viewingUserId, setViewingUserId] = useState<string | null>(null);
-
-  // Get userId from URL or use current user
-  const urlUserId = window.location.pathname.split('/')[2];
-  const currentUserId = viewingUserId || urlUserId || user?.id;
-  const isOwnProfile = currentUserId === user?.id;
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchUsername.trim()) return;
-
-    try {
-      // Search for user by username
-      const response = await fetch('/api/auth/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ username: searchUsername.trim() })
-      });
-
-      if (response.ok) {
-        const searchedUser = await response.json();
-        setViewingUserId(searchedUser.id);
-        setLocation(`/stats/${searchedUser.id}`);
-      } else {
-        // User not found - could show toast here
-        console.error('User not found');
-      }
-    } catch (error) {
-      console.error('Search failed:', error);
-    }
-  };
+  const [activeTab, setActiveTab] = useState('mastery');
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <Card className="bg-black/40 border-purple-500/30 max-w-md">
-          <CardContent className="p-8 text-center">
-            <User className="w-12 h-12 mx-auto mb-4 text-purple-400" />
-            <h3 className="text-xl font-bold text-purple-200 mb-2">Login Required</h3>
-            <p className="text-purple-400 mb-4">Please log in to view player statistics.</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center">
+        <Card className="bg-black/40 border-purple-500/20">
+          <CardContent className="p-6">
+            <p className="text-purple-300">Please log in to view your stats</p>
             <Link href="/">
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white">
-                Go to Home
-              </Button>
+              <Button className="mt-4">Return Home</Button>
             </Link>
           </CardContent>
         </Card>
@@ -66,90 +28,167 @@ export default function Stats() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <div className="border-b border-purple-500/20 bg-black/20 backdrop-blur-sm">
-        <div className="container max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm" className="text-purple-300 hover:text-purple-200">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Game
-                </Button>
-              </Link>
-              <h1 className="font-cinzel text-2xl font-bold text-purple-200">
-                {isOwnProfile ? 'Your Statistics' : 'Player Statistics'}
-              </h1>
-            </div>
-
-            {/* Search for other players */}
-            <form onSubmit={handleSearch} className="flex gap-2">
-              <Input
-                placeholder="Search by username..."
-                value={searchUsername}
-                onChange={(e) => setSearchUsername(e.target.value)}
-                className="w-56 bg-slate-800 border-purple-500/30 text-slate-200 placeholder:text-slate-500"
-                data-testid="input-search-player"
-              />
-              <Button 
-                type="submit" 
-                size="sm" 
-                variant="outline" 
-                className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
-                data-testid="button-search-player"
-              >
-                <Search className="w-4 h-4" />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
+      <div className="container mx-auto p-6 max-w-7xl">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Link href="/home">
+              <Button variant="ghost" size="sm" className="text-purple-300 hover:text-purple-200">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Game
               </Button>
-            </form>
+            </Link>
+            <LawDuelLogo className="h-8" />
+          </div>
+          <div className="text-right">
+            <p className="text-purple-300 font-cinzel text-lg">{user.displayName || user.username}</p>
+            <p className="text-purple-400 text-sm">Level {user.level} • {user.points} Points</p>
           </div>
         </div>
+
+        {/* Main Content */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid grid-cols-4 w-full max-w-2xl mx-auto">
+            <TabsTrigger value="mastery" className="flex items-center gap-2">
+              <Trophy className="w-4 h-4" />
+              Mastery
+            </TabsTrigger>
+            <TabsTrigger value="performance" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Performance
+            </TabsTrigger>
+            <TabsTrigger value="history" className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              History
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="mastery" className="space-y-6">
+            <MasteryProgress />
+          </TabsContent>
+
+          <TabsContent value="performance" className="space-y-6">
+            <Card className="bg-black/40 border-purple-500/20">
+              <CardHeader>
+                <CardTitle>Performance Metrics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Overall Accuracy</p>
+                    <p className="text-2xl font-bold text-purple-300">
+                      {user.totalQuestionsAnswered > 0 
+                        ? ((user.totalCorrectAnswers / user.totalQuestionsAnswered) * 100).toFixed(1) + '%'
+                        : 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Win Rate</p>
+                    <p className="text-2xl font-bold text-purple-300">
+                      {(user.totalWins + user.totalLosses) > 0
+                        ? ((user.totalWins / (user.totalWins + user.totalLosses)) * 100).toFixed(1) + '%'
+                        : 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Current Streak</p>
+                    <p className="text-2xl font-bold text-purple-300">{user.currentOverallStreak}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Daily Streak</p>
+                    <p className="text-2xl font-bold text-purple-300">🔥 {user.dailyStreak}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-black/40 border-purple-500/20">
+              <CardHeader>
+                <CardTitle>Recent Performance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {user.recentAttempts?.slice(0, 10).map((attempt: any, i: number) => (
+                    <div key={i} className="flex items-center justify-between p-2 rounded bg-purple-500/5">
+                      <div className="flex items-center gap-3">
+                        <span className={`text-2xl ${attempt.correct ? '✅' : '❌'}`} />
+                        <div>
+                          <p className="text-sm font-medium">{attempt.subject}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(attempt.timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="history" className="space-y-6">
+            <Card className="bg-black/40 border-purple-500/20">
+              <CardHeader>
+                <CardTitle>Game History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Match history coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <Card className="bg-black/40 border-purple-500/20">
+              <CardHeader>
+                <CardTitle>Advanced Analytics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium mb-3">Time Analysis</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Total Hours Played</span>
+                        <span className="font-medium">{user.totalHoursPlayed?.toFixed(1) || '0'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Avg. Session Length</span>
+                        <span className="font-medium">Coming soon</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Most Active Time</span>
+                        <span className="font-medium">Coming soon</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-3">Progress Metrics</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Subjects Mastered</span>
+                        <span className="font-medium">{user.subjectsMastered || 0}/7</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Average Daily XP</span>
+                        <span className="font-medium">{user.dailyXpEarned || 0}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Total XP Earned</span>
+                        <span className="font-medium">{user.totalXp?.toLocaleString() || 0}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-
-      {/* Stats Content */}
-      {currentUserId ? (
-        <PlayerStats 
-          userId={currentUserId} 
-          isOwnProfile={isOwnProfile}
-        />
-      ) : (
-        <div className="container max-w-6xl mx-auto p-6">
-          <Tabs defaultValue="browse" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6 bg-slate-800 border-purple-500/30">
-              <TabsTrigger 
-                value="browse" 
-                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-                data-testid="tab-browse-players"
-              >
-                <Trophy className="w-4 h-4 mr-2" />
-                Browse Players
-              </TabsTrigger>
-              <TabsTrigger 
-                value="search" 
-                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-                data-testid="tab-search-player"
-              >
-                <Search className="w-4 h-4 mr-2" />
-                Search Player
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="browse">
-              <PublicLeaderboard />
-            </TabsContent>
-
-            <TabsContent value="search">
-              <Card className="bg-black/40 border-purple-500/20 max-w-md mx-auto">
-                <CardContent className="p-8 text-center">
-                  <User className="w-12 h-12 mx-auto mb-4 text-purple-400" />
-                  <h3 className="text-xl font-bold text-purple-200 mb-2">Search for a Player</h3>
-                  <p className="text-purple-400 mb-4">Enter a username in the search box above to view their statistics.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-      )}
     </div>
   );
 }

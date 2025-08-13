@@ -241,6 +241,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get mastery progress for the current user
+  app.get("/api/mastery/progress", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Get all subject stats for this user
+      const subjectStats = await storage.getSubjectStats(userId);
+      
+      // Map MBE subjects to stats
+      const MBE_SUBJECTS = [
+        "Civil Procedure",
+        "Constitutional Law", 
+        "Contracts",
+        "Criminal Law/Procedure",
+        "Evidence",
+        "Real Property",
+        "Torts"
+      ];
+
+      const formattedStats = MBE_SUBJECTS.map(subject => {
+        const stats = subjectStats.find(s => s.subject === subject);
+        return {
+          subject,
+          correctAnswers: stats?.correctAnswers || 0,
+          questionsAnswered: stats?.questionsAnswered || 0,
+          currentDifficultyLevel: stats?.currentDifficultyLevel || 1,
+          highestDifficultyReached: stats?.highestDifficultyReached || 1,
+          masteryPoints: stats?.masteryPoints || 0,
+          hoursPlayed: stats?.hoursPlayed || 0,
+        };
+      });
+
+      // Calculate subjects mastered (15,000+ correct answers)
+      const subjectsMastered = formattedStats.filter(s => s.correctAnswers >= 15000).length;
+      const hasAchievedVictory = subjectsMastered >= 7;
+
+      const response = {
+        overallStats: {
+          totalCorrectAnswers: user.totalCorrectAnswers || 0,
+          totalQuestionsAnswered: user.totalQuestionsAnswered || 0,
+          totalHoursPlayed: user.totalHoursPlayed || 0,
+          subjectsMastered,
+          hasAchievedVictory,
+          victoryDate: user.victoryDate,
+        },
+        subjectStats: formattedStats,
+      };
+
+      res.json(response);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to fetch mastery progress", error: error.message });
+    }
+  });
+
   // Update user profile
   app.patch("/api/users/:id", requireAuth, async (req: any, res) => {
     try {

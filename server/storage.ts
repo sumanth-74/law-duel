@@ -1,4 +1,4 @@
-import { users, matches, questions, type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion } from "@shared/schema";
+import { users, matches, questions, playerSubjectStats, type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, notInArray } from "drizzle-orm";
 import bcrypt from "bcrypt";
@@ -174,6 +174,14 @@ export class DatabaseStorage implements IStorage {
       .where(sql`${matches.player1Id} = ${userId} OR ${matches.player2Id} = ${userId}`)
       .orderBy(desc(matches.createdAt))
       .limit(limit);
+  }
+
+  // Get subject stats for mastery tracking
+  async getSubjectStats(userId: string): Promise<any[]> {
+    return await db
+      .select()
+      .from(playerSubjectStats)
+      .where(eq(playerSubjectStats.userId, userId));
   }
 
   // Question methods

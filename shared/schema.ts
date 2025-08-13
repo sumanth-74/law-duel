@@ -56,6 +56,12 @@ export const users = pgTable("users", {
     subject: string;
   }>>().default([]),
   
+  // Victory tracking - true when all subjects reach Supreme (15,000+ correct each)
+  hasAchievedVictory: boolean("has_achieved_victory").notNull().default(false),
+  victoryDate: timestamp("victory_date"),
+  totalHoursPlayed: real("total_hours_played").notNull().default(0),
+  subjectsMastered: integer("subjects_mastered").notNull().default(0), // Count of subjects at Supreme level
+  
   createdAt: timestamp("created_at").notNull().defaultNow(),
   lastLoginAt: timestamp("last_login_at"),
 });
@@ -87,7 +93,7 @@ export const questions = pgTable("questions", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-// Player stats per subject
+// Player stats per subject - Deep Mastery Tracking
 export const playerSubjectStats = pgTable("player_subject_stats", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull(),
@@ -97,13 +103,25 @@ export const playerSubjectStats = pgTable("player_subject_stats", {
   currentStreak: integer("current_streak").notNull().default(0),
   isProvisional: boolean("is_provisional").notNull().default(true), // true until 20+ attempts
   
-  // Subject Mastery System (0-1250 points, Mastery I-X)
-  masteryPoints: integer("mastery_points").notNull().default(0),
-  masteryLevel: integer("mastery_level").notNull().default(0), // 0-10 (I-X)
+  // Deep Mastery System - tracks progression to 15,000+ correct answers
+  masteryPoints: integer("mastery_points").notNull().default(0), // Total correct weighted by difficulty
+  currentDifficultyLevel: integer("current_difficulty_level").notNull().default(1), // 1-10
+  highestDifficultyReached: integer("highest_difficulty_reached").notNull().default(1),
+  
+  // Detailed tracking per difficulty level
+  correctByDifficulty: jsonb("correct_by_difficulty").$type<Record<string, number>>().default({}),
+  attemptsByDifficulty: jsonb("attempts_by_difficulty").$type<Record<string, number>>().default({}),
+  
+  // Progression metrics
+  hoursPlayed: real("hours_played").notNull().default(0),
+  averageTimePerQuestion: real("avg_time_per_question").notNull().default(0),
+  lastMilestone: integer("last_milestone").notNull().default(0), // Last mastery threshold reached
+  
   lastDecayDate: timestamp("last_decay_date").defaultNow(),
   recentAttempts: jsonb("recent_attempts").$type<Array<{
     timestamp: string;
     correct: boolean;
+    difficulty: number;
   }>>().default([]),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -202,9 +220,41 @@ export const LEVEL_TITLES = [
   "Archon of Evidence", "Chancellor of Claims", "Warden of Writs", "Keeper of Precedent", "Legend of the Bar"
 ] as const;
 
-// Mastery Thresholds (0-1250 points for Mastery 0-X)
-export const MASTERY_THRESHOLDS = [0, 80, 170, 270, 380, 500, 630, 770, 920, 1080, 1250] as const;
-export const MASTERY_NUMERALS = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] as const;
+// Deep Mastery System - Each subject requires thousands of correct answers at increasing difficulty
+export const MASTERY_LEVELS = {
+  NOVICE: { min: 0, max: 99, title: "Novice", requiredCorrect: 0 },
+  APPRENTICE: { min: 100, max: 249, title: "Apprentice", requiredCorrect: 100 },
+  PRACTITIONER: { min: 250, max: 499, title: "Practitioner", requiredCorrect: 250 },
+  JOURNEYMAN: { min: 500, max: 999, title: "Journeyman", requiredCorrect: 500 },
+  EXPERT: { min: 1000, max: 1999, title: "Expert", requiredCorrect: 1000 },
+  MASTER: { min: 2000, max: 3499, title: "Master", requiredCorrect: 2000 },
+  GRANDMASTER: { min: 3500, max: 5999, title: "Grandmaster", requiredCorrect: 3500 },
+  SAGE: { min: 6000, max: 9999, title: "Sage", requiredCorrect: 6000 },
+  LEGEND: { min: 10000, max: 14999, title: "Legend", requiredCorrect: 10000 },
+  SUPREME: { min: 15000, max: Infinity, title: "Supreme Advocate", requiredCorrect: 15000 }
+} as const;
+
+// Difficulty progression - questions get harder as you advance
+export const DIFFICULTY_LEVELS = {
+  INTRO: { level: 1, multiplier: 1.0, minCorrect: 0 },
+  BASIC: { level: 2, multiplier: 1.2, minCorrect: 50 },
+  INTERMEDIATE: { level: 3, multiplier: 1.5, minCorrect: 150 },
+  ADVANCED: { level: 4, multiplier: 2.0, minCorrect: 400 },
+  EXPERT: { level: 5, multiplier: 2.5, minCorrect: 800 },
+  MASTER: { level: 6, multiplier: 3.0, minCorrect: 1500 },
+  LEGENDARY: { level: 7, multiplier: 4.0, minCorrect: 3000 },
+  MYTHIC: { level: 8, multiplier: 5.0, minCorrect: 5000 },
+  TRANSCENDENT: { level: 9, multiplier: 7.0, minCorrect: 8000 },
+  DIVINE: { level: 10, multiplier: 10.0, minCorrect: 12000 }
+} as const;
+
+// Victory condition - must achieve Supreme in all 7 MBE subjects
+export const VICTORY_REQUIREMENTS = {
+  subjectsRequired: 7, // All MBE subjects
+  masteryLevelRequired: 15000, // Supreme level per subject
+  totalQuestionsRequired: 105000, // 15k × 7 subjects minimum
+  estimatedHours: 1000 // Roughly 1000 hours to complete
+} as const;
 
 // Daily Questions Table
 export const dailyQuestions = pgTable("daily_questions", {
