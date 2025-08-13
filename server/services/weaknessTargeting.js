@@ -1,6 +1,6 @@
 // Weakness targeting service - ensures 3/5 questions target weak areas
 import { progressService } from '../progress.js';
-import { normalizeLabel, SUBJECTS } from '../taxonomy.js';
+import { normalizeLabel, getSubtopicsForSubject, SUBJECTS } from '../taxonomy.js';
 
 // Get questions targeting player's weaknesses
 export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
@@ -22,7 +22,7 @@ export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
   // If no weak areas in this subject, use all subtopics
   if (targetSubtopics.length === 0 && subject && subject !== 'Mixed Questions') {
     const normalizedSubject = normalizeLabel(subject);
-    const subtopics = SUBJECTS[normalizedSubject] || [];
+    const subtopics = getSubtopicsForSubject(normalizedSubject);
     targetSubtopics = subtopics.map(st => ({
       subject: normalizedSubject,
       subtopic: st,
@@ -68,7 +68,7 @@ export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
     }
     
     const normalizedSubject = normalizeLabel(selectedSubject);
-    const subtopics = SUBJECTS[normalizedSubject] || [];
+    const subtopics = getSubtopicsForSubject(normalizedSubject);
     
     // Try to pick an unused subtopic
     const availableSubtopics = subtopics.filter(st => 
