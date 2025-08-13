@@ -1,1 +1,356 @@
-{}
+{
+  "Con Law": [
+    {
+      "qid": "fresh_openai_1755099865551_bafecf05",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A state legislature passes a law that prohibits the sale of any product that is not manufactured within the state, arguing it is necessary to protect local businesses. A national retailer challenges the law, claiming it violates the Commerce Clause of the Constitution. Which of the following statements is most accurate regarding the constitutionality of the state law?",
+      "choices": [
+        "The law is constitutional if it serves a legitimate local purpose and does not impose an undue burden on interstate commerce.",
+        "The law is unconstitutional because all states must allow the sale of any product manufactured elsewhere.",
+        "The law is constitutional because states have the right to regulate commerce within their borders.",
+        "The law is unconstitutional because it discriminates against interstate commerce."
+      ],
+      "correctIndex": 3,
+      "explanation": "The law is unconstitutional because it discriminates against interstate commerce, violating the dormant Commerce Clause.",
+      "explanationLong": "The correct answer is that the law is unconstitutional because it discriminates against interstate commerce. The dormant Commerce Clause prohibits states from enacting laws that favor in-state economic interests over those from out of state. In this case, the law restricts the sale of products not manufactured within the state, which discriminates against out-of-state manufacturers and impedes interstate commerce. Answer choice one is incorrect because while states can regulate commerce, they cannot do so in a manner that discriminates against interstate commerce. Answer choice three is incorrect; while a state law can be constitutional if it serves a legitimate local purpose, this law's discriminatory nature makes it unconstitutional regardless of purpose. Answer choice four is incorrect because it misstates the law; states do not have to allow the sale of all products from other states, but they cannot favor their own products over those from other states in a discriminatory manner.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099925551,
+      "generatedAt": 1755099865552
+    },
+    {
+      "qid": "fresh_openai_1755099868755_96092a30",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A state legislature passes a law requiring all public schools to include a moment of silence at the beginning of each school day. The law does not specify the purpose of the moment of silence, but school officials encourage students to use the time for prayer. A group of parents challenges the law, claiming it violates the Establishment Clause of the First Amendment. What is the likely outcome of this challenge?",
+      "choices": [
+        "The law is likely constitutional because it allows for personal reflection without mandating prayer.",
+        "The law is likely unconstitutional as it promotes a religious activity in public schools.",
+        "The law is likely unconstitutional because it lacks a secular purpose.",
+        "The law is likely constitutional as it does not coerce students to pray."
+      ],
+      "correctIndex": 1,
+      "explanation": "The law is likely unconstitutional as it promotes a religious activity in public schools.",
+      "explanationLong": "The correct answer is that the law is likely unconstitutional as it promotes a religious activity in public schools. The Establishment Clause prohibits laws that advance or inhibit religion, and while a moment of silence may seem neutral, the encouragement for prayer suggests a religious purpose, violating the Lemon test established in Lemon v. Kurtzman. Answer choice B is incorrect because the encouragement of prayer undermines the claim of neutrality and does not fulfill the secular purpose requirement. Answer choice C is incorrect; while a lack of secular purpose is a valid concern, the promotion of prayer alone suffices to establish unconstitutionality under the Establishment Clause. Answer choice D is also incorrect because the presence of coercion is not required for a violation; the mere endorsement of prayer in a public school context is sufficient to violate the Establishment Clause, regardless of whether students are coerced to pray.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099928755,
+      "generatedAt": 1755099868755
+    },
+    {
+      "qid": "fresh_openai_1755099868075_3a6b392b",
+      "subject": "Con Law",
+      "topic": "General",
+      "stem": "A state passes a law that prohibits the sale of any books that contain explicit sexual content, arguing that it is necessary to protect community morals. A local bookstore owner challenges the law, claiming it violates the First Amendment. Which of the following is the most likely outcome of the challenge?",
+      "choices": [
+        "The law is struck down because it imposes an unconstitutional prior restraint on free speech.",
+        "The law is struck down because it discriminates against certain viewpoints.",
+        "The law is upheld because states have the right to regulate materials in the interest of community standards.",
+        "The law is upheld because it serves a compelling state interest in protecting minors."
+      ],
+      "correctIndex": 0,
+      "explanation": "The law is struck down because it imposes an unconstitutional prior restraint on free speech.",
+      "explanationLong": "The correct answer is that the law is struck down because it imposes an unconstitutional prior restraint on free speech. Under the First Amendment, laws that censor speech based on content are subject to strict scrutiny, requiring the government to demonstrate that they serve a compelling interest and are narrowly tailored to achieve that interest. In this case, while the state may argue it has a legitimate interest in regulating community morals, the blanket prohibition on explicit sexual content is overly broad and not the least restrictive means to achieve that interest. The first option is incorrect because it misapplies the balancing of interests; while states do have some power to regulate, they cannot do so in a way that infringes on protected speech. The third option is incorrect because protecting minors does not justify a blanket ban on all explicit content; more targeted measures are required. Finally, the fourth option is incorrect as the law does not explicitly discriminate against viewpoints but rather restricts a category of content, which is a different legal issue.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099928075,
+      "generatedAt": 1755099868076
+    }
+  ],
+  "Property": [
+    {
+      "qid": "fresh_openai_1755099869478_567324bb",
+      "subject": "Property",
+      "topic": "RAP",
+      "stem": "Alice conveys a parcel of land to Bob for life, then to the children of Bob who reach the age of 25. Bob has two children, Charlie and Dana, who are both currently 20 years old. Under the terms of the conveyance, what is the status of the future interest held by Bob's children with respect to the Rule Against Perpetuities?",
+      "choices": [
+        "The future interest is invalid because it may not vest within 21 years after Bob's death.",
+        "The future interest is valid because it will vest when either child turns 25.",
+        "The future interest is valid because Bob's children are identifiable and the age condition is certain.",
+        "The future interest is invalid because it is contingent upon both children reaching the age of 25."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that the future interest is invalid because it may not vest within 21 years after Bob's death, violating the Rule Against Perpetuities.",
+      "explanationLong": "The correct answer is that the future interest is invalid because it may not vest within 21 years after Bob's death. Under the Rule Against Perpetuities (RAP), a future interest must vest, if at all, within 21 years after the death of a relevant life in being. Here, Bob's children, Charlie and Dana, must reach the age of 25 for the interest to vest. Since they are currently 20, it is possible that either could die before reaching 25, and thus the interest could remain contingent and unvested beyond the permissible period. Answer choice 1 is incorrect because while the interest may vest at 25, it does not guarantee vesting within the RAP timeframe. Answer choice 3 is incorrect because, although the children are identifiable, the condition of reaching 25 years of age creates a risk that the interest may remain contingent beyond the RAP period. Finally, answer choice 4 is incorrect because the invalidity arises from the vesting uncertainty regarding the time frame rather than solely on the number of children reaching the age condition.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099929478,
+      "generatedAt": 1755099869478
+    },
+    {
+      "qid": "fresh_openai_1755099867919_3024a4cd",
+      "subject": "Property",
+      "topic": "Future Interests",
+      "stem": "Alice conveys her 100-acre farm to Bob 'for as long as the land is used for farming purposes, but if it is ever used for any other purpose, to Carol.' What type of future interest does Carol have in the property?",
+      "choices": [
+        "A possibility of reverter.",
+        "A remainder in fee simple subject to a condition subsequent.",
+        "A contingent remainder.",
+        "A vested remainder."
+      ],
+      "correctIndex": 0,
+      "explanation": "Carol has a possibility of reverter because the conveyance to Bob is a fee simple determinable, which automatically reverts to Carol if the condition is violated.",
+      "explanationLong": "The correct answer is that Carol has a possibility of reverter. In this case, Alice conveyed the property to Bob 'for as long as the land is used for farming purposes,' creating a fee simple determinable. This means that the property automatically reverts to Alice (or her successors) if the condition is not met. Carol's interest is a possibility of reverter because it is contingent upon Bob ceasing to use the land for farming, at which point Carol will take possession. The first wrong answer, a remainder in fee simple subject to a condition subsequent, is incorrect because a remainder cannot follow a fee simple determinable; it must follow a fee simple subject to a condition subsequent. The second wrong answer, a contingent remainder, is incorrect because a contingent remainder requires a third party's interest and is not applicable here. The fourth wrong answer, a vested remainder, is incorrect because Carol does not have a vested interest; she only has a contingent right to the property should the condition precedent not be satisfied.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099927919,
+      "generatedAt": 1755099867920
+    },
+    {
+      "qid": "fresh_openai_1755099867051_8c115e88",
+      "subject": "Property",
+      "topic": "Estates",
+      "stem": "Alice owns a parcel of land and conveys it to Bob 'for life, then to Carol.' After Bob's death, he bequeaths his life estate to his friend Dave. What is the status of the land after Bob's death?",
+      "choices": [
+        "Dave retains the life estate and can possess the land for the remainder of his life.",
+        "The land reverts back to Alice's estate upon Bob's death.",
+        "Carol becomes the owner of the land immediately upon Bob's death.",
+        "Bob's will is invalid, and the land passes directly to Carol."
+      ],
+      "correctIndex": 2,
+      "explanation": "Carol becomes the owner of the land immediately upon Bob's death, as a life estate cannot be devised.",
+      "explanationLong": "The correct answer is that Carol becomes the owner of the land immediately upon Bob's death. In this scenario, Bob holds a life estate, which is a non-inheritable interest. Upon Bob's death, the property automatically passes to the remainderman, Carol, as specified in the conveyance. The attempted bequest of the life estate to Dave is ineffective because a life estate cannot be transferred or devised. Option B is incorrect because Dave cannot retain the life estate; it terminates at Bob's death, and he has no interest in the property. Option C is incorrect because the land does not revert to Alice; it passes directly to Carol as the remainder. Option D is incorrect as well because Bob's will does not affect the conveyance; he cannot devise a life estate that he does not own posthumously. Thus, the correct outcome is that Carol takes immediate ownership upon Bob's death.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099927051,
+      "generatedAt": 1755099867051
+    }
+  ],
+  "Civ Pro": [
+    {
+      "qid": "fresh_openai_1755099868820_48280c01",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "A plaintiff files a lawsuit in a federal court based on diversity jurisdiction, alleging that the defendant breached a contract. The plaintiff is a citizen of California, while the defendant is a citizen of Nevada. The amount in controversy is $75,000. After the defendant files an answer, the plaintiff realizes that the defendant also has a principal place of business in California. Can the federal court continue to hear the case based on diversity jurisdiction?",
+      "choices": [
+        "Yes, because the amount in controversy exceeds $75,000.",
+        "No, because diversity must exist at the time the lawsuit is filed.",
+        "No, because the defendant is a citizen of California.",
+        "Yes, as long as the plaintiff's claim is valid."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is 'No, because the defendant is a citizen of California.' Diversity jurisdiction requires complete diversity, meaning no plaintiff can be from the same state as any defendant.",
+      "explanationLong": "The correct answer is 'No, because the defendant is a citizen of California.' Under 28 U.S.C. § 1332, diversity jurisdiction requires complete diversity of citizenship between the parties. In this case, both the plaintiff and the defendant are citizens of California, which destroys diversity and thus precludes federal jurisdiction based on diversity, regardless of the amount in controversy being over $75,000. The first choice is incorrect because while the amount in controversy requirement is met, diversity must also be complete, which is not the case here. The third choice is misleading because the validity of the claim is irrelevant if jurisdiction is lacking due to lack of diversity. The fourth choice is partially correct but does not fully address the reason for the jurisdictional failure; it is not just about diversity existing at the time of filing, but also about it being maintained throughout the case, and here it was never present due to the defendant's citizenship.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099928820,
+      "generatedAt": 1755099868820
+    },
+    {
+      "qid": "fresh_openai_1755099870881_af141c52",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "A plaintiff files a lawsuit in a federal district court based on diversity jurisdiction, claiming $100,000 in damages against a defendant who resides in the same state as the plaintiff. The plaintiff alleges that the defendant breached a contract. The defendant moves to dismiss the case for lack of subject matter jurisdiction. What is the likely outcome of the motion to dismiss?",
+      "choices": [
+        "The motion to dismiss will be denied because the amount in controversy exceeds $75,000.",
+        "The motion to dismiss will be denied because the plaintiff's claim is based on a state law breach of contract.",
+        "The motion to dismiss will be granted because the plaintiff failed to establish a federal question.",
+        "The motion to dismiss will be granted because the parties are not diverse."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is that the motion to dismiss will be granted because the parties are not diverse.",
+      "explanationLong": "The correct answer is that the motion to dismiss will be granted because the parties are not diverse. Under 28 U.S.C. § 1332, diversity jurisdiction requires that the parties be citizens of different states, and in this case, both the plaintiff and defendant are residents of the same state, which defeats diversity jurisdiction. Answer choice B incorrectly states that the amount in controversy is sufficient; however, without diversity of citizenship, the federal court lacks jurisdiction regardless of the amount. Answer choice C is incorrect because the case does not involve a federal question; it is purely a state law breach of contract claim. Answer choice D incorrectly suggests that the denial of the motion is based on the nature of the claim; however, the critical issue here is the lack of diversity, which is a prerequisite for federal jurisdiction in this scenario.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099930881,
+      "generatedAt": 1755099870882
+    },
+    {
+      "qid": "fresh_openai_1755099869298_7ad6c6cd",
+      "subject": "Civ Pro",
+      "topic": "General",
+      "stem": "In a diversity jurisdiction case, Plaintiff filed a lawsuit in federal court against Defendant, who resides in the same state as Plaintiff. Defendant moves to dismiss the case based on lack of subject matter jurisdiction. Which of the following is the most appropriate ruling for the court?",
+      "choices": [
+        "The motion to dismiss should be denied because the case can proceed under federal question jurisdiction.",
+        "The motion to dismiss should be granted because the amount in controversy does not exceed $75,000.",
+        "The motion to dismiss should be granted because there is no complete diversity between the parties.",
+        "The motion to dismiss should be denied because the federal court has supplemental jurisdiction."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the motion to dismiss should be granted due to lack of complete diversity between the parties.",
+      "explanationLong": "The correct answer is that the motion to dismiss should be granted because there is no complete diversity between the parties. Under 28 U.S.C. § 1332, federal courts have diversity jurisdiction when the parties are citizens of different states and the amount in controversy exceeds $75,000. Here, both Plaintiff and Defendant reside in the same state, which destroys complete diversity, making the federal court unable to exercise jurisdiction over this case. Answer choice B is incorrect because supplemental jurisdiction does not apply when there is no original jurisdiction based on diversity. Choice C is wrong because the issue is not the amount in controversy but the lack of diversity. Lastly, D is incorrect because there is no federal question jurisdiction present, as the question does not present any federal law or constitutional issue, only a state law matter between parties from the same state.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099929298,
+      "generatedAt": 1755099869299
+    }
+  ],
+  "Evidence": [
+    {
+      "qid": "fresh_openai_1755099867480_016056fb",
+      "subject": "Evidence",
+      "topic": "Relevance 401/403",
+      "stem": "In a personal injury lawsuit, the plaintiff seeks to introduce evidence of the defendant's prior unrelated criminal conviction for theft to demonstrate the defendant's character for being dishonest. The defendant objects, arguing that the evidence is not relevant to the issues at hand. How should the court rule on the admissibility of the evidence?",
+      "choices": [
+        "The court should exclude the evidence because it is not relevant to the plaintiff's claims.",
+        "The court should admit the evidence because it is relevant to the credibility of the defendant as a witness.",
+        "The court should exclude the evidence because the probative value is substantially outweighed by the danger of unfair prejudice.",
+        "The court should admit the evidence because it shows the defendant's character for dishonesty."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the court should exclude the evidence because the probative value is substantially outweighed by the danger of unfair prejudice.",
+      "explanationLong": "The correct answer is that the court should exclude the evidence because the probative value is substantially outweighed by the danger of unfair prejudice under Rule 403 of the Federal Rules of Evidence. While evidence of a prior conviction may be relevant under Rule 401, in this case, the conviction for theft is unrelated to the personal injury claim and primarily serves to cast the defendant in a negative light, which can unfairly influence the jury. Answer A is incorrect because it overlooks Rule 403's balancing test; being dishonest is not directly relevant to the issues of the case. Answer B is incorrect as it misapplies the relevance standard; the defendant's character for dishonesty does not enhance credibility in the context of this personal injury case. Answer C is partially correct in noting the lack of relevance but fails to address the unfair prejudice concern that Rule 403 highlights, making it less comprehensive than the correct answer.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099927480,
+      "generatedAt": 1755099867480
+    },
+    {
+      "qid": "fresh_openai_1755099867732_b8532603",
+      "subject": "Evidence",
+      "topic": "Privileges",
+      "stem": "During a civil lawsuit for breach of contract, the plaintiff's attorney seeks to introduce a conversation between the plaintiff and his psychiatrist regarding the plaintiff's emotional distress caused by the breach. The psychiatrist is prepared to testify about the content of that conversation. What is the most likely outcome regarding the admissibility of this testimony?",
+      "choices": [
+        "The testimony is inadmissible because it is hearsay.",
+        "The testimony is admissible because it relates to the plaintiff's emotional state.",
+        "The testimony is inadmissible due to the doctor-patient privilege.",
+        "The testimony is admissible because the plaintiff waived the privilege by discussing the conversation with his attorney."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the testimony is inadmissible due to the doctor-patient privilege, which protects confidential communications between a patient and their psychiatrist.",
+      "explanationLong": "The correct answer is that the testimony is inadmissible due to the doctor-patient privilege, which protects confidential communications made for the purpose of diagnosis or treatment. In this case, the conversation between the plaintiff and his psychiatrist is protected under this privilege, meaning the psychiatrist cannot disclose what was discussed without the plaintiff's consent. Answer A is incorrect because the relevance of the testimony does not override the privilege. Answer C is incorrect because there is no indication in the facts that the plaintiff waived the privilege; merely discussing his emotional state does not constitute a waiver. Answer D is incorrect because the issue at hand is not hearsay but rather the application of a privilege, which is a separate evidentiary rule that protects certain communications from disclosure in court.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099927732,
+      "generatedAt": 1755099867732
+    },
+    {
+      "qid": "fresh_openai_1755099872381_75646023",
+      "subject": "Evidence",
+      "topic": "Hearsay 801–807",
+      "stem": "During a robbery trial, the prosecution called Jane, who testified that she saw the defendant commit the robbery. Jane then recalled that, shortly after the event, she pointed out the defendant to a police officer at the scene. The defense objected to the introduction of Jane's identification of the defendant to the officer as hearsay. How should the court rule on the objection?",
+      "choices": [
+        "The court should sustain the objection because the identification was not made in court and lacks proper foundation.",
+        "The court should sustain the objection because the identification was made out of court and is therefore hearsay.",
+        "The court should overrule the objection because Jane's identification is a prior identification and non-hearsay under FRE 801(d)(1)(C).",
+        "The court should overrule the objection because the identification is admissible as a spontaneous declaration."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the court should overrule the objection because Jane's identification is a prior identification and non-hearsay under FRE 801(d)(1)(C).",
+      "explanationLong": "The correct answer is that the court should overrule the objection because Jane's identification of the defendant to the police officer is a prior identification and is therefore non-hearsay under FRE 801(d)(1)(C). This rule allows for the admission of prior identifications as evidence if the witness testifies at trial and is subject to cross-examination. Here, Jane is testifying in court and can be cross-examined about her identification, fulfilling the requirements of the rule. The first wrong answer is incorrect because it misstates the nature of the objection; the identification is not hearsay and is admissible. The second wrong answer incorrectly asserts that any out-of-court statement is hearsay, failing to recognize the exception for prior identifications. The third wrong answer is incorrect because the identification does not require additional foundation if it qualifies as a prior identification under the rules. Lastly, the fourth wrong answer incorrectly cites spontaneous declarations, which do not apply here as the identification was made after the event and not in an immediate emotional response.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099932381,
+      "generatedAt": 1755099872381
+    }
+  ],
+  "Torts": [
+    {
+      "qid": "fresh_openai_1755099875120_45212c85",
+      "subject": "Torts",
+      "topic": "Products Liability",
+      "stem": "A consumer purchased a new model of a kitchen blender, which was advertised as being able to blend any food item without issue. Soon after purchase, while using it to blend a hard vegetable, the blender exploded, causing injury to the consumer. The consumer sues the manufacturer for product liability, claiming that the blender was defectively designed. Under the risk-utility test, which of the following is most likely to be the outcome of the lawsuit?",
+      "choices": [
+        "The manufacturer is not liable because the blender complied with all applicable safety standards.",
+        "The manufacturer is not liable because the blender was used in a manner not intended by the manufacturer.",
+        "The manufacturer is liable because the blender's design did not adequately account for the risk of explosion when blending hard items.",
+        "The manufacturer is liable because the consumer's injuries were directly caused by a manufacturing defect."
+      ],
+      "correctIndex": 2,
+      "explanation": "The correct answer is that the manufacturer is liable because the blender's design did not adequately account for the risk of explosion when blending hard items.",
+      "explanationLong": "The correct answer is that the manufacturer is liable because the blender's design did not adequately account for the risk of explosion when blending hard items. Under the risk-utility test, a product is defectively designed if the risks of harm it poses outweigh its utility to consumers. Here, the blender's failure to safely blend hard vegetables suggests a design that does not prioritize consumer safety, leading to liability. The second choice is incorrect because even if the consumer used the blender in a manner not intended, the design should still be safe for reasonable use, including blending hard items. The third choice is incorrect as it misidentifies the defect as a manufacturing defect rather than a design defect; the facts do not indicate a flaw in the manufacturing process. The fourth choice is also incorrect because compliance with safety standards does not automatically absolve the manufacturer of liability if the product is still unreasonably dangerous due to its design.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099935120,
+      "generatedAt": 1755099875120
+    },
+    {
+      "qid": "fresh_openai_1755099868876_f7e9ba43",
+      "subject": "Torts",
+      "topic": "Defamation",
+      "stem": "After a local newspaper published an article stating that a local politician, John, was under investigation for embezzlement, John lost a significant number of supporters and donations. The article was based on an anonymous tip but did not provide any sources or evidence to support the claim. John claims that the article is defamatory. Which of the following statements is TRUE regarding John's potential defamation claim?",
+      "choices": [
+        "John must prove that the statement was made with actual malice to succeed in his claim.",
+        "John's claim will fail because the statement was based on an anonymous tip and lacks factual basis.",
+        "John's claim will succeed because the newspaper is liable for publishing a false statement regardless of intent.",
+        "John can succeed in a defamation claim because the statement was published and it harmed his reputation."
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct answer is that John must prove that the statement was made with actual malice to succeed in his claim, as he is a public figure.",
+      "explanationLong": "The correct answer is that John must prove that the statement was made with actual malice to succeed in his claim. As a public figure, John is required to show that the defamatory statement was made with knowledge of its falsity or with reckless disregard for the truth (New York Times Co. v. Sullivan). In this case, the newspaper's reliance on an anonymous tip does not automatically shield it from liability, but it does mean that John must meet the higher standard of proof for actual malice. The first answer is incorrect because, although publication and harm are necessary for defamation, they are not sufficient for a public figure like John without proving actual malice. The second answer fails because, while the statement's basis is questionable, the absence of factual support does not negate John's need to prove actual malice. The fourth answer is incorrect because liability for defamation does not arise solely from the publication of a false statement; the intent behind the statement matters significantly, particularly for public figures.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099928876,
+      "generatedAt": 1755099868876
+    },
+    {
+      "qid": "fresh_openai_1755099871958_9a2c1ed1",
+      "subject": "Torts",
+      "topic": "Defamation",
+      "stem": "A local newspaper published an article stating that a prominent businessman, John, was under investigation for embezzlement. The article included a quote from an anonymous source claiming they witnessed John taking money from the company. John was never charged with any crime, and the claims were false. After the article's publication, John lost several business contracts. What is the most likely outcome if John sues the newspaper for defamation?",
+      "choices": [
+        "John will likely win the lawsuit because the newspaper is responsible for the truthfulness of its sources.",
+        "John will likely lose the lawsuit because he is a public figure and must prove actual malice.",
+        "John will likely win the lawsuit because the statement was false and caused him harm.",
+        "John will likely lose the lawsuit because the statement was made by an anonymous source."
+      ],
+      "correctIndex": 1,
+      "explanation": "The correct answer is that John will likely lose the lawsuit because he is a public figure and must prove actual malice. Public figures must demonstrate that the defendant acted with actual malice, meaning they knew the statement was false or acted with reckless disregard for the truth.",
+      "explanationLong": "The correct answer is that John will likely lose the lawsuit because he is a public figure and must prove actual malice. Under defamation law, public figures, like John, must show that the defendant made the false statement with knowledge of its falsity or reckless disregard for the truth (New York Times Co. v. Sullivan). Although the statement was false and caused John harm, he must meet this high burden of proof, which he likely cannot do based solely on the anonymous source’s claims. The first answer is incorrect because, while the statement was false and harmful, the actual malice standard for public figures is not satisfied. The second answer is incorrect because the source's anonymity does not absolve the newspaper of liability but rather relates to the evidentiary weight of the statement. The fourth answer is incorrect because, while newspapers have a duty to verify information, John must still meet the actual malice standard due to his status as a public figure, making this point irrelevant to his success in the lawsuit.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099931958,
+      "generatedAt": 1755099871958
+    }
+  ],
+  "Contracts": [
+    {
+      "qid": "fresh_openai_1755099867544_b2c1e123",
+      "subject": "Contracts",
+      "topic": "Offer/Acceptance",
+      "stem": "Alice, a book publisher, sends a letter to Bob, an author, offering to publish his manuscript for a payment of $10,000. The letter states that Bob must accept the offer by March 1. On February 28, Bob mails a letter of acceptance to Alice. However, on the same day, he also sends a text message to Alice stating he has decided to decline the offer. Alice receives the text message before the acceptance letter. Which of the following statements is true regarding the contract between Alice and Bob?",
+      "choices": [
+        "A contract is formed because Bob mailed his acceptance before declining the offer.",
+        "A contract is formed because acceptance is valid upon dispatch.",
+        "No contract is formed because Bob's acceptance was not received by Alice before his rejection.",
+        "No contract is formed because Bob's text message is a valid rejection of the offer."
+      ],
+      "correctIndex": 3,
+      "explanation": "Bob's text message constitutes a valid rejection, preventing the formation of a contract.",
+      "explanationLong": "The correct answer is that no contract is formed because Bob's text message is a valid rejection of the offer. Under the mailbox rule, an acceptance is generally effective upon dispatch; however, a rejection is effective only upon receipt. Here, Bob sent a text message rejecting the offer before Alice received the acceptance letter, which means that the rejection is valid and prevents the formation of a contract. Answer choice 0 is incorrect because although Bob mailed his acceptance, the subsequent rejection via text takes precedence upon receipt. Answer choice 2 is incorrect because while acceptance is valid upon dispatch, it does not apply when a rejection is communicated prior to the acceptance being received. Answer choice 3 is incorrect because, although Bob’s acceptance was mailed, it was not received by Alice before the rejection was communicated, thus no contract was formed.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099927544,
+      "generatedAt": 1755099867544
+    },
+    {
+      "qid": "fresh_openai_1755099867422_bad846dc",
+      "subject": "Contracts",
+      "topic": "Consideration",
+      "stem": "Alice offers to sell her vintage guitar to Bob for $500. Bob, who has always wanted the guitar, agrees to purchase it. After a week, Alice changes her mind and decides not to sell. Bob insists that they have a binding agreement. Which of the following statements best describes the enforceability of their agreement?",
+      "choices": [
+        "The agreement is not enforceable because Bob's agreement lacked consideration.",
+        "The agreement is enforceable because it was made in writing and signed by both parties.",
+        "The agreement is enforceable because Bob's desire for the guitar constitutes sufficient consideration.",
+        "The agreement is not enforceable because Alice did not receive any consideration from Bob."
+      ],
+      "correctIndex": 3,
+      "explanation": "The correct answer is that the agreement is not enforceable because Alice did not receive any consideration from Bob.",
+      "explanationLong": "The correct answer is that the agreement is not enforceable because Alice did not receive any consideration from Bob. In contract law, consideration requires a benefit to the promisor or a detriment to the promisee. Here, Bob's mere desire for the guitar does not constitute legal consideration since he has not provided anything of value in exchange for the guitar. Answer choice A is incorrect because a mere desire or wish does not qualify as consideration. Answer choice C is incorrect because the Statute of Frauds does not apply here since there is no signed writing; an oral agreement lacks enforceability without consideration. Answer choice D is also incorrect because Bob's agreement does not lack consideration per se; rather, there is simply no consideration exchanged between the parties. Therefore, without consideration, Alice's agreement to sell the guitar is not enforceable against her.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099927423,
+      "generatedAt": 1755099867424
+    },
+    {
+      "qid": "fresh_openai_1755099875792_ff678b2c",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "Alice and Bob entered into a written contract for the sale of a car, which included a clause stating that the written agreement constituted the entire agreement between the parties. After the contract was signed, Bob claimed that Alice had verbally agreed to include new tires as part of the sale. Alice refused to acknowledge this claim, citing the written contract. Which of the following is the most likely outcome regarding Bob's claim?",
+      "choices": [
+        "Bob's claim will be denied because he did not provide written evidence of the verbal agreement.",
+        "Bob's claim will be denied because the written contract is integrated and excludes prior oral agreements.",
+        "Bob's claim will be upheld because verbal agreements can always be introduced to supplement written contracts.",
+        "Bob's claim will be upheld because the inclusion of new tires is a separate agreement."
+      ],
+      "correctIndex": 1,
+      "explanation": "The correct answer is that Bob's claim will be denied because the written contract is integrated and excludes prior oral agreements.",
+      "explanationLong": "The correct answer is that Bob's claim will be denied because the written contract is integrated and excludes prior oral agreements. Under the Parol Evidence Rule, when a written contract is intended to be a complete and final expression of the parties' agreement, as indicated by the integration clause, prior or contemporaneous oral statements cannot be introduced to contradict or modify the terms of the written agreement. In this case, the contract explicitly states that it represents the entire agreement, thus excluding Bob's claim about the verbal agreement regarding new tires. Answer choice B is incorrect because it misapplies the rule by suggesting that verbal agreements can always supplement written contracts, which is not true when an integration clause is present. Answer choice C is erroneous because it incorrectly assumes that a verbal agreement can be treated as a separate agreement, whereas it is actually subject to the Parol Evidence Rule. Finally, answer choice D is wrong because the lack of written evidence does not impact the validity of the Parol Evidence Rule; the rule itself precludes Bob from introducing the oral agreement regardless of its documentation.",
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755099935792,
+      "generatedAt": 1755099875792
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Heart, Flame, Trophy, Crown, CreditCard } from 'lucide-react';
+import LawDuelLogo from '@/components/LawDuelLogo';
 
 const SUBJECTS = [
   'Mixed Questions',
@@ -320,9 +321,9 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
           <CardContent className="p-8">
             <div className="flex flex-col items-center justify-center py-16 space-y-4">
               <div className="relative">
-                <div className="w-16 h-16 border-4 border-arcane/20 border-t-arcane rounded-full animate-spin"></div>
+                <div className="w-24 h-24 border-4 border-arcane/20 border-t-arcane rounded-full animate-spin"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Flame className="w-6 h-6 text-arcane" />
+                  <LawDuelLogo size="sm" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-arcane">Generating Question</h3>
