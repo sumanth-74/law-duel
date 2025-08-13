@@ -18,7 +18,7 @@ import LawDuelLogo from '@/components/LawDuelLogo';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell, CalendarDays } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 
@@ -644,35 +644,129 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Game Modes */}
-          <div className="lg:col-span-2 space-y-6">
-            {gameMode === 'menu' && (
-              <>
-                {/* Quick Match */}
-                <Card className="bg-black/40 border-purple-500/20">
-                  <CardHeader>
-                    <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
-                      ⚔️ Quick Match
-                      <Badge variant="secondary" className="bg-purple-600/30 text-purple-200 border-purple-500/50">Find Opponent</Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Subject</label>
-                      <Select 
-                        value={gameSettings.subject} 
-                        onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {SUBJECTS.map(subject => (
-                            <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+        {/* Main Game Mode Selection */}
+        {gameMode === 'menu' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Solo Mode */}
+            <Card className="bg-gradient-to-br from-indigo-900/40 to-blue-900/40 border-indigo-500/30 hover:border-indigo-400/50 transition-all">
+              <CardHeader className="pb-4">
+                <CardTitle className="font-cinzel text-2xl flex items-center gap-3 text-indigo-300">
+                  <UserIcon className="w-8 h-8 text-indigo-400" />
+                  Solo Mode
+                </CardTitle>
+                <p className="text-indigo-300/80 text-sm mt-2">
+                  Progressive difficulty • 3 Lives system • Test your limits
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-indigo-950/40 rounded-lg p-4 space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-indigo-300">Starting Difficulty</span>
+                    <Badge className="bg-indigo-600/30 text-indigo-200 border-indigo-500/50">Level 1</Badge>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-indigo-300">Lives</span>
+                    <div className="flex gap-1">
+                      <Heart className="w-4 h-4 text-red-400 fill-red-400" />
+                      <Heart className="w-4 h-4 text-red-400 fill-red-400" />
+                      <Heart className="w-4 h-4 text-red-400 fill-red-400" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-indigo-300">Continue Cost</span>
+                    <Badge className="bg-green-600/30 text-green-200 border-green-500/50">$0.99</Badge>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => window.location.href = '/solo'}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                  size="lg"
+                >
+                  Start Solo Challenge
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* VS Mode */}
+            <Card className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border-purple-500/30 hover:border-purple-400/50 transition-all">
+              <CardHeader className="pb-4">
+                <CardTitle className="font-cinzel text-2xl flex items-center gap-3 text-purple-300">
+                  <Users className="w-8 h-8 text-purple-400" />
+                  VS Mode
+                </CardTitle>
+                <p className="text-purple-300/80 text-sm mt-2">
+                  Play against friends or random opponents
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-purple-950/40 rounded-lg p-4 space-y-2">
+                  <Button 
+                    onClick={() => setGameMode('vs-selection')}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white justify-between"
+                    size="lg"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Zap className="w-5 h-5" />
+                      Live Duel
+                    </span>
+                    <ChevronRight className="w-5 h-5" />
+                  </Button>
+                  <p className="text-xs text-purple-300/60 text-center">Match with random player or bot instantly</p>
+                </div>
+                <div className="bg-purple-950/40 rounded-lg p-4 space-y-2">
+                  <Button 
+                    onClick={() => setGameMode('friend-challenge')}
+                    className="w-full bg-pink-600 hover:bg-pink-700 text-white justify-between"
+                    size="lg"
+                  >
+                    <span className="flex items-center gap-2">
+                      <UserPlus className="w-5 h-5" />
+                      Friend Challenge
+                    </span>
+                    <ChevronRight className="w-5 h-5" />
+                  </Button>
+                  <p className="text-xs text-purple-300/60 text-center">Challenge a specific friend by username</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* VS Mode Selection Screen */}
+        {gameMode === 'vs-selection' && (
+          <Card className="bg-black/40 border-purple-500/20 max-w-2xl mx-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
+                  ⚔️ Live Duel Setup
+                </CardTitle>
+                <Button
+                  onClick={() => setGameMode('menu')}
+                  variant="ghost"
+                  size="sm"
+                  className="text-purple-400 hover:text-purple-300"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Subject</label>
+                <Select 
+                  value={gameSettings.subject} 
+                  onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUBJECTS.map(subject => (
+                      <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                     </div>
                     
                     <div>
@@ -713,92 +807,104 @@ export default function Home() {
                       </Select>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button onClick={() => setGameMode('bot-practice')} className="bg-green-600 hover:bg-green-700 text-white" size="lg">
-                        Practice Mode
+                    <div className="pt-4">
+                      <Button onClick={handleStartBotGame} className="w-full bg-purple-600 hover:bg-purple-700 text-white" size="lg">
+                        Start Live Duel
                       </Button>
-                      <Button onClick={handleStartBotGame} className="bg-purple-600 hover:bg-purple-700 text-white" size="lg">
-                        Live Duel
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Play with Friend - Async Style */}
-                <Card className="bg-black/40 border-purple-500/20">
-                  <CardHeader>
-                    <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
-                      👥 Play with Friends
-                      <Badge variant="default" className="bg-blue-600/30 text-blue-200 border-blue-500/50">Async</Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Start New Game</label>
-                      <div className="flex gap-2">
-                        <Input
-                          placeholder="Friend's username"
-                          value={gameSettings.friendUsername}
-                          onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
-                          className="flex-1"
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
-                              handleStartAsyncFriendGame();
-                            }
-                          }}
-                        />
-                        <Select 
-                          value={gameSettings.subject}
-                          onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
-                        >
-                          <SelectTrigger className="w-40">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {SUBJECTS.map(subject => (
-                              <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <Button 
-                        onClick={handleStartAsyncFriendGame}
-                        className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white" 
-                        disabled={!gameSettings.friendUsername.trim()}
-                      >
-                        Start Game
-                      </Button>
-                    </div>
-                    
-                    <div className="border-t border-purple-500/20 pt-4">
-                      <Button 
-                        onClick={() => setShowAsyncInbox(true)}
-                        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white" 
-                        size="lg"
-                      >
-                        <Bell className={`h-4 w-4 mr-2 ${asyncNotificationCount > 0 ? 'animate-pulse' : ''}`} />
-                        View Active Games
-                        {asyncNotificationCount > 0 && (
-                          <Badge className="ml-2 bg-red-500 text-white">
-                            {asyncNotificationCount}
-                          </Badge>
-                        )}
-                      </Button>
-                      <p className="text-xs text-purple-400 mt-2 text-center">
-                        {asyncNotificationCount > 0 ? `${asyncNotificationCount} games waiting for you` : 'Play on your own time'}
+                      <p className="text-xs text-purple-300/60 text-center mt-2">
+                        Matches you with a random player or bot
                       </p>
                     </div>
                   </CardContent>
                 </Card>
-              </>
-            )}
-          </div>
+        )}
 
-          {/* Leaderboard */}
-          <div>
+        {/* Friend Challenge Screen */}
+        {gameMode === 'friend-challenge' && (
+          <Card className="bg-black/40 border-purple-500/20 max-w-2xl mx-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
+                  👥 Friend Challenge
+                </CardTitle>
+                <Button
+                  onClick={() => setGameMode('menu')}
+                  variant="ghost"
+                  size="sm"
+                  className="text-purple-400 hover:text-purple-300"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Friend's Username</label>
+                <Input
+                  placeholder="Enter friend's username"
+                  value={gameSettings.friendUsername}
+                  onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
+                  className="w-full"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
+                      handleStartAsyncFriendGame();
+                    }
+                  }}
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-2 block">Subject</label>
+                <Select 
+                  value={gameSettings.subject}
+                  onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUBJECTS.map(subject => (
+                      <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="pt-4">
+                <Button 
+                  onClick={handleStartAsyncFriendGame}
+                  className="w-full bg-pink-600 hover:bg-pink-700 text-white" 
+                  size="lg"
+                  disabled={!gameSettings.friendUsername.trim()}
+                >
+                  Challenge Friend
+                </Button>
+              </div>
+              
+              <div className="border-t border-purple-500/20 pt-4">
+                <Button 
+                  onClick={() => setShowAsyncInbox(true)}
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white" 
+                  size="lg"
+                >
+                  <Bell className={`h-4 w-4 mr-2 ${asyncNotificationCount > 0 ? 'animate-pulse' : ''}`} />
+                  View Active Games
+                  {asyncNotificationCount > 0 && (
+                    <Badge className="ml-2 bg-red-500 text-white">{asyncNotificationCount}</Badge>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Leaderboard - Always visible on the right side */}
+        {gameMode === 'menu' && (
+          <div className="mt-6">
             <Leaderboard />
           </div>
-        </div>
+        )}
 
         {/* Async Inbox */}
         <AsyncInbox

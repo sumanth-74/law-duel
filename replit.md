@@ -1,17 +1,15 @@
 # Law Duel - Legal Education Game
 
 ## Overview
-
-Law Duel is a competitive legal education game where players engage in 1v1 duels using legal questions for bar exam preparation and law school finals. The application features character creation, quick matchmaking, real-time gameplay, a comprehensive leaderboard system, and progressive solo challenges. Players can choose from various law-themed archetypes (e.g., Trial Hawk, Constitutional Scholar, Corporate Counsel) with legal accessories like gavels, scales of justice, law books, briefcases, and diplomas. Characters gain XP and level up their avatars, and compete in different legal subjects including Evidence, Contracts, Torts, Property, Civil Procedure, Constitutional Law, and Criminal Law/Procedure. The platform now includes monetized Solo Challenge mode with progressive difficulty, 3-lives system, and pay-to-continue mechanics.
+Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. A key feature is the monetized Solo Challenge mode, offering progressive difficulty, a 3-lives system, and pay-to-continue mechanics. The platform aims to provide an engaging and competitive environment for legal education.
 
 ## User Preferences
-
 Preferred communication style: Simple, everyday language.
 
-**UX Requirements (Updated 2025-01-13):**
 - **Game focus**: Law Duel is a competitive legal education game, not just a study tool
-- **Direct signup**: Users can register directly on landing page with username only
+- **Direct signup**: Users can register directly on landing page with username and email
 - **Avatar creation**: Account creation leads directly to character/avatar creation
+- **Email required**: Email is now required during signup for account recovery purposes
 - Stealth bot system: Players must never know they're playing against bots
 - Streamlined matchmaking: Remove redundant "Quick Match" and "Create Room" options
 - Clear game modes: "Quick Match" (vs stealth bots) and "Play with Friend" (enter username)
@@ -31,113 +29,76 @@ Preferred communication style: Simple, everyday language.
 - **Populated leaderboard**: 15+ competitive bot players make platform feel active and engaging
 - **Solo Challenge Mode**: Progressive difficulty system with 3 lives, monetization via life restoration ($0.99)
 - **Practice Mode Redesign**: Transformed from bot duels to progressive solo challenges with increasing difficulty
+- **Game Mode Structure**: Two main modes - Solo Mode (single player with lives) and VS Mode (multiplayer with Live Duel and Friend Challenge)
 - **Daily Casefile System**: Automated daily question generation with fresh content every 24 hours at midnight UTC
 - **Daily Question Rotation**: Questions automatically regenerate with cleanup system removing old questions after 7 days
 
 ## System Architecture
 
 ### Full-Stack TypeScript Application
-The application uses a monorepo structure with shared types and schemas between client and server. TypeScript provides type safety across the entire stack, with shared interfaces for users, matches, questions, and avatar data defined in the `shared/schema.ts` file using Drizzle ORM and Zod validation.
+The application is a monorepo utilizing TypeScript for type safety across client and server, with shared schemas for core data entities.
 
 ### Frontend Architecture
-- **React with Vite**: Modern React setup using Vite for fast development and building
-- **Component-based UI**: Uses shadcn/ui components built on Radix UI primitives for accessibility
-- **Styling**: Tailwind CSS with custom CSS variables for theming, featuring a dark arcane theme with fonts like Cinzel for headlines and Inter Tight for UI
-- **State Management**: React Query (TanStack Query) for server state management and caching
-- **Routing**: Wouter for lightweight client-side routing
-- **Avatar System**: Custom SVG-based avatar renderer with dynamic scaling based on character level
+- **Framework**: React with Vite for development.
+- **UI Components**: shadcn/ui built on Radix UI primitives.
+- **Styling**: Tailwind CSS with custom variables for a dark arcane theme, using Cinzel and Inter Tight fonts.
+- **State Management**: React Query for server state.
+- **Routing**: Wouter for client-side routing.
+- **Avatar System**: Custom SVG-based avatar renderer with dynamic scaling.
 
 ### Backend Architecture
-- **Express.js Server**: RESTful API with WebSocket support for real-time duel functionality
-- **WebSocket Integration**: Real-time communication for matchmaking, duels, live game state updates, leaderboard broadcasting, and friend challenges
-- **Modular Services**: Separated concerns with dedicated services for matchmaking, question coordination, leaderboard management, stealth bot opponents, and friend challenge notifications
-- **Real-time Features**: Live leaderboard updates, instant friend challenge notifications, WebSocket-based duel invitations with 1-minute expiry timers
-- **In-Memory Storage**: File-based storage using JSON files with atomic write operations for data persistence
+- **Server**: Express.js with RESTful API and WebSocket support for real-time features.
+- **Real-time Features**: WebSockets enable matchmaking, duels, live game state updates, leaderboard broadcasts, and friend challenges.
+- **Modularity**: Dedicated services for matchmaking, questions, leaderboard, bots, and notifications.
+- **Data Persistence (Development)**: In-memory storage with JSON file persistence, using atomic writes.
 
 ### Data Storage Solutions
-- **PostgreSQL Schema**: Drizzle ORM configuration for production database with tables for users, matches, and questions
-- **Development Storage**: In-memory storage with JSON file persistence for rapid development
-- **Atomic Writes**: Safe file operations using temporary files and atomic renames to prevent data corruption
-- **Caching Layer**: 10-minute question cache with fallback mechanisms for reliability
+- **Production Database**: PostgreSQL via Drizzle ORM.
+- **Development Database**: In-memory storage with JSON file persistence.
+- **Caching**: 10-minute question cache for performance and cost control.
 
 ### Authentication and User Management
-- **Simple Registration**: Username-based user creation with duplicate checking
-- **Local Storage**: Client-side character data persistence for quick access
-- **Profile Management**: Character creation with avatar customization and display name handling
-- **Username Validation**: 2-18 character limit with alphanumeric and space restrictions
+- **Registration**: Simple username-based registration with duplicate checking.
+- **Profile**: Avatar customization and display name handling.
+- **Client-side Storage**: Local storage for character data.
 
 ### Game Logic Architecture
-- **Real-time Duels**: Server-authoritative timer system with 20-second question timeouts, 10 questions per match
-- **Question Quality**: Professional bar exam quality questions using structured OpenAI generation with JSON schema validation, comprehensive explanations and rule references
-- **Structured Generation**: MBE generator service using OpenAI's structured outputs for both dueling questions and Daily Casefile, ensuring consistent format and quality
-- **Cost Optimization**: Shared server calls between players, 10-minute question cache, structured generation reducing API costs while maintaining quality
-- **Retention Loop**: Fast matchmaking (<8s target) → immediate win/lose feedback → ladder progression → rematch incentives, targeting D7 retention ≥ 20%
-- **Competitive Points System**: Winners earn 5 points per correct answer + 25 bonus points, losers forfeit 25 points, creating high-stakes competition
-- **Level Progression**: Levels determined by total points earned (every 100 points = 1 level), with points preventing from going below 0
-- **Stealth Bot System**: Human-appearing bots with adaptive difficulty (70% base accuracy, adjusted for player retention optimization)
-- **Streamlined Matchmaking**: Two clear modes - Quick Match (stealth bots) and Friend Challenge (username-based)
-- **Subject Flexibility**: Specific legal subjects or mixed question pools
-- **XP and Leveling**: Growth system with visual scaling based on character level (1 + 0.08 * level, capped at 1.8)
-- **Leaderboard System**: Points-based ranking with real-time stat updates and database synchronization
-- **Solo Challenge System**: Progressive difficulty mode (1-10 levels), 3-lives mechanic, daily completion tracking, monetization through life restoration ($0.99)
-- **Difficulty Scaling**: Questions increase in complexity from introductory to Supreme Court level, with point rewards scaling by difficulty
-- **Monetization Strategy**: Pay-to-continue model when all lives are lost, allowing players to restore 3 lives and continue their challenge
-- **Daily Question System**: Automatic generation of fresh daily questions with OpenAI integration, topic rotation based on day of year
-- **Daily Question Management**: Automated cleanup system removes questions older than 7 days, with scheduled regeneration at midnight UTC
-- **Daily Streak System**: Comprehensive daily participation tracking with milestone rewards at 3, 7, 14, 30, 50, and 100 days
-- **Streak Milestone Rewards**: Bonus XP ranging from 25 XP (3-day) to 1000 XP (100-day) with visual celebrations and progress tracking
-- **Daily Participation Logic**: Streaks continue for any daily attempt (correct or incorrect), resetting only when days are missed
-- **Enhanced UI Feedback**: Streak flames, milestone badges, progress bars, and motivational messages for building momentum (Updated 2025-08-13)
-
-### Error Handling and Resilience
-- **Question Bank System**: Pre-generated, verified questions with 10-minute cache and nightly regeneration for cost control
-- **Fresh Duel Questions**: OpenAI generation confirmed working - generates questions like `fresh_openai_1755027766896_aouqoebfa` with professional legal analysis (Updated 2025-08-12)
-- **Question Delivery**: Server successfully delivers OpenAI questions when clients maintain persistent WebSocket connections throughout the generation process (Updated 2025-08-12)
-- **Answer Choice Validation**: Implemented robust choice normalization to prevent junk answers (e.g., "A", "B") and strip prefixes like "A)" from OpenAI responses (Updated 2025-08-12)
-- **UI Choice Display**: Fixed double-letter rendering issue - choices now display clean text without duplicating the letter labels (Updated 2025-08-12)
-- **Critical Fixes Deployed**: Fixed OpenAI prompt to require exactly 4 choices, added server-side choice normalization, and eliminated stale question caching - fresh questions now generated consistently (Updated 2025-08-12)
-- **Duel Deduplication System**: Implemented per-duel fingerprinting to prevent repeated questions within single duels, with 4-attempt retry logic for truly unique questions each round (Updated 2025-08-12)
-- **Robust Duel API**: Implemented working `/duel/next` endpoint that generates fresh questions per round with proper subject handling, choice normalization, and 60-second timers - delivers exactly what was requested (Updated 2025-08-12)
-- **Fast Matchmaking**: <8s target with immediate bot matching for optimal user experience
-- **Retention Optimization**: Adaptive bot difficulty, D7 retention tracking, and rematch incentives
-- **Cost Management**: Shared question delivery, batch generation, and cached explanations keeping operational costs minimal
-- **Connection Management**: Disconnect handling with forfeit logic for abandoned matches
-- **Data Validation**: Strict schema validation for all user inputs and API responses
-- **Quality Monitoring**: Daily spot-checking of question accuracy and explanation tightness
-- **Leaderboard System**: Fixed "users2" initialization error caused by variable shadowing in statsService - both overall and real-time leaderboards now functional
-- **Subject Integrity Guard**: Comprehensive system implemented to eliminate cross-subject bleed with canonical subject normalization, heuristic validation, and retry logic (Updated 2025-08-12)
-- **Fresh Question Generation**: Fixed critical issue where OpenAI questions with invalid choice counts (8 instead of 4) caused fallback to cached questions. Implemented 3-attempt retry logic with no fallbacks for duels (Updated 2025-08-12)
-- **Round-Based Duel System**: Implemented proper round progression with state management, preventing question repetition and ensuring each "Next Question" generates unique content with proper fallback handling (Updated 2025-08-12)
-- **Answer Position Randomization**: Fixed critical "A bias" issue where correct answers defaulted to choice A. Implemented Fisher-Yates shuffle to distribute correct answers evenly across positions A, B, C, D, eliminating predictable patterns (Updated 2025-08-12)
+- **Real-time Duels**: Server-authoritative, 20-second question timeouts, 10 questions per match.
+- **Question Generation**: Professional bar exam quality questions generated using OpenAI with JSON schema validation, detailed explanations, and rule references. An MBE generator service ensures structured outputs.
+- **Cost Optimization**: Shared server calls, question caching, and structured generation minimize API costs.
+- **Retention Mechanisms**: Fast matchmaking, immediate feedback, ladder progression, and rematch incentives.
+- **Points System**: Competitive point system with bonuses for correct answers and penalties for losses.
+- **Level Progression**: XP and leveling system tied to points, influencing visual scaling.
+- **Stealth Bots**: Adaptive difficulty bots for seamless matchmaking and retention.
+- **Matchmaking Modes**: "Quick Match" (bots) and "Friend Challenge."
+- **Solo Challenge**: Progressive difficulty (1-10 levels), 3-lives mechanic, monetized via life restoration.
+- **Daily Questions**: Automated daily question generation via OpenAI, with topic rotation and 7-day cleanup.
+- **Daily Streaks**: Tracks daily participation with milestone rewards (XP bursts) and enhanced UI feedback.
+- **Answer Randomization**: Fisher-Yates shuffle ensures even distribution of correct answers.
 
 ## External Dependencies
 
 ### Third-Party Services
-- **OpenAI API**: GPT-4o-mini model for generating legal questions with server-side API key management - **FULLY OPERATIONAL** (Updated 2025-08-12)
-- **Question Generation**: Answer randomization working correctly - questions generated with topics like "Separation of Powers", "Privacy Torts", "Hearsay", "Future Interests"
-- **Fresh Question System**: OpenAI generates unique questions with IDs like `fresh_openai_1755027766896_aouqoebfa` for each duel round
-- **Topic Variety**: Property (Covenants), Torts (Defamation), Evidence (Judicial Notice), Constitutional Law (Separation of Powers) - diverse topics across all subjects
-- **Connection Management**: Successfully delivers OpenAI questions when clients maintain persistent connections during generation
-- **Neon Database**: PostgreSQL hosting service for production data storage
+- **OpenAI API**: GPT-4o-mini model for generating legal questions and explanations.
+- **Neon Database**: PostgreSQL hosting service.
 
 ### UI and Styling Libraries
-- **Radix UI**: Comprehensive set of accessible, unstyled UI primitives
-- **Tailwind CSS**: Utility-first CSS framework with custom theming
-- **Lucide React**: Icon library for consistent UI elements
-- **Google Fonts**: Cinzel (serif headers) and Inter Tight (UI text) font families
+- **Radix UI**: Accessible UI primitives.
+- **Tailwind CSS**: Utility-first CSS framework.
+- **Lucide React**: Icon library.
+- **Google Fonts**: Cinzel (headers) and Inter Tight (UI text).
 
 ### Development and Build Tools
-- **Vite**: Fast build tool with HMR and TypeScript support
-- **Drizzle Kit**: Database migration and schema management
-- **ESBuild**: Fast JavaScript bundler for production builds
-- **TypeScript**: Static type checking across the entire codebase
+- **Vite**: Fast build tool.
+- **Drizzle Kit**: Database migration and schema management.
+- **ESBuild**: JavaScript bundler.
+- **TypeScript**: Static type checking.
 
 ### Validation and Data Management
-- **Zod**: Runtime type validation and schema definition
-- **React Hook Form**: Form state management with validation
-- **TanStack Query**: Server state management, caching, and synchronization
-- **Class Variance Authority**: Type-safe CSS class composition
+- **Zod**: Runtime type validation.
+- **React Hook Form**: Form state management.
+- **TanStack Query**: Server state management.
+- **Class Variance Authority**: Type-safe CSS class composition.
 
 ### WebSocket and Real-time Features
-- **ws**: WebSocket library for real-time server communication
-- **Socket-like Implementation**: Custom WebSocket handling for matchmaking and duel states
+- **ws**: WebSocket library.
