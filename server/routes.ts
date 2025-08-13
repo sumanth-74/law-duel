@@ -18,6 +18,7 @@ import { realTimeLeaderboard } from './realTimeLeaderboard';
 import streakManager from './services/streakManager.js';
 import asyncDuels from './services/async.js';
 import { dailyCasefileService } from './services/dailyCasefileService';
+import { emailTrackingService } from './services/emailTrackingService';
 
 // Initialize bot practice system
 import { BotPractice } from './services/botPractice.js';
@@ -955,6 +956,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve archetypes data
   app.get("/api/archetypes", (req, res) => {
     res.sendFile(path.join(process.cwd(), "client/public/archetypes.json"));
+  });
+
+  // === EMAIL TRACKING ROUTES ===
+  
+  // Get email analytics (admin only)
+  app.get("/api/admin/email-analytics", requireAuth, async (req: any, res) => {
+    try {
+      // Check if user is admin (you can customize this check)
+      const user = await storage.getUser(req.session.userId);
+      if (!user || user.username !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      const analytics = await emailTrackingService.getEmailAnalytics();
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error getting email analytics:", error);
+      res.status(500).json({ message: "Failed to get email analytics" });
+    }
+  });
+  
+  // Get users with emails (admin only)
+  app.get("/api/admin/users-with-emails", requireAuth, async (req: any, res) => {
+    try {
+      // Check if user is admin
+      const user = await storage.getUser(req.session.userId);
+      if (!user || user.username !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      const limit = parseInt(req.query.limit as string) || 100;
+      const users = await emailTrackingService.getAllUsersWithEmails(limit);
+      res.json(users);
+    } catch (error) {
+      console.error("Error getting users with emails:", error);
+      res.status(500).json({ message: "Failed to get users with emails" });
+    }
+  });
+  
+  // Get recent signups (admin only)
+  app.get("/api/admin/recent-signups", requireAuth, async (req: any, res) => {
+    try {
+      // Check if user is admin
+      const user = await storage.getUser(req.session.userId);
+      if (!user || user.username !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      const days = parseInt(req.query.days as string) || 7;
+      const signups = await emailTrackingService.getRecentSignups(days);
+      res.json(signups);
+    } catch (error) {
+      console.error("Error getting recent signups:", error);
+      res.status(500).json({ message: "Failed to get recent signups" });
+    }
+  });
+  
+  // Export email list (admin only)
+  app.get("/api/admin/export-emails", requireAuth, async (req: any, res) => {
+    try {
+      // Check if user is admin
+      const user = await storage.getUser(req.session.userId);
+      if (!user || user.username !== 'admin') {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      const filters = {
+        minLevel: req.query.minLevel ? parseInt(req.query.minLevel as string) : undefined,
+        minPoints: req.query.minPoints ? parseInt(req.query.minPoints as string) : undefined,
+        lawSchool: req.query.lawSchool as string,
+        activeInLastDays: req.query.activeInLastDays ? parseInt(req.query.activeInLastDays as string) : undefined,
+      };
+      
+      const emails = await emailTrackingService.exportEmailList(filters);
+      res.json(emails);
+    } catch (error) {
+      console.error("Error exporting email list:", error);
+      res.status(500).json({ message: "Failed to export email list" });
+    }
   });
 
   // === DAILY CASEFILE ROUTES ===

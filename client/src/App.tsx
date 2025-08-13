@@ -12,6 +12,7 @@ import DailyCasefile from "@/pages/DailyCasefile";
 import DuelTestPage from "@/pages/DuelTestPage";
 import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
+import EmailAdmin from "@/pages/EmailAdmin";
 import { Loader2 } from "lucide-react";
 
 function Router() {
@@ -41,6 +42,7 @@ function Router() {
           <Route path="/daily" component={DailyCasefile} />
           <Route path="/stats" component={Stats} />
           <Route path="/stats/:userId" component={Stats} />
+          <Route path="/admin/emails" component={EmailAdmin} />
         </>
       )}
       <Route path="/duel-test" component={DuelTestPage} />

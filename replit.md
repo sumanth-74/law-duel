@@ -9,7 +9,7 @@ Preferred communication style: Simple, everyday language.
 - **Game focus**: Law Duel is a competitive legal education game, not just a study tool
 - **Direct signup**: Users can register directly on landing page with username and email
 - **Avatar creation**: Account creation leads directly to character/avatar creation
-- **Email required**: Email is now required during signup for account recovery purposes
+- **Email required**: Email is now required during signup for user tracking and communication
 - Stealth bot system: Players must never know they're playing against bots
 - Streamlined matchmaking: Remove redundant "Quick Match" and "Create Room" options
 - Clear game modes: "Quick Match" (vs stealth bots) and "Play with Friend" (enter username)

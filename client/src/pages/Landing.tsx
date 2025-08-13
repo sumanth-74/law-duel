@@ -147,7 +147,7 @@ export default function Landing() {
                   />
                   <Input
                     type="email"
-                    placeholder="Email (for account recovery)"
+                    placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="bg-slate-800 border-purple-500/30 text-slate-200"
