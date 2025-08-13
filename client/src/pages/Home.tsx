@@ -58,7 +58,7 @@ export default function Home() {
     typeof user.avatarData === 'object' && 
     'needsCharacterCreation' in user.avatarData && 
     user.avatarData.needsCharacterCreation;
-  const [gameMode, setGameMode] = useState<'menu' | 'bot-practice' | 'friend-setup' | 'searching' | 'duel'>('menu');
+  const [gameMode, setGameMode] = useState<'menu' | 'bot-practice' | 'friend-setup' | 'searching' | 'duel' | 'vs-selection'>('menu');
   const [gameSettings, setGameSettings] = useState({
     subject: 'Mixed Questions',
     botDifficulty: 'medium',
@@ -678,7 +678,10 @@ export default function Home() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => setGameMode('bot-practice')}
+                  onClick={() => {
+                    console.log('Solo Challenge clicked, setting gameMode to bot-practice');
+                    setGameMode('bot-practice');
+                  }}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                   size="lg"
                 >
