@@ -355,6 +355,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get leaderboard
+  // Weekly Ladder endpoint - Per North Star requirements
+  app.get("/api/weekly-ladder", async (req, res) => {
+    try {
+      const { getWeeklyTop50 } = await import("./services/weeklyLadder.js");
+      const ladder = await getWeeklyTop50();
+      return res.json(ladder);
+    } catch (error) {
+      console.error("Error fetching weekly ladder:", error);
+      return res.status(500).json({ error: "Failed to fetch weekly ladder" });
+    }
+  });
+
   app.get("/api/leaderboard", async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 20;

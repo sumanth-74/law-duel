@@ -3,6 +3,10 @@ import { makeStealthBot } from "./stealthbot.js";
 import { getQuestion } from "./qcoordinator.js";
 import { storage } from "../storage.js";
 import { getWeaknessTargetedQuestions, logTargeting } from "./weaknessTargeting.js";
+import { updateWeeklyLadder } from "./weeklyLadder.js";
+
+// North Star configuration: All modes use 5 questions
+const MATCH_QUESTIONS = 5;
 
 const queues = {
   'Civil Procedure': [],
@@ -192,14 +196,14 @@ async function runDuel(wss, roomCode, players, subject) {
 
   // Get weakness targeting for both players (use first player for targeting)
   const player1Id = players[0].profile?.id || 'guest';
-  const questionTargets = getWeaknessTargetedQuestions(player1Id, subject, 5);
+  const questionTargets = getWeaknessTargetedQuestions(player1Id, subject, MATCH_QUESTIONS);
   logTargeting(player1Id, questionTargets);
   match.questionTargets = questionTargets;
 
   activeMatches.set(roomCode, match);
 
-  for (let round = 1; round <= 5; round++) {  // Changed to 5 questions per North Star
-    if (match.scores[0] >= 3 || match.scores[1] >= 3) break;  // First to 3 wins
+  for (let round = 1; round <= MATCH_QUESTIONS; round++) {
+    if (match.scores[0] >= Math.ceil(MATCH_QUESTIONS / 2) || match.scores[1] >= Math.ceil(MATCH_QUESTIONS / 2)) break;  // First to majority wins
     
     match.round = round;
     // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
@@ -319,15 +323,61 @@ async function runDuel(wss, roomCode, players, subject) {
 
   // End duel
   const winner = match.scores[0] > match.scores[1] ? 0 : 1;
+  
+  // Calculate Elo rating changes - Per North Star (K=24)
+  const K = 24;
+  const player1 = await storage.getUserById(players[0].profile?.id);
+  const player2 = await storage.getUserById(players[1].profile?.id);
+  
+  const rating1 = player1?.points || 1200;
+  const rating2 = player2?.points || 1200;
+  
+  const expected1 = 1 / (1 + Math.pow(10, (rating2 - rating1) / 400));
+  const expected2 = 1 / (1 + Math.pow(10, (rating1 - rating2) / 400));
+  
+  const actual1 = winner === 0 ? 1 : 0;
+  const actual2 = winner === 1 ? 1 : 0;
+  
+  const ratingChange1 = Math.round(K * (actual1 - expected1));
+  const ratingChange2 = Math.round(K * (actual2 - expected2));
+  
+  // Update player ratings
+  if (player1) {
+    await storage.updateUserStats(player1.id, { 
+      points: rating1 + ratingChange1 
+    });
+    await updateWeeklyLadder(player1.id, ratingChange1, winner === 0);
+  }
+  
+  if (player2) {
+    await storage.updateUserStats(player2.id, { 
+      points: rating2 + ratingChange2 
+    });
+    await updateWeeklyLadder(player2.id, ratingChange2, winner === 1);
+  }
+  
   const finalData = {
     winner,
     scores: match.scores,
-    roomCode
+    roomCode,
+    ratingChanges: {
+      player1: ratingChange1,
+      player2: ratingChange2
+    },
+    newRatings: {
+      player1: rating1 + ratingChange1,
+      player2: rating2 + ratingChange2
+    }
   };
 
-  players.forEach(ws => {
+  players.forEach((ws, idx) => {
     if (ws.readyState === 1) {
-      ws.send(JSON.stringify({ type: 'duel:end', payload: finalData }));
+      const playerData = {
+        ...finalData,
+        yourRatingChange: idx === 0 ? ratingChange1 : ratingChange2,
+        yourNewRating: idx === 0 ? rating1 + ratingChange1 : rating2 + ratingChange2
+      };
+      ws.send(JSON.stringify({ type: 'duel:end', payload: playerData }));
     }
   });
 
@@ -350,14 +400,14 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 
   // Get weakness targeting for the human player
   const playerId = humanWs.profile?.id || 'guest';
-  const questionTargets = getWeaknessTargetedQuestions(playerId, subject, 5);
+  const questionTargets = getWeaknessTargetedQuestions(playerId, subject, MATCH_QUESTIONS);
   logTargeting(playerId, questionTargets);
   match.questionTargets = questionTargets;
 
   activeMatches.set(roomCode, match);
 
-  for (let round = 1; round <= 5; round++) {  // Changed to 5 questions per North Star
-    if (match.scores[0] >= 3 || match.scores[1] >= 3) break;  // First to 3 wins
+  for (let round = 1; round <= MATCH_QUESTIONS; round++) {
+    if (match.scores[0] >= Math.ceil(MATCH_QUESTIONS / 2) || match.scores[1] >= Math.ceil(MATCH_QUESTIONS / 2)) break;  // First to majority wins
     
     match.round = round;
     // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
@@ -481,10 +531,33 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 
   // End duel
   const winner = match.scores[0] > match.scores[1] ? 0 : 1;
+  
+  // Calculate Elo rating changes for human vs bot - Per North Star (K=24)
+  const K = 24;
+  const humanPlayer = await storage.getUserById(humanWs.profile?.id);
+  
+  const humanRating = humanPlayer?.points || 1200;
+  const botRating = 1200; // Bots always at 1200
+  
+  const expected = 1 / (1 + Math.pow(10, (botRating - humanRating) / 400));
+  const actual = winner === 0 ? 1 : 0;
+  
+  const ratingChange = Math.round(K * (actual - expected));
+  
+  // Update human player rating and weekly ladder
+  if (humanPlayer) {
+    await storage.updateUserStats(humanPlayer.id, { 
+      points: humanRating + ratingChange 
+    });
+    await updateWeeklyLadder(humanPlayer.id, ratingChange, winner === 0);
+  }
+  
   const finalData = {
     winner,
     scores: match.scores,
-    roomCode
+    roomCode,
+    yourRatingChange: ratingChange,
+    yourNewRating: humanRating + ratingChange
   };
 
   if (humanWs.readyState === 1) {
