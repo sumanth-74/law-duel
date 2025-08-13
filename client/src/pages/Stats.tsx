@@ -50,26 +50,26 @@ export default function Stats() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full max-w-3xl mx-auto">
-            <TabsTrigger value="mastery" className="flex items-center gap-2">
-              <Trophy className="w-4 h-4" />
-              Mastery
+          <TabsList className="grid grid-cols-5 w-full max-w-5xl mx-auto bg-black/40 p-1">
+            <TabsTrigger value="mastery" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
+              <Trophy className="w-4 h-4 flex-shrink-0" />
+              <span>Mastery</span>
             </TabsTrigger>
-            <TabsTrigger value="subtopics" className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4" />
-              Subtopics
+            <TabsTrigger value="subtopics" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
+              <BookOpen className="w-4 h-4 flex-shrink-0" />
+              <span>Subtopics</span>
             </TabsTrigger>
-            <TabsTrigger value="performance" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Performance
+            <TabsTrigger value="performance" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
+              <TrendingUp className="w-4 h-4 flex-shrink-0" />
+              <span>Performance</span>
             </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              History
+            <TabsTrigger value="history" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
+              <Clock className="w-4 h-4 flex-shrink-0" />
+              <span>History</span>
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" />
-              Analytics
+            <TabsTrigger value="analytics" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
+              <BarChart3 className="w-4 h-4 flex-shrink-0" />
+              <span>Analytics</span>
             </TabsTrigger>
           </TabsList>
 
