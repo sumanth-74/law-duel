@@ -109,10 +109,11 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
 
     switch (type) {
       case 'duel:start':
+        console.log('Duel started with payload:', payload);
         setDuelState(prev => ({
           ...prev,
           roomCode: payload.roomCode,
-          subject: payload.subject,
+          subject: payload.subject || 'Mixed Questions',
           round: 0,
           scores: [0, 0],
           isFinished: false,
@@ -136,12 +137,18 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         // Handle bot answer for visual feedback
         break;
 
+      case 'leaderboard:update':
+        // Ignore leaderboard updates in duel view
+        break;
+
       default:
         console.log('Unknown message type:', type);
     }
   };
 
   const handleNewQuestion = (questionData: QuestionData) => {
+    console.log('Received question data:', questionData);
+    
     // Clear any stale state and force fresh question display
     setDuelState(prev => ({
       ...prev,
@@ -153,7 +160,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           : []
       },
       round: questionData.round,
-      timeLeft: 20,
+      timeLeft: questionData.timeLimitSec || 60, // Use timeLimitSec from server
       selectedAnswer: undefined,
       showResult: false,
       waitingForOpponent: false,
@@ -162,7 +169,9 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
       generatingQuestion: false // Clear loading state when question arrives
     }));
 
-    startTimer(questionData.deadlineTs);
+    // Use deadlineTs if available, otherwise calculate based on time limit
+    const deadline = questionData.deadlineTs || (Date.now() + (questionData.timeLimitSec || 60) * 1000);
+    startTimer(deadline);
     announceForScreenReader(`Round ${questionData.round}. New question presented.`);
   };
 
@@ -223,10 +232,23 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
 
       if (remaining === 0) {
         clearInterval(timerRef.current!);
-        // Auto-submit or handle timeout
-        if (duelState.selectedAnswer === undefined) {
-          handleAnswerSelect(-1); // No answer
-        }
+        // Auto-submit if no answer selected
+        setDuelState(prev => {
+          if (prev.selectedAnswer === undefined) {
+            // Auto-submit no answer
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+              wsRef.current.send(JSON.stringify({
+                type: 'duel:answer',
+                payload: {
+                  answerIndex: -1,
+                  responseTimeMs: 60000
+                }
+              }));
+            }
+            return { ...prev, selectedAnswer: -1, waitingForOpponent: true };
+          }
+          return prev;
+        });
       }
     }, 1000);
   };
