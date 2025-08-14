@@ -35,6 +35,16 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
       console.log('Login mutation called with:', { username: credentials.username, password: credentials.password ? '***' : 'empty' });
+      
+      // First clear any old cookies to ensure clean state
+      await fetch('/api/auth/clear-cookies', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      
+      // Small delay to ensure cookies are cleared
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

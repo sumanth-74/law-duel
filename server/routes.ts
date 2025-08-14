@@ -73,6 +73,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   }));
 
+  // Force clear cookies endpoint
+  app.post("/api/auth/clear-cookies", (req, res) => {
+    // Clear the session cookie completely
+    res.clearCookie('connect.sid', { path: '/' });
+    
+    // Destroy session if it exists
+    if (req.session) {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Session destroy error:', err);
+        }
+      });
+    }
+    
+    res.json({ ok: true, message: 'Cookies cleared' });
+  });
+  
   // Debug endpoint to check session configuration
   app.get("/api/debug/session", (req, res) => {
     const sessionInfo = {
@@ -312,24 +329,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ ok: false, error: "Invalid username or password" });
       }
 
-      // Set user data in session directly without regeneration
-      // This avoids cookie persistence issues in development
-      (req.session as any).userId = user.id;
-      (req.session as any).user = { id: user.id, username: user.username };
-      
-      // Explicitly save the session before sending response
-      req.session.save((err2) => {
-        if (err2) {
-          console.error('Session save error:', err2);
-          return next(err2);
+      // Regenerate session to get a clean state
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error('Session regeneration error:', err);
+          return res.status(500).json({ ok: false, message: 'Session error' });
         }
         
-        // Don't return password
-        const { password, ...userResponse } = user;
-        console.log('Login successful, session saved for user:', user.username);
-        console.log('Session ID:', req.sessionID);
-        console.log('Response headers being sent:', res.getHeaders());
-        res.json({ ok: true, user: userResponse });
+        // Set user data in the new session
+        (req.session as any).userId = user.id;
+        (req.session as any).user = { id: user.id, username: user.username };
+        
+        // Save the session
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error('Session save error:', saveErr);
+            return res.status(500).json({ ok: false, message: 'Session save error' });
+          }
+          
+          // Don't return password
+          const { password, ...userResponse } = user;
+          console.log('Login successful, session saved for user:', user.username);
+          console.log('Session ID:', req.sessionID);
+          
+          res.json({ ok: true, user: userResponse });
+        });
       });
     } catch (error: any) {
       console.error('Login error:', error);
