@@ -72,8 +72,9 @@ export default function Landing() {
       });
       
       if (response.ok) {
-        // Successful login - reload to go to home page
-        window.location.href = '/';
+        // Successful login - force full page reload to refresh auth state
+        console.log('Login successful, reloading page...');
+        window.location.reload();
       } else {
         const error = await response.json();
         toast({

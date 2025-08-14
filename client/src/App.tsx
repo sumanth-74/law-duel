@@ -18,6 +18,8 @@ import { Loader2 } from "lucide-react";
 function Router() {
   const { user, isAuthenticated, isLoading } = useAuth();
 
+  console.log('Router render - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading, 'user:', user?.username);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
