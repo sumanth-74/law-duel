@@ -75,8 +75,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Force clear cookies endpoint
   app.post("/api/auth/clear-cookies", (req, res) => {
-    // Clear the session cookie completely
-    res.clearCookie('connect.sid', { path: '/' });
+    // Clear the session cookie with all possible options
+    res.clearCookie('connect.sid', { 
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false
+    });
+    
+    // Also try clearing with just the name
+    res.clearCookie('connect.sid');
     
     // Destroy session if it exists
     if (req.session) {
@@ -129,6 +137,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: e.message
       });
     }
+  });
+  
+  // Serve fix-login page for clearing session issues
+  app.get('/fix-login', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'fix-login.html'));
   });
   
   // Pool status endpoint - check pre-generated questions

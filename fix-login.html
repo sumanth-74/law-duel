@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Login - Law Duel</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 48px;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #8b5cf6;
+            margin-bottom: 24px;
+        }
+        p {
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #7c3aed;
+        }
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+        }
+        .success {
+            background: #064e3b;
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+        .error {
+            background: #7f1d1d;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fix Login Issues</h1>
+        <p>
+            If you're having trouble staying logged in, click the button below to clear your session and start fresh.
+        </p>
+        <button id="fixBtn" onclick="fixLogin()">Clear Session & Fix Login</button>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        async function fixLogin() {
+            const btn = document.getElementById('fixBtn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.textContent = 'Fixing...';
+            
+            try {
+                // Clear all cookies we can from JavaScript
+                document.cookie.split(";").forEach(function(c) {
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+                
+                // Call the server to clear session
+                const response = await fetch('/api/auth/clear-cookies', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    status.className = 'status success';
+                    status.style.display = 'block';
+                    status.innerHTML = '✅ Session cleared successfully!<br><br>Redirecting to login page...';
+                    
+                    // Redirect to login after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to clear session');
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.style.display = 'block';
+                status.innerHTML = '❌ Error clearing session. Please try again.';
+                btn.disabled = false;
+                btn.textContent = 'Clear Session & Fix Login';
+            }
+        }
+        
+        // Automatically clear cookies on page load
+        window.onload = function() {
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+        }
+    </script>
+</body>
+</html>
