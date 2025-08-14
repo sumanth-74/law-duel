@@ -2041,5 +2041,600 @@
     "explanation": "The artist may be liable for negligence because he should have anticipated the possibility of children playing near his setup, and as such, he had a duty to take reasonable precautions to prevent harm. This includes ensuring that the area around his booth was safe and that any potentially hazardous items, like paint, were secured. The foreseeability of children in the vicinity creates a standard of care that the artist failed to meet, making him potentially liable for the damages caused.",
     "createdAt": 1755136308484,
     "usedCount": 0
+  },
+  {
+    "id": "smart_1755188463864_jiflcvtyg",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 3,
+    "stem": "During a neighborhood barbecue, Anna was grilling and accidentally spilled a pot of boiling water onto Peter, who was sitting nearby. Peter suffered third-degree burns on his legs. While Peter received medical treatment, Anna immediately expressed her regret and offered to pay for Peter's medical bills. However, Peter decided to sue Anna for negligence anyway. Which of the following is most likely?",
+    "choices": [
+      "A) Peter will likely win because Anna breached her duty of care by spilling boiling water.",
+      "B) Peter will likely lose because Anna did not intend to harm him or was not negligent.",
+      "C) Peter will likely win due to Anna's assumption of duty by hosting the event.",
+      "D) Peter will likely lose because he was not an invitee at Anna's barbecue."
+    ],
+    "correctIndex": 1,
+    "explanation": "A plaintiff must show duty, breach, causation, and damages in a negligence claim. Anna's actions were not careless; spilling boiling water unintentionally does not equate to negligence.",
+    "createdAt": 1755188463864,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188463864_kta1qpnsp",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "While driving on a rural road, Mike was distracted when he saw a deer crossing the road. In swerving to avoid the deer, he lost control of his vehicle and crashed into a tree. The impact caused serious injuries to his passenger, Sarah. Sarah plans to sue Mike for negligence. Which of the following defenses could Mike successfully raise?",
+    "choices": [
+      "A) Comparative negligence, claiming Sarah was also distracted.",
+      "B) Assumption of risk, arguing that Sarah knew driving was risky.",
+      "C) Impossibility, citing that avoiding the deer was unavoidable.",
+      "D) Contributory negligence, stating Sarah failed to wear her seatbelt."
+    ],
+    "correctIndex": 0,
+    "explanation": "In jurisdictions that allow comparative negligence, Mike may argue that Sarah's own negligence contributed to her injuries. However, the facts do not strongly support other defenses, as her awareness of risk doesn't negate liability.",
+    "createdAt": 1755188463864,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188463864_3xhxmw7gi",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 3,
+    "stem": "A child, Timmy, was playing in a park when he found a baseball bat near a busy sidewalk. Not understanding the danger, he swung the bat and accidentally struck a passing pedestrian, resulting in injuries. The pedestrian, Robert, sues Timmy’s parents for negligence based on the theory of vicarious liability. Which of the following statements is most accurate regarding the liability of Timmy's parents?",
+    "choices": [
+      "A) Timmy's parents may be held liable because they are responsible for their minor child's actions.",
+      "B) Timmy's parents cannot be held liable because Timmy was not acting within the scope of parental supervision.",
+      "C) Timmy's parents may be liable if they failed to provide adequate supervision.",
+      "D) Timmy's parents are never liable for injuries caused by their children."
+    ],
+    "correctIndex": 2,
+    "explanation": "Parents can be held vicariously liable for their children's negligent acts if they can prove inadequate supervision; Timmy's actions were potentially negligent, but liability hinges on the adequacy of supervision.",
+    "createdAt": 1755188463864,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188463864_a6nppm0fd",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Jessica, a dog owner, allowed her dog to roam freely in her fenced backyard. One day, her dog dug a hole under the fence and escaped, subsequently biting a neighbor, Frank, who was passing by. Frank suffers lacerations and files a lawsuit against Jessica under strict liability for dog bites. What is the most likely outcome regarding Jessica's liability?",
+    "choices": [
+      "A) Jessica will be strictly liable because she owns the dog.",
+      "B) Jessica may not be liable if she can prove the dog had never bitten anyone before.",
+      "C) Jessica will not be liable due to the dog escaping without her knowledge.",
+      "D) Jessica will be liable, but only for economic damages."
+    ],
+    "correctIndex": 0,
+    "explanation": "Strict liability applies in dog bite cases regardless of the owner's prior knowledge of the dog's aggressive tendencies. Ownership alone typically brings liability.",
+    "createdAt": 1755188463864,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188463864_in242ncmj",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 5,
+    "stem": "In a fit of rage, Adam threw a rock at his neighbor's window, shattering it. The neighbor, Beth, had already had plans to renovate her house, which included replacing the window with a stronger material. She sued Adam for damages. What is the most likely defense Adam can raise?",
+    "choices": [
+      "A) Contributory negligence, arguing Beth's plans had already existed.",
+      "B) Mitigation of damages, claiming Beth should have replaced the window sooner.",
+      "C) Inevitable accident, stating he never intended to hit the window.",
+      "D) No harm, as the window was already going to be replaced."
+    ],
+    "correctIndex": 1,
+    "explanation": "Although Adam's actions were wrongful, Beth had a duty to mitigate damages, meaning she should minimize her losses wherever possible. Her plans to renovate affect her claim.",
+    "createdAt": 1755188463864,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188486985_5q9lmyod6",
+    "subject": "Contracts",
+    "topic": "Contracts",
+    "difficulty": 3,
+    "stem": "Alice, a professional photographer, enters into a contract with Bob to shoot his wedding for $5,000. The contract specifies that Alice must provide the photographs to Bob within 30 days of the wedding date. Three days after the wedding, Bob informs Alice that he is canceling the contract because he found another photographer who offered him a better deal. Alice demands that Bob pay her the full contract amount because she has already incurred significant expenses for the wedding shoot. Which of the following is most likely?",
+    "choices": [
+      "A: Alice can recover the full contract amount because Bob breached the contract by canceling it.",
+      "B: Alice can only recover expenses incurred up to the point of cancellation.",
+      "C: Alice must waive her right to recovery because Bob found a better deal.",
+      "D: Bob's cancellation is valid because Alice did not deliver any photographs yet."
+    ],
+    "correctIndex": 0,
+    "explanation": "Under the rules of contract law, Alice has performed her obligation by shooting the wedding, and Bob's unilateral cancellation constitutes a breach. Therefore, Alice is entitled to recover the full contract amount.",
+    "createdAt": 1755188486985,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188486985_yyktv6xvi",
+    "subject": "Contracts",
+    "topic": "Contracts",
+    "difficulty": 4,
+    "stem": "Denise owns a bakery and frequently sells custom cakes. One day, she receives a phone call from Clara, who requests a cake for her son's birthday two weeks from then. Denise agrees, and they discuss the design and flavors. Clara expresses how important it is for the cake to be perfect, saying she will pay any price. However, Denise never sends Clara a written confirmation or invoice. The day before the birthday, Clara decides she no longer wants the cake. Denise had already purchased the ingredients and reserved time for baking. Which of the following is most likely?",
+    "choices": [
+      "A: Denise can enforce the contract because Clara's acknowledgment of the cake's importance implies acceptance.",
+      "B: There was no contract because it was not in writing as required by the Statute of Frauds.",
+      "C: Denise cannot enforce the contract because it was an oral agreement for over $500.",
+      "D: Clara can cancel the contract without liability because Denise did not provide a written confirmation."
+    ],
+    "correctIndex": 0,
+    "explanation": "The conversation between Denise and Clara created an enforceable oral contract, and Denise's reliance on this agreement constitutes acceptance. Therefore, Denise can enforce the contract despite the lack of a written confirmation.",
+    "createdAt": 1755188486985,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188486985_xv498u6cc",
+    "subject": "Contracts",
+    "topic": "Contracts",
+    "difficulty": 3,
+    "stem": "Frank, a car dealership owner, sends a letter to a potential buyer, Jill, offering to sell a used car for $15,000. The letter states that the offer will remain open for 30 days. Jill is interested but does not respond immediately. After 15 days, Frank sells the car to another buyer and then informs Jill that the offer is no longer valid. Which of the following is most likely?",
+    "choices": [
+      "A: Jill has a valid claim against Frank for breach of contract.",
+      "B: Frank's offer is revoked, and Jill cannot claim any rights to the car.",
+      "C: Frank must honor the offer because it was made in writing and open for 30 days.",
+      "D: Jill can accept the offer within the 30 days despite Frank's sale to another buyer."
+    ],
+    "correctIndex": 1,
+    "explanation": "Frank's offer can be revoked before acceptance, even if the period is stated. Since Jill did not respond or accept within the timeframe, Frank's subsequent sale of the car is valid.",
+    "createdAt": 1755188486985,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188486985_69mifjjn0",
+    "subject": "Contracts",
+    "topic": "Contracts",
+    "difficulty": 4,
+    "stem": "George, an artist, creates a sculpture and displays it at a local gallery. He receives an unsolicited call from a collector, Rachel, who expresses interest in purchasing the sculpture. Without any formal agreement, George tells Rachel the sculpture is available for $20,000 and that he is considering other offers. Rachel pauses and states she needs a couple of days to think it over. The next day, George sells the sculpture to another buyer for $18,000. When Rachel learns of the sale, she claims that George should honor their agreement. Which of the following is most likely?",
+    "choices": [
+      "A: Rachel has a valid claim against George based on implied acceptance.",
+      "B: There was no binding contract because Rachel did not accept the offer.",
+      "C: George is obligated to sell the sculpture to Rachel because he informed her first.",
+      "D: Rachel cannot claim the sculpture since George communicated he was considering other offers."
+    ],
+    "correctIndex": 1,
+    "explanation": "For a binding contract to exist, there must be an acceptance of the offer. Rachel's pause and request for time indicates she did not accept the offer; therefore, no binding contract existed.",
+    "createdAt": 1755188486985,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188486985_9lpeuhlc3",
+    "subject": "Contracts",
+    "topic": "Contracts",
+    "difficulty": 2,
+    "stem": "Larry and Mia agree that Larry will sell Mia his motorcycle for $7,000. They shake hands to finalize the deal, but neither party signs a written contract. A week later, Larry changes his mind and refuses to sell the motorcycle, claiming he never intended to go through with it. Mia, however, has already sold her own motorcycle in anticipation of the sale. Which of the following is most likely?",
+    "choices": [
+      "A: There is an enforceable contract because the handshake indicates acceptance.",
+      "B: Larry can refuse to sell the motorcycle because the agreement was not written.",
+      "C: Mia is entitled to damages because she reasonably relied on Larry's promise.",
+      "D: Mia cannot enforce the agreement because it was not in writing."
+    ],
+    "correctIndex": 2,
+    "explanation": "Mia's reliance on Larry's promise constitutes detrimental reliance, allowing her to seek damages even without a formal written contract, based on the principle of promissory estoppel.",
+    "createdAt": 1755188486985,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188504784_zstbdqcgo",
+    "subject": "Criminal Law",
+    "topic": "Criminal Law",
+    "difficulty": 3,
+    "stem": "During a heated argument at a family dinner, John, who has a history of verbal altercations but no prior criminal convictions, threatens to kill his cousin Mark after Mark insults him in front of the family. John then storms out of the house. Later that evening, Mark receives a voicemail from John in which he states, 'I’m going to make you pay for what you said. You won't see it coming.' Mark feels threatened and reports the voicemail to the police. Which of the following is most likely?",
+    "choices": [
+      "John can be charged with assault based on the threat to kill.",
+      "Mark's report to the police does not establish sufficient evidence for an arrest.",
+      "John's voicemail constitutes a valid defense against any potential charges.",
+      "John can only be charged if he actually harmed Mark."
+    ],
+    "correctIndex": 0,
+    "explanation": "Threatening to kill can constitute assault if it puts the victim in fear of imminent harm, even if no physical act follows.",
+    "createdAt": 1755188504784,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188504784_pr8lhv14w",
+    "subject": "Criminal Law",
+    "topic": "Criminal Law",
+    "difficulty": 4,
+    "stem": "Rachel, a bartender, witnesses a patron, Mike, become increasingly belligerent and attempts to start a fight with another customer. Concerned for the customer's safety, Rachel discreetly informs Mike that if he doesn’t leave immediately, she will call the police. Instead, Mike shoves Rachel hard, causing her to fall and injure her wrist. Rachel immediately calls the police, and Mike is arrested. Which statement is most accurate regarding Mike's potential charges?",
+    "choices": [
+      "Mike can be charged with aggravated assault against Rachel.",
+      "Mike cannot be charged with assault because Rachel was not the initial aggressor.",
+      "Rachel's warning negates any possibility of Mike being charged with assault.",
+      "Mike can only be charged with a misdemeanor for disturbing the peace."
+    ],
+    "correctIndex": 0,
+    "explanation": "Mike's shove constitutes a harmful or offensive contact, supporting a charge of aggravated assault against Rachel.",
+    "createdAt": 1755188504784,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188504784_impi5k0jy",
+    "subject": "Criminal Law",
+    "topic": "Criminal Law",
+    "difficulty": 3,
+    "stem": "Tom and Jerry are co-workers who have been feuding for weeks. One day, during lunch break, Tom approaches Jerry and throws a soda at him, soaking him. Upset, Jerry picks up a sandwich and throws it back, hitting Tom. In response, Tom punches Jerry in the face, injuring him. If Jerry were to sue Tom for battery, which of the following is likely true?",
+    "choices": [
+      "Tom's actions may be justified due to Jerry's earlier provocation.",
+      "Tom will be liable for battery, regardless of Jerry's provocation.",
+      "Jerry cannot sue for battery because he initiated the altercation.",
+      "Both are liable for battery in this situation."
+    ],
+    "correctIndex": 1,
+    "explanation": "Tom's punch constitutes battery as he intentionally caused harmful contact, regardless of Jerry's prior actions.",
+    "createdAt": 1755188504784,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188504784_hkxju38ai",
+    "subject": "Criminal Law",
+    "topic": "Criminal Law",
+    "difficulty": 5,
+    "stem": "Samantha, a college student, attends a party where she meets David. After a few drinks, David convinces Samantha to go with him to a more private area of the party. Once there, David engages in unwanted sexual activity with Samantha, ignoring her clear verbal refusals and physical resistance. Which of the following best characterizes David's conduct from a criminal law perspective?",
+    "choices": [
+      "David may be charged with sexual battery because consent was not given.",
+      "David's actions cannot be considered a crime since they did not involve physical restraint.",
+      "Samantha could have prevented the situation by being more assertive.",
+      "David's actions constitute a crime only if Samantha immediately reported it."
+    ],
+    "correctIndex": 0,
+    "explanation": "Unwanted sexual activity without consent qualifies as sexual battery, making David liable for his actions.",
+    "createdAt": 1755188504784,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188504784_p2xppfs3d",
+    "subject": "Criminal Law",
+    "topic": "Criminal Law",
+    "difficulty": 4,
+    "stem": "After a series of threatening phone calls, Lisa decides to take matters into her own hands. She follows her ex-boyfriend, Greg, to his workplace, where she confronts him angrily and threatens to harm him if he doesn’t return her calls. A co-worker overhears the threat and calls the police. Lisa leaves before the police arrive. If Lisa faces charges, which of the following statements is most accurate?",
+    "choices": [
+      "Lisa's conduct may constitute a violation of harassment laws.",
+      "Lisa cannot be charged because she did not carry out her threat.",
+      "Lisa's actions are justified under the circumstances of emotional distress.",
+      "Lisa's threats are considered protected speech under free speech rights."
+    ],
+    "correctIndex": 0,
+    "explanation": "Lisa’s threats fall under harassment laws as she intended to intimidate Greg and create fear, regardless of whether she carried out the threat.",
+    "createdAt": 1755188504784,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188527581_c637l3d1c",
+    "subject": "Civil Procedure",
+    "topic": "Civil Procedure",
+    "difficulty": 3,
+    "stem": "A homeowner, Alex, discovers that his neighbor, Taylor, has built a fence that encroaches on his property by three feet. Alex and Taylor have a long-standing dispute regarding property lines but have never come to a formal agreement. Frustrated, Alex files a lawsuit for trespass against Taylor in state court. In response, Taylor argues that Alex's claim is barred by the statute of limitations. Which of the following is most likely?",
+    "choices": [
+      "A) Alex's claim is likely to proceed because a trespass claim does not have a statute of limitations.",
+      "B) Taylor's defense is likely to succeed if the statute of limitations has expired before the filing of the complaint.",
+      "C) Alex's claim is barred because disputes over property lines must be settled by negotiation prior to filing a lawsuit.",
+      "D) The court will dismiss the claim due to the lack of evidence of the fence's encroachment."
+    ],
+    "correctIndex": 1,
+    "explanation": "Taylor's defense is viable if the statute of limitations for trespass, which typically ranges from 3 to 6 years, has expired before Alex filed his claim.",
+    "createdAt": 1755188527581,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188527581_ig7lxdcxa",
+    "subject": "Civil Procedure",
+    "topic": "Civil Procedure",
+    "difficulty": 4,
+    "stem": "Linda, a resident of New York, slips and falls in a grocery store in New Jersey, resulting in serious injuries. She decides to sue the grocery store chain in federal court, claiming diversity jurisdiction. The grocery store, however, moves to dismiss the case on grounds of improper venue, arguing that the suit should be filed in state court in New Jersey. Which of the following is most likely?",
+    "choices": [
+      "A) The federal court will dismiss the case for lack of jurisdiction because neither party is a citizen of New Jersey.",
+      "B) The grocery store's motion to dismiss for improper venue will be granted because the incident occurred in New Jersey.",
+      "C) Linda can still pursue the case in federal court if the amount in controversy exceeds $75,000.",
+      "D) The federal court will retain jurisdiction because Linda can file in any federal court."
+    ],
+    "correctIndex": 2,
+    "explanation": "Linda has established federal diversity jurisdiction with an amount in controversy exceeding $75,000, even if the state is not where she resides.",
+    "createdAt": 1755188527581,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188527581_d9ule94z5",
+    "subject": "Civil Procedure",
+    "topic": "Civil Procedure",
+    "difficulty": 5,
+    "stem": "During a civil lawsuit regarding a car accident, the defendant, Ben, discovers that one of the plaintiff's witnesses, Carla, has previously been convicted of lying under oath in another case. Ben seeks to introduce this conviction to challenge Carla's credibility during trial. The plaintiff objects to the evidence, arguing that it is not admissible. Which of the following is most likely?",
+    "choices": [
+      "A) Carla's prior conviction is admissible because it is a felony involving dishonesty.",
+      "B) The conviction is inadmissible because it does not relate to the issue of the plaintiff’s damages.",
+      "C) Ben is not permitted to introduce the conviction unless he also shows the specific details of the prior case.",
+      "D) The court will exclude the evidence on grounds of relevance."
+    ],
+    "correctIndex": 0,
+    "explanation": "Under Federal Rule of Evidence 609, a prior conviction that involved dishonesty can be admitted to impeach a witness's credibility.",
+    "createdAt": 1755188527581,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188527581_yauz9mc53",
+    "subject": "Civil Procedure",
+    "topic": "Civil Procedure",
+    "difficulty": 3,
+    "stem": "A large corporation, GlobalTech, merges with a smaller tech firm, InnovateCorp. After the merger, several former InnovateCorp employees sue GlobalTech for breach of contract, claiming they were promised employment by GlobalTech as part of the merger deal. GlobalTech files a motion to dismiss based on the failure to state a claim, arguing that the employees were not parties to the merger agreement. Which of the following is most likely a valid argument for GlobalTech's motion?",
+    "choices": [
+      "A) The employees have standing to sue because they are third-party beneficiaries of the merger agreement.",
+      "B) The lawsuit should be dismissed because the merger agreement explicitly states it does not create any rights for employees.",
+      "C) GlobalTech can argue that, as a merger, it is not liable for any contracts made prior to the merger.",
+      "D) The employees' claim is valid, and their lawsuit cannot be dismissed based on the motion."
+    ],
+    "correctIndex": 1,
+    "explanation": "If the merger agreement explicitly states that it does not confer rights to employees, the employees cannot claim breach of contract despite their employment expectations.",
+    "createdAt": 1755188527581,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188527581_p58imu99x",
+    "subject": "Civil Procedure",
+    "topic": "Civil Procedure",
+    "difficulty": 4,
+    "stem": "In a personal injury case, the plaintiff, Mary, serves a complaint on the defendant, Scott, through certified mail. Scott receives the complaint but fails to respond within the required timeframe. Mary moves for a default judgment. Scott later files a motion to set aside the default judgment, arguing that he never signed the return receipt and was unsure of the complaint's credibility. Which of the following is true regarding Scott's chances of succeeding on his motion?",
+    "choices": [
+      "A) Scott's motion will likely be granted because he did not receive the complaint personally.",
+      "B) Scott has a high chance of success because he can argue lack of jurisdiction due to improper service.",
+      "C) Scott's motion will likely be denied because certified mail constitutes valid service even without a signature.",
+      "D) Scott may succeed if a showing of good cause for his failure to respond is established."
+    ],
+    "correctIndex": 3,
+    "explanation": "Scott can successfully move to set aside the default judgment if he demonstrates good cause for his failure to respond, including his misunderstanding of the service process.",
+    "createdAt": 1755188527581,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188549683_k0navy3vi",
+    "subject": "Constitutional Law",
+    "topic": "Constitutional Law",
+    "difficulty": 4,
+    "stem": "In Cityville, the city council has enacted an ordinance prohibiting all outdoor public protests within 500 feet of a polling place on election days. This ordinance was enacted to ensure that voters can cast their ballots without intimidation. Sarah, a local activist, plans to hold a protest outside the polling place on election day. She argues that the ordinance violates her First Amendment rights. Which of the following is most likely?",
+    "choices": [
+      "A) The ordinance is constitutional because it serves a significant government interest and is narrowly tailored.",
+      "B) The ordinance is unconstitutional because it imposes a prior restraint on free speech.",
+      "C) The ordinance is constitutional because it is a content-based restriction on speech.",
+      "D) The ordinance is unconstitutional because it is vague and overbroad."
+    ],
+    "correctIndex": 1,
+    "explanation": "The ordinance imposes a prior restraint on free speech, which is generally deemed unconstitutional under the First Amendment. The government must show a compelling interest and that the restriction is narrowly tailored to pass constitutional scrutiny.",
+    "createdAt": 1755188549683,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188549683_dninlieo1",
+    "subject": "Constitutional Law",
+    "topic": "Constitutional Law",
+    "difficulty": 3,
+    "stem": "During a routine traffic stop, Officer Green noticed that the driver, Mark, appeared nervous and was avoiding eye contact. After making a traffic violation stop, Officer Green asked Mark for his identification and insurance. While Mark was retrieving these documents from his glove compartment, Officer Green noticed a gun lying in plain view. Officer Green seized the gun and arrested Mark for unlawful possession of a firearm. Mark claims that his Fourth Amendment rights were violated. Which of the following is most likely?",
+    "choices": [
+      "A) The seizure of the gun was constitutional under the plain view doctrine.",
+      "B) The seizure of the gun was unconstitutional because Officer Green lacked probable cause.",
+      "C) The traffic stop was unlawful, making the evidence obtained inadmissible.",
+      "D) Officer Green should have obtained a warrant before seizing the gun."
+    ],
+    "correctIndex": 0,
+    "explanation": "Under the plain view doctrine, if an officer is lawfully in a position and observes evidence of a crime, they may seize it without a warrant. Here, the gun was in plain view during a lawful stop.",
+    "createdAt": 1755188549683,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188549683_svslq265r",
+    "subject": "Constitutional Law",
+    "topic": "Constitutional Law",
+    "difficulty": 3,
+    "stem": "After a controversial ruling, a group of citizens in State A are demanding the impeachment of a judge on the state Supreme Court. The citizens argue that the judge's decision violates public policy. The state constitution allows for judicial impeachment only for misconduct or criminal activity. The citizens file a petition for impeachment citing the judge's unpopular ruling as the basis. Which of the following best represents the legal principle applicable to this situation?",
+    "choices": [
+      "A) The citizens' petition will likely be upheld because the judge's unpopular ruling constitutes misconduct.",
+      "B) The citizens' petition will likely fail because judicial decisions, even if unpopular, cannot warrant impeachment.",
+      "C) The citizens' petition will succeed because it permits impeachment for any reason.",
+      "D) The citizens can impeach the judge by referendum since the issue has public support."
+    ],
+    "correctIndex": 1,
+    "explanation": "Judicial independence protects judges from impeachment based solely on unpopular decisions; impeachment is reserved for misconduct or criminal activity as defined by state law.",
+    "createdAt": 1755188549683,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188549683_zwqy41fua",
+    "subject": "Constitutional Law",
+    "topic": "Constitutional Law",
+    "difficulty": 2,
+    "stem": "Leslie, a resident of State X, was arrested for selling food without a permit during a pandemic when the state implemented strict public health regulations. During trial, Leslie argued that the state’s health regulations violate her right to engage in economic activity under the Constitution. The court ruled that the state had the authority to regulate businesses during a public health emergency. Which constitutional principle does this ruling primarily invoke?",
+    "choices": [
+      "A) The dormant commerce clause.",
+      "B) The police powers of the state.",
+      "C) The equal protection clause.",
+      "D) The privileges and immunities clause."
+    ],
+    "correctIndex": 1,
+    "explanation": "The ruling invokes the state's police powers, which allow it to enact laws to protect public health and safety, particularly during emergencies.",
+    "createdAt": 1755188549683,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188549683_5ygyx1oqt",
+    "subject": "Constitutional Law",
+    "topic": "Constitutional Law",
+    "difficulty": 4,
+    "stem": "In an election year, the federal government passed a law prohibiting any campaign contributions from foreign nationals to political campaigns. Jim, a naturalized U.S. citizen but originally from Canada, is concerned that he cannot contribute to his favorite candidate’s campaign due to his birthplace. The law applies only to campaign contributions from non-citizens. Which of the following is the best argument against the constitutionality of this law?",
+    "choices": [
+      "A) The law violates the First Amendment free speech rights of foreign nationals.",
+      "B) The law violates the Equal Protection Clause by discriminating based on national origin.",
+      "C) The law violates the privileges and immunities clause by restricting contributions based on citizenship.",
+      "D) The law is constitutional because it serves a compelling government interest in maintaining electoral integrity."
+    ],
+    "correctIndex": 2,
+    "explanation": "The law may violate the privileges and immunities clause, as it discriminates against individuals based on their citizenship status, which can be seen as protection against discrimination against U.S. citizens based on their place of origin.",
+    "createdAt": 1755188549683,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188571127_hywoqbznd",
+    "subject": "Evidence",
+    "topic": "Evidence",
+    "difficulty": 2,
+    "stem": "During a civil trial for breach of contract, the plaintiff seeks to introduce an email from the defendant that contains an admission of liability. The defendant objects, arguing the email is hearsay because it is being offered to prove the truth of the matter asserted. The plaintiff responds that the email is a party admission and therefore not hearsay. Which of the following is most likely?",
+    "choices": [
+      "The email is admissible because it is a statement made by a party opponent.",
+      "The email is inadmissible because it is hearsay.",
+      "The email is admissible only if it was sent in the course of business.",
+      "The email is admissible only if the defendant acknowledges sending it."
+    ],
+    "correctIndex": 0,
+    "explanation": "Under Rule 801(d)(2), a statement made by a party opponent is not considered hearsay when offered against that party.",
+    "createdAt": 1755188571127,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188571127_g5qjc6kpt",
+    "subject": "Evidence",
+    "topic": "Evidence",
+    "difficulty": 3,
+    "stem": "In a criminal trial for theft, the prosecution introduces a witness who testifies that she saw the defendant near the scene of the crime on the night in question. To bolster her credibility, the prosecution also seeks to introduce testimony from another witness who states that the defendant has a history of stealing. The defense objects, arguing that this testimony is improper character evidence. Which of the following is most likely?",
+    "choices": [
+      "The character evidence is admissible to show the defendant's propensity to commit theft.",
+      "The character evidence is inadmissible because it fails to meet the requirements of Rule 404.",
+      "The character evidence is admissible only if specific instances of conduct are shown.",
+      "The character evidence may be admissible if the defendant chooses to testify."
+    ],
+    "correctIndex": 1,
+    "explanation": "Rule 404 generally prohibits the use of character evidence to prove propensity; thus, prior bad acts are typically inadmissible.",
+    "createdAt": 1755188571127,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188571127_qupn7lyro",
+    "subject": "Evidence",
+    "topic": "Evidence",
+    "difficulty": 4,
+    "stem": "In a personal injury case, the plaintiff attempts to introduce a video surveillance recording of the defendant engaging in activities that contradict the defendant's claims of injury. The defendant objects, arguing that the video was not disclosed during discovery, violating the rules of procedure. The plaintiff argues the recording is admissible as it was obtained lawfully and is relevant. Which of the following is most likely?",
+    "choices": [
+      "The recording is admissible because it is relevant and not hearsay.",
+      "The recording is inadmissible due to the discovery violation.",
+      "The recording is admissible if the plaintiff can show good cause for the late disclosure.",
+      "The recording is inadmissible because it constitutes character evidence."
+    ],
+    "correctIndex": 2,
+    "explanation": "While discovery violations can affect admissibility, courts may allow the late-disclosed evidence if good cause is shown and if it is relevant.",
+    "createdAt": 1755188571127,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188571127_zycp8dhm4",
+    "subject": "Evidence",
+    "topic": "Evidence",
+    "difficulty": 3,
+    "stem": "In a defamation case, the plaintiff attempts to introduce a blog post written by a third party, which includes statements about the plaintiff's conduct. The plaintiff argues that these statements are admissible to establish the reputation damages suffered. The defendant objects on the grounds of hearsay. Which of the following is most likely?",
+    "choices": [
+      "The blog post is admissible as it is a public record.",
+      "The blog post is inadmissible as hearsay since it is offered to prove the truth of the matter asserted.",
+      "The blog post is admissible because it constitutes an opinion.",
+      "The blog post is inadmissible unless the author appears as a witness."
+    ],
+    "correctIndex": 1,
+    "explanation": "The blog post is offered for the truth of the statements made and thus constitutes hearsay and is inadmissible under Rule 802.",
+    "createdAt": 1755188571127,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188571127_f6v7emg5c",
+    "subject": "Evidence",
+    "topic": "Evidence",
+    "difficulty": 4,
+    "stem": "In a products liability case, the plaintiff seeks to introduce evidence of a prior incident involving the same product, where another person was injured due to a defect. The defendant objects, arguing that this evidence is irrelevant and prejudicial. The plaintiff argues that the prior incident is admissible to show notice of the defect. Which of the following is most likely?",
+    "choices": [
+      "The evidence of the prior incident is admissible to show a pattern of defects.",
+      "The evidence is inadmissible because it is irrelevant to the current case.",
+      "The evidence is admissible only if the plaintiff can prove the defect was the same.",
+      "The evidence is admissible as it shows the defendant had notice of the potential defect."
+    ],
+    "correctIndex": 3,
+    "explanation": "Evidence of prior incidents is often admissible to show notice or knowledge of defects under certain conditions, despite the potential for prejudice.",
+    "createdAt": 1755188571127,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188592880_tep4g3jll",
+    "subject": "Real Property",
+    "topic": "Real Property",
+    "difficulty": 4,
+    "stem": "Anna owns a parcel of land in a rural area. She has cultivated the land for growing crops for the past 20 years. During this time, her neighbor Bob has used a portion of Anna's land for grazing his cows without her permission. Anna never objected to Bob's use of the land although she was aware of it. Recently, Anna decided to build a fence to enclose her property. Bob, upon learning of Anna's plans, stated he would not move his cows and invoked the doctrine of adverse possession. Which of the following is most likely?",
+    "choices": [
+      "A) Bob will successfully claim adverse possession because he has openly and continuously used the land for grazing.",
+      "B) Bob cannot claim adverse possession because Anna never intended to give her land away.",
+      "C) Bob can only claim right to the land if he proves he has used it for at least 20 years without objection from Anna.",
+      "D) Bob's use of the land does not satisfy the requirements for adverse possession due to lack of exclusivity."
+    ],
+    "correctIndex": 0,
+    "explanation": "Bob's use was open, notorious, and continuous for the statutory period, potentially satisfying adverse possession requirements. However, he lacks exclusivity of possession as he did not have exclusive use.",
+    "createdAt": 1755188592880,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188592880_v762zxarv",
+    "subject": "Real Property",
+    "topic": "Real Property",
+    "difficulty": 3,
+    "stem": "Grace owns a house on a large plot of land, and she entered into a lease agreement with Mark for the home for one year. The lease provided that Mark would make necessary repairs. Halfway through the lease, a severe storm caused significant damage to the roof, which Grace refused to repair. Mark vacated the premises and withheld his last month’s rent in protest. Grace sued him for breach of lease. Which of the following is most likely?",
+    "choices": [
+      "A) Mark is liable for breach of lease since he vacated without Grace’s consent.",
+      "B) Mark is not liable for breach of lease because Grace failed to provide a habitable living condition.",
+      "C) Grace is entitled to recover rent because the damage was not her fault.",
+      "D) Grace can recover rent, but the damages can be reduced due to the storm’s unforeseen nature."
+    ],
+    "correctIndex": 1,
+    "explanation": "Mark's refusal to pay rent was justified due to Grace's failure to maintain a habitable property, which constitutes a breach of the implied warranty of habitability.",
+    "createdAt": 1755188592880,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188592880_d9wvn6lta",
+    "subject": "Real Property",
+    "topic": "Real Property",
+    "difficulty": 4,
+    "stem": "Tom and Jerry are co-owners of a piece of real estate as joint tenants. After a disagreement, Tom decides to sell his interest in the property to Sally without Jerry's consent. Jerry is unaware of this sale until he receives a notice from Sally. Sally claims she is now a joint tenant with Jerry. Which of the following is most likely?",
+    "choices": [
+      "A) Sally is a joint tenant with Jerry because Tom legitimately sold his interest.",
+      "B) Sally has no interest in the property because joint tenancies cannot be severed without mutual consent.",
+      "C) Jerry can force Sally to sell her interest on the grounds of being an unauthorized owner.",
+      "D) Tom's sale to Sally constitutes a severance of the joint tenancy, making Sally and Jerry tenants in common."
+    ],
+    "correctIndex": 3,
+    "explanation": "Tom's sale to Sally effectively severed the joint tenancy, creating a tenancy in common between Jerry and Sally.",
+    "createdAt": 1755188592880,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188592880_hqx54jyhi",
+    "subject": "Real Property",
+    "topic": "Real Property",
+    "difficulty": 3,
+    "stem": "Susan purchased a home in a subdivision that is subject to a set of restrictive covenants that prohibit any commercial activities. After moving in, she starts a home-based business selling homemade crafts. The homeowners association (HOA) warns her to stop her activities or face litigation. Susan argues that the covenants are not enforceable because they were not recorded. Which of the following is most likely?",
+    "choices": [
+      "A) Susan will prevail since the covenants were not recorded and are thus not enforceable.",
+      "B) The covenants are enforceable regardless of recording because they are part of the chain of title.",
+      "C) The HOA cannot enforce the covenants unless all homeowners unanimously agree to uphold them.",
+      "D) Restrictive covenants must be in writing to be enforceable, but oral agreements can still bind homeowners."
+    ],
+    "correctIndex": 1,
+    "explanation": "Even if the covenants were not recorded, they can still be enforceable as they form part of the common plan for the subdivision, which is its purpose in regulating property use.",
+    "createdAt": 1755188592880,
+    "usedCount": 0
+  },
+  {
+    "id": "smart_1755188592880_saeytv7oq",
+    "subject": "Real Property",
+    "topic": "Real Property",
+    "difficulty": 5,
+    "stem": "During a storm, a large tree from Bob's property falls onto his neighbor Carol's home, causing substantial damage. Carol sues Bob for negligence, claiming he failed to maintain the tree. Bob’s defense is that he had no knowledge of the tree’s condition. Carol argues that Bob should be held strictly liable for the damages. Which of the following is most likely?",
+    "choices": [
+      "A) Bob is liable because he has a duty to maintain trees on his property.",
+      "B) Carol cannot recover unless she proves Bob acted unreasonably regarding the tree.",
+      "C) Bob is strictly liable because falling trees are an abnormally dangerous activity.",
+      "D) Bob will not be liable since he had no actual knowledge of the tree’s potential hazard."
+    ],
+    "correctIndex": 1,
+    "explanation": "Bob's liability is based on negligence; Carol must demonstrate that Bob failed to act reasonably in maintaining the tree. Strict liability does not apply here because tree maintenance is typically not considered an abnormally dangerous activity.",
+    "createdAt": 1755188592880,
+    "usedCount": 0
   }
 ]
