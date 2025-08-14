@@ -11,21 +11,21 @@ import fs from "fs/promises";
 import { storage } from "./storage";
 import { registerSchema, loginSchema } from "@shared/schema";
 import { statsService } from "./services/statsService";
-import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker.js";
-import { initializeQuestionCoordinator } from "./services/qcoordinator.js";
-import { initializeLeaderboard, updateBotActivity, updatePlayerStats } from "./services/leaderboard.js";
+import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker";
+import { initializeQuestionCoordinator } from "./services/qcoordinator";
+import { initializeLeaderboard, updateBotActivity, updatePlayerStats } from "./services/leaderboard";
 import { generateMBEItem } from "./services/mbeGenerator";
 import { questionBank, type CachedQuestion } from './questionBank';
 import { retentionOptimizer } from './retentionOptimizer';
 import { realTimeLeaderboard } from './realTimeLeaderboard';
-import streakManager from './services/streakManager.js';
-import asyncDuels from './services/async.js';
+import streakManager from './services/streakManager';
+import asyncDuels from './services/async';
 import { dailyCasefileService } from './services/dailyCasefileService';
 import { emailTrackingService } from './services/emailTrackingService';
-import { chatbotService } from './services/chatbotService.js';
+import { chatbotService } from './services/chatbotService';
 
 // Initialize bot practice system
-import { BotPractice } from './services/botPractice.js';
+import { BotPractice } from './services/botPractice';
 const botPractice = new BotPractice();
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -75,7 +75,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for OpenAI
   app.get("/health/openai", async (req, res) => {
     try {
-      const { healthCheck } = await import("./services/robustGenerator.js");
+      const { healthCheck } = await import("./services/robustGenerator");
       const result = await healthCheck();
       return res.status(result.ok ? 200 : 500).json(result);
     } catch (e) {
@@ -90,7 +90,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Pool status endpoint - check pre-generated questions
   app.get("/api/pool-status", async (req, res) => {
     try {
-      const { getPoolStatus } = await import("./services/questionPool.js");
+      const { getPoolStatus } = await import("./services/questionPool");
       const status = getPoolStatus();
       
       // Calculate totals
@@ -128,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : subjects[Math.floor(Math.random() * subjects.length)];
       
       // Generate fresh question using the proven system
-      const { generateFreshQuestion } = await import("./services/robustGenerator.js");
+      const { generateFreshQuestion } = await import("./services/robustGenerator");
       const question = await generateFreshQuestion(subject);
       
       // Log the generated question details for debugging
@@ -159,7 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await initializeQuestionCoordinator();
   
   // Start pre-generating questions for instant serving
-  const { getQuestionPool } = await import("./services/questionPool.js");
+  const { getQuestionPool } = await import("./services/questionPool");
   getQuestionPool();
   await initializeLeaderboard();
   
