@@ -53,10 +53,11 @@ export function useAuth() {
       // Handle both old and new response formats
       return data.user || data;
     },
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       console.log('Login onSuccess called, data:', data);
-      // Immediately redirect - the session is already established
-      window.location.href = '/';
+      // Invalidate and refetch the auth query to update the authentication state
+      await queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      // The router will automatically show the home page when authenticated
     },
     onError: (error) => {
       console.log('Login onError called:', error);
