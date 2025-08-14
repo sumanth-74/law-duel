@@ -595,7 +595,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
               <p className="text-muted text-sm">
                 {duelState.showTransition 
                   ? 'Preparing next question...' 
-                  : `Atticus is crafting a fresh ${duelState.subject || 'MBE'} question...`}
+                  : 'Atticus is crafting a question...'}
               </p>
             </div>
           </div>
