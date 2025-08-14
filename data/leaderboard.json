@@ -51,9 +51,9 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 19,
-    "points": 3631,
+    "points": 3651,
     "totalWins": 64,
-    "totalLosses": 10,
+    "totalLosses": 11,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#F5DEB3",
@@ -66,7 +66,7 @@
       ],
       "accessoryColor": "#E6E6FA"
     },
-    "lastActive": "2025-08-14T16:22:15.907Z"
+    "lastActive": "2025-08-14T16:58:32.917Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -120,8 +120,8 @@
     "displayName": "LawBeast99",
     "lawSchool": "Harvard Law",
     "level": 16,
-    "points": 3100,
-    "totalWins": 49,
+    "points": 3119,
+    "totalWins": 50,
     "totalLosses": 12,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#333333"
     },
-    "lastActive": "2025-08-14T16:12:15.907Z"
+    "lastActive": "2025-08-14T17:03:32.913Z"
   },
   {
     "id": "bot_contracts_wizard",
@@ -210,9 +210,9 @@
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
     "level": 13,
-    "points": 2401,
+    "points": 2433,
     "totalWins": 37,
-    "totalLosses": 14,
+    "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#DEB887",
@@ -225,7 +225,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-14T00:16:31.547Z"
+    "lastActive": "2025-08-14T17:03:32.913Z"
   },
   {
     "id": "bot_objection_hero",
