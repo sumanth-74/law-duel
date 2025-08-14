@@ -29,147 +29,17 @@ import { BotPractice } from './services/botPractice';
 const botPractice = new BotPractice();
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // CRITICAL: Trust proxy for Replit environment
-  app.set('trust proxy', 1);
-  
-  // Add CORS headers for cross-domain requests
-  app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    // Allow requests from both Replit and custom domain
-    const allowedOrigins = [
-      'https://lawduel.net',
-      'https://www.lawduel.net',
-      /https:\/\/.*\.replit\.app$/,
-      /https:\/\/.*\.replit\.dev$/,
-      'http://localhost:5000',
-      'http://localhost:5173'
-    ];
-    
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed instanceof RegExp) {
-        return allowed.test(origin || '');
-      }
-      return allowed === origin;
-    });
-    
-    if (isAllowed) {
-      res.header('Access-Control-Allow-Origin', origin);
-      res.header('Access-Control-Allow-Credentials', 'true');
-      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    }
-    
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(200);
-    }
-    
-    next();
-  });
-  
-  // Session configuration MUST be before routes
-  // Check if we're in production - detect deployed environment or custom domain
-  const PROD = process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYMENT === '1';
-  
-  // Use PostgreSQL for persistent session storage in production
-  let sessionStore: any;
-  if (PROD && process.env.DATABASE_URL) {
-    const PgSession = connectPgSimple(session);
-    const pool = new pg.Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: PROD ? { rejectUnauthorized: false } : false
-    });
-    sessionStore = new PgSession({
-      pool,
-      tableName: 'user_sessions',
-      createTableIfMissing: true,
-      pruneSessionInterval: 60 * 15, // Prune every 15 minutes
-    });
-  } else {
-    // Use memory store for development
-    const MemStore = MemoryStore(session);
-    sessionStore = new MemStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    });
-  }
-  
-  // Clear old cookies middleware - removes conflicting session cookies
-  app.use((req, res, next) => {
-    // If old connect.sid cookie exists, clear it
-    if (req.headers.cookie && req.headers.cookie.includes('connect.sid')) {
-      res.clearCookie('connect.sid', { path: '/' });
-    }
-    next();
-  });
-  
-  // Session configuration - works for both HTTP and HTTPS
-  app.use(session({
-    name: 'sid', // Use 'sid' as the cookie name  
-    secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    proxy: true, // Trust the proxy for secure cookies
-    cookie: {
-      httpOnly: true,
-      sameSite: 'lax', // Use 'lax' for same-origin
-      secure: false, // Allow cookies on both HTTP and HTTPS
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      path: '/'
-      // DO NOT set domain - let it be host-only for the current domain
-    },
-  }));
+  // Sessions are now configured in index.ts BEFORE this function is called
 
 
-  
-  // Debug endpoint to check session configuration
-  app.get("/api/debug/session", (req, res) => {
-    const sessionInfo = {
-      environment: process.env.NODE_ENV || 'development',
-      hasSession: !!req.session,
-      sessionId: req.sessionID,
-      sessionData: req.session,
-      cookies: req.cookies,
-      headers: {
-        cookie: req.headers.cookie,
-        origin: req.headers.origin,
-        host: req.headers.host,
-      },
-      sessionConfig: {
-        isProd: PROD,
-        cookieSettings: {
-          httpOnly: true,
-          sameSite: 'lax',
-          secure: false,
-          path: '/'
-        }
-      }
-    };
-    res.json(sessionInfo);
-  });
-  
-  // Serve test authentication page
-  app.get('/test-auth', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'test-auth-fixed.html'));
-  });
-  
-  // Serve final login test page
-  app.get('/test-login', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'test-login-final.html'));
-  });
-  
-  // Serve instant login page that force-clears cookies
-  app.get('/fix', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'instant-login.html'));
-  });
-  
-  // Serve fix page for custom domain issues
-  app.get('/fix-domain', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'fix-custom-domain.html'));
-  });
-  
-  // Serve browser auth test page
-  app.get('/browser-test', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'browser-auth-test.html'));
+  // Health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({
+      ok: true,
+      host: req.headers.host,
+      authed: Boolean((req.session as any)?.userId),
+      sid: req.sessionID || null
+    });
   });
   
   // Health check endpoint for OpenAI

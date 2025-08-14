@@ -14,7 +14,6 @@ import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
 import EmailAdmin from "@/pages/EmailAdmin";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 
 function Router() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -56,15 +55,6 @@ function Router() {
 }
 
 function App() {
-  // Only clear the old connect.sid cookie once, not the new sid cookie
-  useEffect(() => {
-    // Check if old connect.sid exists and clear it ONLY
-    if (document.cookie.includes('connect.sid')) {
-      document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      console.log('Cleared old connect.sid cookie');
-    }
-  }, []);
-  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

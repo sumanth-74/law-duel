@@ -1,12 +1,58 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import MemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
+import pg from "pg";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { dailyCasefileService } from "./services/dailyCasefileService";
 import './services/questionCache.js'; // Initialize question cache for instant loading
 
 const app = express();
+const PROD = process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYMENT === '1';
+
+// CRITICAL: Trust proxy FIRST for Replit/any proxy
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// SESSION CONFIGURATION - MUST BE BEFORE ALL ROUTES
+let sessionStore: any;
+if (PROD && process.env.DATABASE_URL) {
+  const PgSession = connectPgSimple(session);
+  const pool = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: PROD ? { rejectUnauthorized: false } : false
+  });
+  sessionStore = new PgSession({
+    pool,
+    tableName: 'user_sessions',
+    createTableIfMissing: true,
+    pruneSessionInterval: 60 * 15, // Prune every 15 minutes
+  });
+} else {
+  const MemStore = MemoryStore(session);
+  sessionStore = new MemStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  });
+}
+
+app.use(session({
+  name: 'sid',
+  secret: process.env.SESSION_SECRET || 'dev-secret-key-change-in-production',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',  // Always use lax for same-origin
+    secure: false,     // Allow HTTP in development  
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    path: '/'
+    // DO NOT set domain - let it be host-only
+  }
+}));
 
 app.use((req, res, next) => {
   const start = Date.now();
