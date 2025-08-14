@@ -33,13 +33,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     store: new MemStore({
       checkPeriod: 86400000 // prune expired entries every 24h
     }),
-    resave: false,
-    saveUninitialized: false,
+    resave: true, // Force session save
+    saveUninitialized: true, // Save even empty sessions
+    rolling: true, // Reset expiry on activity
     cookie: {
       secure: false, // Allow cookies in development
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      sameSite: 'lax' // Allow cookies on same-origin requests
+      sameSite: 'lax', // Allow cookies on same-origin requests
+      path: '/' // Ensure cookie works on all paths
     },
   }));
 
@@ -146,7 +148,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Authentication middleware
   function requireAuth(req: any, res: any, next: any) {
-    if (!req.session.userId) {
+    console.log('Auth middleware - SessionID:', req.sessionID, 'UserID:', req.session?.userId, 'Session:', req.session);
+    if (!req.session?.userId) {
+      console.log('No userId in session, rejecting');
       return res.status(401).json({ message: "Authentication required" });
     }
     next();
