@@ -1133,6 +1133,26 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755204216352,
       "generatedAt": 1755204156352
+    },
+    {
+      "qid": "fresh_openai_1755205611826_28ec3567",
+      "subject": "Contracts",
+      "topic": "Parol Evidence",
+      "stem": "Alice and Bob enter into a written agreement for the sale of a car. The contract states that the car is sold 'as is' and contains no warranties. After the sale, Alice claims that Bob verbally promised her the car was in excellent condition. Bob refuses to honor this claim, stating that the written contract is the final agreement. Which of the following statements is true regarding the enforceability of Alice's claim?",
+      "choices": [
+        "Alice's claim is not enforceable because it contradicts the 'as is' clause in the contract.",
+        "Alice's claim is enforceable because it is a verbal promise made before the contract was signed.",
+        "Alice's claim is not enforceable because the written contract is complete and unambiguous.",
+        "Alice's claim is enforceable because it provides evidence of Bob's intent to mislead her."
+      ],
+      "correctIndex": 2,
+      "explanation": "Alice's claim is not enforceable because the written contract is complete and unambiguous.",
+      "explanationLong": "The correct answer is that Alice's claim is not enforceable because the written contract is complete and unambiguous. Under the Parol Evidence Rule, prior or contemporaneous statements that contradict a written agreement are generally inadmissible to change the terms of the contract. In this case, the written contract explicitly states that the car is sold 'as is' with no warranties, making it clear that Alice cannot rely on Bob's alleged verbal promise about the car's condition. The first choice is incorrect because the timing of the verbal promise does not matter if it contradicts a written agreement. The third choice fails as it misapplies the rule by suggesting that intent to mislead can override the written terms. Finally, the fourth choice is incorrect as it is redundant; the contradiction with the 'as is' clause is already covered by the Parol Evidence Rule, reinforcing that the claim cannot stand.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755205671826,
+      "generatedAt": 1755205611827
     }
   ],
   "Crim": [
