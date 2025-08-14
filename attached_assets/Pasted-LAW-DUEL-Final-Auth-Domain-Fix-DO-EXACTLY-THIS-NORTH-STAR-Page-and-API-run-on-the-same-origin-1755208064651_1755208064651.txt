@@ -1,0 +1,214 @@
+LAW DUEL — Final Auth + Domain Fix (DO EXACTLY THIS)
+NORTH STAR
+
+Page and API run on the same origin (https://lawduel.net). Session cookie sid is first-party (SameSite=Lax, Secure), set before routes. Frontend only calls relative /api/* paths. No special “clear cookie” pages, no replit.app base URLs.
+
+1) Serve SPA and API from the same app (same origin)
+// server/index.ts
+import express from "express";
+import session from "express-session";
+import path from "path";
+import auth from "./auth.js"; // routes below
+const app = express();
+const PROD = process.env.NODE_ENV === "production";
+
+app.set("trust proxy", 1);          // REQUIRED on Replit/any proxy
+app.use(express.json());
+
+// --- SESSIONS: MOUNT BEFORE ANY /api ROUTES ---
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: PROD ? "lax" : "none",   // same-origin in prod
+    secure: PROD,                      // HTTPS in prod
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    path: "/"
+    // DO NOT set cookie.domain unless sharing cookies across subdomains
+  }
+}));
+
+// --- API ROUTES ---
+app.use("/api/auth", auth);
+// app.use("/api/...", other routes)
+
+// --- CANONICAL HOST: choose one (apex recommended) ---
+const CANON = "lawduel.net";
+app.use((req, res, next) => {
+  if (PROD && (req.headers.host || "") !== CANON) {
+    return res.redirect(301, `https://${CANON}${req.originalUrl}`);
+  }
+  next();
+});
+
+// --- SERVE SPA FROM SAME ORIGIN IN PROD ---
+if (PROD) {
+  const staticDir = path.join(process.cwd(), "client/dist");
+  app.use(express.static(staticDir));
+  app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(staticDir, "index.html")));
+}
+
+app.listen(process.env.PORT || 5000);
+
+2) Auth routes: regenerate + save, JSON only (no server redirects)
+// server/auth.ts
+import { Router } from "express";
+import bcrypt from "bcrypt";
+import { getUserByUsername } from "./db.js";
+
+const r = Router();
+
+r.post("/login", async (req, res, next) => {
+  const { username, password } = req.body || {};
+  const u = await getUserByUsername(username);
+  if (!u || !(await bcrypt.compare(password, u.passwordHash))) {
+    return res.status(401).json({ ok: false, error: "Invalid credentials" });
+  }
+  req.session.regenerate(err => {
+    if (err) return next(err);
+    req.session.user = { id: u.id, username: u.username };
+    req.session.save(err2 => {
+      if (err2) return next(err2);
+      res.json({ ok: true, user: req.session.user });
+    });
+  });
+});
+
+r.get("/me", (req, res) => {
+  if (!req.session.user) return res.status(401).json({ ok: false });
+  res.json({ ok: true, user: req.session.user });
+});
+
+r.post("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("sid", { path: "/" });
+    res.json({ ok: true });
+  });
+});
+
+export default r;
+
+
+(If you use a session store like Postgres/Redis, keep it—but import it in ESM-safe form and leave the cookie config above.)
+
+3) Frontend: relative API + cookies on EVERY call
+// client/src/api.ts
+export async function api(path: string, opts: RequestInit = {}) {
+  return fetch(`/api${path}`, {
+    ...opts,
+    credentials: "include",
+    headers: { "Content-Type": "application/json", ...(opts.headers || {}) }
+  });
+}
+
+// client/src/pages/Login.tsx (on success)
+const res = await api("/auth/login", {
+  method: "POST",
+  body: JSON.stringify({ username, password })
+});
+if (res.ok) window.location.assign("/play"); else setError("Invalid username or password");
+
+
+Search & destroy any of these in the repo (they cause the loop):
+
+https://*.replit.app
+
+https://*.replit.dev
+
+http://localhost:5000 (in prod code)
+
+VITE_API_URL or similar supplying an absolute prod URL
+
+All prod calls must be relative (/api/...) so they hit lawduel.net.
+
+4) Remove hacks & conflicting cookies
+
+Delete:
+
+Any “cookie-clearing” routes/pages (/fix-login, /test-auth, auto-clearing scripts)
+
+Any code setting cookie.domain to a different host
+
+Any server-side redirects after login (only return JSON)
+
+Keep a single cookie named sid.
+
+5) Diagnostics (keep for beta, remove later)
+// server/diag.ts
+import { Router } from "express";
+const d = Router();
+d.get("/health", (req, res) => {
+  res.json({
+    ok: true,
+    host: req.headers.host,
+    authed: Boolean(req.session?.user),
+    sid: (req as any).sessionID || null
+  });
+});
+export default d;
+
+// mount
+// app.use("/api/diag", diagRouter);
+
+6) Acceptance tests (MUST PASS before you say “fixed”)
+
+Run these against https://lawduel.net (not replit.app):
+
+A. Curl
+
+# 1) Login: expect HTTP/1.1 200 AND Set-Cookie: sid=...; Secure; SameSite=Lax
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  https://lawduel.net/api/auth/login
+
+# 2) Me: expect 200 { ok:true, user:{...} }
+curl -i -b jar.txt https://lawduel.net/api/auth/me
+
+# 3) Health: authed:true, sid not null
+curl -s -b jar.txt https://lawduel.net/api/diag/health | jq .
+
+
+B. Browser (DevTools → Network on lawduel.net)
+
+/api/auth/login response shows Set-Cookie: sid=…; Secure; SameSite=Lax; Path=/.
+
+Refresh the page → /api/auth/me returns 200 and the app lands on /play.
+
+Incognito + a friend’s laptop: same behavior.
+
+C. No cross-origin traffic
+
+In Network tab, zero requests to *.replit.app or *.replit.dev after load. All API calls go to /api/....
+
+D. Persistence
+
+Restart the server → existing sessions remain valid if you’re using a real session store (optional for today, recommended).
+
+FAIL means:
+
+No Set-Cookie on login → session middleware order/flags wrong.
+
+Set-Cookie for wrong host (e.g., Domain=*.replit.app) → remove cookie.domain; rely on host-only cookies for lawduel.net.
+
+/auth/me 401 with cookie present → session store not saving/reading or trust proxy missing.
+
+Any call goes to replit.app → remove hard-coded base URL.
+
+7) Domain/Deployment sanity (Replit settings)
+
+Deployments → Production is green.
+
+Domains shows lawduel.net Verified with HTTPS.
+
+If you also have www.lawduel.net, either:
+
+add the same in Replit Domains, or
+
+keep the 301 canonical redirect above to apex so cookies aren’t split.
+
+Definition of Done
+
+On https://lawduel.net, logging in returns Set-Cookie: sid=…; /api/auth/me is 200 after a full refresh and on a second device; no requests hit replit.app; users land on /play and stay logged in. No special “fix login” pages required.

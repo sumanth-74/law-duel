@@ -56,18 +56,13 @@ function Router() {
 }
 
 function App() {
-  // Clear old session cookies on app initialization
+  // Only clear the old connect.sid cookie once, not the new sid cookie
   useEffect(() => {
-    // Clear any old connect.sid cookies that might be blocking new sessions
-    const clearOldCookies = () => {
+    // Check if old connect.sid exists and clear it ONLY
+    if (document.cookie.includes('connect.sid')) {
       document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
-      document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname;
-      // Also clear variations
-      document.cookie = 'connect.sid=; Max-Age=0; path=/;';
-      document.cookie = 'connect.sid=; Max-Age=0; path=/; domain=' + window.location.hostname;
-    };
-    clearOldCookies();
+      console.log('Cleared old connect.sid cookie');
+    }
   }, []);
   
   return (

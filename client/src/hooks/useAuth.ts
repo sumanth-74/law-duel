@@ -62,7 +62,7 @@ export function useAuth() {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
       // Small delay to ensure session is saved before redirect
       setTimeout(() => {
-        window.location.href = '/play';
+        window.location.href = '/';
       }, 100);
     },
     onError: (error) => {

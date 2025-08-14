@@ -167,6 +167,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(process.cwd(), 'fix-custom-domain.html'));
   });
   
+  // Serve browser auth test page
+  app.get('/browser-test', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'browser-auth-test.html'));
+  });
+  
   // Health check endpoint for OpenAI
   app.get("/health/openai", async (req, res) => {
     try {
