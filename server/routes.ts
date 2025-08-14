@@ -181,6 +181,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userData = registerSchema.parse(req.body);
       const { confirmPassword, ...userInsert } = userData;
       
+      // Clean up email field - convert empty string to undefined
+      if (userInsert.email === "" || userInsert.email === null) {
+        userInsert.email = undefined;
+      }
+      
       // Check if username is taken
       const existing = await storage.getUserByUsername(userData.username);
       if (existing) {

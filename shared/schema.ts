@@ -145,6 +145,9 @@ export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
   lastLoginAt: true,
+}).partial({
+  email: true,
+  lawSchool: true,
 });
 
 export const loginSchema = z.object({
@@ -152,11 +155,14 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export const registerSchema = insertUserSchema.extend({
-  email: z.string().email("Please enter a valid email address"),
+export const registerSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  displayName: z.string().min(1, "Display name is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
+  email: z.string().optional(),
   lawSchool: z.string().optional(),
+  avatarData: z.any(), // JSON data for avatar
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
