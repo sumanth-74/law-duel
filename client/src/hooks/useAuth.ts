@@ -6,7 +6,7 @@ export function useAuth() {
   const queryClient = useQueryClient();
 
   const { data: user, isLoading, error } = useQuery({
-    queryKey: ['/api', 'auth', 'me'],
+    queryKey: ['/api/auth/me'],
     retry: false,
     refetchOnWindowFocus: true,
     queryFn: async () => {
@@ -49,7 +49,7 @@ export function useAuth() {
     },
     onSuccess: (user: User) => {
       console.log('Login onSuccess called with user:', user.username);
-      queryClient.setQueryData(['/api', 'auth', 'me'], user);
+      queryClient.setQueryData(['/api/auth/me'], user);
       // Force a full page reload to ensure the app recognizes the new auth state
       window.location.reload();
     },
@@ -81,7 +81,8 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: (user: User) => {
-      queryClient.setQueryData(['/api', 'auth', 'me'], user);
+      queryClient.setQueryData(['/api/auth/me'], user);
+      window.location.reload();
     },
   });
 
@@ -94,7 +95,8 @@ export function useAuth() {
       return response.ok;
     },
     onSuccess: () => {
-      queryClient.setQueryData(['/api', 'auth', 'me'], null);
+      queryClient.setQueryData(['/api/auth/me'], null);
+      window.location.reload();
     },
   });
 

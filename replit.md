@@ -9,6 +9,7 @@ Law Duel is a competitive legal education game designed for bar exam preparation
 - **Fixed Daily Casefile UI**: Removed duplicate letter displays (A, B, C, D) from answer text while keeping proper side labels
 - **Enhanced answer randomization**: Improved regex pattern to strip all letter prefixes from OpenAI-generated answers
 - **App deployment ready**: Configured for Replit deployment with custom domain lawduel.net purchased by user
+- **Fixed authentication system**: Resolved session persistence issues by fixing cookie configuration (removed secure flag for dev, added sameSite), ensuring session.save() is called after login/registration, and verified complete auth flow with integration tests
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
