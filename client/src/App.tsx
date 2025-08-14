@@ -44,6 +44,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Home} />
+          <Route path="/play" component={Home} />
           <Route path="/daily" component={DailyCasefile} />
           <Route path="/stats" component={Stats} />
           <Route path="/stats/:userId" component={Stats} />
