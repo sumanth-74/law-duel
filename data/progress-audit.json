@@ -1,0 +1,62 @@
+[
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_meammv7y_e30i",
+    "questionId": "pool_1755129253770_6kpo3nam",
+    "subject": "Evidence",
+    "subtopic": "Evidence",
+    "difficulty": 1,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -3.5999999999999996,
+    "ts": 1755129314774,
+    "timestamp": "2025-08-13T23:55:14.774Z"
+  },
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_meammv7y_e30i",
+    "questionId": "pool_1755129334340_kzi0vw7o",
+    "subject": "Evidence",
+    "subtopic": "Evidence",
+    "difficulty": 1,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -3.5999999999999996,
+    "ts": 1755129395342,
+    "timestamp": "2025-08-13T23:56:35.342Z"
+  },
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_meammv7y_e30i",
+    "questionId": "pool_1755129409913_vxm7rd8k",
+    "subject": "Evidence",
+    "subtopic": "Evidence",
+    "difficulty": 2,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -4.2,
+    "ts": 1755129470914,
+    "timestamp": "2025-08-13T23:57:50.914Z"
+  },
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_meammv7y_e30i",
+    "questionId": "pool_1755129487003_fbhwpooz",
+    "subject": "Evidence",
+    "subtopic": "Evidence",
+    "difficulty": 2,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -4.2,
+    "ts": 1755129548004,
+    "timestamp": "2025-08-13T23:59:08.004Z"
+  }
+]
