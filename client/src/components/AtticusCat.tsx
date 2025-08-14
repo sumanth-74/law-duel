@@ -9,7 +9,7 @@ const sizeMap = {
   md: 24,
   lg: 32,
   xl: 48,
-  '2xl': 80
+  '2xl': 120
 };
 
 /**
@@ -23,7 +23,7 @@ export function AtticusCat({ size = 'sm', className = '' }: AtticusCatProps) {
     <svg 
       width={svgSize}
       height={svgSize}
-      viewBox="0 0 40 40" 
+      viewBox="0 0 60 60" 
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -36,30 +36,30 @@ export function AtticusCat({ size = 'sm', className = '' }: AtticusCatProps) {
         </linearGradient>
       </defs>
       
-      {/* Cat silhouette - scaled and centered */}
-      <g transform="translate(20, 12)">
+      {/* Cat silhouette - bigger and centered */}
+      <g transform="translate(30, 18)">
         {/* Cat head */}
-        <ellipse cx="0" cy="0" rx="7" ry="5" fill="url(#atticusGradient)" opacity="0.9"/>
+        <ellipse cx="0" cy="0" rx="14" ry="10" fill="url(#atticusGradient)" opacity="0.9"/>
         
         {/* Cat ears */}
-        <polygon points="-5,-3 -7,-8 -2,-5" fill="url(#atticusGradient)" opacity="0.9"/>
-        <polygon points="5,-3 7,-8 2,-5" fill="url(#atticusGradient)" opacity="0.9"/>
+        <polygon points="-10,-6 -14,-16 -4,-10" fill="url(#atticusGradient)" opacity="0.9"/>
+        <polygon points="10,-6 14,-16 4,-10" fill="url(#atticusGradient)" opacity="0.9"/>
         
         {/* Cat eyes - bright purple/lavender */}
-        <circle cx="-2.5" cy="-0.5" r="1" fill="#e9d5ff"/>
-        <circle cx="2.5" cy="-0.5" r="1" fill="#e9d5ff"/>
+        <circle cx="-5" cy="-1" r="2" fill="#e9d5ff"/>
+        <circle cx="5" cy="-1" r="2" fill="#e9d5ff"/>
         
-        {/* Tiny whiskers */}
-        <line x1="-7" y1="0" x2="-10" y2="-1" stroke="#e9d5ff" strokeWidth="0.5" opacity="0.6"/>
-        <line x1="-7" y1="1" x2="-10" y2="1" stroke="#e9d5ff" strokeWidth="0.5" opacity="0.6"/>
-        <line x1="7" y1="0" x2="10" y2="-1" stroke="#e9d5ff" strokeWidth="0.5" opacity="0.6"/>
-        <line x1="7" y1="1" x2="10" y2="1" stroke="#e9d5ff" strokeWidth="0.5" opacity="0.6"/>
+        {/* Whiskers */}
+        <line x1="-14" y1="0" x2="-20" y2="-2" stroke="#e9d5ff" strokeWidth="1" opacity="0.6"/>
+        <line x1="-14" y1="2" x2="-20" y2="2" stroke="#e9d5ff" strokeWidth="1" opacity="0.6"/>
+        <line x1="14" y1="0" x2="20" y2="-2" stroke="#e9d5ff" strokeWidth="1" opacity="0.6"/>
+        <line x1="14" y1="2" x2="20" y2="2" stroke="#e9d5ff" strokeWidth="1" opacity="0.6"/>
         
         {/* Cat body */}
-        <ellipse cx="0" cy="7" rx="5" ry="7" fill="url(#atticusGradient)" opacity="0.8"/>
+        <ellipse cx="0" cy="14" rx="10" ry="14" fill="url(#atticusGradient)" opacity="0.8"/>
         
         {/* Cat tail - curved */}
-        <path d="M 5,10 Q 10,7 8,14" stroke="url(#atticusGradient)" strokeWidth="2" fill="none" opacity="0.8"/>
+        <path d="M 10,20 Q 20,14 16,28" stroke="url(#atticusGradient)" strokeWidth="4" fill="none" opacity="0.8"/>
       </g>
     </svg>
   );
