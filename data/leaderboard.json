@@ -28,8 +28,8 @@
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
     "level": 20,
-    "points": 3989,
-    "totalWins": 72,
+    "points": 3999,
+    "totalWins": 73,
     "totalLosses": 9,
     "avatarData": {
       "baseModel": "male",
@@ -43,7 +43,7 @@
       ],
       "accessoryColor": "#8B0000"
     },
-    "lastActive": "2025-08-14T02:06:45.958Z"
+    "lastActive": "2025-08-14T16:41:35.175Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -233,8 +233,8 @@
     "displayName": "ObjectionHero",
     "lawSchool": "UChicago Law",
     "level": 12,
-    "points": 2237,
-    "totalWins": 34,
+    "points": 2270,
+    "totalWins": 35,
     "totalLosses": 16,
     "avatarData": {
       "baseModel": "male",
@@ -248,7 +248,7 @@
       ],
       "accessoryColor": "#2F4F4F"
     },
-    "lastActive": "2025-08-14T16:31:35.170Z"
+    "lastActive": "2025-08-14T16:41:35.175Z"
   },
   {
     "id": "bot_statute_slayer",
