@@ -10,7 +10,7 @@ const sizeMap = {
   lg: 32,
   xl: 48,
   '2xl': 120,
-  massive: 110  // Slightly smaller than button for padding
+  massive: 140  // For the larger 160px button
 };
 
 /**
