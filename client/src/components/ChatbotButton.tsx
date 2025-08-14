@@ -21,7 +21,7 @@ export function ChatbotButton({ currentSubject, className = '', variant = 'float
         <div className={`fixed bottom-6 right-6 z-30 ${className}`}>
           <Button
             onClick={() => setIsOpen(!isOpen)}
-            className={`relative w-14 h-14 rounded-full shadow-lg transition-all duration-300 ${
+            className={`relative w-20 h-20 rounded-full shadow-xl transition-all duration-300 ${
               isOpen 
                 ? 'bg-purple-600 hover:bg-purple-700 scale-110' 
                 : 'bg-mystic-gold hover:bg-mystic-gold/90'
@@ -29,16 +29,16 @@ export function ChatbotButton({ currentSubject, className = '', variant = 'float
             data-testid="button-floating-chatbot"
           >
             {isOpen ? (
-              <span className="text-xl">×</span>
+              <span className="text-3xl">×</span>
             ) : (
-              <AtticusCat size="md" className="opacity-90" />
+              <AtticusCat size="xl" className="opacity-90" />
             )}
             
             {/* Subject Badge */}
             {currentSubject && !isOpen && (
               <Badge 
                 variant="outline" 
-                className="absolute -top-2 -right-2 text-xs border-purple-400/50 text-purple-300 bg-purple-900/90 backdrop-blur-sm"
+                className="absolute -top-1 -right-1 text-xs border-purple-400/50 text-purple-300 bg-purple-900/90 backdrop-blur-sm shadow-lg"
               >
                 {currentSubject.split(' ')[0]}
               </Badge>

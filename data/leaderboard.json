@@ -210,9 +210,9 @@
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
     "level": 12,
-    "points": 2337,
+    "points": 2379,
     "totalWins": 36,
-    "totalLosses": 13,
+    "totalLosses": 14,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#DEB887",
@@ -225,7 +225,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-13T22:01:02.507Z"
+    "lastActive": "2025-08-14T00:05:56.987Z"
   },
   {
     "id": "bot_objection_hero",

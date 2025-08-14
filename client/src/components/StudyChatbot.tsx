@@ -175,11 +175,11 @@ export function StudyChatbot({ currentSubject, isVisible, onClose }: StudyChatbo
       <CardHeader className="border-b border-purple-500/20 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-mystic-gold rounded-lg flex items-center justify-center">
-              <AtticusCat size="md" className="opacity-90" />
+            <div className="w-16 h-16 bg-mystic-gold rounded-lg flex items-center justify-center shadow-lg">
+              <AtticusCat size="xl" className="opacity-90" />
             </div>
             <div>
-              <CardTitle className="text-lg font-cinzel">Study Companion</CardTitle>
+              <CardTitle className="text-xl font-cinzel">Study Companion</CardTitle>
               <p className="text-sm text-muted">Ask Atticus anything about law</p>
             </div>
           </div>

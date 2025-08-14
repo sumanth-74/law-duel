@@ -1,5 +1,5 @@
 interface AtticusCatProps {
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   className?: string;
 }
 
@@ -7,7 +7,9 @@ const sizeMap = {
   xs: 16,
   sm: 20,
   md: 24,
-  lg: 32
+  lg: 32,
+  xl: 48,
+  '2xl': 64
 };
 
 /**

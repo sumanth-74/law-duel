@@ -58,5 +58,35 @@
     "masteryDelta": -4.2,
     "ts": 1755129548004,
     "timestamp": "2025-08-13T23:59:08.004Z"
+  },
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_meamxfnl_6gk0",
+    "questionId": "pool_1755129789210_pl9d53e9",
+    "subject": "Civil Procedure",
+    "subtopic": "Civil Procedure",
+    "difficulty": 1,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -3.5999999999999996,
+    "ts": 1755129850212,
+    "timestamp": "2025-08-14T00:04:10.212Z"
+  },
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_meamxfnl_6gk0",
+    "questionId": "pool_1755129872548_ehlc4s9o",
+    "subject": "Civil Procedure",
+    "subtopic": "Civil Procedure",
+    "difficulty": 1,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -3.5999999999999996,
+    "ts": 1755129933549,
+    "timestamp": "2025-08-14T00:05:33.549Z"
   }
 ]
