@@ -415,10 +415,10 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   if (!isVisible) return null;
 
   return (
-    <Card className="panel relative pt-20" data-testid="duel-arena">
+    <Card className="panel relative overflow-hidden" data-testid="duel-arena">
       {/* Pokemon-style Avatar Displays in Corners */}
       {/* Opponent Avatar - Top Left */}
-      <div className={`absolute top-32 left-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer === duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
+      <div className={`absolute top-4 left-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer === duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
         <div className="bg-panel-2 border-2 border-danger/60 rounded-xl p-3 shadow-lg min-w-[220px]">
           <div className="flex items-center space-x-3">
             <AvatarRenderer
@@ -447,7 +447,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
       </div>
       
       {/* User Avatar - Top Right */}
-      <div className={`absolute top-32 right-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer !== duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
+      <div className={`absolute top-4 right-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer !== duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
         <div className="bg-panel-2 border-2 border-arcane/60 rounded-xl p-3 shadow-lg min-w-[220px]">
           <div className="flex items-center space-x-3">
             <div className="flex-1 text-right">
@@ -486,7 +486,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         masteryChange={duelState.feedbackData?.masteryChange}
       />
       
-      <CardContent className="p-6 pt-20">
+      <CardContent className="p-4 sm:p-6 pt-24">
         {/* Opponent Info */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
@@ -606,12 +606,12 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         {/* Question */}
         {duelState.currentQuestion && !duelState.generatingQuestion && (
           <div className="question-reveal mb-8">
-            <div className="bg-panel-2 border border-white/10 rounded-xl p-6">
-              <div className="flex items-start justify-between mb-4">
-                <h4 className="font-semibold text-lg" data-testid="question-header">
+            <div className="bg-panel-2 border border-white/10 rounded-xl p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-2">
+                <h4 className="font-semibold text-base sm:text-lg" data-testid="question-header">
                   {(duelState.currentQuestion as any)?.subject || duelState.subject} • Round {duelState.round}/10
                 </h4>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 flex-shrink-0">
                   <button 
                     className="text-muted hover:text-mystic-gold transition-colors disabled:opacity-50"
                     onClick={handleHintRequest}
@@ -621,10 +621,10 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
                   >
                     <AtticusCat size="xs" className="inline-block" />
                   </button>
-                  <span className="text-xs text-muted">Hints: {duelState.hintsUsed}/3</span>
+                  <span className="text-xs text-muted whitespace-nowrap">Hints: {duelState.hintsUsed}/3</span>
                 </div>
               </div>
-              <p className="text-ink leading-relaxed mb-6" data-testid="question-stem">
+              <p className="text-sm sm:text-base text-ink leading-relaxed mb-6 break-words overflow-hidden" data-testid="question-stem">
                 {duelState.currentQuestion.stem}
               </p>
             </div>
@@ -635,27 +635,22 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
         {duelState.currentQuestion && !duelState.showResult && !duelState.generatingQuestion && (
           <div className="grid grid-cols-1 gap-3 mb-6">
             {duelState.currentQuestion.choices.map((choice, index) => (
-              <Button
+              <button
                 key={index}
                 onClick={() => handleAnswerSelect(index)}
                 disabled={duelState.selectedAnswer !== undefined}
-                className={`text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[60px] bg-transparent ${
+                className={`w-full text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[60px] bg-transparent flex items-start ${
                   duelState.selectedAnswer === index ? 'border-arcane bg-arcane/10' : ''
-                }`}
-                style={{ 
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  width: '100%',
-                  height: 'auto',
-                  whiteSpace: 'normal'
-                }}
+                } ${duelState.selectedAnswer !== undefined ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 data-testid={`answer-choice-${index}`}
               >
                 <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold flex items-center justify-center text-sm flex-shrink-0">
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span className="ml-4 text-sm leading-relaxed break-words">{choice}</span>
-              </Button>
+                <span className="ml-4 text-sm leading-relaxed flex-1 break-all overflow-hidden">
+                  {choice}
+                </span>
+              </button>
             ))}
           </div>
         )}

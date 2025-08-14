@@ -385,20 +385,20 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
               
               <div className="grid grid-cols-1 gap-3">
                 {currentQuestion.choices.map((choice, index) => (
-                  <Button
+                  <button
                     key={index}
                     onClick={() => setSelectedAnswer(index)}
                     disabled={isSubmitting}
-                    className={`text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[44px] flex items-center bg-transparent ${
+                    className={`w-full text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[44px] flex items-start bg-transparent ${
                       selectedAnswer === index ? 'border-arcane bg-arcane/10' : ''
-                    }`}
+                    } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     data-testid={`answer-choice-${index}`}
                   >
-                    <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold mr-4 flex items-center justify-center text-sm">
+                    <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold flex items-center justify-center text-sm flex-shrink-0">
                       {String.fromCharCode(65 + index)}
                     </span>
-                    <span>{choice}</span>
-                  </Button>
+                    <span className="ml-4 text-sm leading-relaxed flex-1 break-all overflow-hidden">{choice}</span>
+                  </button>
                 ))}
               </div>
 
