@@ -1,0 +1,126 @@
+Copy-paste fixes that end this for good
+1) Same origin in prod (SPA + API from one host)
+// server/index.ts
+import express from "express";
+import session from "express-session";
+import path from "path";
+import auth from "./auth.js";
+
+const app = express();
+const PROD = process.env.NODE_ENV === "production";
+
+app.set("trust proxy", 1);
+app.use(express.json());
+
+// Sessions BEFORE any /api routes
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: PROD ? "lax" : "none",   // first-party on lawduel.net
+    secure: PROD,                      // HTTPS only in prod
+    maxAge: 30*24*60*60*1000,
+    path: "/"
+  }
+}));
+
+app.use("/api/auth", auth);
+// ...other /api routes...
+
+// Canonicalize host (pick ONE): apex is simpler
+const CANON = "lawduel.net";
+app.use((req,res,next)=>{
+  if (PROD && (req.headers.host||"") !== CANON) {
+    return res.redirect(301, `https://${CANON}${req.originalUrl}`);
+  }
+  next();
+});
+
+// Serve the React build from SAME origin
+if (PROD) {
+  const staticDir = path.join(process.cwd(), "client/dist");
+  app.use(express.static(staticDir));
+  app.get(/^(?!\/api).*/, (_req,res)=>res.sendFile(path.join(staticDir,"index.html")));
+}
+
+2) Auth routes: regenerate + save; JSON only (no server redirects)
+// server/auth.ts
+r.post("/login", async (req,res,next)=>{
+  const { username, password } = req.body||{};
+  const u = await getUserByUsername(username);
+  if (!u || !(await bcrypt.compare(password, u.passwordHash)))
+    return res.status(401).json({ ok:false });
+
+  req.session.regenerate(err=>{
+    if (err) return next(err);
+    req.session.user = { id: u.id, username: u.username };
+    req.session.save(err2=> err2 ? next(err2) : res.json({ ok:true, user:req.session.user }));
+  });
+});
+
+r.get("/me",(req,res)=> req.session.user
+  ? res.json({ ok:true, user:req.session.user })
+  : res.status(401).json({ ok:false }));
+
+3) Frontend: relative API + send cookies on every call
+// client/src/api.ts
+export async function api(path: string, opts: RequestInit = {}) {
+  return fetch(`/api${path}`, {
+    ...opts,
+    credentials: "include",
+    headers: { "Content-Type":"application/json", ...(opts.headers||{}) }
+  });
+}
+
+
+Search & delete any replit.app, replit.dev, or hardcoded http://localhost in prod code.
+
+One tiny diagnostic endpoint (keep for beta)
+// server/diag.ts
+import { Router } from "express";
+const d = Router();
+d.get("/health",(req,res)=>{
+  res.json({ ok:true, host:req.headers.host, authed:Boolean(req.session?.user) });
+});
+export default d;
+// mount: app.use("/api/diag", diagRouter);
+
+
+What to check in 60 seconds, on lawduel.net:
+
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  https://lawduel.net/api/auth/login   # expect Set-Cookie: sid=...; Secure; SameSite=Lax
+
+curl -i -b jar.txt https://lawduel.net/api/auth/me   # expect 200
+
+If it still fails, the reason is one of these (and the fix)
+
+Request URL is not lawduel.net → frontend still calls the wrong base. Fix to relative /api/....
+
+No Set-Cookie header → session middleware not mounted before routes or cookie flags wrong.
+
+Set-Cookie has a different Domain → remove cookie.domain; let it be host-only for lawduel.net.
+
+/auth/me is 401 with cookie present → session store not saving/reading (or app.set('trust proxy', 1) missing).
+
+If you want, I’ll give you two quick console snippets you can run on lawduel.net to self-diagnose without guessing:
+
+// 1) Show where your frontend is actually posting
+performance.getEntriesByType('resource').map(r=>r.name).filter(n=>n.includes('/api/'));
+
+// 2) Manual login test (replace creds)
+await fetch('/api/auth/login',{
+  method:'POST', credentials:'include',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({username:'debuguser', password:'test123'})
+}).then(r=>[r.status, r.headers.get('set-cookie')]);
+
+document.cookie;  // should now include something like "sid=..."
+(await fetch('/api/auth/me',{credentials:'include'})).status;  // should be 200
+
+
+You don’t need new domains or “clear cookie” pages. Make it same origin, mount sessions before routes, call relative /api and ensure Set-Cookie appears on lawduel.net. That’s the whole game.

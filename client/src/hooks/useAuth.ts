@@ -54,16 +54,9 @@ export function useAuth() {
       return data.user || data;
     },
     onSuccess: (data: any) => {
-      const user = data.user || data;
-      console.log('Login onSuccess called with user:', user.username);
-      // Set the user data in the cache
-      queryClient.setQueryData(['/api/auth/me'], user);
-      // Refetch to ensure session is properly established
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-      // Small delay to ensure session is saved before redirect
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 100);
+      console.log('Login onSuccess called, data:', data);
+      // Immediately redirect - the session is already established
+      window.location.href = '/';
     },
     onError: (error) => {
       console.log('Login onError called:', error);
