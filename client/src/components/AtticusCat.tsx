@@ -37,8 +37,8 @@ export function AtticusCat({ size = 'sm', className = '' }: AtticusCatProps) {
         </linearGradient>
       </defs>
       
-      {/* Cat silhouette - exact copy from LawDuelLogo */}
-      <g transform="translate(50, 50)">
+      {/* Cat silhouette - scaled up 3x to fill the button */}
+      <g transform="translate(50, 45) scale(3)">
         {/* Cat head */}
         <ellipse cx="0" cy="0" rx="8" ry="6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
         {/* Cat ears */}
