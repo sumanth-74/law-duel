@@ -73,9 +73,9 @@
     "username": "TortMasterX",
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
-    "level": 17,
-    "points": 3349,
-    "totalWins": 58,
+    "level": 18,
+    "points": 3403,
+    "totalWins": 59,
     "totalLosses": 11,
     "avatarData": {
       "baseModel": "female",
@@ -89,7 +89,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-14T17:23:46.300Z"
+    "lastActive": "2025-08-14T18:56:42.056Z"
   },
   {
     "id": "bot_gavel_crusher",

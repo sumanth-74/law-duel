@@ -1,0 +1,153 @@
+I know—you’re getting bounced back to the landing page and the agent keeps saying “fixed.” This is almost always a cookie/session + origin mismatch on deploy. The agent’s curl test hit http://localhost:5000, but you and friends are using the production *.replit.app URL. Cookies that work on localhost won’t work on *.replit.app unless the app is set up for same-origin in prod (or cross-origin with the right flags).
+
+Here’s a copy-paste “final fix” that stops the loop. It forces same-origin sessions in production and a guaranteed redirect to /play on success.
+
+Law Duel — Login Loop Final Fix (paste to Replit)
+1) Serve the SPA from Express in production (same origin)
+// server/app.ts
+import express from "express";
+import session from "express-session";
+import path from "path";
+
+const app = express();
+const PROD = process.env.NODE_ENV === "production";
+
+app.set("trust proxy", 1);             // behind Replit proxy
+app.use(express.json());
+
+// Sessions BEFORE routes
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: PROD ? "lax" : "none",   // same-origin in prod
+    secure: PROD,                      // HTTPS cookie in prod
+    maxAge: 30*24*60*60*1000,
+    path: "/"
+  }
+}));
+
+// ... mount /api routes here ...
+
+if (PROD) {
+  const staticDir = path.join(process.cwd(), "client/dist");
+  app.use(express.static(staticDir));
+  app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(staticDir, "index.html")));
+}
+
+export default app;
+
+
+This eliminates cross-origin cookies in prod. Don’t test on preview (*.replit.dev) while logged into prod (*.replit.app)—pick one origin.
+
+2) Auth routes that regenerate + save and return JSON (no redirects)
+// server/auth.ts
+import { Router } from "express";
+import bcrypt from "bcrypt";
+import { getUserByUsername } from "./db";
+const r = Router();
+
+r.post("/login", async (req, res, next) => {
+  const { username, password } = req.body || {};
+  const u = await getUserByUsername(username);
+  if (!u || !(await bcrypt.compare(password, u.passwordHash))) {
+    return res.status(401).json({ ok:false, error:"Invalid credentials" });
+  }
+  req.session.regenerate(err => {
+    if (err) return next(err);
+    req.session.user = { id: u.id, username: u.username };
+    req.session.save(err2 => {
+      if (err2) return next(err2);
+      res.json({ ok:true, user: req.session.user });
+    });
+  });
+});
+
+r.get("/me", (req, res) => {
+  if (!req.session.user) return res.status(401).json({ ok:false });
+  res.json({ ok:true, user: req.session.user });
+});
+
+r.post("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("sid", { path:"/" });
+    res.json({ ok:true });
+  });
+});
+
+export default r;
+
+
+Mount before other routes:
+
+app.use("/api/auth", authRouter);
+
+3) Frontend: always send cookies + hard-navigate to /play on success
+// client/src/api.ts
+export async function api(path: string, opts: RequestInit = {}) {
+  return fetch(`/api${path}`, {
+    ...opts,
+    credentials: "include",
+    headers: { "Content-Type": "application/json", ...(opts.headers||{}) }
+  });
+}
+
+// client/src/pages/Login.tsx (submit handler)
+const res = await api("/auth/login", {
+  method: "POST",
+  body: JSON.stringify({ username, password })
+});
+if (res.ok) {
+  // bypass any SPA routing race
+  window.location.assign("/play");
+} else {
+  setError("Invalid username or password");
+}
+
+// client/src/App.tsx (bootstrap auth gate)
+useEffect(() => {
+  api("/auth/me").then(async r => {
+    if (r.ok) window.history.replaceState(null, "", "/play");
+  });
+}, []);
+
+
+The window.location.assign("/play") avoids client-side router edge cases that can bounce you back.
+
+4) Smoke test on production domain (not localhost)
+
+Replace <APP> with your https://law-duel-….replit.app:
+
+# fresh incognito, or terminal:
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  https://<APP>/api/auth/login
+
+# Expect: HTTP 200 + Set-Cookie: sid=...; Path=/; HttpOnly; Secure; SameSite=Lax
+
+curl -i -b jar.txt https://<APP>/api/auth/me
+# Expect: 200 { ok:true, user:{...} }
+
+
+If these pass but the browser still loops, it means the frontend wasn’t sending credentials somewhere. Search your repo for fetch( or axios( and ensure each call uses credentials:"include" (or withCredentials:true).
+
+5) What causes the loop (so you can spot it instantly)
+
+Testing on preview (*.replit.dev) while the API cookie is for prod (*.replit.app) → cookie not sent.
+
+Session middleware mounted after routes.
+
+Cookie set with wrong attributes (SameSite:"lax" across two origins, or secure:true over HTTP).
+
+Any one fetch without credentials:"include".
+
+What you should see now
+
+After Sign In you land on /play and stay logged in on refresh.
+
+Friends on their laptops sign in to the same prod URL and land on /play.
+
+DevTools → Network shows /api/auth/login response with Set-Cookie and /api/auth/me returning 200.
