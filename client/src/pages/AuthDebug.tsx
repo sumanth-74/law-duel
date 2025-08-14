@@ -3,12 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
-import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle, LogOut, LogIn, RefreshCw } from 'lucide-react';
 
 export default function AuthDebug() {
-  const { user, isAuthenticated, isLoading, logout, refetch } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { toast } = useToast();
   const [loginData, setLoginData] = useState({ username: 'admin', password: 'admin123' });
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -16,10 +15,17 @@ export default function AuthDebug() {
   const handleLogin = async () => {
     setIsLoggingIn(true);
     try {
-      await apiRequest('/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(loginData)
       });
+      
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
       
       // Hard reload to ensure clean state
       window.location.href = '/';
@@ -36,8 +42,11 @@ export default function AuthDebug() {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      window.location.href = '/';
+      logout.mutate();
+      // Wait a bit then reload
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 100);
     } catch (error) {
       console.error('Logout error:', error);
       // Force reload anyway
@@ -81,7 +90,7 @@ export default function AuthDebug() {
 
             <div className="flex gap-2">
               <Button 
-                onClick={() => refetch()} 
+                onClick={() => window.location.reload()} 
                 variant="outline"
                 className="bg-purple-600 hover:bg-purple-700"
               >
