@@ -23,6 +23,7 @@ import asyncDuels from './services/async';
 import { dailyCasefileService } from './services/dailyCasefileService';
 import { emailTrackingService } from './services/emailTrackingService';
 import { chatbotService } from './services/chatbotService';
+import { signAccessToken, verifyAccessToken } from './token';
 
 // Initialize bot practice system
 import { BotPractice } from './services/botPractice';
@@ -147,10 +148,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Authentication middleware
   function requireAuth(req: any, res: any, next: any) {
-    if (!req.session?.userId) {
-      return res.status(401).json({ message: "Authentication required" });
+    // First check session
+    if (req.session?.userId) {
+      return next();
     }
-    next();
+    
+    // Then check Bearer token
+    const payload = verifyAccessToken(req.headers.authorization);
+    if (payload) {
+      req.userId = payload.sub;
+      // Also set session userId for compatibility with existing code
+      if (!req.session) req.session = {} as any;
+      req.session.userId = payload.sub;
+      return next();
+    }
+    
+    // Neither session nor token is valid
+    return res.status(401).json({ message: "Authentication required" });
   }
 
   // Check username availability
@@ -248,9 +262,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           console.log('Registration session saved, sending response');
           
+          // Generate JWT token for dual support  
+          const token = signAccessToken({ id: user.id, username: user.username });
+          
           // Don't return password
           const { password, ...userResponse } = user;
-          res.json({ ok: true, user: userResponse });
+          res.json({ ok: true, user: userResponse, token });
         });
       });
     } catch (error: any) {
@@ -297,7 +314,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log('Login successful, session saved for user:', user.username);
           console.log('Session ID:', req.sessionID);
           
-          res.json({ ok: true, user: userResponse });
+          // Generate JWT token for dual support
+          const token = signAccessToken({ id: user.id, username: user.username });
+          
+          res.json({ ok: true, user: userResponse, token });
         });
       });
     } catch (error: any) {
@@ -320,29 +340,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/me", async (req: any, res) => {
     console.log('Auth check - Headers:', {
       cookie: req.headers.cookie,
+      authorization: req.headers.authorization,
       sessionID: req.sessionID,
       session: req.session,
       userId: req.session?.userId
     });
     
-    // Check if user is logged in
-    if (!req.session?.userId) {
-      console.log('No userId in session, returning 401');
-      return res.status(401).json({ ok: false });
+    // First check session (cookie auth)
+    if (req.session?.userId) {
+      try {
+        const user = await storage.getUser(req.session.userId);
+        if (user) {
+          const { password, ...userResponse } = user;
+          return res.json({ ok: true, user: userResponse, mode: "session" });
+        }
+      } catch (error: any) {
+        console.error('Session user fetch error:', error);
+      }
     }
     
-    try {
-      const user = await storage.getUser(req.session.userId);
-      if (!user) {
-        return res.status(404).json({ ok: false, error: "User not found" });
+    // If no session, check Bearer token
+    const payload = verifyAccessToken(req.headers.authorization);
+    if (payload) {
+      try {
+        const user = await storage.getUser(payload.sub);
+        if (user) {
+          const { password, ...userResponse } = user;
+          return res.json({ ok: true, user: userResponse, mode: "token" });
+        }
+      } catch (error: any) {
+        console.error('Token user fetch error:', error);
       }
-      
-      // Don't return password
-      const { password, ...userResponse } = user;
-      res.json({ ok: true, user: userResponse });
-    } catch (error: any) {
-      res.status(500).json({ ok: false, error: "Failed to get user", details: error.message });
     }
+    
+    // Neither session nor token is valid
+    console.log('No valid auth found, returning 401');
+    return res.status(401).json({ ok: false });
   });
 
   // Get user profile

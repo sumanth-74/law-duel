@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { setToken, getToken } from "@/authToken";
 import type { User } from "@shared/schema";
 
 export function useAuth() {
@@ -11,7 +12,16 @@ export function useAuth() {
     refetchOnWindowFocus: true,
     queryFn: async () => {
       console.log('Checking auth status...');
+      const token = getToken();
+      const headers: Record<string, string> = {};
+      
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+        console.log('Using token for auth check');
+      }
+      
       const response = await fetch('/api/auth/me', {
+        headers,
         credentials: 'include',
       });
       console.log('Auth check response:', response.status);
@@ -24,7 +34,7 @@ export function useAuth() {
       const data = await response.json();
       
       if (data.ok && data.user) {
-        console.log('User authenticated:', data.user.username);
+        console.log('User authenticated:', data.user.username, 'mode:', data.mode);
         return data.user;
       }
       
@@ -50,6 +60,11 @@ export function useAuth() {
       }
       const data = await response.json();
       console.log('Login successful:', data.user?.username || data.username);
+      // Store the token if provided
+      if (data.token) {
+        setToken(data.token);
+        console.log('Token stored');
+      }
       // Handle both old and new response formats
       return data.user || data;
     },
@@ -83,7 +98,13 @@ export function useAuth() {
         const error = await response.json();
         throw new Error(error.message || 'Registration failed');
       }
-      return response.json();
+      const data = await response.json();
+      // Store the token if provided
+      if (data.token) {
+        setToken(data.token);
+        console.log('Registration token stored');
+      }
+      return data;
     },
     onSuccess: (data: any) => {
       const user = data.user || data;
@@ -108,6 +129,9 @@ export function useAuth() {
       return response.ok;
     },
     onSuccess: () => {
+      // Clear the token on logout
+      setToken(null);
+      console.log('Token cleared');
       queryClient.setQueryData(['/api/auth/me'], null);
       window.location.reload();
     },

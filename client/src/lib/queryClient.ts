@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { getToken } from "../authToken";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -12,9 +13,20 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  const token = getToken();
+  const headers: Record<string, string> = {};
+  
+  if (data) {
+    headers["Content-Type"] = "application/json";
+  }
+  
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
@@ -31,7 +43,15 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     // Handle both array and string query keys
     const url = Array.isArray(queryKey) ? queryKey[0] : queryKey;
+    const token = getToken();
+    const headers: Record<string, string> = {};
+    
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    
     const res = await fetch(url as string, {
+      headers,
       credentials: "include",
     });
 
@@ -48,7 +68,15 @@ export const queryClient = new QueryClient({
     queries: {
       queryFn: async ({ queryKey }) => {
         const url = Array.isArray(queryKey) ? queryKey[0] : queryKey;
+        const token = getToken();
+        const headers: Record<string, string> = {};
+        
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+        
         const res = await fetch(url as string, {
+          headers,
           credentials: "include",
         });
         
