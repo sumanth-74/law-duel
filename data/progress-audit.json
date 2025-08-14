@@ -88,5 +88,20 @@
     "masteryDelta": -3.5999999999999996,
     "ts": 1755129933549,
     "timestamp": "2025-08-14T00:05:33.549Z"
+  },
+  {
+    "userId": "7eb2f5db-ef74-4a29-9614-04ad54fcd5db",
+    "duelId": "r_mean74ji_w05p",
+    "questionId": "pool_1755130205376_ugrmf7hw",
+    "subject": "Evidence",
+    "subtopic": "Evidence",
+    "difficulty": 1,
+    "correct": false,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -3.5999999999999996,
+    "ts": 1755130266379,
+    "timestamp": "2025-08-14T00:11:06.379Z"
   }
 ]
