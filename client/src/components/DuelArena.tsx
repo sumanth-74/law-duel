@@ -22,7 +22,8 @@ interface DuelState {
   roomCode?: string;
   subject?: string;
   round: number;
-  scores: [number, number]; // [user, opponent]
+  scores: [number, number]; // [player1, player2]
+  playerIndex?: number; // Which index the current player is (0 or 1)
   currentQuestion?: QuestionData;
   timeLeft: number;
   selectedAnswer?: number;
@@ -138,6 +139,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           subject: payload.subject || 'Mixed Questions',
           round: 0,
           scores: [0, 0],
+          playerIndex: payload.playerIndex || 0, // Store which player we are (0 or 1)
           isFinished: false,
           generatingQuestion: true // Show loading while waiting for first question
         }));
@@ -513,14 +515,14 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
           <div className="flex items-center space-x-6">
             <div className="text-center">
               <div className="w-8 h-8 bg-arcane rounded-full flex items-center justify-center font-bold" data-testid="score-user">
-                {duelState.scores[0]}
+                {duelState.playerIndex === 1 ? duelState.scores[1] : duelState.scores[0]}
               </div>
               <p className="text-xs text-muted mt-1">You</p>
             </div>
             <div className="text-2xl font-cinzel font-bold text-muted">VS</div>
             <div className="text-center">
               <div className="w-8 h-8 bg-danger rounded-full flex items-center justify-center font-bold" data-testid="score-opponent">
-                {duelState.scores[1]}
+                {duelState.playerIndex === 1 ? duelState.scores[0] : duelState.scores[1]}
               </div>
               <p className="text-xs text-muted mt-1">Opponent</p>
             </div>

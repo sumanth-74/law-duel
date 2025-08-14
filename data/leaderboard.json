@@ -97,8 +97,8 @@
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 17,
-    "points": 3262,
-    "totalWins": 55,
+    "points": 3273,
+    "totalWins": 56,
     "totalLosses": 7,
     "avatarData": {
       "baseModel": "female",
@@ -112,7 +112,7 @@
       ],
       "accessoryColor": "#FF1493"
     },
-    "lastActive": "2025-08-14T18:11:20.922Z"
+    "lastActive": "2025-08-14T19:51:21.097Z"
   },
   {
     "id": "bot_lawbeast_99",

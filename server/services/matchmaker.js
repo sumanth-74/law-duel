@@ -117,6 +117,7 @@ function startDuel(wss, subject, player1Ws, player2Ws, config) {
     bestOf: 7,
     ranked: config.ranked,
     stake: config.stake,
+    playerIndex: 0,  // Player 1 is at index 0
     opponent: {
       username: player2Ws.profile?.username || 'Anonymous',
       displayName: player2Ws.profile?.displayName || 'Anonymous',
@@ -134,6 +135,7 @@ function startDuel(wss, subject, player1Ws, player2Ws, config) {
   if (player2Ws.readyState === 1) {
     const player2MatchData = {
       ...matchData,
+      playerIndex: 1,  // Player 2 is at index 1
       opponent: {
         username: player1Ws.profile?.username || 'Anonymous',
         displayName: player1Ws.profile?.displayName || 'Anonymous',
@@ -167,6 +169,7 @@ function startDuelWithBot(wss, subject, humanWs, bot) {
     bestOf: 5,  // Changed from 7 to 5 per North Star requirements
     ranked: false,
     stake: 0,
+    playerIndex: 0,  // Human is always player 0 when playing against bot
     opponent: {
       username: bot.username,
       displayName: bot.username,
