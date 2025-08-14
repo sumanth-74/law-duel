@@ -1,0 +1,368 @@
+how do i make sure that the questions are working in replit and are effectively tied to the player's progress? that duels work?
+ChatGPT said:
+Thought for 35s
+
+Totally get the need for a clear, “does this actually work?” check. Here’s how to prove (in Replit) that:
+
+questions are being created and served,
+
+each answer updates the player’s stats (XP + subtopic mastery),
+
+async duels use the same 5 questions for both players and move Elo/ladder.
+
+I made you a tiny smoke-test script you can run right away.
+
+Download: lawduel_smoke.sh
+
+What this does (in 5–7 minutes)
+
+Logs in User A and User B (uses debuguser/test123 & debugfriend/test123—change in env if needed).
+
+Starts a Solo match for A → submits one answer → checks /api/stats/subtopics for a bump on that subtopic.
+
+Starts an Async Friend Duel A→B → verifies both players got the same 5 questionIds → answers → fetches duel result (to check Elo/XP fields).
+
+Fails fast with a red ✗ if any of the contract points are broken.
+
+How to run it
+
+In Replit shell (or your terminal):
+
+chmod +x lawduel_smoke.sh
+BASE="https://<your-app>.replit.app" ./lawduel_smoke.sh
+
+
+Replace <your-app>.replit.app with your production URL.
+
+If your test usernames/passwords differ, set:
+
+USER_A="youruser" PASS_A="yourpass" USER_B="friend" PASS_B="friendpass" \
+BASE="https://<your-app>.replit.app" ./lawduel_smoke.sh
+
+
+PASS criteria you’ll see in the output:
+
+“Solo started duelId=… with questions …”
+
+“Answer accepted”
+
+“Stats updated: <Subject>/<Subtopic> attempts=1”
+
+“Async parity OK: both players have same question set”
+
+“Duel result endpoint responded (verify Elo/XP fields in JSON)”
+
+If any step prints a red ✗, that’s the exact place to send back to the agent.
+
+If the script FAILs, here’s what that means (and the fix to demand)
+
+Solo start fails / no duelId
+➜ Matchmaker not returning a server-authored question set.
+Fix: server must reserve 5 questionIds and return them.
+
+Answer accepted but Stats don’t move
+➜ recordAttempt(userId, duelId, questionId, subject, subtopic, difficulty, correct, ms, ts) is not being called at answer time (or idempotency key missing).
+Fix: call it in the server’s answer handler; update/persist SubtopicMastery immediately; return masteryDelta and xpGained in response.
+
+Async parity failed (A & B different question IDs)
+➜ You’re regenerating questions per user or not storing reservations.
+Fix: on A’s start, store the 5 questionIds in question_reservations keyed by duelId; B loads the same list.
+
+No duel result / Elo unchanged
+➜ Result aggregation not writing rating/XP or no /api/duel/result/:id.
+Fix: compute Elo (K≈24), write both deltas, expose a result endpoint.
+
+Minimal API contracts this script expects
+
+POST /api/auth/login → { ok, user } and sets cookie
+
+GET /api/auth/me → { ok, user } when logged in
+
+POST /api/duel/solo/start → { duelId, questions:[{questionId,subject,subtopic,difficulty}] }
+
+POST /api/duel/answer → { ok, xpGained, masteryDelta:{subtopicId,before,after} }
+
+GET /api/stats/subtopics → subjects with nested subtopics including attempts
+
+POST /api/duel/async/start → { duelId, questions:[...] }
+
+POST /api/duel/async/answer → { ok }
+
+GET /api/duel/async/:duelId → { duelId, questions:[...] } (for B to fetch)
+
+GET /api/duel/result/:duelId → { winnerId, yourScore, oppScore, eloDelta, xpGained }
+
+If any endpoint names differ, have Replit add thin wrappers to match these—your core logic doesn’t need to change, and you’ll get repeatable tests.
+
+Extra sanity checks (30 seconds in the browser)
+
+After each answer in UI, you see a chip: +XP · Subject/Subtopic · Mastery +N.
+
+Refresh Stats → Subtopics: the subtopic you just answered shows attempts incremented and mastery nudged.
+
+Start an async duel vs friend: both see identical question IDs (order can differ) and the Weekly Ladder moves when it’s done.
+
+This gives you a repeatable, objective “is it working?” lever. Run it any time the agent claims something’s fixed; you’ll get a clear PASS/FAIL with the exact point of breakage. 
+
+You said:
+any other important sanity checks so i can finally deploy the beta?
+ChatGPT said:
+Thought for 22s
+
+Absolutely—here’s a tight beta-ready sanity checklist. If all of these pass, you can ship a closed beta confidently.
+
+🔐 Auth & Sessions
+
+Same-origin in prod: SPA served by Express; API paths are /api/*.
+
+Cookie: sid present, HttpOnly, Secure (prod), SameSite=Lax.
+
+/auth/me returns 200 after full refresh and on another device.
+
+Idempotent login: repeated POST /login doesn’t create duplicate sessions.
+
+🧠 Question Engine (AI + Pool)
+
+No sync calls on match start (OpenAI runs in background worker).
+
+Pool inventory: each (Subject, Subtopic, diff-band) ≥ target (e.g., 150).
+
+Schema-valid: every Q has 4 choices, answerIndex 0–3, short explanation, tags.
+
+Deduped: checksum prevents identical questions in DB.
+
+User freshness: same user doesn’t see a repeat within 30 days.
+
+🕹️ Gameplay Flow
+
+Solo: 5 questions, server timer (e.g., 25s or your 60s), late answers rejected.
+
+Async Friend Duel: both players get the same 5 questionIds; winner by corrects → time tiebreak.
+
+No duplicates within a match (1000-match sim = 0 dupes).
+
+Reconnect: drop/rejoin within grace resumes the same question.
+
+📈 Progression & Stats (the core you care about)
+
+On answer server updates: XP, streak, SubtopicMastery, attempts/correct; returns xpGained & masteryDelta.
+
+Subtopics tab shows the exact subtopic you just answered, without reload hacks.
+
+Result screen matches the per-question chips (numbers line up).
+
+Persistence: log out/in on another device → stats unchanged.
+
+🧮 Ranking & Community
+
+Elo applied at duel end; result screen shows +XX (old→new).
+
+Weekly ladder (ISO week) updates immediately; no zero-point users.
+
+Bots labeled with gamer tags + unique avatars; clearly non-human.
+
+Public profiles: /profile/:username viewable cross-account (unless Private).
+
+📅 Daily Casefile & Streaks
+
+Today playable (not pre-answered).
+
+Timer targets midnight UTC; label says “resets at 00:00 UTC”.
+
+Streak: consecutive UTC days increments; skip resets to 1; playing twice in one day doesn’t increment twice.
+
+⚡ Performance & Stability
+
+P95 server event <150 ms during 100 concurrent duels (or your target).
+
+No crash on OpenAI 429: matches run from pool; generator pauses & resumes.
+
+Heartbeats: ghost clients dropped within 5s; no stuck duels.
+
+🧭 Observability (your lifeline)
+
+Audit log per answer: (userId, duelId, questionId, subject, subtopic, correct, ms, ts).
+
+Key counters: matches_total, dupes_in_match (should be 0), elo_updates_total, gen_failovers_total.
+
+Admin views: pool inventory by bucket; generator status; last OpenAI error.
+
+🔒 Security & Abuse Basics
+
+Rate-limit answer submits (min 1/sec).
+
+Server-authoritative scoring; ignore duplicate/late answers.
+
+Input validation on all JSON bodies; reject unmapped tags.
+
+🧪 Quick spot checks (curl)
+
+Auth:
+
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' https://<app>/api/auth/login
+curl -i -b jar.txt https://<app>/api/auth/me   # expect 200
+
+
+Solo start:
+
+curl -s -b jar.txt https://<app>/api/duel/solo/start | jq '.questions | length' # expect 5
+
+
+Stats move: answer one → GET /api/stats/subtopics shows attempts++ for that subtopic.
+
+🛑 Stop-ship red flags
+
+Any mismatch between chip numbers ↔ result screen ↔ Stats page.
+
+Async duel players get different questionIds.
+
+/auth/me flips to 401 after refresh or on a second device.
+
+OpenAI quota stops matches (means you’re still calling sync).
+
+✅ Go/No-Go criteria (closed beta)
+
+Activation (finish 1 match) ≥ 70%
+
+Bug-free matches (no dupes/desyncs) ≥ 99%
+
+Async duel rematch rate ≥ 25%
+
+Daily streak increments correctly for 3 consecutive days (manual test)
+
+If you want, run the smoke script I gave you plus these spot checks. Anything red—send the exact bullet back to the dev with “FAIL: <bullet>” so they know precisely what to fix.
+
+You said:
+how do i know this is gonna run and people are gonna be able to get on and its not gonna crash or something
+ChatGPT said:
+Thought for 26s
+
+Totally fair fear. Here’s a no-drama “will it run?” plan that makes crashes and login loops extremely unlikely, and gives you hard proofs before you invite anyone.
+
+1) Lock the basics (so auth & sessions don’t blow up)
+
+Same origin in prod: serve the React build from Express; the browser only hits https://<your-app>.replit.app/*.
+
+Session store: not MemoryStore. Use Postgres/Redis; set cookie: { httpOnly:true, secure:true, sameSite:'lax', path:'/' }, app.set('trust proxy', 1).
+
+Client fetch: every call uses credentials: 'include'. One miss = login loop.
+
+2) Add one health endpoint (green or not)
+
+Implement /health returning JSON like:
+
+{
+  "ok": true,
+  "version": "2025-08-14-01",
+  "uptime_sec": 1234,
+  "db": "ok",
+  "sessionStore": "ok",
+  "questionPool": { "total": 1830, "lowBuckets": 0 },
+  "openai": { "generator": "paused|running", "callsToday": 1420, "resetsAtUTC": "00:00" }
+}
+
+
+If ok=false or any field is “fail”, you don’t launch.
+
+3) Pre-fill the AI pool (so OpenAI can’t stall matches)
+
+Run the background generator until each (Subject, Subtopic, difficulty-band) has inventory (e.g., ≥150/bucket).
+
+Verify with /admin/pool (counts by bucket).
+
+Generator disabled during launch window (pool only), then re-enable at a low rate.
+
+4) Run 3 smoke tests (prove end-to-end)
+
+Auth (prod domain):
+
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' https://<app>/api/auth/login
+curl -i -b jar.txt https://<app>/api/auth/me   # expect 200
+
+
+Solo stats move: Start Solo → answer 1 → GET /api/stats/subtopics shows attempts++ for that subtopic.
+
+Async parity: A starts async vs B → both get same 5 questionIds → finish → Elo & weekly ladder change.
+
+(You already have my script to automate this; run it before every deploy.)
+
+5) Quick load test (light but real)
+
+From a laptop, hit the Solo start endpoint to 50 RPS for 60s (or use k6/autocannon). Target:
+
+No 5xx
+
+P95 < 150 ms for Solo start and answer endpoints
+
+DB connections steady (not climbing to max)
+
+6) Set hard SLOs for beta
+
+Availability (auth + Solo start): 99.5% in the first week
+
+Latency: P95 < 150 ms for answer/feedback
+
+Bug-free matches (no dupes/desyncs): ≥ 99%
+
+No sync OpenAI calls on match start (0 during duel paths)
+
+If any SLO breaches in the first hour, pause invites (see killswitch below) and ship a hotfix.
+
+7) Add a killswitch + maintenance banner
+
+Env flag MAINTENANCE_MODE=true → all new duels return 503 with a friendly banner; existing duels/Stats still load.
+
+A second flag DISABLE_GENERATOR=true to pause OpenAI worker without affecting gameplay.
+
+8) Guardrails that prevent “crashy” behavior
+
+Answer rate-limit: min 1 req/sec per user; ignore duplicates and late answers.
+
+Server-authoritative timers; clients can’t extend time.
+
+Circuit breaker for OpenAI worker (on 429/5xx → backoff; gameplay unaffected).
+
+DB pool sane defaults (e.g., PG: max=10–20, idleTimeout=30s, statement_timeout=5s).
+
+Unhandled errors:
+
+process.on('unhandledRejection', e => console.error(e));
+process.on('uncaughtException', e => console.error(e));
+
+
+Plus Express error middleware, so one bad route doesn’t take down the process.
+
+9) Minimal monitoring you can actually use today
+
+/metrics or logs: counters for matches_total, dupe_in_match_total, elo_updates_total, gen_failovers_total.
+
+Uptime ping from any free monitor hitting /health every minute (alert on non-200 or "ok":false).
+
+Log a single duel_summary row per match (score, subjects, durations, errors).
+
+10) Canary rollout (so “people can get on” without chaos)
+
+Invite 20 testers first hour (friends + 2L/3L mix). Watch /health, logs, and counters.
+
+If green, open to 50 more.
+
+Keep generator throttled until you see stable pool consumption.
+
+Your quick GO/NO-GO (use this literally)
+
+/health shows ok:true, pool ≥ target, sessions “ok”.
+
+Curl auth test on prod URL returns 200 and cookie sticks.
+
+Smoke script: PASS on Solo stats move, Async parity, and Duel result.
+
+60s load spike → 0 5xx; P95 < 150 ms.
+
+Killswitch tested once (returns 503 banner, not a crash).
+
+If all five are true → ship the beta.
+If any fail, paste the failing bullet back to your dev with “STOP-SHIP: <bullet>”.
+
+This is the boring scaffolding that keeps your launch from exploding, and it’s lean enough to do today.

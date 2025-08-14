@@ -122,5 +122,57 @@
     "isDailyComplete": false,
     "lostAllLivesAt": null,
     "currentQuestionId": "fresh_openai_1755100172411_a3155add"
+  },
+  {
+    "id": "solo_5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5_1755206169947",
+    "userId": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+    "subject": "Mixed Questions",
+    "livesRemaining": 5,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T21:16:09.951Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755113982006_305256dd"
+  },
+  {
+    "id": "solo_5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5_1755206280244",
+    "userId": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+    "subject": "Mixed Questions",
+    "livesRemaining": 5,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T21:18:00.248Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755113981627_df1fed65"
+  },
+  {
+    "id": "solo_5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5_1755206368855",
+    "userId": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+    "subject": "Mixed Questions",
+    "livesRemaining": 4,
+    "round": 2,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T21:19:28.877Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755113978508_40c36a8b"
+  },
+  {
+    "id": "solo_5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5_1755206419711",
+    "userId": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+    "subject": "Mixed Questions",
+    "livesRemaining": 5,
+    "round": 2,
+    "score": 15,
+    "difficulty": 2,
+    "startedAt": "2025-08-14T21:20:19.716Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755114014933_5a26a38f"
   }
 ]

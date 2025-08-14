@@ -1076,7 +1076,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { subject } = req.body;
       
       // Start a solo challenge
-      const challenge = await soloChallengeService.startChallenge(userId, subject || 'Mixed Questions');
+      const result = await soloChallengeService.startChallenge(userId, subject || 'Mixed Questions');
+      const challenge = result.challenge;
       
       // Generate 5 questions for the solo duel
       const questions = [];
@@ -1085,12 +1086,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           questionId: `q${i}_${Date.now()}`,
           subject: subject || 'Mixed Questions',
           subtopic: 'General',
-          difficulty: challenge.currentDifficulty || 1
+          difficulty: challenge.difficulty || 1
         });
       }
       
       res.json({
-        duelId: challenge.challengeId || challenge.id || `sc_${Date.now()}`,
+        duelId: challenge.id,  // Use the actual challenge ID from the service (solo_userId_timestamp)
         questions
       });
     } catch (error: any) {
@@ -1103,19 +1104,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/duel/answer', requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;
-      const { duelId, challengeId, matchId, answerIndex, choiceIndex, responseTime } = req.body;
+      const { duelId, challengeId, matchId, questionId, answerIndex, choiceIndex, responseTime, timeMs } = req.body;
       
       // Determine if this is a solo challenge or async match
       const actualDuelId = duelId || challengeId || matchId;
       
       // Try solo challenge first by checking if it starts with appropriate prefix
-      const isSoloChallenge = actualDuelId && actualDuelId.startsWith('sc_');
+      const isSoloChallenge = actualDuelId && actualDuelId.startsWith('solo_');
       
       if (isSoloChallenge) {
         try {
+          // For solo challenges, we'll accept any question ID format
+          // since the challenge tracks progress by index, not specific IDs
           const result = await soloChallengeService.submitAnswer(
             actualDuelId,
-            `q0_${Date.now()}`, // Mock question ID
+            questionId || `q0_${Date.now()}`, // Use actual questionId from request
             answerIndex ?? choiceIndex ?? 0
           );
           
@@ -1132,7 +1135,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             xpGained: result.correct ? 10 : 0,
             masteryDelta
           });
-        } catch (err) {
+        } catch (err: any) {
+          console.error('Solo challenge answer error:', err.message);
           // Not a solo challenge, try async
         }
       }
@@ -1161,6 +1165,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: 'Duel not found' });
     } catch (error: any) {
       console.error('Error in duel/answer:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Wrapper for friend duel start (maps to async duel)
+  app.post('/api/duel/friend/start', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { friendUsername, subject } = req.body;
+      
+      // Create async match with friend
+      const result = await asyncDuels.createMatch(userId, subject || 'Mixed Questions', friendUsername);
+      
+      // Return in expected format for smoke test
+      res.json({
+        duelId: result.matchId,
+        questions: result.questions || []
+      });
+    } catch (error: any) {
+      console.error('Error in duel/friend/start:', error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Wrapper for joining friend duel
+  app.get('/api/duel/friend/join/:duelId', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { duelId } = req.params;
+      
+      // Get match details for the joining player
+      const match = asyncDuels.getMatchForUser(duelId, userId);
+      if (!match) {
+        return res.status(404).json({ message: 'Match not found' });
+      }
+      
+      res.json({
+        duelId: match.matchId,
+        questions: match.questions || []
+      });
+    } catch (error: any) {
+      console.error('Error joining friend duel:', error);
       res.status(400).json({ message: error.message });
     }
   });

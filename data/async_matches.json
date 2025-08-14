@@ -334,5 +334,52 @@
     "isBotMatch": false,
     "createdAt": 1755204146433,
     "updatedAt": 1755204225133
+  },
+  "m_1755206420024_6xg1xhfiq": {
+    "id": "m_1755206420024_6xg1xhfiq",
+    "mode": "async",
+    "subject": "Mixed Questions",
+    "audience": "Bar",
+    "bestOf": 7,
+    "players": [
+      {
+        "id": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+        "username": "debuguser"
+      },
+      {
+        "id": "2b99f2f3-527d-46fc-a465-61fa1b06307f",
+        "username": "debugfriend"
+      }
+    ],
+    "scores": {
+      "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": 0,
+      "2b99f2f3-527d-46fc-a465-61fa1b06307f": 0
+    },
+    "round": 1,
+    "difficulty": 1,
+    "turns": [
+      {
+        "qid": "pool_1755206452920_azh522q0",
+        "stem": "On March 15, 2023, in State Y, Alice was charged with robbery after allegedly taking $500 from Bob at gunpoint outside Corp X's premises. During the preliminary hearing, the prosecution sought to introduce Bob's eyewitness testimony, who had previously identified Alice in a police lineup. However, Alice's attorney objected, claiming that the lineup was suggestive and violated Alice's Sixth Amendment right to counsel. The judge ruled that the testimony could be admitted, stating that the identification was reliable based on Bob's prior familiarity with Alice. During the trial, Alice's attorney attempted to call a witness, Carol, who was present during the incident but was barred from testifying due to a procedural issue regarding her subpoena. The jury ultimately convicted Alice. Alice is now appealing the conviction, arguing that her right to confront witnesses was violated and that the admission of Bob's testimony was improper. ",
+        "choices": [
+          "The appellate court is most likely to reverse Alice's conviction due to the improper admission of Bob's eyewitness testimony, violating her Sixth Amendment rights.",
+          "The appellate court may vacate the conviction on the basis that Carol's testimony was essential to Alice's defense and her right to present a defense was violated.",
+          "Alice's appeal will likely fail since the procedural issue regarding Carol's testimony was not preserved for appeal, weakening her confrontation claim.",
+          "Alice's conviction is likely to be upheld because the trial court properly admitted Bob's testimony, finding it reliable despite the suggestive lineup."
+        ],
+        "subject": "Crim",
+        "difficulty": 1,
+        "deadlineTs": 1755292852921,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 0,
+        "explanation": "The Sixth Amendment guarantees defendants the right to confront witnesses against them. In *Simmons v. United States*, the Court held that suggestive identification procedures can violate this right if they lead to a substantial likelihood of misidentification. Here, Alice's attorney objected to Bob's testimony based on the suggestive nature of the lineup, which raises significant concerns about the reliability of the identification. The trial court's failure to exclude this testimony likely constitutes a violation of Alice's rights. Furthermore, an improper admission of evidence that is prejudicial can lead to a reversal on appeal. \n\nAddressing the distractors: \n- Option B is incorrect because it misapplies the reliability standard; the suggestive lineup should have prompted exclusion rather than admission. \n- Option C, while addressing the right to present a defense, incorrectly assumes that Carol's testimony was essential without demonstrating how it would have changed the outcome. \n- Option D is wrong because it overlooks the significance of preserving confrontation rights, which is a fundamental aspect of a fair trial. \n\nBar Exam Tip: Always assess how evidence admission affects the defendant's rights, especially under the Sixth Amendment. Remember that suggestive identification can lead to a presumption of unreliability. \n\nIn summary, the appellate court is likely to reverse Alice's conviction due to the improper admission of Bob's testimony, as it infringes on her constitutional right to confront witnesses."
+      }
+    ],
+    "status": "active",
+    "winnerId": null,
+    "isBotMatch": false,
+    "createdAt": 1755206420084,
+    "updatedAt": 1755206452921
   }
 }

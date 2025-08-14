@@ -1,5 +1,28 @@
 [
   {
+    "id": "bot_precedent_pro",
+    "username": "PrecedentPro",
+    "displayName": "PrecedentPro",
+    "lawSchool": "Cooley Law School",
+    "level": 21,
+    "points": 4124,
+    "totalWins": 77,
+    "totalLosses": 9,
+    "avatarData": {
+      "baseModel": "male",
+      "skinColor": "#FFE4B5",
+      "hairStyle": "professional",
+      "hairColor": "#A52A2A",
+      "clothingStyle": "jacket",
+      "clothingColor": "#000080",
+      "accessories": [
+        "bowtie"
+      ],
+      "accessoryColor": "#8B0000"
+    },
+    "lastActive": "2025-08-14T21:16:20.710Z"
+  },
+  {
     "id": "bot_mbe_destroyer",
     "username": "MBEDestroyer",
     "displayName": "MBEDestroyer",
@@ -21,29 +44,6 @@
       "accessoryColor": "#DAA520"
     },
     "lastActive": "2025-08-14T20:14:56.555Z"
-  },
-  {
-    "id": "bot_precedent_pro",
-    "username": "PrecedentPro",
-    "displayName": "PrecedentPro",
-    "lawSchool": "Cooley Law School",
-    "level": 21,
-    "points": 4100,
-    "totalWins": 76,
-    "totalLosses": 9,
-    "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#FFE4B5",
-      "hairStyle": "professional",
-      "hairColor": "#A52A2A",
-      "clothingStyle": "jacket",
-      "clothingColor": "#000080",
-      "accessories": [
-        "bowtie"
-      ],
-      "accessoryColor": "#8B0000"
-    },
-    "lastActive": "2025-08-14T21:11:20.709Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -382,5 +382,25 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-14T20:36:01.513Z"
+  },
+  {
+    "id": "2b99f2f3-527d-46fc-a465-61fa1b06307f",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T21:16:09.786Z"
+  },
+  {
+    "id": "199fb49d-f60d-4cf0-9c9c-21cc3463e8ac",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T21:21:03.287Z"
   }
 ]
