@@ -10,7 +10,7 @@ const sizeMap = {
   lg: 32,
   xl: 48,
   '2xl': 120,
-  massive: 90   // For the 96px button with padding
+  massive: 120  // For the 128px button with padding
 };
 
 /**
@@ -37,20 +37,20 @@ export function AtticusCat({ size = 'sm', className = '' }: AtticusCatProps) {
         </linearGradient>
       </defs>
       
-      {/* Cat silhouette - fills most of the viewBox */}
-      <g transform="translate(50, 45)">
-        {/* Cat head - fills significant portion */}
-        <ellipse cx="0" cy="0" rx="35" ry="25" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
-        {/* Cat ears - proportionally large */}
-        <polygon points="-25,-18 -35,-40 -10,-25" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
-        <polygon points="25,-18 35,-40 10,-25" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
-        {/* Cat eyes - clearly visible */}
-        <circle cx="-12" cy="-3" r="5" fill="#e9d5ff"/>
-        <circle cx="12" cy="-3" r="5" fill="#e9d5ff"/>
-        {/* Cat body - substantial size */}
-        <ellipse cx="0" cy="35" rx="25" ry="30" fill={`url(#purpleGradient-${size})`} opacity="0.6"/>
-        {/* Cat tail - prominent */}
-        <path d="M 25,50 Q 45,35 40,70" stroke={`url(#purpleGradient-${size})`} strokeWidth="8" fill="none" opacity="0.6"/>
+      {/* Cat silhouette - exact proportions from logo but 5x bigger to fill button */}
+      <g transform="translate(50, 50) scale(5)">
+        {/* Cat head */}
+        <ellipse cx="0" cy="0" rx="8" ry="6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
+        {/* Cat ears */}
+        <polygon points="-6,-4 -8,-10 -2,-6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
+        <polygon points="6,-4 8,-10 2,-6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
+        {/* Cat eyes */}
+        <circle cx="-3" cy="-1" r="1" fill="#e9d5ff"/>
+        <circle cx="3" cy="-1" r="1" fill="#e9d5ff"/>
+        {/* Cat body */}
+        <ellipse cx="0" cy="8" rx="6" ry="8" fill={`url(#purpleGradient-${size})`} opacity="0.6"/>
+        {/* Cat tail */}
+        <path d="M 6,12 Q 12,8 10,16" stroke={`url(#purpleGradient-${size})`} strokeWidth="2" fill="none" opacity="0.6"/>
       </g>
     </svg>
   );
