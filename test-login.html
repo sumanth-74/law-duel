@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct Login Test</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+        }
+        input, button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 300px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #333;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Direct Login Test</h1>
+    <input type="text" id="username" placeholder="Username" value="debuguser">
+    <input type="password" id="password" placeholder="Password" value="test123">
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="checkAuth()">Check Auth Status</button>
+    <button onclick="logout()">Logout</button>
+    <div id="result"></div>
+
+    <script>
+        const result = document.getElementById('result');
+
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            result.innerHTML = 'Logging in...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `<h3>✅ Login successful!</h3>
+                        <p>User: ${data.username}</p>
+                        <p>ID: ${data.id}</p>
+                        <p>Now check auth status to verify session...</p>`;
+                } else {
+                    result.innerHTML = `❌ Login failed: ${data.message}`;
+                }
+            } catch (error) {
+                result.innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function checkAuth() {
+            result.innerHTML = 'Checking authentication...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/me', {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    result.innerHTML = `<h3>✅ Authenticated!</h3>
+                        <p>User: ${data.username}</p>
+                        <p>Session is working!</p>
+                        <p><a href="http://localhost:5000/" style="color: #4CAF50;">Go to App →</a></p>`;
+                } else {
+                    result.innerHTML = '❌ Not authenticated';
+                }
+            } catch (error) {
+                result.innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function logout() {
+            result.innerHTML = 'Logging out...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    result.innerHTML = '✅ Logged out successfully';
+                } else {
+                    result.innerHTML = '❌ Logout failed';
+                }
+            } catch (error) {
+                result.innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
