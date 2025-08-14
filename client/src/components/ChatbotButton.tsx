@@ -21,7 +21,7 @@ export function ChatbotButton({ currentSubject, className = '', variant = 'float
         <div className={`fixed bottom-6 right-6 z-30 ${className}`}>
           <Button
             onClick={() => setIsOpen(!isOpen)}
-            className={`relative w-40 h-40 rounded-full shadow-xl transition-all duration-300 ${
+            className={`relative w-24 h-24 rounded-full shadow-xl transition-all duration-300 ${
               isOpen 
                 ? 'bg-purple-600 hover:bg-purple-700 scale-110' 
                 : 'bg-mystic-gold hover:bg-mystic-gold/90'
