@@ -1276,5 +1276,770 @@
     "checksum": "559a70c1f2302352439585623c2837916fa9894ef01762851678236e4ed5eeb4",
     "createdAt": 1755127954144,
     "usedCount": 0
+  },
+  {
+    "id": "direct_1755136027742_s6uct84z9",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 6,
+    "stem": "Alice, a skilled painter, was setting up her easel in a public park to create a landscape painting. While adjusting the height of her easel, she accidentally swung the arm of the easel and knocked over Bob, a passerby, causing him to spill his coffee and trip, resulting in a minor injury. Bob wants to sue Alice for negligence. Which of the following is the strongest argument Alice can make in her defense against Bob's negligence claim?",
+    "choices": [
+      "A) Alice did not intend to harm Bob, so she cannot be held liable.",
+      "B) Bob was trespassing in the area where Alice was painting.",
+      "C) Alice's actions were not a breach of the duty of care because she was in a public area and had no reason to expect someone would be near her easel.",
+      "D) Bob assumed the risk of injury by walking too close to Alice while she was painting."
+    ],
+    "correctIndex": 2,
+    "explanation": "Alice can argue that her actions were not a breach of the duty of care because she was in a public space and had no reason to believe anyone would be in the immediate vicinity of her easel while setting it up, making her conduct reasonable under the circumstances.",
+    "createdAt": 1755136027742,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136034372_lmtco9ms2",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "In a small town, a popular local bakery, 'Sweet Treats,' decides to host a baking competition to engage the community. The owner, ranging from seasoned bakers to amateur enthusiasts, announces that any participant can use the bakery's kitchen facilities. One participant, Jane, while using the mixer in the kitchen, accidentally spills a bowl of flour on the floor. As other participants enter the kitchen, one contestant, Tim, slips on the flour, falls, and breaks his arm. Tim sues Jane for negligence. What is the most likely outcome of Tim's lawsuit against Jane?",
+    "choices": [
+      "A. Tim will win because Jane had a duty to keep the kitchen safe and failed to warn others about the spill.",
+      "B. Tim will win because all participants have a duty to avoid causing harm to others in shared spaces.",
+      "C. Tim will lose because he assumed the risk of injury by participating in the competition.",
+      "D. Tim will lose because Jane did not create the hazardous condition intentionally or recklessly."
+    ],
+    "correctIndex": 3,
+    "explanation": "In this case, Jane did not intentionally or recklessly create the hazardous condition that caused Tim's injury. To establish negligence, a plaintiff must show that the defendant breached a duty of care that resulted in the injury. Jane's action of using the mixer and the spilling of flour could be considered an accident. Furthermore, Jane was not in a position to foresee that the flour spill would create an imminent danger to others. Therefore, Tim is unlikely to succeed in his claim against Jane for negligence.",
+    "createdAt": 1755136034372,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136040643_1ynetqxom",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Lisa owns a bakery in a busy downtown area. One day, she decides to promote her new pastry line by creating an eye-catching display outside her shop, which includes a large sandwich board sign with colorful graphics. Unfortunately, the sign is placed too close to the sidewalk, obstructing the walking path. While walking by, Tom, an unsuspecting pedestrian, trips over the sign and falls, breaking his arm. Tom decides to sue Lisa for negligence. What must Tom show in order to successfully prove his negligence claim against Lisa?",
+    "choices": [
+      "A. That Lisa intended to harm Tom by placing the sign in a dangerous location.",
+      "B. That Lisa failed to act as a reasonable person would have under similar circumstances, causing Tom's injury.",
+      "C. That Lisa had a duty to ensure no one was ever harmed by her sign, regardless of circumstances.",
+      "D. That the sign was the sole cause of Tom's injuries, with no other contributing factors."
+    ],
+    "correctIndex": 1,
+    "explanation": "To prove negligence, Tom must demonstrate that Lisa owed him a duty of care, breached that duty by failing to act as a reasonable person would in a similar situation, and that this breach was the direct cause of his injury. Intention to harm is not required for negligence, and the existence of contributing factors does not negate her liability if her actions were negligent.",
+    "createdAt": 1755136040643,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136046131_idw1fzm2b",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Alice invites Bob over to her house for a barbecue. While cooking, Alice accidentally spills hot oil on the patio, creating a slippery surface. Later, Bob comes outside, slips on the oil, and injures himself. Bob wants to sue Alice for his injuries. What standard is most commonly applied to determine Alice's liability in this situation?",
+    "choices": [
+      "A: Alice must have acted with gross negligence.",
+      "B: Alice is liable only if she intentionally harmed Bob.",
+      "C: Alice must have failed to exercise reasonable care to maintain a safe environment.",
+      "D: Alice is not liable because Bob was an adult and assumed the risk of injury."
+    ],
+    "correctIndex": 2,
+    "explanation": "Alice, as a property owner, has a duty to maintain her property in a reasonably safe condition for invitees. The standard of care applied in this scenario is reasonable care, meaning that Alice must ensure that her patio does not pose an unreasonable risk of harm. Since she created a hazardous condition, this could lead to liability if it is determined that she failed to act reasonably.",
+    "createdAt": 1755136046131,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136050906_qvc0ev54y",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Alice is walking in a park when she slips on a patch of ice that was not properly cleared by the city. She falls, injures her wrist, and files a lawsuit against the city for negligence. The city argues that it had a policy in place to clear ice, but due to an unexpected snowstorm, its workers were unable to come in. Is the city likely to be held liable for Alice's injuries?",
+    "choices": [
+      "Yes, because the city has a duty to maintain safe conditions in public areas.",
+      "No, because the city's workers were unable to clear the ice due to an unexpected snowstorm.",
+      "Yes, because the city should have anticipated the ice formation.",
+      "No, because Alice should have been more careful while walking."
+    ],
+    "correctIndex": 0,
+    "explanation": "The city has a duty to maintain safe conditions in public areas. Even though the city argues that a snowstorm prevented its workers from clearing the ice, it still had a responsibility to ensure the park was safe for visitors. If the city failed to take reasonable steps to prevent the hazardous condition, it could be found liable for negligence.",
+    "createdAt": 1755136050906,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136058980_j21c0mmbb",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "Thomas, an amateur photographer, set up a small photography booth at a local street fair to offer portrait sessions. While taking pictures, Thomas noticed a child, Lily, running towards him with a balloon. In an attempt to capture the perfect moment, Thomas bent down and held his camera at eye level. Unbeknownst to Thomas, Lily's balloon had a small tear, and as she reached him, the balloon burst, startling her and causing her to accidentally bump into Thomas. This caused Thomas to lose his balance and fall, injuring his wrist. Thomas later discovered that Lily’s mother, Rebecca, had seen the whole incident and was standing nearby. Thomas intends to sue both Lily and Rebecca for his injuries. Which of the following is likely the best defense for Rebecca against Thomas's claim for negligence based on the circumstances of the incident?",
+    "choices": [
+      "A. Rebecca can argue that Thomas assumed the risk by positioning himself in a way that exposed him to potential injury.",
+      "B. Rebecca can argue that Thomas was engaging in a recreational activity and therefore should not be compensated for his injuries.",
+      "C. Rebecca can argue that Lily was not negligent in her actions since she was simply a child playing innocently.",
+      "D. Rebecca can argue that Thomas was primarily responsible for his own injuries due to his failure to keep a proper lookout."
+    ],
+    "correctIndex": 0,
+    "explanation": "The best defense for Rebecca is that Thomas assumed the risk of injury by positioning himself in a situation where he was attempting to capture spontaneous moments, which inherently carries some risk of accidents occurring around him, particularly with children present. Therefore, he may have assumed the risk of injury from such events.",
+    "createdAt": 1755136058980,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136064068_0c1pzks5z",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Emily was jogging in a public park when she tripped over a broken sidewalk slab and fell, injuring her ankle. The slab had been broken for several months, and many joggers had complained to the city about it. Emily files a lawsuit against the city for negligence. What must Emily demonstrate to prove her case against the city?",
+    "choices": [
+      "A. That the city had a specific duty to fix the sidewalk slab and failed to do so.",
+      "B. That the city was aware of the broken slab but did not fix it, regardless of whether they had a duty to do so.",
+      "C. That the city breached a duty of care to her, and that her injury was a foreseeable result of that breach.",
+      "D. That the city had a policy in place for maintaining sidewalks that was not followed."
+    ],
+    "correctIndex": 2,
+    "explanation": "To establish a negligence claim, Emily must demonstrate that the city owed her a duty of care, breached that duty, and that the breach caused her injury. Choice C correctly identifies the necessary elements of her claim.",
+    "createdAt": 1755136064068,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136069456_vtqw145xv",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 5,
+    "stem": "Alice, a skilled carpenter, was contracted by Bob to build a large, custom-made bookshelf for his home. During the construction, Alice decided to use a new type of wood glue that she had never used before, believing it would enhance the durability of the bookshelf. After delivering the completed bookshelf, Bob noticed that the shelves were sagging under the weight of the books he placed on them. Upon inspection, he discovered that the glue had not properly set and had failed to hold the shelves in place. Bob's expensive books fell and were damaged. If Bob sues Alice for negligence, what must he prove to establish his claim?",
+    "choices": [
+      "A. That Alice had a legal duty to use the most expensive materials available.",
+      "B. That Alice failed to meet the standard of care expected of a reasonably skilled carpenter.",
+      "C. That Alice intentionally caused the bookshelf to fail.",
+      "D. That Bob incurred actual damages solely because he did not construct the bookshelf himself."
+    ],
+    "correctIndex": 1,
+    "explanation": "To establish a negligence claim, Bob must prove that Alice breached her duty of care by failing to act as a reasonably skilled carpenter would. The use of a new type of glue without adequate testing could be seen as a failure to meet that standard, leading to the damages Bob incurred.",
+    "createdAt": 1755136069456,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136075234_tzlwaoag0",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Lara, a competitive cyclist, was training for an upcoming race by riding her bicycle on a popular path in her town. One afternoon, a small dog slipped out of its owner's yard and ran into the path, causing Lara to swerve and crash. She sustained significant injuries. Lara later learned that the dog's owner, Tom, had previously been warned multiple times that his dog had a habit of escaping and running onto the path. Lara is now considering suing Tom for the injuries she suffered. Which of the following is the most likely outcome if Lara sues Tom for negligence?",
+    "choices": [
+      "A. Lara will likely prevail because Tom had knowledge of the dog's dangerous behavior and failed to take adequate precautions.",
+      "B. Lara will likely lose because she was engaged in a recreational activity and assumed the risk of injury.",
+      "C. Lara will likely prevail because the dog’s actions were a direct cause of her injuries, regardless of Tom's knowledge.",
+      "D. Lara will likely lose because she did not have a direct encounter with Tom or his home."
+    ],
+    "correctIndex": 0,
+    "explanation": "Lara is likely to prevail in her negligence claim because Tom had knowledge of his dog's propensity to escape, and he failed to take reasonable steps to prevent it. This establishes a breach of duty that directly caused Lara's injuries when the dog ran onto the path. Thus, the correct choice is A.",
+    "createdAt": 1755136075234,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136079767_n9trs0evv",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 3,
+    "stem": "Emma was walking her dog in the local park when her dog suddenly ran after a squirrel, causing Emma to lose her balance and fall to the ground. As she fell, she accidentally knocked over a young child, who was playing nearby. The child suffered a minor scrape on his arm. Emma was not negligent because she was keeping her dog on a leash and the fall was unexpected. Can Emma be held liable for the child's injuries?",
+    "choices": [
+      "A) Yes, because she caused the child to be injured.",
+      "B) No, because she was not negligent.",
+      "C) Yes, because dog owners are always responsible for their dogs' actions.",
+      "D) No, because the injury was an unfortunate accident and not a result of her actions."
+    ],
+    "correctIndex": 1,
+    "explanation": "Emma cannot be held liable because she was not negligent in her actions. She was following the law by keeping her dog on a leash, and her fall was an unexpected incident that could not have been foreseen or prevented.",
+    "createdAt": 1755136079767,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136085569_54y05wkkt",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Emma, a local artist, decided to conduct a painting workshop at a community center. During the workshop, she used a type of paint that she knew could cause skin irritation for some individuals. Before starting the workshop, she verbally warned all attendees about the possibility of irritation and advised them to wear protective gloves. However, she did not provide any written materials or specific warnings about the paint's chemical properties. Jason, a participant, developed a severe rash after touching the paint directly. He claims that Emma failed to adequately inform him of the risks associated with using the paint, and he is considering suing Emma for negligence. Which of the following is most likely to be a successful defense for Emma against Jason's negligence claim?",
+    "choices": [
+      "A. Emma provided a verbal warning about the paint's potential risks.",
+      "B. Jason assumed the risk by participating in the workshop.",
+      "C. Emma was not aware of the paint's hazardous properties.",
+      "D. The community center is liable for Jason's injury, not Emma."
+    ],
+    "correctIndex": 1,
+    "explanation": "Emma's verbal warning constitutes a reasonable effort to inform attendees of the potential risks. However, the key defense here is that Jason assumed the risk by voluntarily participating in the workshop despite being warned, which undermines his negligence claim against Emma.",
+    "createdAt": 1755136085569,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136096601_m19oplxc3",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "Alice was driving her car when she noticed a dog running loose in the street. In an attempt to avoid hitting the dog, Alice swerved her car abruptly, lost control, and crashed into a parked car owned by Bob, causing significant damage. Bob, who was outside washing his car, witnessed the accident and suffered emotional distress upon seeing the damage to his vehicle. He filed a lawsuit against Alice for negligence, seeking damages for the property damage and his emotional distress. Which of the following is the most likely outcome of Bob's lawsuit against Alice?",
+    "choices": [
+      "A. Bob will recover damages for property damage to his car, but not for emotional distress, as he did not suffer any physical injury.",
+      "B. Bob will recover damages for both property damage and emotional distress because Alice's actions were negligent.",
+      "C. Bob will not recover for property damage since it was caused by Alice’s attempt to avoid a greater harm, which constitutes a defense.",
+      "D. Bob will only recover for emotional distress since the property damage was not caused by Alice’s direct actions."
+    ],
+    "correctIndex": 0,
+    "explanation": "Bob will likely recover damages for the property damage to his car because Alice was negligent in failing to control her vehicle, causing harm to Bob's property. However, most jurisdictions require some form of physical injury or a direct threat of physical harm for a claim of emotional distress, which Bob did not experience in this case.",
+    "createdAt": 1755136096601,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136101666_g717dwn9x",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 1,
+    "stem": "Alice was walking in a public park when she tripped over a tree root that was protruding from the ground. She fell and suffered a minor injury. The park had posted signs warning visitors to be careful around the tree roots. Alice wants to sue the city for her injuries. What is the most likely outcome of Alice's lawsuit against the city?",
+    "choices": [
+      "The city will not be liable because it provided adequate warning about the condition.",
+      "The city will be liable because it did not fix the tree root.",
+      "The city will be liable because Alice was injured in a public place.",
+      "The city will not be liable because Alice was not paying attention."
+    ],
+    "correctIndex": 0,
+    "explanation": "The city will not be liable because it provided adequate warnings about the condition of the tree roots, which effectively mitigates their liability for Alice's injuries.",
+    "createdAt": 1755136101666,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136106695_i0yeyc37w",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Alice was walking in a park when she tripped over a tree root that was protruding from the ground. She fell and broke her wrist. After her recovery, Alice discovered that the park had a sign warning visitors to be cautious of uneven ground, but the sign was not clearly visible due to overgrown bushes. Can Alice successfully sue the city for her injury?",
+    "choices": [
+      "Yes, because the city has a duty to maintain safe park conditions.",
+      "No, because Alice was warned of the potential danger.",
+      "Yes, because the warning sign was not clearly visible.",
+      "No, because Alice should have been more careful."
+    ],
+    "correctIndex": 2,
+    "explanation": "Alice can successfully sue the city because the warning sign was obscured by overgrown bushes, which made it difficult for her to be aware of the danger. The city has a duty to maintain its property in a safe condition and to ensure that any warnings are clearly visible.",
+    "createdAt": 1755136106695,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136115330_5ghaleju5",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 1,
+    "stem": "Alice is walking in a park when she accidentally trips over a small uneven patch of grass and falls, injuring her ankle. The park has a sign warning of potential hazards, but Alice was distracted while looking at the scenery. Can Alice successfully sue the park for negligence?",
+    "choices": [
+      "Yes, because the park should have maintained the grass more safely.",
+      "No, because Alice was not paying attention.",
+      "Yes, because the warning sign does not absolve the park of liability.",
+      "No, because this was an obvious hazard."
+    ],
+    "correctIndex": 1,
+    "explanation": "Alice is unlikely to succeed in a negligence claim because she was not paying attention to her surroundings, which contributed to her fall. The park's responsibility is mitigated by the fact that the hazard was not hidden and she was warned about potential dangers.",
+    "createdAt": 1755136115330,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136120876_cwugytj04",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Emma, a professional photographer, was hired by a local bakery to take photos for their new menu. During the photo shoot, Emma was setting up her lighting equipment when she noticed Bob, an employee of the bakery, accidentally spill flour on the floor. Emma warned Bob to be careful and then continued her setup. Moments later, Emma slipped on the flour and fell, injuring her wrist. Emma is considering suing the bakery for her injuries. What is the most likely outcome of her claim for negligence against the bakery?",
+    "choices": [
+      "The bakery is likely liable because they should have cleaned up the flour spill.",
+      "The bakery is likely not liable because Emma was warned about the spill.",
+      "The bakery is likely liable because Emma was an invitee and the spill created an unreasonable risk.",
+      "The bakery is likely not liable because Emma was partially responsible for her own injury."
+    ],
+    "correctIndex": 2,
+    "explanation": "Emma, as an invitee, is owed a duty of care by the bakery to keep the premises safe. The presence of the flour on the floor constituted a dangerous condition. Although Emma was warned, the bakery still had a duty to address the spill. Hence, the bakery may be found liable for not remedying the dangerous condition.",
+    "createdAt": 1755136120876,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136126563_5kwym4696",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Lucy is a well-known artist who works in a studio located in a thriving arts district. One day, while Lucy is painting outdoors in a public park, a small group of children runs into her equipment, knocking over a can of paint. The can spills all over a nearby passerby, Tom, who is wearing a brand-new white suit. Tom is furious and demands that Lucy pay for the dry cleaning costs of his suit, which amounts to $300. Lucy apologizes, but claims she is not responsible because the children caused the spill. If Tom files a lawsuit against Lucy for negligence, what is the most likely outcome?",
+    "choices": [
+      "A. Tom will win because Lucy had a duty to secure her equipment from foreseeable harm.",
+      "B. Tom will win because Lucy's actions were the direct cause of the spill.",
+      "C. Tom will lose because the act of the children breaking the equipment was a superseding cause.",
+      "D. Tom will lose because he did not take reasonable steps to avoid the paint spill."
+    ],
+    "correctIndex": 0,
+    "explanation": "Tom is likely to win because Lucy, as the owner of the equipment, had a duty to ensure that her equipment was set up in a manner that wouldn't pose a risk to others, particularly in a public area where children may be present. Although the children may have initially caused the spill, Lucy's negligence in not securing her paint can contribute to liability.",
+    "createdAt": 1755136126563,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136135449_aimbqb4gx",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Alice, a high school teacher, was walking in the school hallway when she accidentally bumped into Bob, a student. Bob was carrying a stack of books and fell to the ground, dropping his books. Bob was unharmed but was embarrassed by the fall. Bob later decided to sue Alice for battery. Can Bob successfully sue Alice for battery?",
+    "choices": [
+      "Yes, because Alice caused Bob to fall and drop his books.",
+      "No, because Bob was not harmed beyond embarrassment.",
+      "Yes, because Alice intended to bump into Bob.",
+      "No, because the act was accidental and not intentional."
+    ],
+    "correctIndex": 3,
+    "explanation": "Battery requires intentional conduct that results in harmful or offensive contact. In this case, Alice's act of bumping into Bob was accidental and lacked the intent to cause harm or offense, making it unlikely that Bob can successfully sue for battery.",
+    "createdAt": 1755136135449,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136143163_etguao9jn",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "Alice, a skilled carpenter, was hired by Bob to renovate his home. While working on the project, Alice inadvertently left a power tool on the edge of a staircase. Later that day, Carol, Bob's neighbor, was visiting and tripped over the tool while descending the stairs, suffering a broken ankle. Carol decides to sue both Alice for negligence and Bob for premises liability, arguing that Bob had a duty to maintain a safe environment for visitors. Which of the following statements best describes the potential liability of Alice and Bob? ",
+    "choices": [
+      "A) Alice is liable for negligence because she breached her duty of care by leaving the tool on the stairs, and Bob is also liable for premises liability because he failed to ensure the property was safe for visitors.",
+      "B) Alice is not liable for negligence because she did not reasonably foresee that leaving the tool would cause harm, and Bob is not liable for premises liability because Carol was not lawfully on his property.",
+      "C) Alice is liable for negligence because her actions directly caused Carol's injury, but Bob is not liable for premises liability since he had no reasonable way to know the tool was left there.",
+      "D) Bob is liable for premises liability because he has a duty to maintain safe conditions on his property, while Alice has no liability since she was performing work for Bob and not in control of the premises."
+    ],
+    "correctIndex": 0,
+    "explanation": "Alice is liable for negligence because she breached her duty of care by leaving the tool in a hazardous location, creating a foreseeable risk of injury. Bob is also liable for premises liability as he had a duty to maintain his property in a safe condition for visitors, and the presence of the tool created an unsafe condition.",
+    "createdAt": 1755136143163,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136147876_siz52haqv",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 6,
+    "stem": "Alice invites her friends over for a backyard barbecue. While preparing food, she puts several bags of charcoal near the barbecue grill. Unbeknownst to her, the bags are defective and highly flammable. Later, one of Alice's friends, Bob, accidentally knocks over a bag while trying to grab a hot dog. The bag ignites, causing a fire that spreads to a nearby fence, damaging it. Bob suffers minor burn injuries while trying to extinguish the fire. Bob sues Alice for negligence. What is the likely outcome of Bob's lawsuit against Alice?",
+    "choices": [
+      "A. Bob will win because Alice created a dangerous condition by leaving the flammable bags near the grill.",
+      "B. Bob will lose because he assumed the risk by attending the barbecue.",
+      "C. Bob will win because Alice had a duty to ensure the safety of her guests and failed to do so.",
+      "D. Bob will lose because he was not injured directly by Alice's actions."
+    ],
+    "correctIndex": 2,
+    "explanation": "Alice had a duty to maintain a safe environment for her guests. By leaving highly flammable bags close to a heat source, she breached that duty, which resulted in injury to Bob. Therefore, Bob is likely to win his negligence claim against Alice.",
+    "createdAt": 1755136147876,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136152426_5vsigtg78",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 1,
+    "stem": "Alice, while walking in a park, accidentally trips over a loose stone and falls. In doing so, she accidentally knocks over Bob, who was sitting on a nearby bench. Bob suffers a minor scrape on his arm but does not require medical attention. Can Bob successfully sue Alice for the injury he sustained?",
+    "choices": [
+      "A) Yes, Alice is responsible for Bob's injury because she caused the accident.",
+      "B) Yes, Bob can sue for emotional distress because Alice's actions were negligent.",
+      "C) No, Alice is not liable for Bob's injury because it was accidental and not intentional.",
+      "D) No, Bob cannot recover damages because he suffered only a minor injury."
+    ],
+    "correctIndex": 2,
+    "explanation": "Alice's actions were accidental, and she did not intend to cause harm to Bob. Under tort law, liability for negligence requires both a duty and a breach of that duty leading to foreseeable harm. Here, Alice did not breach any duty to Bob as her actions were not negligent. Therefore, Bob cannot successfully sue Alice for his minor injury.",
+    "createdAt": 1755136152426,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136158215_l90emrwnr",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Alice is at a park enjoying her day when she accidentally drops her phone on the ground. Bob, who is walking by, sees the phone on the ground and picks it up with the intention of returning it to Alice. However, as he picks it up, he trips over a tree root and falls, causing him to drop the phone, which shatters on the ground. Alice sues Bob for the damage to her phone. What is the most likely outcome of Alice's lawsuit against Bob?",
+    "choices": [
+      "Bob is liable for the damage to Alice's phone because he had possession of it.",
+      "Bob is not liable because he was not negligent in the incident.",
+      "Bob is liable only if he was aware of the risk of tripping.",
+      "Bob is not liable because the damage was caused by an accident."
+    ],
+    "correctIndex": 1,
+    "explanation": "Bob is not liable for the damage to Alice's phone because he did not act negligently. His trip over the tree root was an unforeseen accident and not a breach of his duty of care.",
+    "createdAt": 1755136158215,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136162885_th3stdyy7",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Alice, a professional chef, was invited to give a cooking demonstration at a local food festival. During her demonstration, she was using a food processor while explaining the importance of safety in the kitchen. She accidentally spilled a small amount of vegetable oil on the floor behind her, creating a slippery surface. After a few minutes, Bob, a festival attendee, walked by and slipped on the oil, falling and injuring his back. Bob sues Alice for negligence. Which of the following is the most likely outcome of Bob's lawsuit against Alice?",
+    "choices": [
+      "Alice is liable because she had a duty to keep the demonstration area safe for attendees.",
+      "Alice is not liable because the spill was not foreseeable and she did not have time to clean it up.",
+      "Alice is liable only if Bob can prove that she was negligent in her demonstration of cooking safety.",
+      "Alice is not liable because Bob was also careless by not paying attention to his surroundings."
+    ],
+    "correctIndex": 0,
+    "explanation": "Alice is likely to be found liable because she owes a duty to keep the area safe for attendees, and the spill created an unreasonable risk of harm that she should have anticipated and remedied even if it happened quickly.",
+    "createdAt": 1755136162885,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136169671_diz7sw61l",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "During a community event, Sarah set up a lemonade stand to raise money for charity. While preparing her stand, she accidentally spilled lemonade on the sidewalk. Later, John, a passerby, slipped on the spilled lemonade and fell, breaking his wrist. John's injury required medical attention and time off work. John decides to sue Sarah for negligence. What is the most likely outcome of John's lawsuit against Sarah?",
+    "choices": [
+      "A) Sarah will be liable for negligence because she created a hazardous condition on the property.",
+      "B) Sarah will not be liable because she did not intend to cause harm.",
+      "C) Sarah will not be liable because the spill was an isolated incident and not foreseeable.",
+      "D) Sarah will be liable for negligence because she failed to take reasonable steps to clean up the spill."
+    ],
+    "correctIndex": 0,
+    "explanation": "Sarah can be found liable for negligence because she created a hazardous condition (the spilled lemonade) while engaged in an activity (running a lemonade stand) that was open to the public. She had a duty to ensure that her area was safe for patrons and fail to maintain that duty can be actionable. The spill was foreseeable due to her activity.",
+    "createdAt": 1755136169671,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136174688_0beayobv8",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Alice is walking her dog in a public park when her dog, Max, suddenly lunges at a jogger, Sam, who is passing by. Max starts barking loudly and jumps up on Sam, causing him to stumble and fall. Sam suffers a sprained ankle and decides to sue Alice for negligence. What must Sam prove to establish Alice's liability for his injuries?",
+    "choices": [
+      "A. That Alice’s dog has a history of aggressive behavior.",
+      "B. That Alice failed to control her dog, which caused Sam's injuries.",
+      "C. That Alice was aware of the risk of her dog jumping on people.",
+      "D. That Alice intended for her dog to attack Sam."
+    ],
+    "correctIndex": 1,
+    "explanation": "To establish negligence, Sam must prove that Alice failed to control her dog, which directly caused his injuries. He does not need to show that Alice was aware of the dog's behavior or had any intent to injure Sam.",
+    "createdAt": 1755136174688,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136179282_rqdwj6qbb",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 1,
+    "stem": "Alice is walking through a park when she accidentally trips over a raised tree root and falls, injuring her ankle. There are no warning signs in the park indicating that the ground may be uneven. If Alice sues the city for her injuries, which of the following is the most likely outcome regarding the city's liability? ",
+    "choices": [
+      "The city is liable for Alice's injuries because it failed to maintain safe conditions in the park.",
+      "The city is not liable because Alice was not paying attention while walking.",
+      "The city is not liable because tripping over natural features is an inherent risk of using the park.",
+      "The city is liable only if Alice can prove that the tree root was specifically placed there by the city."
+    ],
+    "correctIndex": 0,
+    "explanation": "The city may be held liable for Alice's injuries because it has a duty to maintain safe conditions in public parks. The lack of warning signs about the raised root suggests that the city may have failed to fulfill this duty, potentially constituting negligence.",
+    "createdAt": 1755136179282,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136187099_rqteg4q63",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "Maria owns a small bakery and often allows her regular customers to sample baked goods for free in exchange for feedback. One day, she invites her friend Jack, a food blogger, to try a new chocolate cake she has created. As Jack samples the cake, he discovers that Maria inadvertently used an expired ingredient. Jack, who has a severe nut allergy, suffers a serious allergic reaction after eating a piece that contained nuts. He sues Maria for negligence. Which of the following statements is most accurate regarding Maria’s potential liability? ",
+    "choices": [
+      "A. Maria is liable for negligence because she had a duty to ensure the safety of the food she provided, even though it was given for free.",
+      "B. Maria is not liable since Jack was a guest and not a paying customer, and therefore, she owed him no duty of care.",
+      "C. Maria is liable only if Jack can prove that he had communicated his allergy to her before eating the cake.",
+      "D. Maria is not liable because Jack took the risk of eating the cake by choosing to sample it."
+    ],
+    "correctIndex": 0,
+    "explanation": "Maria is liable for negligence because she had a duty to ensure the safety of the food she provided, regardless of whether it was given for free. The standard of care in food preparation requires that the food be safe for consumption, and using expired ingredients constitutes a breach of that duty.",
+    "createdAt": 1755136187099,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136192073_fbdprwhwj",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 6,
+    "stem": "Sarah, a professional photographer, was commissioned to take outdoor portraits for a family. During the photoshoot, Sarah set up her camera on a tripod and left it unattended to adjust the lighting. While she was away, a gust of wind knocked over the tripod, and the camera fell onto a passerby, John, who was walking by on the sidewalk. John sustained a concussion and several bruises. John later sued Sarah for negligence. What is the most likely outcome of John's claim against Sarah?",
+    "choices": [
+      "A) Sarah is liable for negligence because she left her equipment unattended in a public space.",
+      "B) Sarah is not liable for negligence because the gust of wind was an unforeseeable act of nature.",
+      "C) Sarah is liable for negligence only if John can prove she breached a duty of care.",
+      "D) Sarah is not liable for negligence because John was distracted and not paying attention to his surroundings."
+    ],
+    "correctIndex": 0,
+    "explanation": "Sarah is likely liable for negligence because she owed a duty of care to ensure her equipment did not pose a risk to others. Leaving the camera unattended in a public space created a foreseeable risk of harm, which was realized when the wind knocked it over, causing injury to John.",
+    "createdAt": 1755136192073,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136198173_6qxpalwke",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Alice owns a bakery and employs Bob as her assistant. One day, while Bob was cleaning the bakery, he accidentally knocked over a large glass display case, which shattered on the floor. Carol, a customer who was browsing near the display, slipped on the glass and sustained injuries to her arm. Carol files a lawsuit against Alice for negligence, claiming that she failed to maintain a safe environment for her customers. In her defense, Alice argues that she was not present at the time of the incident and that Bob was solely responsible for his actions. In determining whether Alice can be held liable for Carol's injuries, which of the following statements is most accurate? ",
+    "choices": [
+      "A) Alice is liable because she is responsible for the actions of her employee during the course of employment.",
+      "B) Alice is not liable because she was not present when the accident occurred.",
+      "C) Alice is liable only if it can be shown that she was aware of the risk posed by the display case before the incident.",
+      "D) Alice is not liable because Carol was partially at fault for being too close to the display case while it was being cleaned."
+    ],
+    "correctIndex": 0,
+    "explanation": "Under the doctrine of respondeat superior, an employer is generally liable for the negligent acts of an employee when those acts occur within the scope of employment. Since Bob was acting in the course of his employment at the time of the incident, Alice can be held liable for Carol's injuries, regardless of her physical presence.",
+    "createdAt": 1755136198173,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136205764_odwthp1jx",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "Alice, a skilled carpenter, was hired by Bob to construct custom furniture for Bob's new home. Bob specified that he wanted a large wooden dining table with an attached bench seat. After completing the furniture, Alice delivered it to Bob's house. While helping Bob move the table into the dining room, Alice noticed that the table seemed heavier than expected. Once inside, Bob began to test the stability of the table by leaning on it. Suddenly, the table collapsed, causing Bob to fall and injure his wrist. Bob claims that Alice was negligent in constructing the table because she failed to properly reinforce it. If Bob sues Alice for negligence, which of the following is most likely to be true regarding Alice’s liability?",
+    "choices": [
+      "Alice is liable for negligence because her lack of proper reinforcement constituted a breach of the duty of care owed to Bob.",
+      "Alice is not liable for negligence because Bob assumed the risk by testing the table himself after it was delivered.",
+      "Alice is liable for negligence because she had a contractual duty to ensure the safety of the finished product.",
+      "Alice is not liable for negligence because the collapse of the table was not a foreseeable result of her actions."
+    ],
+    "correctIndex": 0,
+    "explanation": "Alice is liable for negligence because she owed a duty of care to Bob, which included constructing the table in a reasonably safe manner. The collapse indicates a breach of that duty since a reasonable carpenter would ensure the stability of furniture they create, especially before it is put to use.",
+    "createdAt": 1755136205764,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136210476_yl1mo3yy7",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 3,
+    "stem": "Alice, a professional photographer, was hired by Bob to take portraits at his family reunion. During the shoot, as Alice was positioning her camera, she accidentally tripped over a loose garden hose in Bob's yard and fell, breaking her wrist. Alice has been unable to work since the accident and is now considering suing Bob for negligence. Which of the following defenses is Bob most likely to assert to avoid liability for Alice's injury?",
+    "choices": [
+      "A) Contributory negligence",
+      "B) Assumption of risk",
+      "C) Comparative negligence",
+      "D) Statute of limitations"
+    ],
+    "correctIndex": 1,
+    "explanation": "Bob can assert the defense of assumption of risk because Alice, as a professional familiar with her environment, may have voluntarily accepted the risk of tripping over hazards present on the property, such as the loose garden hose.",
+    "createdAt": 1755136210476,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136215960_7vf8vy2qw",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Alice owns a small bakery and is known for her delicious cupcakes. One day, while walking to her car in the parking lot outside her bakery, she slips on a wet floor that was recently mopped by a janitor employed by a nearby grocery store. Alice falls and injures her wrist. She did not see any warning signs about the wet floor. Can Alice successfully sue the grocery store for her injuries?",
+    "choices": [
+      "Yes, because the grocery store had a duty to ensure the safety of the parking lot.",
+      "Yes, because Alice was a business invitee and the grocery store should have warned her.",
+      "No, because Alice was not on the grocery store's property.",
+      "No, because the grocery store is not liable for injuries occurring on a public sidewalk."
+    ],
+    "correctIndex": 1,
+    "explanation": "Alice can sue the grocery store because as a business invitee, she is entitled to a reasonable standard of care from the grocery store, which includes warning her about hazards in areas under their control that could foreseeably impact customers, even if she was not technically on their property at the time of the fall.",
+    "createdAt": 1755136215960,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136220563_tad076qz8",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Alice was a waitress at a busy restaurant. One day, while carrying a tray with several drinks to a table, she tripped over a loose floor tile and spilled the drinks on Bob, a patron at the restaurant. Bob was annoyed and suffered minor burns from the hot coffee that spilled on him. He immediately filed a lawsuit against Alice for negligence. Which of the following is Alice's best defense in this situation?",
+    "choices": [
+      "Choice A: Alice was acting in the course of her employment and is not personally liable for her actions.",
+      "Choice B: The loose tile was a known hazard that Bob should have avoided.",
+      "Choice C: Bob should have anticipated the risk of being around waitstaff carrying drinks.",
+      "Choice D: Alice did not intend to cause harm to Bob."
+    ],
+    "correctIndex": 1,
+    "explanation": "The best defense for Alice is that the loose tile was a known hazard that Bob should have avoided. It suggests that Bob had a duty to be cautious while dining at a busy restaurant and may have contributed to his injury.",
+    "createdAt": 1755136220563,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136227946_g29sntybq",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 6,
+    "stem": "Alice is a renowned artist who has been invited to exhibit her new collection at a local gallery. During the exhibit, a large sculpture that Alice created falls and strikes Ben, a patron who is admiring the artwork. The sculpture fell because of a sudden gust of wind that blew through an open window. The window was not properly secured due to a recent storm, and the gallery owner, Carl, had been warned about the issue but did not take any steps to fix it. Ben sustains a broken arm and minor contusions as a result of the incident. Which of the following statements is true regarding the potential liability of Carl for Ben's injuries?",
+    "choices": [
+      "Choice A: Carl is liable for Ben's injuries because he had actual knowledge of the unsafe condition of the window and failed to rectify it.",
+      "Choice B: Carl is not liable for Ben's injuries because the gust of wind was an unforeseeable intervening event.",
+      "Choice C: Carl is liable for Ben's injuries only if it can be proven that the gust of wind was foreseeable.",
+      "Choice D: Carl is not liable for Ben's injuries because the sculpture was not inherently dangerous."
+    ],
+    "correctIndex": 0,
+    "explanation": "Carl is liable for Ben's injuries because he had actual knowledge of the unsafe condition (the unsecured window) and failed to take appropriate action to fix it, which constitutes a breach of his duty of care to maintain a safe environment for patrons.",
+    "createdAt": 1755136227946,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136232745_8flp36ukd",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Alice and Bob are neighbors. One day, Alice is trimming her hedges and accidentally sends a branch flying into Bob's yard, hitting Bob in the shoulder and causing him minor bruising. Bob is upset and decides to sue Alice for negligence. Which of the following is most likely to be a successful defense for Alice in this case?",
+    "choices": [
+      "Choice A: Alice did not intend to harm Bob.",
+      "Choice B: Alice was exercising reasonable care while trimming her hedges.",
+      "Choice C: The branch was a natural object and Bob should have been aware of potential hazards from his neighbor's yard.",
+      "Choice D: Bob did not suffer any permanent injury."
+    ],
+    "correctIndex": 1,
+    "explanation": "Alice's defense of exercising reasonable care while trimming her hedges is likely to succeed, as she did not act negligently. The standard for negligence requires a breach of duty that causes harm, and Alice's actions were reasonable given the circumstances.",
+    "createdAt": 1755136232745,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136243216_tqtha070o",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Emily is a competitive cyclist who often trains on a public road in her town. One day, while riding her bike, she swerves to avoid a pothole and inadvertently collides with Daniel, who is walking his dog on the same side of the road. Daniel sustains a broken leg due to the collision. Emily had no way of knowing the pothole was there, and there were no warning signs. Daniel sues Emily for negligence. Which of the following is the most likely outcome of the lawsuit?",
+    "choices": [
+      "A) Emily is liable for negligence because she failed to control her bike and caused Daniel's injuries.",
+      "B) Emily is not liable for negligence because the pothole was an unexpected hazard that she could not reasonably avoid.",
+      "C) Emily is not liable for negligence as she was exercising her right to use the public road.",
+      "D) Emily is liable for negligence because she should have seen the pothole and avoided it."
+    ],
+    "correctIndex": 1,
+    "explanation": "Emily is not liable for negligence because she had no way of knowing about the pothole, and it was an unexpected hazard. The standard of care requires that a defendant act as a reasonable person would under similar circumstances; here, Emily's actions were reasonable given the circumstances.",
+    "createdAt": 1755136243216,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136252788_2oiwt6ptj",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 8,
+    "stem": "Ava owns a small coffee shop. One morning, while she was preparing to open, she accidentally spilled hot coffee on the floor. She placed a 'Caution: Wet Floor' sign in front of the spill but forgot to inform her employees to clean it up. When a customer, Ben, entered the shop a few minutes later, he slipped on the wet floor and broke his wrist. Ben sues Ava for negligence. In this case, what standard of care is Ava held to, and what is the likely outcome of the lawsuit?",
+    "choices": [
+      "A. Ava is held to the standard of care of a reasonable person, and Ben will likely win because the spill was an obvious hazard.",
+      "B. Ava is held to a higher standard of care specific to business owners, and Ben will likely lose because she took reasonable steps by placing a warning sign.",
+      "C. Ava is held to the standard of care of a reasonable business owner, and Ben will likely win because she failed to ensure the area was safe after the warning was given.",
+      "D. Ava is held to the standard of care of a reasonable business owner, and Ben will likely lose because he should have seen the 'Caution: Wet Floor' sign."
+    ],
+    "correctIndex": 2,
+    "explanation": "Ava, as a business owner, is held to a higher standard of care to ensure the safety of her customers. Even though she placed a warning sign, she still had a duty to ensure the area was safe, which she failed to do by not having the spill cleaned up promptly. Therefore, Ben is likely to win the lawsuit.",
+    "createdAt": 1755136252788,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136257813_xtj4w50kk",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "Alice is a competitive runner who often trains on the public streets of her neighborhood. One day, while running, she trips over a broken sidewalk slab that has been sticking up for several months, causing her to fall and injure her wrist. Alice had previously reported the hazard to the city’s public works department, but they failed to take action. After her injury, Alice decides to sue the city for negligence. What is the most likely outcome of Alice's case against the city?",
+    "choices": [
+      "Choice A: The city will be liable because they had notice of the defect and failed to repair it.",
+      "Choice B: The city will not be liable because Alice assumed the risk by running in public.",
+      "Choice C: The city will not be liable because sidewalks are considered open and obvious hazards.",
+      "Choice D: The city will be liable only if Alice can prove that they acted with gross negligence."
+    ],
+    "correctIndex": 0,
+    "explanation": "The city is likely liable for negligence because they had actual knowledge of the defective sidewalk and failed to take corrective action, which establishes a breach of their duty of care to maintain safe public walkways.",
+    "createdAt": 1755136257813,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136263676_3spunbz82",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Alice is walking her dog in the park when she sees a small child, Timmy, running towards her. Timmy accidentally trips over Alice's dog leash and falls, scraping his knees. Timmy's mother, Brenda, sees the incident and scolds Alice for not controlling her dog properly. If Timmy's mother decides to sue Alice for negligence, which of the following is the most likely outcome?",
+    "choices": [
+      "Alice is not liable because she did not breach a duty of care.",
+      "Alice is liable because she should have controlled her dog better.",
+      "Alice is liable because the dog was involved in the incident.",
+      "Alice is not liable because the child was running and tripped on his own."
+    ],
+    "correctIndex": 0,
+    "explanation": "Alice is not liable because she did not breach a duty of care. There is no negligence if Alice did not act unreasonably, and simply walking her dog in a park does not constitute a breach of duty.",
+    "createdAt": 1755136263676,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136271403_e9bg9puli",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 9,
+    "stem": "During a community festival, a local bakery set up a booth to sell its pastries. To attract customers, the bakery displayed a large sign that read, 'The Best Pastries in Town!' and included an enticing photograph of their signature cupcake. Jane, a customer, saw the sign and purchased a cupcake. After taking a bite, she realized the cupcake was stale and had a strange taste. Upset, she dropped it, and when it hit the ground, it shattered, causing a piece of the cupcake to fly and hit Mike, a passerby, in the eye, resulting in a minor injury. Mike later sued the bakery for negligence. Which of the following statements best captures the bakery's potential liability in this scenario?",
+    "choices": [
+      "Choice A: The bakery is liable for negligence because the sign created a false impression about the quality of the cupcake, leading to a foreseeable injury.",
+      "Choice B: The bakery is not liable for negligence because there was no direct action by the bakery that caused Mike’s injury.",
+      "Choice C: The bakery is liable for negligence because it failed to warn customers about the potential for stale pastries, which is a direct cause of Mike's injury.",
+      "Choice D: The bakery is not liable for negligence because Mike’s injury was not a foreseeable result of the bakery's actions."
+    ],
+    "correctIndex": 1,
+    "explanation": "The bakery is not liable for negligence because the customer’s injury was not a direct result of any negligent behavior by the bakery. The injury to Mike was caused by Jane's action of dropping the cupcake, not by any defect in the product itself or any failure on the bakery's part to ensure the quality of its pastries. Without a direct causal link to the bakery's conduct, liability for the injury does not attach.",
+    "createdAt": 1755136271403,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136277346_ai4j6wcsn",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 3,
+    "stem": "Alice is walking her dog in the local park when her dog, which is on a leash, suddenly lunges at Ben, who is riding his bicycle nearby. Alice promptly pulls the leash back, but Ben loses control of his bicycle, falls, and injures his arm. Ben sues Alice for negligence. Which of the following is the most likely outcome of the lawsuit?",
+    "choices": [
+      "A) Alice is liable because she should have known her dog could behave aggressively.",
+      "B) Alice is not liable because she was exercising reasonable control over her dog.",
+      "C) Alice is liable because she failed to provide a safe environment for Ben.",
+      "D) Alice is not liable because Ben was riding his bicycle too close to the dog."
+    ],
+    "correctIndex": 1,
+    "explanation": "Alice is not liable because she was exercising reasonable control over her dog when the incident occurred. She had the dog on a leash and tried to prevent an incident, which demonstrates appropriate care.",
+    "createdAt": 1755136277346,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136282378_qjpzbkqyk",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Alice is walking her dog in the park when she notices a large, loose dog running toward them. Alice quickly steps aside to protect her dog from the oncoming dog. In her haste, she trips over a tree root and falls, injuring her ankle. The owner of the loose dog, Bob, was not present at the time of the incident. Alice sues Bob for negligence. Which of the following is MOST likely to be a key issue in Alice's claim against Bob?",
+    "choices": [
+      "Whether Bob had a duty to control his dog while it was off-leash.",
+      "Whether Alice was walking her dog in a public park.",
+      "Whether the park was well-maintained and free of hazards.",
+      "Whether Alice's dog was also acting aggressively."
+    ],
+    "correctIndex": 0,
+    "explanation": "In a negligence claim, a plaintiff must establish that the defendant had a duty of care to the plaintiff. Here, the key issue is whether Bob, as the owner of the loose dog, had a duty to control his dog, which was off-leash. If Bob breached that duty by allowing his dog to run freely, he may be liable for Alice's injuries.",
+    "createdAt": 1755136282379,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136288033_npfoqtube",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 2,
+    "stem": "Maria is walking in a public park when she slips on a wet patch of grass that had been recently watered by the park maintenance crew. There were no warning signs indicating that the area was slippery. Maria falls and sustains injuries to her wrist. She decides to sue the city for her injuries. Which of the following is the most likely outcome of Maria’s lawsuit against the city?",
+    "choices": [
+      "Maria will win because the city is responsible for maintaining safe conditions in the park.",
+      "Maria will lose because she assumed the risk by walking in a park.",
+      "Maria will win because the city had a duty to warn of the slippery condition.",
+      "Maria will lose because she did not take reasonable care while walking."
+    ],
+    "correctIndex": 0,
+    "explanation": "Maria is likely to win because the city has a duty to maintain safe conditions in public areas and failed to provide a warning about the slippery surface, which contributed to her injury.",
+    "createdAt": 1755136288033,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136293922_6eo94vsvh",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 4,
+    "stem": "Maria is a professional photographer who specializes in outdoor portrait sessions. One day, while shooting a group of clients in a public park, a dog runs up to her and accidentally knocks her over, causing her to drop her camera and break it. The dog's owner, John, runs over and apologizes, explaining that his dog is usually well-behaved but got startled by a loud noise. Maria wants to sue John for the cost of her broken camera. What is the most likely outcome of Maria's lawsuit against John?",
+    "choices": [
+      "A) Maria will win because John is strictly liable for any harm caused by his dog.",
+      "B) Maria will win because John failed to maintain control of his dog in a public space.",
+      "C) Maria will lose because John did not intend for his dog to harm her and was not negligent.",
+      "D) Maria will lose because she was in a public park where the risk of being approached by dogs is foreseeable."
+    ],
+    "correctIndex": 2,
+    "explanation": "Maria is likely to lose her lawsuit because John was not negligent; he did not intend for the dog to cause harm, and there is no evidence that he had reason to believe his dog would behave aggressively. Additionally, Maria was in a public park where encounters with dogs are foreseeable, which makes it difficult to establish liability against John.",
+    "createdAt": 1755136293922,
+    "usedCount": 0
+  },
+  {
+    "id": "direct_1755136308484_bhejqqhus",
+    "subject": "Torts",
+    "topic": "Torts",
+    "difficulty": 7,
+    "stem": "During a community charity event, a local artist set up a booth to create live paintings. As part of his performance, he used a large canvas that was positioned on the grass near a playground. While he was distracted by onlookers, a child ran onto the canvas and accidentally knocked over a bucket of paint that spilled onto a nearby spectator's clothing. The spectator suffered damages and sought compensation from the artist, claiming negligence. Which of the following statements is MOST accurate regarding the artist's potential liability? \n\nA) The artist is liable because he should have anticipated that children would be playing near his setup.\nB) The artist is not liable because the child’s actions were an unforeseeable intervening cause.\nC) The artist is liable because he failed to adequately supervise the area around his booth.\nD) The artist is not liable because he was engaged in an artistic performance and cannot be held responsible for distractions.",
+    "choices": [
+      "A) The artist is liable because he should have anticipated that children would be playing near his setup.",
+      "B) The artist is not liable because the child’s actions were an unforeseeable intervening cause.",
+      "C) The artist is liable because he failed to adequately supervise the area around his booth.",
+      "D) The artist is not liable because he was engaged in an artistic performance and cannot be held responsible for distractions."
+    ],
+    "correctIndex": 0,
+    "explanation": "The artist may be liable for negligence because he should have anticipated the possibility of children playing near his setup, and as such, he had a duty to take reasonable precautions to prevent harm. This includes ensuring that the area around his booth was safe and that any potentially hazardous items, like paint, were secured. The foreseeability of children in the vicinity creates a standard of care that the artist failed to meet, making him potentially liable for the damages caused.",
+    "createdAt": 1755136308484,
+    "usedCount": 0
   }
 ]

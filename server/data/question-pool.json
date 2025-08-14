@@ -1,0 +1,17 @@
+[
+  {
+    "id": "test_1755136602871",
+    "subject": "Torts",
+    "stem": "Alice, a competitive cyclist, was training for an upcoming race on a public road. While riding, she was startled by a dog that ran into the roadway. She swerved to avoid the dog and lost control of her bicycle, crashing into a parked car and causing damages. Alice subsequently sued the dog's owner for negligence. Which of the following statements best describes the potential liability of the dog's owner?",
+    "choices": [
+      "The dog's owner is liable for Alice's damages because the dog created an unreasonable risk when it ran into the roadway.",
+      "The dog's owner is not liable because Alice was at fault for swerving and crashing into the car.",
+      "The dog's owner is liable only if it can be proven that the dog had a history of aggressive behavior.",
+      "The dog's owner is not liable because the accident was an unforeseen consequence of the dog's actions."
+    ],
+    "correctIndex": 0,
+    "explanation": "Under tort law, a dog owner may be liable for negligence if the owner's actions create an unreasonable risk that leads to injury. In this case, the dog's sudden entry onto the roadway could be considered an unreasonable risk, and the owner could be held liable for the damages caused by Alice's crash.",
+    "difficulty": 5,
+    "createdAt": 1755136602871
+  }
+]

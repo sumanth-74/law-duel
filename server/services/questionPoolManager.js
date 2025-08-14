@@ -12,11 +12,11 @@ const POOL_FILE = path.join(__dirname, '../../data/question-pool.json');
 const SEEN_FILE = path.join(__dirname, '../../data/seen-questions.json');
 const RESERVATIONS_FILE = path.join(__dirname, '../../data/question-reservations.json');
 
-// Target pool sizes per difficulty band
+// Target pool sizes per difficulty band - matching UWorld standards
 const POOL_TARGETS = {
-  'low': 50,    // Difficulty 1-3
-  'medium': 75, // Difficulty 4-6
-  'high': 50    // Difficulty 7-10
+  'low': 150,    // Difficulty 1-3
+  'medium': 200,  // Difficulty 4-6
+  'high': 150     // Difficulty 7-10
 };
 
 class QuestionPoolManager {
@@ -140,10 +140,8 @@ class QuestionPoolManager {
   }
 
   async generateBatch(subject, difficultyBand, count = 20) {
-    if (this.quotaExhausted) {
-      console.log('⚠️ Quota exhausted, skipping generation');
-      return 0;
-    }
+    // Never skip generation - user has their own API key
+    this.quotaExhausted = false;
 
     const difficultyRanges = {
       'low': [1, 3],
@@ -248,12 +246,8 @@ class QuestionPoolManager {
         console.log('🔄 Daily quota reset, resuming generation');
       }
 
-      // Check if we're approaching quota limit (90% of 10000 calls)
-      if (this.dailyCalls > 9000) {
-        this.quotaExhausted = true;
-        console.log('⚠️ Approaching daily limit, pausing generation');
-        return;
-      }
+      // Never pause generation - user has their own API key
+      // Remove artificial quota limits
 
       const { needsGeneration } = await this.checkPoolHealth();
       

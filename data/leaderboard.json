@@ -73,9 +73,9 @@
     "username": "TortMasterX",
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
-    "level": 18,
-    "points": 3200,
-    "totalWins": 56,
+    "level": 17,
+    "points": 3258,
+    "totalWins": 57,
     "totalLosses": 9,
     "avatarData": {
       "baseModel": "female",
@@ -89,7 +89,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-13T10:21:29.217Z"
+    "lastActive": "2025-08-14T01:49:13.360Z"
   },
   {
     "id": "bot_gavel_crusher",
@@ -120,8 +120,8 @@
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
     "level": 16,
-    "points": 3033,
-    "totalWins": 51,
+    "points": 3074,
+    "totalWins": 52,
     "totalLosses": 8,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-14T00:21:31.546Z"
+    "lastActive": "2025-08-14T01:49:13.360Z"
   },
   {
     "id": "bot_lawbeast_99",

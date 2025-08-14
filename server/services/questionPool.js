@@ -37,21 +37,16 @@ class QuestionPool {
     const hoursUntilReset = Math.floor(msUntilReset / (1000 * 60 * 60));
     const minutesUntilReset = Math.floor((msUntilReset % (1000 * 60 * 60)) / (1000 * 60));
     
-    console.log(`⏰ OpenAI daily quota resets in ${hoursUntilReset}h ${minutesUntilReset}m (at midnight UTC)`);
-    console.log(`📊 Pausing all generation until quota resets to avoid wasting API calls`);
+    // User has their own API key - start generating immediately
+    console.log('✅ Starting question generation immediately (user has API key)...');
     
-    // Wait until quota resets, then start generating
-    setTimeout(() => {
-      console.log('✅ OpenAI quota has reset! Starting question generation...');
-      
-      // Start with modest generation
+    // Start with aggressive generation
+    this.fillAllPools();
+    
+    // Then generate periodically
+    setInterval(() => {
       this.fillAllPools();
-      
-      // Then generate periodically
-      setInterval(() => {
-        this.fillAllPools();
-      }, 60000); // Every minute after reset
-    }, msUntilReset + 5000); // Add 5 seconds buffer after midnight
+    }, 30000); // Every 30 seconds for rapid pool filling
     
     // For now, log pool status
     this.logPoolStatus();
