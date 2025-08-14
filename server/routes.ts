@@ -279,22 +279,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ ok: false, error: "Invalid username or password" });
       }
 
-      // Set session data directly without regenerating
-      // This prevents issues with session persistence
-      (req.session as any).userId = user.id;
-      (req.session as any).user = { id: user.id, username: user.username };
-      
-      // Save session and send response
-      req.session.save((err) => {
+      // Regenerate session to prevent fixation attacks (as per security guide)
+      req.session.regenerate((err) => {
         if (err) {
-          console.error('Session save error:', err);
-          return res.status(500).json({ ok: false, error: 'Session error' });
+          console.error('Session regenerate error:', err);
+          return next(err);
         }
         
-        // Don't return password
-        const { password, ...userResponse } = user;
-        console.log('Login successful, session saved for user:', user.username);
-        res.json({ ok: true, user: userResponse });
+        // Set user data in session
+        (req.session as any).userId = user.id;
+        (req.session as any).user = { id: user.id, username: user.username };
+        
+        // Explicitly save the session before sending response
+        req.session.save((err2) => {
+          if (err2) {
+            console.error('Session save error:', err2);
+            return next(err2);
+          }
+          
+          // Don't return password
+          const { password, ...userResponse } = user;
+          console.log('Login successful, session saved for user:', user.username);
+          res.json({ ok: true, user: userResponse });
+        });
       });
     } catch (error: any) {
       console.error('Login error:', error);
@@ -305,7 +312,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/logout", (req, res) => {
     req.session.destroy((err) => {
       if (err) {
-        return res.status(500).json({ message: "Failed to logout" });
+        console.error('Session destroy error:', err);
+        return res.status(500).json({ ok: false, message: "Failed to logout" });
       }
       res.clearCookie('sid', { path: '/' });
       res.json({ ok: true, message: "Logged out successfully" });
