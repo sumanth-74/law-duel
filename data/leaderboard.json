@@ -1,5 +1,28 @@
 [
   {
+    "id": "bot_mbe_destroyer",
+    "username": "MBEDestroyer",
+    "displayName": "MBEDestroyer",
+    "lawSchool": "Thomas Jefferson Law",
+    "level": 21,
+    "points": 4140,
+    "totalWins": 77,
+    "totalLosses": 6,
+    "avatarData": {
+      "baseModel": "male",
+      "skinColor": "#FFDAB9",
+      "hairStyle": "slicked",
+      "hairColor": "#D2691E",
+      "clothingStyle": "sweater",
+      "clothingColor": "#556B2F",
+      "accessories": [
+        "watch"
+      ],
+      "accessoryColor": "#DAA520"
+    },
+    "lastActive": "2025-08-14T21:26:34.652Z"
+  },
+  {
     "id": "bot_precedent_pro",
     "username": "PrecedentPro",
     "displayName": "PrecedentPro",
@@ -21,29 +44,6 @@
       "accessoryColor": "#8B0000"
     },
     "lastActive": "2025-08-14T21:16:20.710Z"
-  },
-  {
-    "id": "bot_mbe_destroyer",
-    "username": "MBEDestroyer",
-    "displayName": "MBEDestroyer",
-    "lawSchool": "Thomas Jefferson Law",
-    "level": 21,
-    "points": 4103,
-    "totalWins": 76,
-    "totalLosses": 6,
-    "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#FFDAB9",
-      "hairStyle": "slicked",
-      "hairColor": "#D2691E",
-      "clothingStyle": "sweater",
-      "clothingColor": "#556B2F",
-      "accessories": [
-        "watch"
-      ],
-      "accessoryColor": "#DAA520"
-    },
-    "lastActive": "2025-08-14T20:14:56.555Z"
   },
   {
     "id": "bot_brief_sniper",
