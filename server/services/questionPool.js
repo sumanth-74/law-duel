@@ -37,16 +37,10 @@ class QuestionPool {
     const hoursUntilReset = Math.floor(msUntilReset / (1000 * 60 * 60));
     const minutesUntilReset = Math.floor((msUntilReset % (1000 * 60 * 60)) / (1000 * 60));
     
-    // User has their own API key - start generating immediately
-    console.log('✅ Starting question generation immediately (user has API key)...');
-    
-    // Start with aggressive generation
-    this.fillAllPools();
-    
-    // Then generate periodically
-    setInterval(() => {
-      this.fillAllPools();
-    }, 30000); // Every 30 seconds for rapid pool filling
+    // TEMPORARILY DISABLED - OpenAI rate limit hit (10k requests/day)
+    console.log('⚠️ Auto-generation disabled due to OpenAI rate limit');
+    console.log('   Pool has 116 questions ready to play!');
+    console.log('   Will resume generation after rate limit resets tomorrow');
     
     // For now, log pool status
     this.logPoolStatus();
@@ -89,40 +83,8 @@ class QuestionPool {
   }
   
   async fillAllPools() {
-    const subjects = Object.keys(SUBJECTS);
-    const tasks = [];
-    
-    // Process subjects in batches to avoid overload
-    for (const subject of subjects) {
-      // Generate for all difficulties 1-4 to ensure coverage
-      for (let difficulty = 1; difficulty <= 4; difficulty++) {
-        const pool = this.pools.get(subject).get(difficulty);
-        const needed = this.TARGET_POOL_SIZE - pool.length;
-        
-        if (needed > 0) {
-          // Add a small delay between subjects to avoid rate limits
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
-          // Generate in background without blocking
-          tasks.push(
-            this.generateQuestionsForPool(subject, difficulty, Math.min(needed, 3))
-              .catch(err => {
-                console.error(`Failed to generate for ${subject} D${difficulty}:`, err);
-              })
-          );
-          
-          // Limit concurrent generation to avoid overwhelming the API
-          if (tasks.length >= 3) {
-            await Promise.race(tasks);
-          }
-        }
-      }
-    }
-    
-    // Generate higher difficulties on demand later
-    setTimeout(() => {
-      this.fillHigherDifficulties();
-    }, 30000); // After 30 seconds
+    // DISABLED - Rate limit hit
+    return;
   }
   
   async fillHigherDifficulties() {

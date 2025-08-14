@@ -231,44 +231,12 @@ class QuestionPoolManager {
   }
 
   async startBackgroundGeneration() {
-    if (this.generating) return;
-    
-    this.generating = true;
-    
-    // Run every 2 minutes
-    setInterval(async () => {
-      // Reset quota tracking at midnight UTC
-      const now = new Date();
-      if (now.getUTCHours() === 0 && now.getUTCMinutes() < 2) {
-        this.quotaExhausted = false;
-        this.dailyCalls = 0;
-        this.lastResetTime = Date.now();
-        console.log('🔄 Daily quota reset, resuming generation');
-      }
-
-      // Never pause generation - user has their own API key
-      // Remove artificial quota limits
-
-      const { needsGeneration } = await this.checkPoolHealth();
-      
-      if (needsGeneration.length > 0 && !this.quotaExhausted) {
-        // Prioritize the most depleted bucket
-        const priority = needsGeneration.sort((a, b) => 
-          (a.current / a.target) - (b.current / b.target)
-        )[0];
-        
-        console.log(`📊 Pool health check: ${priority.subject}/${priority.band} at ${priority.current}/${priority.target}`);
-        
-        await this.generateBatch(priority.subject, priority.band, Math.min(20, priority.needed));
-      }
-    }, 2 * 60 * 1000); // Every 2 minutes
-    
-    // Do an initial check
-    const { needsGeneration } = await this.checkPoolHealth();
-    if (needsGeneration.length > 0 && !this.quotaExhausted) {
-      const priority = needsGeneration[0];
-      await this.generateBatch(priority.subject, priority.band, Math.min(10, priority.needed));
-    }
+    // TEMPORARILY DISABLED - Rate limit hit on OpenAI API
+    // Will re-enable after rate limit resets (tomorrow)
+    console.log('⚠️ Background generation temporarily disabled due to OpenAI rate limit');
+    console.log('   Current pool has 116 questions - enough to play!');
+    console.log('   Generation will resume after rate limit resets');
+    return;
   }
 
   async reserveQuestions(userId, duelId, subject, count = 5, weaknessTargets = null) {
