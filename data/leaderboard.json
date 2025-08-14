@@ -115,6 +115,29 @@
     "lastActive": "2025-08-14T02:01:45.961Z"
   },
   {
+    "id": "bot_lawbeast_99",
+    "username": "LawBeast99",
+    "displayName": "LawBeast99",
+    "lawSchool": "Harvard Law",
+    "level": 16,
+    "points": 3100,
+    "totalWins": 49,
+    "totalLosses": 12,
+    "avatarData": {
+      "baseModel": "female",
+      "skinColor": "#fdbcb4",
+      "hairStyle": "long",
+      "hairColor": "#8B4513",
+      "clothingStyle": "blazer",
+      "clothingColor": "#1c1c1c",
+      "accessories": [
+        "glasses"
+      ],
+      "accessoryColor": "#333333"
+    },
+    "lastActive": "2025-08-14T16:12:15.907Z"
+  },
+  {
     "id": "bot_contracts_wizard",
     "username": "ContractsWizard",
     "displayName": "ContractsWizard",
@@ -138,36 +161,13 @@
     "lastActive": "2025-08-14T01:49:13.360Z"
   },
   {
-    "id": "bot_lawbeast_99",
-    "username": "LawBeast99",
-    "displayName": "LawBeast99",
-    "lawSchool": "Harvard Law",
-    "level": 16,
-    "points": 3050,
-    "totalWins": 49,
-    "totalLosses": 11,
-    "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#fdbcb4",
-      "hairStyle": "long",
-      "hairColor": "#8B4513",
-      "clothingStyle": "blazer",
-      "clothingColor": "#1c1c1c",
-      "accessories": [
-        "glasses"
-      ],
-      "accessoryColor": "#333333"
-    },
-    "lastActive": "2025-08-14T02:01:45.961Z"
-  },
-  {
     "id": "bot_justice_ninja",
     "username": "JusticeNinja",
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 14,
-    "points": 2678,
-    "totalWins": 44,
+    "points": 2729,
+    "totalWins": 45,
     "totalLosses": 11,
     "avatarData": {
       "baseModel": "male",
@@ -181,7 +181,7 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-14T00:16:31.547Z"
+    "lastActive": "2025-08-14T16:12:15.907Z"
   },
   {
     "id": "bot_legal_eagle_420",
@@ -282,5 +282,15 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-13T19:16:15.596Z"
+  },
+  {
+    "id": "e07e4fb7-0093-4cf1-8122-631836a2aef5",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T16:15:17.802Z"
   }
 ]
