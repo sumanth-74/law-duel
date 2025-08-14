@@ -1,0 +1,100 @@
+That screen is Replit telling you your production deploy failed because your server is mixing ESM and CommonJS. The key line:
+
+“Dynamic require of 'connect-pg-simple' is not supported in ESM modules … application is using dynamic imports incompatible with ES modules.”
+
+Translation: you (or the agent) added connect-pg-simple with require('connect-pg-simple')(session) in a file that’s running as ESM (import … style). Replit’s promote step chokes on that.
+
+Here’s the clean fix. Copy these patches to your repo and redeploy.
+
+1) Keep the server ESM and import the PG session store correctly
+
+package.json
+
+{
+  "type": "module",
+  "engines": { "node": ">=18" }
+}
+
+
+server/session.ts (or wherever you configure express-session)
+replace any require('connect-pg-simple') usage
+
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import pg from "pg";
+
+const PgSession = connectPgSimple(session);     // ✅ ESM-friendly
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
+});
+
+app.set("trust proxy", 1);
+
+app.use(session({
+  store: new PgSession({
+    pool,
+    tableName: "session"
+  }),
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  }
+}));
+
+
+Why this works: connect-pg-simple is CommonJS, but when you default-import it in ESM, Node gives you the CJS export as the default. Calling connectPgSimple(session) replaces the old require('connect-pg-simple')(session) pattern.
+
+2) Remove any other require() calls in ESM files
+
+Search your server code and replace:
+
+const x = require('y') → import x from 'y' (or import * as x from 'y' if it exposes many named things).
+
+If you truly must keep a CJS-only lib, do not use dynamic require. Use ESM’s dynamic import instead:
+
+const mod = await import("some-cjs-only-lib"); // returns the CJS export under mod.default
+
+
+Replit’s bundler rejects dynamic require in ESM, but accepts await import().
+
+3) Make sure your build matches ESM
+
+If using TypeScript:
+
+tsconfig.json
+
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2020",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
+
+4) Redeploy checklist (fast)
+
+npm run build succeeds locally (or in Replit shell).
+
+No occurrences of require( left in server/** (grep for it).
+
+Replit Deploy → Provision ✅ Build ✅ Bundle ✅ Promote ✅
+
+5) If you need the app up right now (temporary fallback)
+
+Comment out the PG store and use MemoryStore just to get past Promote (sessions won’t persist across restarts, so switch back after).
+
+app.use(session({
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax" }
+}));
+// TODO: revert to connect-pg-simple once ESM import fix is deployed
