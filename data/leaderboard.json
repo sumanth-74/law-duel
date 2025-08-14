@@ -74,8 +74,8 @@
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
     "level": 18,
-    "points": 3418,
-    "totalWins": 60,
+    "points": 3467,
+    "totalWins": 61,
     "totalLosses": 11,
     "avatarData": {
       "baseModel": "female",
@@ -89,7 +89,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-14T19:19:15.058Z"
+    "lastActive": "2025-08-14T21:57:15.562Z"
   },
   {
     "id": "bot_gavel_crusher",
@@ -256,9 +256,9 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 11,
-    "points": 2055,
+    "points": 2078,
     "totalWins": 29,
-    "totalLosses": 23,
+    "totalLosses": 24,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#CD853F",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-14T21:11:20.709Z"
+    "lastActive": "2025-08-14T21:57:15.562Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

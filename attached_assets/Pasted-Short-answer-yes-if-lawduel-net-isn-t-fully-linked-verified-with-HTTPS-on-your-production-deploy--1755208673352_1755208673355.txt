@@ -1,0 +1,65 @@
+Short answer: yes, if lawduel.net isn’t fully linked/verified with HTTPS on your production deploy, login will fail there even if it works on the Replit URL. Secure session cookies only stick on HTTPS and on the same origin.
+
+Here’s a tight “is the domain ready?” flow + exactly what to tell Replit.
+
+60-second readiness check (run these against lawduel.net)
+
+DNS resolves
+
+dig +short lawduel.net
+dig +short www.lawduel.net
+
+
+You should see Replit’s target (A/CNAME) for whichever host you’ll use. If you see your registrar’s parking IP or nothing → DNS not ready.
+
+HTTPS works
+
+curl -I https://lawduel.net
+
+
+Expect HTTP/1.1 200 (or a 200/301 to /) and no certificate error. If you get SSL errors or a timeout → certificate not issued or domain not attached to the prod deploy.
+
+HTTP redirects to HTTPS (so cookies don’t split)
+
+curl -I http://lawduel.net
+curl -I http://www.lawduel.net
+
+
+Expect 301 → https://lawduel.net/... (or to your chosen canonical host).
+
+Cookie really sets on your domain
+
+# login: MUST show Set-Cookie: sid=...; Secure; SameSite=Lax; Path=/
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  https://lawduel.net/api/auth/login | grep -i set-cookie
+
+# session usable:
+curl -i -b jar.txt https://lawduel.net/api/auth/me
+
+
+If the first call has no Set-Cookie or the second is 401, sessions aren’t attached properly to this origin.
+
+What to tell Replit (copy/paste)
+
+Make lawduel.net the single production origin and prove cookies set there. Do exactly this:
+
+In Deployments → Production → Settings, link lawduel.net to this deploy and wait until it shows Verified and HTTPS.
+
+Give me the exact DNS records; I will set them at my registrar (A/AAAA or CNAME + any TXT verification). Confirm with dig that lawduel.net resolves to Replit.
+
+Set canonical host to lawduel.net (301 redirect www.lawduel.net → lawduel.net).
+
+Serve the SPA from the same Express app as /api/* so all requests are same-origin (no *.replit.app base URLs in the frontend).
+
+Session middleware before routes; cookie { httpOnly:true, secure:true, sameSite:'lax', path:'/' }; do not set cookie.domain.
+
+Return these proofs (on lawduel.net):
+
+Screenshot: Deployments shows Domain Verified + HTTPS
+
+curl -i https://lawduel.net/api/auth/login showing Set-Cookie: sid=…; Secure; SameSite=Lax
+
+curl -i -b jar.txt https://lawduel.net/api/auth/me → 200
+
+DevTools Network screenshot: after login, no calls to *.replit.app/*.replit.dev—all /api/....
