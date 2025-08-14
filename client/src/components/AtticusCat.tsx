@@ -37,20 +37,20 @@ export function AtticusCat({ size = 'sm', className = '' }: AtticusCatProps) {
         </linearGradient>
       </defs>
       
-      {/* Cat silhouette - scaled up 3x to fill the button */}
-      <g transform="translate(50, 45) scale(3)">
-        {/* Cat head */}
-        <ellipse cx="0" cy="0" rx="8" ry="6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
-        {/* Cat ears */}
-        <polygon points="-6,-4 -8,-10 -2,-6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
-        <polygon points="6,-4 8,-10 2,-6" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
-        {/* Cat eyes */}
-        <circle cx="-3" cy="-1" r="1" fill="#e9d5ff"/>
-        <circle cx="3" cy="-1" r="1" fill="#e9d5ff"/>
-        {/* Cat body */}
-        <ellipse cx="0" cy="8" rx="6" ry="8" fill={`url(#purpleGradient-${size})`} opacity="0.6"/>
-        {/* Cat tail */}
-        <path d="M 6,12 Q 12,8 10,16" stroke={`url(#purpleGradient-${size})`} strokeWidth="2" fill="none" opacity="0.6"/>
+      {/* Cat silhouette - large direct dimensions */}
+      <g transform="translate(50, 50)">
+        {/* Cat head - much bigger */}
+        <ellipse cx="0" cy="0" rx="20" ry="15" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
+        {/* Cat ears - bigger */}
+        <polygon points="-15,-10 -20,-25 -5,-15" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
+        <polygon points="15,-10 20,-25 5,-15" fill={`url(#purpleGradient-${size})`} opacity="0.8"/>
+        {/* Cat eyes - bigger */}
+        <circle cx="-7" cy="-2" r="3" fill="#e9d5ff"/>
+        <circle cx="7" cy="-2" r="3" fill="#e9d5ff"/>
+        {/* Cat body - bigger */}
+        <ellipse cx="0" cy="20" rx="15" ry="20" fill={`url(#purpleGradient-${size})`} opacity="0.6"/>
+        {/* Cat tail - bigger stroke */}
+        <path d="M 15,30 Q 30,20 25,40" stroke={`url(#purpleGradient-${size})`} strokeWidth="5" fill="none" opacity="0.6"/>
       </g>
     </svg>
   );
