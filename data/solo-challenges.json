@@ -70,5 +70,57 @@
     "startedAt": "2025-08-13T19:37:50.361Z",
     "isDailyComplete": false,
     "currentQuestionId": "fresh_openai_1755113993461_e68bb6e4"
+  },
+  {
+    "id": "solo_245a4d37-b308-4df5-a463-b1688dfec89d_1755203897672",
+    "userId": "245a4d37-b308-4df5-a463-b1688dfec89d",
+    "subject": "Contracts",
+    "livesRemaining": 5,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T20:38:17.691Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755099867544_b2c1e123"
+  },
+  {
+    "id": "solo_245a4d37-b308-4df5-a463-b1688dfec89d_1755204031252",
+    "userId": "245a4d37-b308-4df5-a463-b1688dfec89d",
+    "subject": "Contracts",
+    "livesRemaining": 5,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T20:40:31.259Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755099867422_bad846dc"
+  },
+  {
+    "id": "solo_245a4d37-b308-4df5-a463-b1688dfec89d_1755204087816",
+    "userId": "245a4d37-b308-4df5-a463-b1688dfec89d",
+    "subject": "Contracts",
+    "livesRemaining": 5,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T20:41:27.822Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755099875792_ff678b2c"
+  },
+  {
+    "id": "solo_245a4d37-b308-4df5-a463-b1688dfec89d_1755204145394",
+    "userId": "245a4d37-b308-4df5-a463-b1688dfec89d",
+    "subject": "Contracts",
+    "livesRemaining": 5,
+    "round": 1,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-14T20:42:25.407Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755100172411_a3155add"
   }
 ]

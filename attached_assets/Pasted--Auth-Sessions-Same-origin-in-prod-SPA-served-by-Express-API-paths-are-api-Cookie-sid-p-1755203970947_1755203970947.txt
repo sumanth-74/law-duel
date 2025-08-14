@@ -1,0 +1,119 @@
+🔐 Auth & Sessions
+
+Same-origin in prod: SPA served by Express; API paths are /api/*.
+
+Cookie: sid present, HttpOnly, Secure (prod), SameSite=Lax.
+
+/auth/me returns 200 after full refresh and on another device.
+
+Idempotent login: repeated POST /login doesn’t create duplicate sessions.
+
+🧠 Question Engine (AI + Pool)
+
+No sync calls on match start (OpenAI runs in background worker).
+
+Pool inventory: each (Subject, Subtopic, diff-band) ≥ target (e.g., 150).
+
+Schema-valid: every Q has 4 choices, answerIndex 0–3, short explanation, tags.
+
+Deduped: checksum prevents identical questions in DB.
+
+User freshness: same user doesn’t see a repeat within 30 days.
+
+🕹️ Gameplay Flow
+
+Solo: 5 questions, server timer (e.g., 25s or your 60s), late answers rejected.
+
+Async Friend Duel: both players get the same 5 questionIds; winner by corrects → time tiebreak.
+
+No duplicates within a match (1000-match sim = 0 dupes).
+
+Reconnect: drop/rejoin within grace resumes the same question.
+
+📈 Progression & Stats (the core you care about)
+
+On answer server updates: XP, streak, SubtopicMastery, attempts/correct; returns xpGained & masteryDelta.
+
+Subtopics tab shows the exact subtopic you just answered, without reload hacks.
+
+Result screen matches the per-question chips (numbers line up).
+
+Persistence: log out/in on another device → stats unchanged.
+
+🧮 Ranking & Community
+
+Elo applied at duel end; result screen shows +XX (old→new).
+
+Weekly ladder (ISO week) updates immediately; no zero-point users.
+
+Bots labeled with gamer tags + unique avatars; clearly non-human.
+
+Public profiles: /profile/:username viewable cross-account (unless Private).
+
+📅 Daily Casefile & Streaks
+
+Today playable (not pre-answered).
+
+Timer targets midnight UTC; label says “resets at 00:00 UTC”.
+
+Streak: consecutive UTC days increments; skip resets to 1; playing twice in one day doesn’t increment twice.
+
+⚡ Performance & Stability
+
+P95 server event <150 ms during 100 concurrent duels (or your target).
+
+No crash on OpenAI 429: matches run from pool; generator pauses & resumes.
+
+Heartbeats: ghost clients dropped within 5s; no stuck duels.
+
+🧭 Observability (your lifeline)
+
+Audit log per answer: (userId, duelId, questionId, subject, subtopic, correct, ms, ts).
+
+Key counters: matches_total, dupes_in_match (should be 0), elo_updates_total, gen_failovers_total.
+
+Admin views: pool inventory by bucket; generator status; last OpenAI error.
+
+🔒 Security & Abuse Basics
+
+Rate-limit answer submits (min 1/sec).
+
+Server-authoritative scoring; ignore duplicate/late answers.
+
+Input validation on all JSON bodies; reject unmapped tags.
+
+🧪 Quick spot checks (curl)
+
+Auth:
+
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' https://<app>/api/auth/login
+curl -i -b jar.txt https://<app>/api/auth/me   # expect 200
+
+
+Solo start:
+
+curl -s -b jar.txt https://<app>/api/duel/solo/start | jq '.questions | length' # expect 5
+
+
+Stats move: answer one → GET /api/stats/subtopics shows attempts++ for that subtopic.
+
+🛑 Stop-ship red flags
+
+Any mismatch between chip numbers ↔ result screen ↔ Stats page.
+
+Async duel players get different questionIds.
+
+/auth/me flips to 401 after refresh or on a second device.
+
+OpenAI quota stops matches (means you’re still calling sync).
+
+✅ Go/No-Go criteria (closed beta)
+
+Activation (finish 1 match) ≥ 70%
+
+Bug-free matches (no dupes/desyncs) ≥ 99%
+
+Async duel rematch rate ≥ 25%
+
+Daily streak increments correctly for 3 consecutive days (manual test)

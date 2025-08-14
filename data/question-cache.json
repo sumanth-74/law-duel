@@ -961,82 +961,6 @@
   ],
   "Contracts": [
     {
-      "qid": "fresh_openai_1755099867544_b2c1e123",
-      "subject": "Contracts",
-      "topic": "Offer/Acceptance",
-      "stem": "Alice, a book publisher, sends a letter to Bob, an author, offering to publish his manuscript for a payment of $10,000. The letter states that Bob must accept the offer by March 1. On February 28, Bob mails a letter of acceptance to Alice. However, on the same day, he also sends a text message to Alice stating he has decided to decline the offer. Alice receives the text message before the acceptance letter. Which of the following statements is true regarding the contract between Alice and Bob?",
-      "choices": [
-        "A contract is formed because Bob mailed his acceptance before declining the offer.",
-        "A contract is formed because acceptance is valid upon dispatch.",
-        "No contract is formed because Bob's acceptance was not received by Alice before his rejection.",
-        "No contract is formed because Bob's text message is a valid rejection of the offer."
-      ],
-      "correctIndex": 3,
-      "explanation": "Bob's text message constitutes a valid rejection, preventing the formation of a contract.",
-      "explanationLong": "The correct answer is that no contract is formed because Bob's text message is a valid rejection of the offer. Under the mailbox rule, an acceptance is generally effective upon dispatch; however, a rejection is effective only upon receipt. Here, Bob sent a text message rejecting the offer before Alice received the acceptance letter, which means that the rejection is valid and prevents the formation of a contract. Answer choice 0 is incorrect because although Bob mailed his acceptance, the subsequent rejection via text takes precedence upon receipt. Answer choice 2 is incorrect because while acceptance is valid upon dispatch, it does not apply when a rejection is communicated prior to the acceptance being received. Answer choice 3 is incorrect because, although Bob’s acceptance was mailed, it was not received by Alice before the rejection was communicated, thus no contract was formed.",
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755099927544,
-      "generatedAt": 1755099867544
-    },
-    {
-      "qid": "fresh_openai_1755099867422_bad846dc",
-      "subject": "Contracts",
-      "topic": "Consideration",
-      "stem": "Alice offers to sell her vintage guitar to Bob for $500. Bob, who has always wanted the guitar, agrees to purchase it. After a week, Alice changes her mind and decides not to sell. Bob insists that they have a binding agreement. Which of the following statements best describes the enforceability of their agreement?",
-      "choices": [
-        "The agreement is not enforceable because Bob's agreement lacked consideration.",
-        "The agreement is enforceable because it was made in writing and signed by both parties.",
-        "The agreement is enforceable because Bob's desire for the guitar constitutes sufficient consideration.",
-        "The agreement is not enforceable because Alice did not receive any consideration from Bob."
-      ],
-      "correctIndex": 3,
-      "explanation": "The correct answer is that the agreement is not enforceable because Alice did not receive any consideration from Bob.",
-      "explanationLong": "The correct answer is that the agreement is not enforceable because Alice did not receive any consideration from Bob. In contract law, consideration requires a benefit to the promisor or a detriment to the promisee. Here, Bob's mere desire for the guitar does not constitute legal consideration since he has not provided anything of value in exchange for the guitar. Answer choice A is incorrect because a mere desire or wish does not qualify as consideration. Answer choice C is incorrect because the Statute of Frauds does not apply here since there is no signed writing; an oral agreement lacks enforceability without consideration. Answer choice D is also incorrect because Bob's agreement does not lack consideration per se; rather, there is simply no consideration exchanged between the parties. Therefore, without consideration, Alice's agreement to sell the guitar is not enforceable against her.",
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755099927423,
-      "generatedAt": 1755099867424
-    },
-    {
-      "qid": "fresh_openai_1755099875792_ff678b2c",
-      "subject": "Contracts",
-      "topic": "Parol Evidence",
-      "stem": "Alice and Bob entered into a written contract for the sale of a car, which included a clause stating that the written agreement constituted the entire agreement between the parties. After the contract was signed, Bob claimed that Alice had verbally agreed to include new tires as part of the sale. Alice refused to acknowledge this claim, citing the written contract. Which of the following is the most likely outcome regarding Bob's claim?",
-      "choices": [
-        "Bob's claim will be denied because he did not provide written evidence of the verbal agreement.",
-        "Bob's claim will be denied because the written contract is integrated and excludes prior oral agreements.",
-        "Bob's claim will be upheld because verbal agreements can always be introduced to supplement written contracts.",
-        "Bob's claim will be upheld because the inclusion of new tires is a separate agreement."
-      ],
-      "correctIndex": 1,
-      "explanation": "The correct answer is that Bob's claim will be denied because the written contract is integrated and excludes prior oral agreements.",
-      "explanationLong": "The correct answer is that Bob's claim will be denied because the written contract is integrated and excludes prior oral agreements. Under the Parol Evidence Rule, when a written contract is intended to be a complete and final expression of the parties' agreement, as indicated by the integration clause, prior or contemporaneous oral statements cannot be introduced to contradict or modify the terms of the written agreement. In this case, the contract explicitly states that it represents the entire agreement, thus excluding Bob's claim about the verbal agreement regarding new tires. Answer choice B is incorrect because it misapplies the rule by suggesting that verbal agreements can always supplement written contracts, which is not true when an integration clause is present. Answer choice C is erroneous because it incorrectly assumes that a verbal agreement can be treated as a separate agreement, whereas it is actually subject to the Parol Evidence Rule. Finally, answer choice D is wrong because the lack of written evidence does not impact the validity of the Parol Evidence Rule; the rule itself precludes Bob from introducing the oral agreement regardless of its documentation.",
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755099935792,
-      "generatedAt": 1755099875792
-    },
-    {
-      "qid": "fresh_openai_1755100172411_a3155add",
-      "subject": "Contracts",
-      "topic": "Parol Evidence",
-      "stem": "A homeowner entered into a written contract with a contractor to renovate her kitchen. The contract specified that the total cost would be $15,000 and included a detailed description of the work to be done. After the contract was signed, the homeowner claimed that the contractor verbally promised to include additional work on the kitchen's plumbing for an extra $3,000. When the contractor refused to perform the additional work without a change order, the homeowner sought to introduce the verbal promise as evidence in a lawsuit. Which of the following is true concerning the homeowner's ability to introduce this evidence?",
-      "choices": [
-        "The homeowner cannot introduce the verbal promise because the contract is fully integrated.",
-        "The homeowner can introduce the verbal promise because it clarifies the written contract.",
-        "The homeowner cannot introduce the verbal promise because it contradicts the written terms.",
-        "The homeowner can introduce the verbal promise because it constitutes a collateral agreement."
-      ],
-      "correctIndex": 0,
-      "explanation": "The homeowner cannot introduce the verbal promise because the contract is fully integrated.",
-      "explanationLong": "The correct answer is that the homeowner cannot introduce the verbal promise because the contract is fully integrated. Under the parol evidence rule, if a written contract is determined to be fully integrated, it precludes the introduction of prior or contemporaneous oral agreements that contradict or modify the written terms. Here, the written contract explicitly details the work to be done and the total cost, indicating that it is a complete agreement. The verbal promise regarding additional plumbing work is thus inadmissible as it serves to modify the contract's terms. The first answer is incorrect because the verbal promise does not merely clarify the contract; it adds a new term, which is not permissible under the parol evidence rule. The third answer fails because a collateral agreement must not contradict the main contract, and here the verbal promise does contradict the written terms. The fourth answer is also inaccurate; while it is true that the verbal promise contradicts the written contract, the primary issue is that the contract is fully integrated, which is the reason it cannot be admitted at all.",
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755100232411,
-      "generatedAt": 1755100172411
-    },
-    {
       "qid": "fresh_openai_1755100154026_18b33a9f",
       "subject": "Contracts",
       "topic": "Defenses",
@@ -1149,6 +1073,66 @@
       "timeLimitSec": 60,
       "deadlineTs": 1755100832116,
       "generatedAt": 1755100772116
+    },
+    {
+      "qid": "fresh_openai_1755204046354_2adcd879",
+      "subject": "Contracts",
+      "topic": "UCC Formation",
+      "stem": "Alice, a seller of widgets, sends a written offer to Bob to sell 100 widgets at $10 each. Bob responds with an acceptance, but adds a clause stating that he will only accept the offer if Alice provides a warranty on the widgets. Alice receives Bob's response and ships the widgets without addressing the warranty clause. Which of the following is TRUE regarding the formation of a contract between Alice and Bob?",
+      "choices": [
+        "Alice can reject Bob's acceptance because it contained additional terms.",
+        "A contract was formed without the warranty clause.",
+        "No contract was formed because Bob's acceptance was not a mirror image.",
+        "A contract was formed with the warranty clause included."
+      ],
+      "correctIndex": 1,
+      "explanation": "A contract was formed without the warranty clause because Bob's additional term did not invalidate his acceptance under UCC §2-207.",
+      "explanationLong": "The correct answer is that a contract was formed without the warranty clause. Under UCC §2-207, an acceptance that contains additional or different terms is still valid unless the acceptance is expressly made conditional on the inclusion of those terms. Here, Bob's acceptance was effective despite the added warranty clause, as Alice did not object to it and proceeded to ship the widgets. The additional term does not become part of the contract unless both parties agree to it, which did not occur in this case. The first answer is incorrect because a contract was formed without the warranty clause, not with it. The second answer is wrong because while Bob's acceptance was not a mirror image of the offer, UCC §2-207 allows for contract formation despite this. The fourth answer is incorrect because Alice's shipment of widgets constituted acceptance and performance, thus forming a contract regardless of the additional terms in Bob's response.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755204106354,
+      "generatedAt": 1755204046355
+    },
+    {
+      "qid": "fresh_openai_1755204155543_566f2af1",
+      "subject": "Contracts",
+      "topic": "Risk of Loss",
+      "stem": "Alice agrees to sell Bob a vintage guitar for $1,000. The contract states that Bob will pick up the guitar at Alice's house on June 1. On May 30, a fire destroys Alice's house and the guitar. Who bears the risk of loss for the guitar?",
+      "choices": [
+        "Bob bears the risk of loss because the contract was fully executed.",
+        "Bob bears the risk of loss because he had not yet taken possession of the guitar.",
+        "The risk of loss is shared equally between Alice and Bob.",
+        "Alice bears the risk of loss because she had not delivered the guitar to Bob."
+      ],
+      "correctIndex": 3,
+      "explanation": "Alice bears the risk of loss because she had not delivered the guitar to Bob.",
+      "explanationLong": "The correct answer is that Alice bears the risk of loss because she had not delivered the guitar to Bob. Under the Uniform Commercial Code (UCC), the risk of loss generally remains with the seller until the goods are delivered to the buyer. In this case, Alice had agreed to allow Bob to pick up the guitar, but no physical transfer had occurred prior to the fire. Therefore, the risk remained with Alice. The first answer is incorrect because risk of loss does not automatically transfer to the buyer without possession. The third answer is incorrect as the risk of loss is not shared; it is solely on the seller until delivery. The fourth answer misapplies the concept of a fully executed contract; simply having a contract does not mean the risk has transferred without delivery.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755204215544,
+      "generatedAt": 1755204155544
+    },
+    {
+      "qid": "fresh_openai_1755204156352_4b4cb661",
+      "subject": "Contracts",
+      "topic": "Consideration",
+      "stem": "Alice offers to sell her bicycle to Bob for $100. Bob agrees to buy the bicycle. After a week, Bob decides he no longer wants the bicycle and tells Alice he won't go through with the purchase. Alice then tries to enforce the agreement. What is the likely outcome regarding the enforceability of the contract?",
+      "choices": [
+        "The contract is enforceable because Bob agreed to buy the bicycle for $100.",
+        "The contract is not enforceable because Alice did not provide any consideration.",
+        "The contract is enforceable because Alice has already delivered the bicycle.",
+        "The contract is not enforceable because Bob changed his mind before paying."
+      ],
+      "correctIndex": 0,
+      "explanation": "The contract is enforceable because Bob agreed to buy the bicycle for $100, which constitutes valid consideration.",
+      "explanationLong": "The correct answer is that the contract is enforceable because Bob agreed to buy the bicycle for $100. Under contract law, consideration is defined as something of value exchanged between parties, and Bob's promise to pay $100 constitutes valid consideration. Each of the incorrect answers fails for specific reasons: (1) The assertion that the contract is not enforceable because Bob changed his mind before paying overlooks that a valid agreement was formed when Bob accepted Alice's offer. (2) The claim that the contract is enforceable because Alice has already delivered the bicycle is incorrect because delivery does not affect the validity of the agreement if it was not executed. (3) The statement that the contract is not enforceable because Alice did not provide any consideration is wrong; Alice's offer of the bicycle and Bob's acceptance provide the necessary consideration for the contract to be valid.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755204216352,
+      "generatedAt": 1755204156352
     }
   ],
   "Crim": [

@@ -109,5 +109,230 @@
     "isBotMatch": true,
     "createdAt": 1755012387352,
     "updatedAt": 1755012387352
+  },
+  "m_1755203898470_nlkk3uckk": {
+    "id": "m_1755203898470_nlkk3uckk",
+    "mode": "async",
+    "subject": "Torts",
+    "audience": "Bar",
+    "bestOf": 7,
+    "players": [
+      {
+        "id": "245a4d37-b308-4df5-a463-b1688dfec89d",
+        "username": "smoketest_a"
+      },
+      {
+        "id": "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6",
+        "username": "smoketest_b"
+      }
+    ],
+    "scores": {
+      "245a4d37-b308-4df5-a463-b1688dfec89d": 1,
+      "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
+    },
+    "round": 2,
+    "difficulty": 1,
+    "turns": [
+      {
+        "qid": "pool_1755203927872_94d8hzbk",
+        "stem": "On June 15, 2023, Alice, a waitress at Bob's Bistro, slipped on a spilled drink while serving a customer, injuring her ankle. The spill occurred when a patron, John, accidentally knocked over his drink while being served. Bob's Bistro is owned by Corp X, which has a policy requiring staff to regularly check for spills. Alice had just completed a round of serving and had not been informed of the spill. After receiving medical treatment, Alice filed a negligence claim against Corp X, alleging that it failed to maintain a safe environment. In response, Corp X argues that Alice's injury was due to John's negligence as he should have been more careful. Alice also considers a claim against John. The case is set for trial in State Y, where comparative negligence applies. The court must assess whether Corp X can be held vicariously liable for Alice’s injuries due to Bob's Bistro's negligence in not ensuring the premises were safe.",
+        "choices": [
+          "The court is likely to rule that Alice's recovery is barred because she failed to take reasonable care while navigating the restaurant floor.",
+          "Corp X is likely to be found vicariously liable for Alice's injuries because she was acting within the scope of her employment at the time of the accident.",
+          "Alice will likely be unable to recover from Corp X as her injuries were primarily caused by John's negligent behavior in spilling the drink.",
+          "Alice can pursue damages against Corp X and John, as both parties may share liability under the comparative negligence framework."
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755290327872,
+        "answers": {
+          "245a4d37-b308-4df5-a463-b1688dfec89d": {
+            "idx": 1,
+            "ms": 3000,
+            "timestamp": 1755203928043
+          },
+          "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": {
+            "idx": 2,
+            "ms": 4000,
+            "timestamp": 1755203928097
+          }
+        },
+        "revealed": true,
+        "correctIndex": 1,
+        "explanation": "The issue at hand is whether Corp X can be held vicariously liable for Alice's injuries resulting from a slip and fall incident that occurred while she was performing her job duties. Under the doctrine of vicarious liability, an employer can be held liable for the negligent acts of an employee if those acts occur within the scope of employment. In this case, Alice was serving customers at the time of her injury, indicating she was acting within her employment scope. Therefore, Corp X would likely be found vicariously liable for failing to maintain safe premises, particularly since there was a policy in place that required staff to monitor spills. \n\nOption B misapplies the concept of liability; while John’s actions contributed to the spill, this does not absolve Corp X of its duty to maintain safe premises. Option C incorrectly assumes that Alice's own negligence completely bars her recovery; while comparative negligence applies, it does not eliminate Corp X's liability. Lastly, Option D suggests Alice can pursue both parties, which is misleading in focusing solely on her potential recovery rather than establishing vicarious liability against Corp X. \n\nBar Exam Tip: Remember that vicarious liability hinges on the employee's actions being within the scope of employment—this is crucial for establishing employer liability in tort cases. Understanding the nuances of premises liability and employer duties can be pivotal in exam scenarios."
+      },
+      {
+        "qid": "pool_1755203927872_94d8hzbk",
+        "stem": "On June 15, 2023, Alice, a waitress at Bob's Bistro, slipped on a spilled drink while serving a customer, injuring her ankle. The spill occurred when a patron, John, accidentally knocked over his drink while being served. Bob's Bistro is owned by Corp X, which has a policy requiring staff to regularly check for spills. Alice had just completed a round of serving and had not been informed of the spill. After receiving medical treatment, Alice filed a negligence claim against Corp X, alleging that it failed to maintain a safe environment. In response, Corp X argues that Alice's injury was due to John's negligence as he should have been more careful. Alice also considers a claim against John. The case is set for trial in State Y, where comparative negligence applies. The court must assess whether Corp X can be held vicariously liable for Alice’s injuries due to Bob's Bistro's negligence in not ensuring the premises were safe.",
+        "choices": [
+          "Corp X is likely to be found vicariously liable for Alice's injuries because she was acting within the scope of her employment at the time of the accident.",
+          "Alice can pursue damages against Corp X and John, as both parties may share liability under the comparative negligence framework.",
+          "The court is likely to rule that Alice's recovery is barred because she failed to take reasonable care while navigating the restaurant floor.",
+          "Alice will likely be unable to recover from Corp X as her injuries were primarily caused by John's negligent behavior in spilling the drink."
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755290330169,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 0,
+        "explanation": "The issue at hand is whether Corp X can be held vicariously liable for Alice's injuries resulting from a slip and fall incident that occurred while she was performing her job duties. Under the doctrine of vicarious liability, an employer can be held liable for the negligent acts of an employee if those acts occur within the scope of employment. In this case, Alice was serving customers at the time of her injury, indicating she was acting within her employment scope. Therefore, Corp X would likely be found vicariously liable for failing to maintain safe premises, particularly since there was a policy in place that required staff to monitor spills. \n\nOption B misapplies the concept of liability; while John’s actions contributed to the spill, this does not absolve Corp X of its duty to maintain safe premises. Option C incorrectly assumes that Alice's own negligence completely bars her recovery; while comparative negligence applies, it does not eliminate Corp X's liability. Lastly, Option D suggests Alice can pursue both parties, which is misleading in focusing solely on her potential recovery rather than establishing vicarious liability against Corp X. \n\nBar Exam Tip: Remember that vicarious liability hinges on the employee's actions being within the scope of employment—this is crucial for establishing employer liability in tort cases. Understanding the nuances of premises liability and employer duties can be pivotal in exam scenarios."
+      }
+    ],
+    "status": "active",
+    "winnerId": null,
+    "isBotMatch": false,
+    "createdAt": 1755203898530,
+    "updatedAt": 1755203930169
+  },
+  "m_1755204031955_2doiqy03w": {
+    "id": "m_1755204031955_2doiqy03w",
+    "mode": "async",
+    "subject": "Torts",
+    "audience": "Bar",
+    "bestOf": 7,
+    "players": [
+      {
+        "id": "245a4d37-b308-4df5-a463-b1688dfec89d",
+        "username": "smoketest_a"
+      },
+      {
+        "id": "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6",
+        "username": "smoketest_b"
+      }
+    ],
+    "scores": {
+      "245a4d37-b308-4df5-a463-b1688dfec89d": 0,
+      "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
+    },
+    "round": 2,
+    "difficulty": 1,
+    "turns": [
+      {
+        "qid": "fallback_Torts_1755204068451_gtpb",
+        "stem": "What are the elements required to establish a negligence claim?",
+        "choices": [
+          "Duty, breach, causation, damages",
+          "Intent, act, harm",
+          "Duty, intent, damages",
+          "Breach, harm, intent"
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755290468451,
+        "answers": {
+          "245a4d37-b308-4df5-a463-b1688dfec89d": {
+            "idx": 1,
+            "ms": 3000,
+            "timestamp": 1755204068599
+          },
+          "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": {
+            "idx": 2,
+            "ms": 4000,
+            "timestamp": 1755204068644
+          }
+        },
+        "revealed": true,
+        "correctIndex": 0,
+        "explanation": "Negligence requires duty, breach of duty, causation, and damages."
+      },
+      {
+        "qid": "fallback_Torts_1755204109248_9aab",
+        "stem": "In a products liability case based on strict liability, which element is NOT required to be proven?",
+        "choices": [
+          "The product was defective",
+          "The defect caused plaintiff's injury",
+          "The defendant was negligent",
+          "The product was unreasonably dangerous"
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755290509248,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 2,
+        "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
+      }
+    ],
+    "status": "active",
+    "winnerId": null,
+    "isBotMatch": false,
+    "createdAt": 1755204032015,
+    "updatedAt": 1755204109248
+  },
+  "m_1755204146373_0cw75alpl": {
+    "id": "m_1755204146373_0cw75alpl",
+    "mode": "async",
+    "subject": "Torts",
+    "audience": "Bar",
+    "bestOf": 7,
+    "players": [
+      {
+        "id": "245a4d37-b308-4df5-a463-b1688dfec89d",
+        "username": "smoketest_a"
+      },
+      {
+        "id": "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6",
+        "username": "smoketest_b"
+      }
+    ],
+    "scores": {
+      "245a4d37-b308-4df5-a463-b1688dfec89d": 0,
+      "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
+    },
+    "round": 2,
+    "difficulty": 1,
+    "turns": [
+      {
+        "qid": "fallback_Torts_1755204186753_64zp",
+        "stem": "What are the elements required to establish a negligence claim?",
+        "choices": [
+          "Duty, breach, causation, damages",
+          "Intent, act, harm",
+          "Duty, intent, damages",
+          "Breach, harm, intent"
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755290586753,
+        "answers": {
+          "245a4d37-b308-4df5-a463-b1688dfec89d": {
+            "idx": 1,
+            "ms": 3000,
+            "timestamp": 1755204186955
+          },
+          "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": {
+            "idx": 2,
+            "ms": 4000,
+            "timestamp": 1755204187028
+          }
+        },
+        "revealed": true,
+        "correctIndex": 0,
+        "explanation": "Negligence requires duty, breach of duty, causation, and damages."
+      },
+      {
+        "qid": "pool_1755204225132_xza5uylq",
+        "stem": "On July 15, 2023, Alice, an employee of Corp X, was driving a company car to deliver products in State Y. During the drive, she negligently collided with Bob, causing him serious injuries. Bob, aware that Alice was distracted by her phone, filed a lawsuit against both Alice and Corp X for negligence. Corp X claims that Alice was acting within the scope of her employment at the time of the accident. However, Alice had just taken a detour to grab coffee for herself, which Corp X argues was outside the scope of her employment duties. Bob asserts that Corp X is vicariously liable for Alice's actions because she was driving a company vehicle. The court must determine if Alice’s actions were within the scope of employment and whether Corp X can be held liable under the doctrine of vicarious liability.",
+        "choices": [
+          "Bob cannot recover damages from Corp X because Alice's detour for coffee constitutes a substantial deviation from her employment duties.",
+          "Corp X is not vicariously liable for Alice's actions since she was on a personal errand unrelated to her employment duties at the time of the accident.",
+          "Alice is liable for negligence, and Corp X is vicariously liable because Alice was driving a company vehicle at the time of the accident.",
+          "Alice may not be liable for negligence if the court finds that her distraction was not the proximate cause of Bob's injuries."
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755290625133,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 2,
+        "explanation": "The key issue here is whether Corp X is vicariously liable for Alice's negligence under the doctrine of respondeat superior. Under common law, an employer may be held vicariously liable for the negligent acts of an employee if such acts occur within the scope of employment. The Restatement (Second) of Agency provides that an employee's conduct is within the scope of employment when it is of the kind the employee is employed to perform and occurs substantially within the authorized time and space limits. In this case, Alice was performing a task that was part of her job—delivering products—despite the detour. This slight deviation does not necessarily remove her actions from the scope of employment. The courts often consider whether the deviation is substantial or merely a minor detour. Therefore, Corp X is likely vicariously liable for Alice's negligence. \n\nOption B is incorrect because while the detour could suggest a deviation, it does not automatically exclude vicarious liability if the act was still related to her employment. Option C is incorrect because Alice's distraction was indeed a proximate cause of the accident, which is part of the negligence analysis. Option D misapplies the law by suggesting that any personal errand negates liability, while the deviation must be substantial to affect vicarious liability. \n\nBar Exam Tip: Remember that minor deviations from an employment task often do not eliminate vicarious liability. Focus on the connection between the employee’s actions and their job responsibilities."
+      }
+    ],
+    "status": "active",
+    "winnerId": null,
+    "isBotMatch": false,
+    "createdAt": 1755204146433,
+    "updatedAt": 1755204225133
   }
 }

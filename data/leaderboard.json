@@ -362,5 +362,25 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-14T20:02:58.968Z"
+  },
+  {
+    "id": "245a4d37-b308-4df5-a463-b1688dfec89d",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:36:00.160Z"
+  },
+  {
+    "id": "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:36:01.513Z"
   }
 ]

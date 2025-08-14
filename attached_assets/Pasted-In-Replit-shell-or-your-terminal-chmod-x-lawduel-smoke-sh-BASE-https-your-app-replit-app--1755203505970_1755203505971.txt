@@ -1,0 +1,75 @@
+In Replit shell (or your terminal):
+
+chmod +x lawduel_smoke.sh
+BASE="https://<your-app>.replit.app" ./lawduel_smoke.sh
+
+
+Replace <your-app>.replit.app with your production URL.
+
+If your test usernames/passwords differ, set:
+
+USER_A="youruser" PASS_A="yourpass" USER_B="friend" PASS_B="friendpass" \
+BASE="https://<your-app>.replit.app" ./lawduel_smoke.sh
+
+
+PASS criteria you’ll see in the output:
+
+“Solo started duelId=… with questions …”
+
+“Answer accepted”
+
+“Stats updated: <Subject>/<Subtopic> attempts=1”
+
+“Async parity OK: both players have same question set”
+
+“Duel result endpoint responded (verify Elo/XP fields in JSON)”
+
+If any step prints a red ✗, that’s the exact place to send back to the agent.
+
+If the script FAILs, here’s what that means (and the fix to demand)
+
+Solo start fails / no duelId
+➜ Matchmaker not returning a server-authored question set.
+Fix: server must reserve 5 questionIds and return them.
+
+Answer accepted but Stats don’t move
+➜ recordAttempt(userId, duelId, questionId, subject, subtopic, difficulty, correct, ms, ts) is not being called at answer time (or idempotency key missing).
+Fix: call it in the server’s answer handler; update/persist SubtopicMastery immediately; return masteryDelta and xpGained in response.
+
+Async parity failed (A & B different question IDs)
+➜ You’re regenerating questions per user or not storing reservations.
+Fix: on A’s start, store the 5 questionIds in question_reservations keyed by duelId; B loads the same list.
+
+No duel result / Elo unchanged
+➜ Result aggregation not writing rating/XP or no /api/duel/result/:id.
+Fix: compute Elo (K≈24), write both deltas, expose a result endpoint.
+
+Minimal API contracts this script expects
+
+POST /api/auth/login → { ok, user } and sets cookie
+
+GET /api/auth/me → { ok, user } when logged in
+
+POST /api/duel/solo/start → { duelId, questions:[{questionId,subject,subtopic,difficulty}] }
+
+POST /api/duel/answer → { ok, xpGained, masteryDelta:{subtopicId,before,after} }
+
+GET /api/stats/subtopics → subjects with nested subtopics including attempts
+
+POST /api/duel/async/start → { duelId, questions:[...] }
+
+POST /api/duel/async/answer → { ok }
+
+GET /api/duel/async/:duelId → { duelId, questions:[...] } (for B to fetch)
+
+GET /api/duel/result/:duelId → { winnerId, yourScore, oppScore, eloDelta, xpGained }
+
+If any endpoint names differ, have Replit add thin wrappers to match these—your core logic doesn’t need to change, and you’ll get repeatable tests.
+
+Extra sanity checks (30 seconds in the browser)
+
+After each answer in UI, you see a chip: +XP · Subject/Subtopic · Mastery +N.
+
+Refresh Stats → Subtopics: the subtopic you just answered shows attempts incremented and mastery nudged.
+
+Start an async duel vs friend: both see identical question IDs (order can differ) and the Weekly Ladder moves when it’s done.
