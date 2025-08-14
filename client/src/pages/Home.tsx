@@ -59,7 +59,7 @@ export default function Home() {
     typeof user.avatarData === 'object' && 
     'needsCharacterCreation' in user.avatarData && 
     user.avatarData.needsCharacterCreation;
-  const [gameMode, setGameMode] = useState<'menu' | 'bot-practice' | 'friend-setup' | 'searching' | 'duel' | 'vs-selection'>('menu');
+  const [gameMode, setGameMode] = useState<'menu' | 'bot-practice' | 'friend-setup' | 'searching' | 'duel' | 'vs-selection' | 'friend-challenge'>('menu');
   const [gameSettings, setGameSettings] = useState({
     subject: 'Mixed Questions',
     botDifficulty: 'medium',
@@ -191,13 +191,14 @@ export default function Home() {
     }
 
     try {
-      const response = await apiRequest('/api/async/create', {
-        method: 'POST',
-        body: JSON.stringify({
+      const response = await apiRequest(
+        'POST',
+        '/api/async/create',
+        {
           opponentUsername: gameSettings.friendUsername,
           subject: gameSettings.subject
-        })
-      });
+        }
+      );
 
       toast({
         title: "Game Started!",
@@ -209,8 +210,9 @@ export default function Home() {
       setGameSettings(prev => ({ ...prev, friendUsername: '' }));
       
       // Open the async match directly
-      if (response.matchId) {
-        setShowAsyncMatch(response.matchId);
+      const data = await response.json();
+      if (data.matchId) {
+        setShowAsyncMatch(data.matchId);
       }
     } catch (error) {
       toast({
@@ -233,13 +235,14 @@ export default function Home() {
     }
 
     try {
-      await apiRequest('/api/challenge/send', {
-        method: 'POST',
-        body: JSON.stringify({
+      await apiRequest(
+        'POST',
+        '/api/challenge/send',
+        {
           targetUsername: gameSettings.friendUsername,
           subject: gameSettings.subject
-        })
-      });
+        }
+      );
 
       toast({
         title: "Challenge Sent!",
@@ -262,13 +265,14 @@ export default function Home() {
     if (!challengeNotification) return;
 
     try {
-      await apiRequest('/api/challenge/respond', {
-        method: 'POST',
-        body: JSON.stringify({
+      await apiRequest(
+        'POST',
+        '/api/challenge/respond',
+        {
           challengeId: challengeNotification.challengeId,
           accepted
-        })
-      });
+        }
+      );
 
       if (accepted) {
         toast({
