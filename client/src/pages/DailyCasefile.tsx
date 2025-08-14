@@ -243,7 +243,7 @@ export default function DailyCasefile() {
                       <span className="font-mono text-sm">
                         {String.fromCharCode(65 + index)}.
                       </span>
-                      <span>{choice.replace(/^[A-D]\.\s*/, '')}</span>
+                      <span>{choice.replace(/^[A-Da-d][\.)]\s*/g, '').trim()}</span>
                       {isCorrect && <Badge variant="outline" className="border-green-400/50 text-green-300 ml-auto">Correct</Badge>}
                       {isUserChoice && !isCorrect && <Badge variant="outline" className="border-red-400/50 text-red-300 ml-auto">Your Answer</Badge>}
                     </div>
@@ -406,7 +406,7 @@ export default function DailyCasefile() {
                     <span className="font-mono text-sm font-bold">
                       {String.fromCharCode(65 + index)}.
                     </span>
-                    <span>{choice.replace(/^[A-D]\.\s*/, '')}</span>
+                    <span>{choice.replace(/^[A-Da-d][\.)]\s*/g, '').trim()}</span>
                   </div>
                 </button>
               ))}
