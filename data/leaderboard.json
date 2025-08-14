@@ -256,8 +256,8 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 11,
-    "points": 2124,
-    "totalWins": 30,
+    "points": 2153,
+    "totalWins": 31,
     "totalLosses": 24,
     "avatarData": {
       "baseModel": "female",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-14T22:30:19.850Z"
+    "lastActive": "2025-08-14T22:35:19.850Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",
