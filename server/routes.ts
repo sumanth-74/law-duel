@@ -92,6 +92,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }
   
+  // Clear old cookies middleware - removes conflicting session cookies
+  app.use((req, res, next) => {
+    // If old connect.sid cookie exists, clear it
+    if (req.headers.cookie && req.headers.cookie.includes('connect.sid')) {
+      res.clearCookie('connect.sid', { path: '/' });
+    }
+    next();
+  });
+  
   // Session configuration - works for both HTTP and HTTPS
   app.use(session({
     name: 'sid', // Use 'sid' as the cookie name  
@@ -146,6 +155,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve final login test page
   app.get('/test-login', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'test-login-final.html'));
+  });
+  
+  // Serve instant login page that force-clears cookies
+  app.get('/fix', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'instant-login.html'));
   });
   
   // Serve fix page for custom domain issues
