@@ -33,7 +33,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.set('trust proxy', 1);
   
   // Session configuration MUST be before routes
-  const PROD = process.env.NODE_ENV === 'production';
+  // Check if we're in production - either NODE_ENV is set or we're on Replit deployment
+  const PROD = process.env.NODE_ENV === 'production' || process.env.REPL_ID !== undefined;
   
   // Use PostgreSQL for persistent session storage in production
   let sessionStore: any;
@@ -63,13 +64,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
+    proxy: true, // Trust the proxy for secure cookies
     cookie: {
       httpOnly: true,
-      sameSite: PROD ? 'lax' : 'none', // same-origin in prod, cross-origin in dev
-      secure: PROD, // HTTPS cookie in prod
+      sameSite: 'lax', // Use 'lax' for same-origin
+      secure: PROD, // Enable secure cookies in production (HTTPS)
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
       path: '/'
-      // DO NOT set domain
+      // DO NOT set domain - let it be host-only for the current domain
     },
   }));
 
@@ -104,6 +106,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve test authentication page
   app.get('/test-auth', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'test-auth-fixed.html'));
+  });
+  
+  // Serve fix page for custom domain issues
+  app.get('/fix-domain', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'fix-custom-domain.html'));
   });
   
   // Health check endpoint for OpenAI
