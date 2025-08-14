@@ -293,19 +293,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add new user to leaderboard JSON file
       updatePlayerStats(user.id, user.username, user.points || 0, user.level || 1);
       
-      // Auto-login after registration
-      (req.session as any).userId = user.id;
-      
-      // Save session before sending response
-      req.session.save((err) => {
+      // Auto-login after registration - regenerate session like login does
+      req.session.regenerate((err) => {
         if (err) {
-          console.error('Session save error:', err);
-          return res.status(500).json({ message: 'Session error' });
+          console.error('Session regeneration error:', err);
+          return res.status(500).json({ ok: false, message: 'Session error' });
         }
         
-        // Don't return password
-        const { password, ...userResponse } = user;
-        res.json(userResponse);
+        // Set user data in the new session
+        (req.session as any).userId = user.id;
+        (req.session as any).user = { id: user.id, username: user.username };
+        
+        // Save session before sending response
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error('Session save error:', saveErr);
+            return res.status(500).json({ ok: false, message: 'Session error' });
+          }
+          
+          // Don't return password
+          const { password, ...userResponse } = user;
+          res.json({ ok: true, user: userResponse });
+        });
       });
     } catch (error: any) {
       console.error("Registration error:", error);

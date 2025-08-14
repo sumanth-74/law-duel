@@ -97,8 +97,8 @@
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 17,
-    "points": 3273,
-    "totalWins": 56,
+    "points": 3314,
+    "totalWins": 57,
     "totalLosses": 7,
     "avatarData": {
       "baseModel": "female",
@@ -112,7 +112,7 @@
       ],
       "accessoryColor": "#FF1493"
     },
-    "lastActive": "2025-08-14T19:51:21.097Z"
+    "lastActive": "2025-08-14T20:00:15.003Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -255,10 +255,10 @@
     "username": "StatuteSlayer",
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
-    "level": 10,
-    "points": 1972,
+    "level": 11,
+    "points": 2028,
     "totalWins": 29,
-    "totalLosses": 21,
+    "totalLosses": 22,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#CD853F",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-14T18:11:20.922Z"
+    "lastActive": "2025-08-14T20:00:15.003Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",
@@ -312,5 +312,55 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-14T17:33:39.332Z"
+  },
+  {
+    "id": "84c4fa65-6055-4335-aa5d-10df380a0d4e",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:00:04.924Z"
+  },
+  {
+    "id": "a63f0524-6351-468f-8d80-cf8f035350c4",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:00:16.786Z"
+  },
+  {
+    "id": "3e88c190-3262-41f4-b864-8f9291b53257",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:02:13.487Z"
+  },
+  {
+    "id": "866ce3cd-1236-447e-8141-5907e780a7d9",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:02:26.130Z"
+  },
+  {
+    "id": "aa67ad86-156f-4a2f-aed6-1e64825ff502",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T20:02:58.968Z"
   }
 ]
