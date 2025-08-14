@@ -50,8 +50,9 @@ export function useAuth() {
     onSuccess: (user: User) => {
       console.log('Login onSuccess called with user:', user.username);
       queryClient.setQueryData(['/api/auth/me'], user);
-      // Force a full page reload to ensure the app recognizes the new auth state
-      window.location.reload();
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      // Navigate to home page after successful login
+      window.location.href = '/';
     },
     onError: (error) => {
       console.log('Login onError called:', error);
@@ -82,7 +83,9 @@ export function useAuth() {
     },
     onSuccess: (user: User) => {
       queryClient.setQueryData(['/api/auth/me'], user);
-      window.location.reload();
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      // Navigate to home page after successful registration
+      window.location.href = '/';
     },
   });
 

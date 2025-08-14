@@ -97,9 +97,9 @@
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 17,
-    "points": 3206,
+    "points": 3262,
     "totalWins": 55,
-    "totalLosses": 6,
+    "totalLosses": 7,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#FFE4E1",
@@ -112,7 +112,7 @@
       ],
       "accessoryColor": "#FF1493"
     },
-    "lastActive": "2025-08-14T02:01:45.961Z"
+    "lastActive": "2025-08-14T18:11:20.922Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -120,8 +120,8 @@
     "displayName": "LawBeast99",
     "lawSchool": "Harvard Law",
     "level": 16,
-    "points": 3140,
-    "totalWins": 50,
+    "points": 3153,
+    "totalWins": 51,
     "totalLosses": 13,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#333333"
     },
-    "lastActive": "2025-08-14T17:18:46.300Z"
+    "lastActive": "2025-08-14T18:11:20.922Z"
   },
   {
     "id": "bot_contracts_wizard",
@@ -210,8 +210,8 @@
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
     "level": 13,
-    "points": 2433,
-    "totalWins": 37,
+    "points": 2490,
+    "totalWins": 38,
     "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
@@ -225,7 +225,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-14T17:03:32.913Z"
+    "lastActive": "2025-08-14T18:11:20.922Z"
   },
   {
     "id": "bot_objection_hero",
@@ -256,9 +256,9 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 10,
-    "points": 1938,
+    "points": 1972,
     "totalWins": 29,
-    "totalLosses": 20,
+    "totalLosses": 21,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#CD853F",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-13T23:47:13.310Z"
+    "lastActive": "2025-08-14T18:11:20.922Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

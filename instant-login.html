@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instant Login - Law Duel</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d1b69 100%);
+            color: white;
+            font-family: Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            border: 2px solid #8b5cf6;
+        }
+        h1 { color: #a78bfa; }
+        .status { 
+            margin: 20px 0; 
+            padding: 20px; 
+            background: rgba(0,0,0,0.3); 
+            border-radius: 5px;
+            min-height: 60px;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover { background: #a78bfa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Law Duel - Quick Access</h1>
+        <div class="status" id="status">Preparing instant login...</div>
+        
+        <button onclick="doLogin()" id="loginBtn">🚀 Enter Game</button>
+        <button onclick="checkAuth()" style="background: #059669;">✓ Check Login Status</button>
+        
+        <div style="margin-top: 20px; opacity: 0.7;">
+            <small>Uses test account: debuguser</small>
+        </div>
+    </div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        async function doLogin() {
+            statusEl.innerHTML = '⏳ Logging in...';
+            statusEl.className = 'status';
+            loginBtn.disabled = true;
+            
+            try {
+                // Step 1: Login
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ 
+                        username: 'debuguser', 
+                        password: 'test123' 
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    statusEl.innerHTML = `
+                        <div class="success">
+                            ✅ Login successful!<br>
+                            👤 ${data.username} (Level ${data.level})<br>
+                            ⏳ Redirecting to game...
+                        </div>
+                    `;
+                    statusEl.className = 'status success';
+                    
+                    // Wait a moment then redirect
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                } else {
+                    throw new Error(data.message || 'Login failed');
+                }
+            } catch (error) {
+                statusEl.innerHTML = `
+                    <div class="error">
+                        ❌ Login failed: ${error.message}<br>
+                        Please refresh and try again
+                    </div>
+                `;
+                statusEl.className = 'status error';
+                loginBtn.disabled = false;
+            }
+        }
+        
+        async function checkAuth() {
+            statusEl.innerHTML = '🔍 Checking authentication...';
+            
+            try {
+                const res = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+                
+                if (res.ok) {
+                    const user = await res.json();
+                    statusEl.innerHTML = `
+                        <div class="success">
+                            ✅ You are logged in!<br>
+                            👤 ${user.username} (Level ${user.level})<br>
+                            <a href="/" style="color: #a78bfa;">Click here to go to game</a>
+                        </div>
+                    `;
+                } else {
+                    statusEl.innerHTML = `
+                        <div class="error">
+                            ❌ Not logged in<br>
+                            Click "Enter Game" to login
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusEl.innerHTML = `
+                    <div class="error">
+                        ❌ Error checking auth: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto-login on page load
+        window.addEventListener('load', () => {
+            setTimeout(doLogin, 500);
+        });
+    </script>
+</body>
+</html>

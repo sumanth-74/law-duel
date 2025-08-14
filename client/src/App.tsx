@@ -18,7 +18,7 @@ import { Loader2 } from "lucide-react";
 function Router() {
   const { user, isAuthenticated, isLoading } = useAuth();
 
-  console.log('Router render - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading, 'user:', user?.username);
+  console.log('Router render - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading, 'user:', user);
 
   if (isLoading) {
     return (

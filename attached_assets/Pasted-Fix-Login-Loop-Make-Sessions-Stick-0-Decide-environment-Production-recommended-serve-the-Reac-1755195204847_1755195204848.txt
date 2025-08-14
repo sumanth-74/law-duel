@@ -1,0 +1,203 @@
+Fix Login Loop — Make Sessions Stick
+0) Decide environment
+
+Production (recommended): serve the React app from the same origin as the API.
+→ Cookies are first-party; SameSite: "lax" works; no CORS headaches.
+
+Dev (two ports): front (e.g., 5173) hits API (e.g., 5000).
+→ You must enable CORS with credentials, cookies with SameSite:"none"; secure if https.
+
+1) Express server config (paste)
+// server/app.ts
+import express from "express";
+import session from "express-session";
+import cors from "cors";
+import path from "path";
+
+const app = express();
+app.set("trust proxy", 1);                  // IMPORTANT behind Replit/Proxy
+
+const FRONTENDS = [
+  "http://localhost:5173",
+  "https://<your-frontend-domain>",        // add your deployed frontend origin
+  "https://<your-replit-app-url>"          // e.g., https://law-duel.yourname.repl.co
+];
+
+app.use(cors({
+  origin: (origin, cb) => cb(null, !origin || FRONTENDS.includes(origin)),
+  credentials: true,
+}));
+
+app.use(express.json());
+
+const PROD = process.env.NODE_ENV === "production";
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: PROD ? "lax" : "none",       // same origin? use "lax"; cross-origin dev? "none"
+    secure: PROD ? true : false,           // must be true if SameSite "none" over HTTPS
+    maxAge: 30 * 24 * 60 * 60 * 1000,      // 30 days
+    path: "/"
+  }
+}));
+
+// Static serve in PROD so front+API share origin:
+if (PROD) {
+  const staticDir = path.join(__dirname, "../client/dist");
+  app.use(express.static(staticDir));
+  app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(staticDir, "index.html")));
+}
+
+export default app;
+
+2) Login, me, logout routes (server-authoritative; no redirects)
+// server/auth.ts
+import { Router } from "express";
+import bcrypt from "bcrypt";
+import { getUserByUsername } from "./db";
+
+const r = Router();
+
+r.post("/login", async (req, res, next) => {
+  const { username, password } = req.body || {};
+  const user = await getUserByUsername(username);
+  if (!user) return res.status(401).json({ ok: false, error: "Invalid credentials" });
+  const ok = await bcrypt.compare(password, user.passwordHash);
+  if (!ok) return res.status(401).json({ ok: false, error: "Invalid credentials" });
+
+  req.session.regenerate((err) => {
+    if (err) return next(err);
+    req.session.user = { id: user.id, username: user.username };
+    req.session.save((err2) => {
+      if (err2) return next(err2);
+      res.json({ ok: true, user: req.session.user });
+    });
+  });
+});
+
+r.get("/me", (req, res) => {
+  if (!req.session.user) return res.status(401).json({ ok: false });
+  res.json({ ok: true, user: req.session.user });
+});
+
+r.post("/logout", (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) return next(err);
+    res.clearCookie("sid", { path: "/" });
+    res.json({ ok: true });
+  });
+});
+
+export default r;
+
+
+Mount it:
+
+// server/index.ts
+import app from "./app";
+import auth from "./auth";
+app.use("/api/auth", auth);
+
+3) Client fetch must include cookies (this is where loops happen)
+
+Make every API call send credentials.
+
+// client/src/api.ts
+export async function api(path: string, opts: RequestInit = {}) {
+  const res = await fetch(`/api${path}`, {
+    ...opts,
+    credentials: "include",                // CRITICAL
+    headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+  });
+  return res;
+}
+
+
+Login:
+
+await api("/auth/login", { method: "POST", body: JSON.stringify({ username, password }) });
+
+
+Bootstrap (on app load):
+
+useEffect(() => {
+  api("/auth/me").then(async (res) => {
+    if (res.ok) {
+      const { user } = await res.json();
+      setUser(user);
+      navigate("/play");                   // go straight to main play page
+    } else {
+      navigate("/login");
+    }
+  });
+}, []);
+
+
+Protect routes by calling /auth/me (not localStorage).
+
+4) Dev vs Prod gotchas (pick one and stick to it)
+A) Single origin (best)
+
+Build front (npm run build) and let Express serve client/dist.
+
+Cookie: sameSite: "lax", secure: true (if HTTPS).
+
+No CORS needed beyond static.
+
+B) Two origins (dev)
+
+Front at http://localhost:5173, API at http://localhost:5000.
+
+CORS credentials: true + origin: http://localhost:5173.
+
+Client must use credentials: "include".
+
+Cookie must be sameSite: "none", and if served over HTTPS, secure: true.
+
+app.set("trust proxy", 1) is required if behind a proxy; otherwise secure cookies won’t set.
+
+5) Smoke test (prove it works in 60 seconds)
+
+Terminal (from your machine or Replit shell):
+
+# 1) Login and capture cookie
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  http://localhost:5000/api/auth/login
+
+# Expect: HTTP/1.1 200 and a Set-Cookie: sid=...; Path=/; HttpOnly
+
+# 2) Use cookie to hit /me
+curl -i -b jar.txt http://localhost:5000/api/auth/me
+# Expect: 200 with { ok:true, user:{...} }
+
+
+If (2) returns 401, the cookie isn’t being sent → fix CORS/credentials/SameSite.
+
+6) Definition of Done (don’t accept anything less)
+
+After login, you land on /play and stay logged in across page refreshes.
+
+/api/auth/me returns 200 in the browser and via curl with cookie jar.
+
+Your friends can log in from their machines and don’t get bounced to landing.
+
+Logout destroys the cookie; /auth/me returns 401 after.
+
+Common culprits to check (kill these loops fast)
+
+Missing credentials: "include" on any client fetch (even one can bounce you out).
+
+CORS credentials: true not set, or origin mismatch.
+
+Cookie mismatch: using SameSite:"lax" across two origins (cookies won’t send).
+
+secure: true over HTTP in dev (cookie won’t set).
+
+No trust proxy when behind HTTPS proxy → Express thinks it’s HTTP and refuses secure cookies.
+
+Server redirecting on login instead of returning JSON (causes race with SPA router).
