@@ -17,14 +17,8 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Canonical host redirect - ensure all traffic goes through lawduel.net
-const CANONICAL_HOST = 'lawduel.net';
-app.use((req, res, next) => {
-  if (PROD && req.headers.host && req.headers.host !== CANONICAL_HOST) {
-    return res.redirect(301, `https://${CANONICAL_HOST}${req.originalUrl}`);
-  }
-  next();
-});
+// Removed domain redirect - allow access from both Replit and lawduel.net
+// This was breaking access when lawduel.net deployment wasn't properly configured
 
 // SESSION CONFIGURATION - MUST BE BEFORE ALL ROUTES
 let sessionStore: any;
