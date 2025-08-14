@@ -17,6 +17,15 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Canonical host redirect - ensure all traffic goes through lawduel.net
+const CANONICAL_HOST = 'lawduel.net';
+app.use((req, res, next) => {
+  if (PROD && req.headers.host && req.headers.host !== CANONICAL_HOST) {
+    return res.redirect(301, `https://${CANONICAL_HOST}${req.originalUrl}`);
+  }
+  next();
+});
+
 // SESSION CONFIGURATION - MUST BE BEFORE ALL ROUTES
 let sessionStore: any;
 if (PROD && process.env.DATABASE_URL) {
@@ -46,8 +55,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    sameSite: 'lax',  // Always use lax for same-origin
-    secure: false,     // Allow HTTP in development  
+    sameSite: 'lax',  // Same-origin cookies
+    secure: PROD,      // HTTPS required in production
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: '/'
     // DO NOT set domain - let it be host-only
