@@ -211,9 +211,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Auto-login after registration
       (req.session as any).userId = user.id;
       
-      // Don't return password
-      const { password, ...userResponse } = user;
-      res.json(userResponse);
+      // Save session before sending response
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.status(500).json({ message: 'Session error' });
+        }
+        
+        // Don't return password
+        const { password, ...userResponse } = user;
+        res.json(userResponse);
+      });
     } catch (error: any) {
       console.error("Registration error:", error);
       res.status(400).json({ message: "Invalid user data", error: error.message });
@@ -231,9 +239,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       (req.session as any).userId = user.id;
       
-      // Don't return password
-      const { password, ...userResponse } = user;
-      res.json(userResponse);
+      // Save session before sending response
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.status(500).json({ message: 'Session error' });
+        }
+        
+        // Don't return password
+        const { password, ...userResponse } = user;
+        res.json(userResponse);
+      });
     } catch (error: any) {
       res.status(400).json({ message: "Invalid credentials", error: error.message });
     }
