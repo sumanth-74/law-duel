@@ -216,6 +216,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userInsert.email = undefined;
       }
       
+      // Ensure avatarData is always provided (use default if missing)
+      if (!userInsert.avatarData) {
+        userInsert.avatarData = {
+          body: 'body1',
+          face: 'face1',
+          hair: 'hair1',
+          outfit: 'outfit1',
+          accessory: 'none',
+          background: 'courtroom1'
+        };
+      }
+      
       // Check if username is taken
       const existing = await storage.getUserByUsername(userData.username);
       if (existing) {
@@ -267,22 +279,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ ok: false, error: "Invalid username or password" });
       }
 
-      // Regenerate session to prevent fixation attacks
-      req.session.regenerate((err) => {
-        if (err) return next(err);
+      // Set session data directly without regenerating
+      // This prevents issues with session persistence
+      (req.session as any).userId = user.id;
+      (req.session as any).user = { id: user.id, username: user.username };
+      
+      // Save session and send response
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.status(500).json({ ok: false, error: 'Session error' });
+        }
         
-        (req.session as any).userId = user.id;
-        (req.session as any).user = { id: user.id, username: user.username };
-        
-        req.session.save((err2) => {
-          if (err2) return next(err2);
-          
-          // Don't return password
-          const { password, ...userResponse } = user;
-          res.json({ ok: true, user: userResponse });
-        });
+        // Don't return password
+        const { password, ...userResponse } = user;
+        console.log('Login successful, session saved for user:', user.username);
+        res.json({ ok: true, user: userResponse });
       });
     } catch (error: any) {
+      console.error('Login error:', error);
       res.status(400).json({ ok: false, error: "Invalid credentials", details: error.message });
     }
   });

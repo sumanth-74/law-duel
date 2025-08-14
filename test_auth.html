@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="checkAuth()">Check Auth Status</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testLogin() {
+            const result = document.getElementById('result');
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        username: 'testuser',
+                        password: 'testpass123'
+                    })
+                });
+                const data = await response.json();
+                result.innerHTML = '<pre>Login: ' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                // Check auth immediately after login
+                setTimeout(checkAuth, 500);
+            } catch (err) {
+                result.innerHTML = 'Error: ' + err.message;
+            }
+        }
+        
+        async function checkAuth() {
+            const result = document.getElementById('result');
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                result.innerHTML += '<pre>Auth Check: ' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (err) {
+                result.innerHTML = 'Error: ' + err.message;
+            }
+        }
+    </script>
+</body>
+</html>

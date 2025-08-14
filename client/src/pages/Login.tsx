@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Login() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -16,7 +17,16 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [lawSchool, setLawSchool] = useState('');
 
-  const { login, register } = useAuth();
+  const { login, register, isAuthenticated } = useAuth();
+  const [, navigate] = useLocation();
+
+  // Redirect to home if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log('User authenticated, redirecting to home...');
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

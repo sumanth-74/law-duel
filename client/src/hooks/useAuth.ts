@@ -55,10 +55,12 @@ export function useAuth() {
     onSuccess: (data: any) => {
       const user = data.user || data;
       console.log('Login onSuccess called with user:', user.username);
+      // Set the user data in the cache
       queryClient.setQueryData(['/api/auth/me'], user);
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-      // Navigate to home page after successful login
-      window.location.href = '/';
+      // Force a refetch to ensure the session is properly established
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      }, 100);
     },
     onError: (error) => {
       console.log('Login onError called:', error);
@@ -88,10 +90,13 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: (user: User) => {
+      console.log('Registration successful for user:', user.username);
+      // Set the user data in the cache
       queryClient.setQueryData(['/api/auth/me'], user);
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-      // Navigate to home page after successful registration
-      window.location.href = '/';
+      // Force a refetch to ensure the session is properly established
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      }, 100);
     },
   });
 
