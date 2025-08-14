@@ -326,18 +326,35 @@ export class DailyCasefileService {
     yesterday.setUTCDate(yesterday.getUTCDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
     
-    let newStreak = 1; // Starting today's attempt
-    if (user.lastDailyDate === today) {
-      // Playing again today (shouldn't happen normally, but handle it)
-      newStreak = user.dailyStreak; // Keep existing streak
-    } else if (user.lastDailyDate === yesterdayStr) {
-      // Consecutive day - continue streak
-      newStreak = user.dailyStreak + 1;
-    } else if (user.lastDailyDate && user.lastDailyDate !== today) {
-      // Missed a day - streak resets to 1 (today's attempt)
-      newStreak = 1;
+    // Get user's attempt history to properly calculate streak
+    const attempts = await db
+      .select({
+        date: sql<string>`DATE(${userDailyAttempts.answeredAt})::text`
+      })
+      .from(userDailyAttempts)
+      .where(eq(userDailyAttempts.userId, userId))
+      .orderBy(sql`DATE(${userDailyAttempts.answeredAt}) DESC`)
+      .limit(30); // Check last 30 days
+    
+    // Calculate consecutive days streak
+    let newStreak = 1; // Today counts as 1
+    let checkDate = new Date(today);
+    
+    // Check if we have consecutive days going backward
+    for (let i = 1; i <= attempts.length; i++) {
+      checkDate.setUTCDate(checkDate.getUTCDate() - 1);
+      const checkDateStr = checkDate.toISOString().split('T')[0];
+      
+      // Check if this date exists in attempts
+      if (attempts.some(a => a.date === checkDateStr)) {
+        newStreak++;
+      } else {
+        // Streak broken, stop counting
+        break;
+      }
     }
-    // If lastDailyDate is null, this is their first attempt ever, streak = 1
+    
+    console.log(`📊 Streak calculation for ${user.username}: ${newStreak} consecutive days`);
     
     // Calculate rewards
     const baseXp = correct ? 150 : 30;
