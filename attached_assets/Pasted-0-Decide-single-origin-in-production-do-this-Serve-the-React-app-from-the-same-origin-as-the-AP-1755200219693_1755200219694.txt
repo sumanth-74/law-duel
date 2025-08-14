@@ -1,0 +1,172 @@
+0) Decide: single origin in production (do this)
+
+Serve the React app from the same origin as the API (your *.replit.app URL). Don’t test on the preview *.replit.dev while hitting the prod API.
+
+Frontend should call relative paths (/api/...), not absolute URLs.
+
+In prod you don’t need CORS at all. Simpler = fewer ways to break.
+
+1) Server — sessions before routes, correct cookie, regenerate+save
+
+Replace your server bootstrap with this (restore session regeneration; remove any “fix-login” hacks and cookie-clearing):
+
+// server/app.ts
+import express from "express";
+import session from "express-session";
+import path from "path";
+
+const app = express();
+const PROD = process.env.NODE_ENV === "production";
+
+app.set("trust proxy", 1);                 // required behind Replit's proxy
+app.use(express.json());
+
+// ---- SESSIONS (mount BEFORE routes) ----
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: PROD ? "lax" : "none",      // same-origin in prod
+    secure: PROD,                          // HTTPS cookie in prod
+    maxAge: 30*24*60*60*1000,
+    path: "/"
+  }
+}));
+
+export default app;
+
+
+Auth routes (don’t redirect from the server; return JSON; keep regeneration):
+
+// server/auth.ts
+import { Router } from "express";
+import bcrypt from "bcrypt";
+import { getUserByUsername } from "./db";
+
+const r = Router();
+
+r.post("/login", async (req, res, next) => {
+  const { username, password } = req.body || {};
+  const u = await getUserByUsername(username);
+  if (!u || !(await bcrypt.compare(password, u.passwordHash))) {
+    return res.status(401).json({ ok:false, error:"Invalid credentials" });
+  }
+  req.session.regenerate(err => {
+    if (err) return next(err);
+    req.session.user = { id: u.id, username: u.username };
+    req.session.save(err2 => {
+      if (err2) return next(err2);
+      res.json({ ok:true, user: req.session.user });
+    });
+  });
+});
+
+r.get("/me", (req, res) => {
+  if (!req.session.user) return res.status(401).json({ ok:false });
+  res.json({ ok:true, user: req.session.user });
+});
+
+r.post("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("sid", { path:"/" });
+    res.json({ ok:true });
+  });
+});
+
+export default r;
+
+
+Mount routes after sessions; serve the SPA from Express in prod:
+
+// server/index.ts
+import app from "./app.js";
+import auth from "./auth.js";
+import path from "path";
+
+app.use("/api/auth", auth);
+// ... other /api routes
+
+if (process.env.NODE_ENV === "production") {
+  const staticDir = path.join(process.cwd(), "client/dist");
+  app.use(express.static(staticDir));
+  app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(staticDir, "index.html")));
+}
+
+
+Remove any CORS config in prod, any custom cookie-clearing routes (/fix-login), and any code that sets a domain on the cookie. Keep one cookie: sid.
+
+2) Client — always send cookies; hard-nav to /play after login
+// client/src/api.ts
+export async function api(path: string, opts: RequestInit = {}) {
+  return fetch(`/api${path}`, {
+    ...opts,
+    credentials: "include",
+    headers: { "Content-Type": "application/json", ...(opts.headers||{}) }
+  });
+}
+
+// client/src/pages/Login.tsx (submit handler)
+const res = await api("/auth/login", {
+  method: "POST",
+  body: JSON.stringify({ username, password })
+});
+if (res.ok) {
+  window.location.assign("/play");       // avoids SPA routing races
+} else {
+  setError("Invalid username or password");
+}
+
+// client/src/App.tsx (bootstrap gate)
+useEffect(() => {
+  api("/auth/me").then(r => {
+    if (r.ok) window.history.replaceState(null, "", "/play");
+  });
+}, []);
+
+
+Search your repo for every fetch( / axios( and ensure each uses credentials (or the shared api() wrapper). One missing call can bounce you.
+
+3) Test on the prod domain only (not localhost)
+
+From a terminal (or your friend’s machine):
+
+# 1) Login and capture cookie (prod URL)
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  https://<your-app>.replit.app/api/auth/login
+
+# Expect: HTTP/1.1 200 and Set-Cookie: sid=...; Path=/; HttpOnly; Secure; SameSite=Lax
+
+# 2) Use the cookie
+curl -i -b jar.txt https://<your-app>.replit.app/api/auth/me
+# Expect: 200 with { ok:true, user:{...} }
+
+
+Then, in the browser on the same prod URL:
+
+Open DevTools → Network. Click /api/auth/login. Confirm the Set-Cookie response header.
+
+Reload the page: /api/auth/me must be 200, and you should be on /play.
+
+If it still loops, one of these is true (fix accordingly)
+
+You’re testing on preview *.replit.dev while your cookie is for *.replit.app → use prod only.
+
+Session middleware is mounted after routes → move it before.
+
+Cookie attrs wrong for your mode (cross-origin needs SameSite:"none"; secure:true; same-origin uses "lax").
+
+Some client call doesn’t include credentials:"include" → fix every call.
+
+Server is redirecting after login → remove redirects; return JSON, then client navigates.
+
+Definition of done
+
+After Sign In, you land on /play and stay logged in across refreshes.
+
+A friend on a different device logs in at the same prod URL and lands on /play.
+
+/api/auth/me returns 200 in browser and via curl with cookie jar.
