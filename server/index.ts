@@ -55,8 +55,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    sameSite: 'lax',  // Same-origin cookies
-    secure: PROD,      // HTTPS required in production
+    sameSite: 'lax',  // Use lax for same-origin
+    secure: false,     // Allow HTTP for development
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: '/'
     // DO NOT set domain - let it be host-only

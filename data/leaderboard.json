@@ -233,8 +233,8 @@
     "displayName": "ObjectionHero",
     "lawSchool": "UChicago Law",
     "level": 12,
-    "points": 2315,
-    "totalWins": 35,
+    "points": 2339,
+    "totalWins": 36,
     "totalLosses": 17,
     "avatarData": {
       "baseModel": "male",
@@ -248,7 +248,7 @@
       ],
       "accessoryColor": "#2F4F4F"
     },
-    "lastActive": "2025-08-14T17:18:46.300Z"
+    "lastActive": "2025-08-14T22:02:15.562Z"
   },
   {
     "id": "bot_statute_slayer",
