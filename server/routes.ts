@@ -58,7 +58,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
   
   app.use(session({
-    name: 'sid', // Use consistent session name
+    // Don't specify name - use default 'connect.sid' to match existing browser cookies
     secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
     store: sessionStore,
     resave: false, // Don't resave unchanged sessions
@@ -299,6 +299,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/login", async (req, res, next) => {
     try {
+      console.log('Login attempt - Headers:', {
+        cookie: req.headers.cookie,
+        origin: req.headers.origin,
+        host: req.headers.host
+      });
+      
       const credentials = loginSchema.parse(req.body);
       
       const user = await storage.authenticateUser(credentials.username, credentials.password);
@@ -322,6 +328,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const { password, ...userResponse } = user;
         console.log('Login successful, session saved for user:', user.username);
         console.log('Session ID:', req.sessionID);
+        console.log('Response headers being sent:', res.getHeaders());
         res.json({ ok: true, user: userResponse });
       });
     } catch (error: any) {
@@ -342,8 +349,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/auth/me", async (req: any, res) => {
+    console.log('Auth check - Headers:', {
+      cookie: req.headers.cookie,
+      sessionID: req.sessionID,
+      session: req.session,
+      userId: req.session?.userId
+    });
+    
     // Check if user is logged in
     if (!req.session?.userId) {
+      console.log('No userId in session, returning 401');
       return res.status(401).json({ ok: false });
     }
     
