@@ -31,7 +31,7 @@ export function ChatbotButton({ currentSubject, className = '', variant = 'float
             {isOpen ? (
               <span className="text-5xl">×</span>
             ) : (
-              <AtticusCat size="2xl" className="opacity-90" />
+              <AtticusCat size="massive" className="opacity-90" />
             )}
             
             {/* Subject Badge */}
