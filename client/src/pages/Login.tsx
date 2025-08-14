@@ -18,6 +18,14 @@ export default function Login() {
   const [lawSchool, setLawSchool] = useState('');
 
   const { login, register } = useAuth();
+  
+  // Clear old session cookies on mount to prevent conflicts
+  useEffect(() => {
+    // Clear any old connect.sid cookies that might be interfering
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname;
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
