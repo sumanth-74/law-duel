@@ -14,6 +14,7 @@ import LoginTest from "@/pages/LoginTest";
 import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
 import EmailAdmin from "@/pages/EmailAdmin";
+import AuthDebug from "@/pages/AuthDebug";
 import { Loader2 } from "lucide-react";
 
 function Router() {
@@ -51,6 +52,7 @@ function Router() {
       )}
       <Route path="/duel-test" component={DuelTestPage} />
       <Route path="/login-test" component={LoginTest} />
+      <Route path="/auth-debug" component={AuthDebug} />
       <Route component={NotFound} />
     </Switch>
   );
