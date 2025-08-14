@@ -17,16 +17,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [lawSchool, setLawSchool] = useState('');
 
-  const { login, register, isAuthenticated } = useAuth();
-  const [, navigate] = useLocation();
-
-  // Redirect to home if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      console.log('User authenticated, redirecting to home...');
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  const { login, register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

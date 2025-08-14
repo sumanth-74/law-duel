@@ -32,20 +32,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // CRITICAL: Trust proxy for Replit environment
   app.set('trust proxy', 1);
   
-  // Add CORS headers for same-origin requests
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    if (req.method === 'OPTIONS') {
-      res.sendStatus(200);
-    } else {
-      next();
-    }
-  });
-  
-  // Session configuration
+  // Session configuration MUST be before routes
   const PROD = process.env.NODE_ENV === 'production';
   
   // Use PostgreSQL for persistent session storage in production
@@ -78,13 +65,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     saveUninitialized: false, // Don't save empty sessions
     cookie: {
       httpOnly: true,
-      sameSite: 'lax', // Same origin for both dev and prod since we serve from same port
-      secure: PROD, // Only require secure in production
+      sameSite: 'lax', // Use 'lax' for both dev and prod - we're same-origin
+      secure: false, // Don't require HTTPS (Replit handles SSL termination)
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      path: '/'
+      path: '/',
+      // DO NOT set domain - let it be host-only
     },
   }));
 
+  // Debug endpoint to check session configuration
+  app.get("/api/debug/session", (req, res) => {
+    const sessionInfo = {
+      environment: process.env.NODE_ENV || 'development',
+      hasSession: !!req.session,
+      sessionId: req.sessionID,
+      sessionData: req.session,
+      cookies: req.cookies,
+      headers: {
+        cookie: req.headers.cookie,
+        origin: req.headers.origin,
+        host: req.headers.host,
+      },
+      sessionConfig: {
+        isProd: PROD,
+        cookieSettings: {
+          httpOnly: true,
+          sameSite: 'lax',
+          secure: false,
+          path: '/'
+        }
+      }
+    };
+    res.json(sessionInfo);
+  });
+  
   // Health check endpoint for OpenAI
   app.get("/health/openai", async (req, res) => {
     try {
@@ -292,29 +306,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ ok: false, error: "Invalid username or password" });
       }
 
-      // Regenerate session to prevent fixation attacks (as per security guide)
-      req.session.regenerate((err) => {
-        if (err) {
-          console.error('Session regenerate error:', err);
-          return next(err);
+      // Set user data in session directly without regeneration
+      // This avoids cookie persistence issues in development
+      (req.session as any).userId = user.id;
+      (req.session as any).user = { id: user.id, username: user.username };
+      
+      // Explicitly save the session before sending response
+      req.session.save((err2) => {
+        if (err2) {
+          console.error('Session save error:', err2);
+          return next(err2);
         }
         
-        // Set user data in session
-        (req.session as any).userId = user.id;
-        (req.session as any).user = { id: user.id, username: user.username };
-        
-        // Explicitly save the session before sending response
-        req.session.save((err2) => {
-          if (err2) {
-            console.error('Session save error:', err2);
-            return next(err2);
-          }
-          
-          // Don't return password
-          const { password, ...userResponse } = user;
-          console.log('Login successful, session saved for user:', user.username);
-          res.json({ ok: true, user: userResponse });
-        });
+        // Don't return password
+        const { password, ...userResponse } = user;
+        console.log('Login successful, session saved for user:', user.username);
+        console.log('Session ID:', req.sessionID);
+        res.json({ ok: true, user: userResponse });
       });
     } catch (error: any) {
       console.error('Login error:', error);
