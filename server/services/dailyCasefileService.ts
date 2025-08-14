@@ -241,10 +241,19 @@ export class DailyCasefileService {
       isCorrect: index === originalCorrectIndex
     }));
     
+    // ALWAYS shuffle - even if it means answer could still be A
     // Fisher-Yates shuffle to ensure proper randomization
     for (let i = items.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [items[i], items[j]] = [items[j], items[i]];
+    }
+    
+    // Force at least one swap if answer is still at position 0
+    const correctItem = items.find((item: any) => item.isCorrect);
+    if (items.indexOf(correctItem) === 0 && items.length > 1) {
+      // Move correct answer to a random non-zero position
+      const newPos = Math.floor(Math.random() * 3) + 1; // positions 1-3
+      [items[0], items[newPos]] = [items[newPos], items[0]];
     }
     
     // Extract shuffled data and find new correct index
