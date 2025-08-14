@@ -302,5 +302,15 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-14T17:30:06.924Z"
+  },
+  {
+    "id": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-14T17:33:39.332Z"
   }
 ]

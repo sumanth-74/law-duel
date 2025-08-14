@@ -24,20 +24,29 @@ export function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
+      console.log('Login mutation called with:', { username: credentials.username, password: credentials.password ? '***' : 'empty' });
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(credentials),
       });
+      console.log('Login response status:', response.status);
       if (!response.ok) {
         const error = await response.json();
+        console.log('Login error:', error);
         throw new Error(error.message || 'Login failed');
       }
-      return response.json();
+      const userData = await response.json();
+      console.log('Login successful:', userData.username);
+      return userData;
     },
     onSuccess: (user: User) => {
+      console.log('Login onSuccess called with user:', user.username);
       queryClient.setQueryData(['/api/auth/me'], user);
+    },
+    onError: (error) => {
+      console.log('Login onError called:', error);
     },
   });
 

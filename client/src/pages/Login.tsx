@@ -20,11 +20,14 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted, mode:', mode, 'username:', username);
     
     if (mode === 'login') {
+      console.log('Attempting login with:', { username, password: password ? '***' : 'empty' });
       login.mutate({ username, password });
     } else {
       if (password !== confirmPassword) {
+        console.log('Password mismatch');
         return;
       }
       
@@ -37,6 +40,7 @@ export default function Login() {
         needsCharacterCreation: true // Flag to trigger character creation
       };
 
+      console.log('Attempting registration with:', { username, displayName: displayName || username });
       register.mutate({
         username,
         displayName: displayName || username,
