@@ -1,5 +1,28 @@
 [
   {
+    "id": "bot_mbe_destroyer",
+    "username": "MBEDestroyer",
+    "displayName": "MBEDestroyer",
+    "lawSchool": "Thomas Jefferson Law",
+    "level": 21,
+    "points": 4103,
+    "totalWins": 76,
+    "totalLosses": 6,
+    "avatarData": {
+      "baseModel": "male",
+      "skinColor": "#FFDAB9",
+      "hairStyle": "slicked",
+      "hairColor": "#D2691E",
+      "clothingStyle": "sweater",
+      "clothingColor": "#556B2F",
+      "accessories": [
+        "watch"
+      ],
+      "accessoryColor": "#DAA520"
+    },
+    "lastActive": "2025-08-14T20:14:56.555Z"
+  },
+  {
     "id": "bot_precedent_pro",
     "username": "PrecedentPro",
     "displayName": "PrecedentPro",
@@ -21,29 +44,6 @@
       "accessoryColor": "#8B0000"
     },
     "lastActive": "2025-08-14T19:19:15.058Z"
-  },
-  {
-    "id": "bot_mbe_destroyer",
-    "username": "MBEDestroyer",
-    "displayName": "MBEDestroyer",
-    "lawSchool": "Thomas Jefferson Law",
-    "level": 21,
-    "points": 4056,
-    "totalWins": 75,
-    "totalLosses": 6,
-    "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#FFDAB9",
-      "hairStyle": "slicked",
-      "hairColor": "#D2691E",
-      "clothingStyle": "sweater",
-      "clothingColor": "#556B2F",
-      "accessories": [
-        "watch"
-      ],
-      "accessoryColor": "#DAA520"
-    },
-    "lastActive": "2025-08-13T23:58:16.105Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -119,9 +119,9 @@
     "username": "LawBeast99",
     "displayName": "LawBeast99",
     "lawSchool": "Harvard Law",
-    "level": 16,
-    "points": 3153,
-    "totalWins": 51,
+    "level": 17,
+    "points": 3209,
+    "totalWins": 52,
     "totalLosses": 13,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#333333"
     },
-    "lastActive": "2025-08-14T18:11:20.922Z"
+    "lastActive": "2025-08-14T20:14:56.555Z"
   },
   {
     "id": "bot_contracts_wizard",
