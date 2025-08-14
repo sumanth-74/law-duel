@@ -49,8 +49,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    sameSite: 'lax',  // Use lax for same-origin
-    secure: false,     // Allow HTTP for development
+    sameSite: 'lax',                  // Always use lax for same-origin
+    secure: PROD,                      // Secure cookies in production
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: '/'
     // DO NOT set domain - let it be host-only
@@ -84,6 +84,14 @@ app.use((req, res, next) => {
     }
   });
 
+  next();
+});
+
+// Redirect authenticated users from landing/login pages to main app
+app.get(["/", "/login"], (req: any, res, next) => {
+  if (req.session?.userId || req.session?.user) {
+    return res.redirect(302, "/play");
+  }
   next();
 });
 

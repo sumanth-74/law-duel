@@ -1,0 +1,170 @@
+0) First, confirm the cookie (60-sec)
+
+On the exact domain you’re testing (replit.app or lawduel.net), open DevTools → Network and submit login once. Click /api/auth/login:
+
+Request URL must be https://<that-domain>/api/auth/login (not any replit.dev/app/localhost).
+
+Response headers must include Set-Cookie: sid=…; Path=/; Secure; SameSite=Lax.
+Then request /api/auth/me — it must be 200.
+If you don’t see Set-Cookie, the server cookie config is still wrong (I include the fix below). If Set-Cookie appears and /auth/me is 200, you have a client routing bug, which the patches below fix.
+
+1) Server: sessions before routes + hard redirect from landing if authed
+
+Put sessions before any routes and add a tiny guard that sends logged-in users to /play even if the SPA misbehaves.
+
+// server/index.ts
+import express from "express";
+import session from "express-session";
+import path from "path";
+import auth from "./auth.js";
+
+const app = express();
+const PROD = process.env.NODE_ENV === "production";
+
+app.set("trust proxy", 1);
+app.use(express.json());
+
+// --- SESSIONS: BEFORE ANY /api ROUTES ---
+app.use(session({
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "change-me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: PROD ? "lax" : "none",
+    secure: PROD,
+    maxAge: 30*24*60*60*1000,
+    path: "/"
+  }
+}));
+
+// --- API ROUTES ---
+app.use("/api/auth", auth);
+// ... other /api routes ...
+
+// --- If user is logged in and hits "/" or "/login", server-redirect to /play ---
+app.get(["/","/login"], (req, res, next) => {
+  if (req.session?.user) return res.redirect(302, "/play");
+  next();
+});
+
+// --- Serve SPA from same origin in prod ---
+if (PROD) {
+  const staticDir = path.join(process.cwd(), "client/dist");
+  app.use(express.static(staticDir));
+  app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(staticDir, "index.html")));
+}
+
+app.listen(process.env.PORT || 5000);
+
+
+Auth routes (keep regenerate + save, return JSON—no server redirects):
+
+// server/auth.ts
+import { Router } from "express";
+import bcrypt from "bcrypt";
+import { getUserByUsername } from "./db.js";
+const r = Router();
+
+r.post("/login", async (req, res, next) => {
+  const { username, password } = req.body || {};
+  const u = await getUserByUsername(username);
+  if (!u || !(await bcrypt.compare(password, u.passwordHash)))
+    return res.status(401).json({ ok:false, error:"Invalid credentials" });
+
+  req.session.regenerate(err => {
+    if (err) return next(err);
+    req.session.user = { id: u.id, username: u.username };
+    req.session.save(err2 => err2 ? next(err2) : res.json({ ok:true, user: req.session.user }));
+  });
+});
+
+r.get("/me", (req, res) =>
+  req.session?.user ? res.json({ ok:true, user: req.session.user })
+                    : res.status(401).json({ ok:false })
+);
+
+r.post("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("sid", { path:"/" });
+    res.json({ ok:true });
+  });
+});
+
+export default r;
+
+2) Frontend: relative API + hard-nav on success + safe bootstrap
+
+Stop using any absolute API base. Always send cookies. After login, hard navigate to /play (bypasses router races). On app load, if /auth/me is 200, send to /play.
+
+// client/src/api.ts
+export async function api(path: string, opts: RequestInit = {}) {
+  return fetch(`/api${path}`, {
+    ...opts,
+    credentials: "include",
+    headers: { "Content-Type":"application/json", ...(opts.headers||{}) }
+  });
+}
+
+// client/src/pages/Login.tsx (submit handler)
+const onSubmit = async (e) => {
+  e.preventDefault();                    // prevent full page reload
+  const res = await api("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ username, password })
+  });
+  if (res.ok) {
+    window.location.assign("/play");     // hard redirect ends landing-loop
+  } else {
+    setError("Invalid username or password");
+  }
+};
+
+// client/src/App.tsx (bootstrap gate)
+useEffect(() => {
+  api("/auth/me").then(r => {
+    if (r.ok) window.history.replaceState(null, "", "/play");
+  });
+}, []);
+
+
+Search & destroy in your repo: any https://*.replit.app, https://*.replit.dev, http://localhost, or VITE_API_URL in production code. All prod calls must be relative (/api/...) so they hit the same origin.
+
+3) Dead-simple go/no-go (takes 90 seconds on the real domain)
+
+A. Cookie actually sets on your domain
+
+curl -i -c jar.txt -H 'Content-Type: application/json' \
+  -d '{"username":"debuguser","password":"test123"}' \
+  https://<YOUR-DOMAIN>/api/auth/login | grep -i set-cookie
+
+
+You must see Set-Cookie: sid=...; Secure; SameSite=Lax; Path=/.
+
+B. Session usable
+
+curl -i -b jar.txt https://<YOUR-DOMAIN>/api/auth/me
+
+
+Must be 200.
+
+C. Browser proof
+
+In DevTools → Network on that same domain, submit login:
+
+/api/auth/login shows Set-Cookie in response headers.
+
+You end up on /play (server redirect will also shove you there if you reload /).
+
+If A/B pass but the browser still loops, the only remaining culprit is a stray frontend call not using credentials:"include" or posting to a different origin—grep for fetch( / axios( and fix.
+
+Why this fixes it “for real”
+
+If the cookie never set: session order/flags were wrong → now they’re correct.
+
+If the cookie set but SPA routed you back: server now forces authenticated users to /play, and the client hard-navigates on success, bypassing any flaky modal/router logic.
+
+Relative /api calls remove cross-origin gotchas entirely.
+
+Ship exactly this, and then run the three checks above on the domain you’ll share. If any check fails, paste the failing command output back to your dev—there’s no guesswork left.

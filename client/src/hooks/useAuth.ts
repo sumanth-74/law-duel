@@ -55,9 +55,8 @@ export function useAuth() {
     },
     onSuccess: async (data: any) => {
       console.log('Login onSuccess called, data:', data);
-      // Invalidate and refetch the auth query to update the authentication state
-      await queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-      // The router will automatically show the home page when authenticated
+      // Hard navigate to bypass any router issues
+      window.location.assign('/');
     },
     onError: (error) => {
       console.log('Login onError called:', error);
