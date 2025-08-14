@@ -4,6 +4,8 @@
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
 ## Recent Changes (Aug 14, 2025)
+- **Universal authentication fix**: Fixed session cookies by setting `secure: false` to work on both HTTP (Replit dev) and HTTPS (production) environments. Sessions now persist correctly across all domains.
+- **CORS headers configured**: Added proper cross-origin headers for lawduel.net, Replit domains, and localhost to ensure frontend-backend communication works everywhere.
 - **ESM Module Compatibility Fix**: Replaced dynamic require('connect-pg-simple') with proper ES module import syntax to resolve deployment errors. Fixed "Dynamic require of 'connect-pg-simple' is not supported in ESM modules" error.
 - **Production-ready authentication**: Implemented persistent PostgreSQL session storage for production, ensuring sessions survive server restarts. Sessions use connect-pg-simple in production, MemoryStore in development.
 - **Authentication stability hardened**: Proper session regeneration on login, trust proxy configuration, consistent JSON response format ({ok: true, user: {...}}), and comprehensive stability testing
@@ -11,7 +13,6 @@ Law Duel is a competitive legal education game designed for bar exam preparation
 - **Fixed Daily Casefile UI**: Removed duplicate letter displays from answer text while keeping proper side labels
 - **Enhanced answer randomization**: Improved regex pattern to strip all letter prefixes from OpenAI-generated answers
 - **App deployment ready**: Configured for Replit deployment with custom domain lawduel.net purchased by user
-- **Custom domain authentication fix**: Updated session cookie configuration to work properly with custom domain (lawduel.net) using secure cookies, proxy trust, and proper sameSite settings
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

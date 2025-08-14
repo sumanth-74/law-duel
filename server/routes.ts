@@ -32,9 +32,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // CRITICAL: Trust proxy for Replit environment
   app.set('trust proxy', 1);
   
+  // Add CORS headers for cross-domain requests
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    // Allow requests from both Replit and custom domain
+    const allowedOrigins = [
+      'https://lawduel.net',
+      'https://www.lawduel.net',
+      /https:\/\/.*\.replit\.app$/,
+      /https:\/\/.*\.replit\.dev$/,
+      'http://localhost:5000',
+      'http://localhost:5173'
+    ];
+    
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed instanceof RegExp) {
+        return allowed.test(origin || '');
+      }
+      return allowed === origin;
+    });
+    
+    if (isAllowed) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Credentials', 'true');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    }
+    
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
+    
+    next();
+  });
+  
   // Session configuration MUST be before routes
-  // Check if we're in production - only true production, not Replit dev
-  const PROD = process.env.NODE_ENV === 'production';
+  // Check if we're in production - detect deployed environment or custom domain
+  const PROD = process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYMENT === '1';
   
   // Use PostgreSQL for persistent session storage in production
   let sessionStore: any;
@@ -58,8 +92,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }
   
+  // Session configuration - works for both HTTP and HTTPS
   app.use(session({
-    name: 'sid', // Use 'sid' as the cookie name
+    name: 'sid', // Use 'sid' as the cookie name  
     secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
     store: sessionStore,
     resave: false,
@@ -68,7 +103,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     cookie: {
       httpOnly: true,
       sameSite: 'lax', // Use 'lax' for same-origin
-      secure: PROD, // Enable secure cookies in production (HTTPS)
+      secure: false, // Allow cookies on both HTTP and HTTPS
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
       path: '/'
       // DO NOT set domain - let it be host-only for the current domain
@@ -106,6 +141,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve test authentication page
   app.get('/test-auth', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'test-auth-fixed.html'));
+  });
+  
+  // Serve final login test page
+  app.get('/test-login', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'test-login-final.html'));
   });
   
   // Serve fix page for custom domain issues

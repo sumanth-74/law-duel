@@ -58,9 +58,12 @@ export function useAuth() {
       console.log('Login onSuccess called with user:', user.username);
       // Set the user data in the cache
       queryClient.setQueryData(['/api/auth/me'], user);
-      // Hard navigate to play page to avoid SPA routing race conditions
-      // This ensures the page fully reloads with the authenticated session
-      window.location.assign('/play');
+      // Refetch to ensure session is properly established
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      // Small delay to ensure session is saved before redirect
+      setTimeout(() => {
+        window.location.href = '/play';
+      }, 100);
     },
     onError: (error) => {
       console.log('Login onError called:', error);
@@ -89,13 +92,17 @@ export function useAuth() {
       }
       return response.json();
     },
-    onSuccess: (user: User) => {
+    onSuccess: (data: any) => {
+      const user = data.user || data;
       console.log('Registration successful for user:', user.username);
       // Set the user data in the cache
       queryClient.setQueryData(['/api/auth/me'], user);
-      // Hard navigate to play page to avoid SPA routing race conditions
-      // This ensures the page fully reloads with the authenticated session
-      window.location.assign('/play');
+      // Refetch to ensure session is properly established
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      // Small delay to ensure session is saved before redirect
+      setTimeout(() => {
+        window.location.href = '/play';
+      }, 100);
     },
   });
 
