@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Law Duel - Authentication Test</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+        .success { background: rgba(0,255,0,0.2); }
+        .error { background: rgba(255,0,0,0.2); }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #a78bfa; }
+        pre { 
+            background: rgba(0,0,0,0.3); 
+            padding: 10px; 
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Law Duel - Authentication System Test</h1>
+    
+    <div>
+        <button onclick="testLogin()">1. Test Login</button>
+        <button onclick="testAuthCheck()">2. Check Auth Status</button>
+        <button onclick="goToApp()">3. Enter App</button>
+        <button onclick="testLogout()">4. Logout</button>
+        <button onclick="runAllTests()">🚀 Run All Tests</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(message, data = null, isError = false) {
+            const div = document.createElement('div');
+            div.className = `test-result ${isError ? 'error' : 'success'}`;
+            div.innerHTML = `
+                <strong>${new Date().toLocaleTimeString()}</strong> - ${message}
+                ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+            `;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        async function testLogin() {
+            log('Testing login endpoint...');
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username: 'debuguser', password: 'test123' })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    log('✅ Login successful!', data);
+                    return true;
+                } else {
+                    log('❌ Login failed', data, true);
+                    return false;
+                }
+            } catch (error) {
+                log('❌ Login error: ' + error.message, null, true);
+                return false;
+            }
+        }
+        
+        async function testAuthCheck() {
+            log('Checking authentication status...');
+            try {
+                const res = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    log('✅ Authenticated!', data);
+                    return true;
+                } else {
+                    log('❌ Not authenticated', data, true);
+                    return false;
+                }
+            } catch (error) {
+                log('❌ Auth check error: ' + error.message, null, true);
+                return false;
+            }
+        }
+        
+        async function testLogout() {
+            log('Testing logout...');
+            try {
+                const res = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                const data = await res.json();
+                log('✅ Logout completed', data);
+                
+                // Verify we're logged out
+                await testAuthCheck();
+            } catch (error) {
+                log('❌ Logout error: ' + error.message, null, true);
+            }
+        }
+        
+        function goToApp() {
+            log('Redirecting to app...');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 500);
+        }
+        
+        async function runAllTests() {
+            results.innerHTML = '';
+            log('🚀 Starting complete authentication test suite...');
+            
+            // Test 1: Login
+            const loginSuccess = await testLogin();
+            if (!loginSuccess) {
+                log('⚠️ Tests stopped due to login failure', null, true);
+                return;
+            }
+            
+            await new Promise(r => setTimeout(r, 500));
+            
+            // Test 2: Verify auth
+            const authSuccess = await testAuthCheck();
+            if (!authSuccess) {
+                log('⚠️ Session not persisting after login', null, true);
+                return;
+            }
+            
+            log('🎉 All tests passed! Authentication system is working correctly.');
+            log('Click "Enter App" to go to the game.');
+        }
+    </script>
+</body>
+</html>

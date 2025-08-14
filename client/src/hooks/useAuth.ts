@@ -15,16 +15,20 @@ export function useAuth() {
         credentials: 'include',
       });
       console.log('Auth check response:', response.status);
-      if (response.status === 401) {
-        console.log('Not authenticated');
-        return null; // Not authenticated, this is expected
-      }
+      
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        console.log('Not authenticated');
+        return null;
       }
-      const userData = await response.json();
-      console.log('User authenticated:', userData.username);
-      return userData;
+      
+      const data = await response.json();
+      
+      if (data.ok && data.user) {
+        console.log('User authenticated:', data.user.username);
+        return data.user;
+      }
+      
+      return null;
     },
   });
 
@@ -43,11 +47,13 @@ export function useAuth() {
         console.log('Login error:', error);
         throw new Error(error.message || 'Login failed');
       }
-      const userData = await response.json();
-      console.log('Login successful:', userData.username);
-      return userData;
+      const data = await response.json();
+      console.log('Login successful:', data.user?.username || data.username);
+      // Handle both old and new response formats
+      return data.user || data;
     },
-    onSuccess: (user: User) => {
+    onSuccess: (data: any) => {
+      const user = data.user || data;
       console.log('Login onSuccess called with user:', user.username);
       queryClient.setQueryData(['/api/auth/me'], user);
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });

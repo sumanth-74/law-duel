@@ -26,22 +26,27 @@ import { BotPractice } from './services/botPractice.js';
 const botPractice = new BotPractice();
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // CRITICAL: Trust proxy for Replit environment
+  app.set('trust proxy', 1);
+  
   // Session configuration
   const MemStore = MemoryStore(session);
+  const PROD = process.env.NODE_ENV === 'production';
+  
   app.use(session({
+    name: 'sid', // Use consistent session name
     secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
     store: new MemStore({
       checkPeriod: 86400000 // prune expired entries every 24h
     }),
-    resave: true, // Force session save
-    saveUninitialized: true, // Save even empty sessions
-    rolling: true, // Reset expiry on activity
+    resave: false, // Don't resave unchanged sessions
+    saveUninitialized: false, // Don't save empty sessions
     cookie: {
-      secure: false, // Allow cookies in development
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      sameSite: 'lax', // Allow cookies on same-origin requests
-      path: '/' // Ensure cookie works on all paths
+      sameSite: 'lax', // Same origin for both dev and prod since we serve from same port
+      secure: PROD, // Only require secure in production
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      path: '/'
     },
   }));
 
@@ -231,30 +236,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/login", async (req, res) => {
+  app.post("/api/auth/login", async (req, res, next) => {
     try {
       const credentials = loginSchema.parse(req.body);
       
       const user = await storage.authenticateUser(credentials.username, credentials.password);
       if (!user) {
-        return res.status(401).json({ message: "Invalid username or password" });
+        return res.status(401).json({ ok: false, error: "Invalid username or password" });
       }
 
-      (req.session as any).userId = user.id;
-      
-      // Save session before sending response
-      req.session.save((err) => {
-        if (err) {
-          console.error('Session save error:', err);
-          return res.status(500).json({ message: 'Session error' });
-        }
+      // Regenerate session to prevent fixation attacks
+      req.session.regenerate((err) => {
+        if (err) return next(err);
         
-        // Don't return password
-        const { password, ...userResponse } = user;
-        res.json(userResponse);
+        (req.session as any).userId = user.id;
+        (req.session as any).user = { id: user.id, username: user.username };
+        
+        req.session.save((err2) => {
+          if (err2) return next(err2);
+          
+          // Don't return password
+          const { password, ...userResponse } = user;
+          res.json({ ok: true, user: userResponse });
+        });
       });
     } catch (error: any) {
-      res.status(400).json({ message: "Invalid credentials", error: error.message });
+      res.status(400).json({ ok: false, error: "Invalid credentials", details: error.message });
     }
   });
 
@@ -263,22 +270,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (err) {
         return res.status(500).json({ message: "Failed to logout" });
       }
-      res.json({ message: "Logged out successfully" });
+      res.clearCookie('sid', { path: '/' });
+      res.json({ ok: true, message: "Logged out successfully" });
     });
   });
 
-  app.get("/api/auth/me", requireAuth, async (req: any, res) => {
+  app.get("/api/auth/me", async (req: any, res) => {
+    // Check if user is logged in
+    if (!req.session?.userId) {
+      return res.status(401).json({ ok: false });
+    }
+    
     try {
       const user = await storage.getUser(req.session.userId);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ ok: false, error: "User not found" });
       }
       
       // Don't return password
       const { password, ...userResponse } = user;
-      res.json(userResponse);
+      res.json({ ok: true, user: userResponse });
     } catch (error: any) {
-      res.status(500).json({ message: "Failed to get user", error: error.message });
+      res.status(500).json({ ok: false, error: "Failed to get user", details: error.message });
     }
   });
 
