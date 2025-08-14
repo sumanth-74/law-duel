@@ -27,9 +27,9 @@
     "username": "PrecedentPro",
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
-    "level": 20,
-    "points": 3999,
-    "totalWins": 73,
+    "level": 21,
+    "points": 4026,
+    "totalWins": 74,
     "totalLosses": 9,
     "avatarData": {
       "baseModel": "male",
@@ -43,7 +43,7 @@
       ],
       "accessoryColor": "#8B0000"
     },
-    "lastActive": "2025-08-14T16:41:35.175Z"
+    "lastActive": "2025-08-14T17:39:04.384Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -165,9 +165,9 @@
     "username": "JusticeNinja",
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
-    "level": 14,
-    "points": 2787,
-    "totalWins": 46,
+    "level": 15,
+    "points": 2821,
+    "totalWins": 47,
     "totalLosses": 13,
     "avatarData": {
       "baseModel": "male",
@@ -181,7 +181,7 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-14T17:18:46.300Z"
+    "lastActive": "2025-08-14T17:39:04.384Z"
   },
   {
     "id": "bot_legal_eagle_420",

@@ -35,10 +35,16 @@ export class DatabaseStorage implements IStorage {
   // User authentication methods
   async authenticateUser(username: string, password: string): Promise<User | null> {
     try {
+      console.log(`Auth attempt for username: ${username}`);
       const [user] = await db.select().from(users).where(eq(users.username, username));
-      if (!user) return null;
+      if (!user) {
+        console.log(`User not found: ${username}`);
+        return null;
+      }
+      console.log(`User found: ${user.username}, checking password...`);
       
       const isValid = await bcrypt.compare(password, user.password);
+      console.log(`Password comparison result: ${isValid}`);
       if (!isValid) return null;
       
       // Update last login

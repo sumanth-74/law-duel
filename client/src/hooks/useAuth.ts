@@ -44,6 +44,8 @@ export function useAuth() {
     onSuccess: (user: User) => {
       console.log('Login onSuccess called with user:', user.username);
       queryClient.setQueryData(['/api/auth/me'], user);
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      window.location.href = '/';
     },
     onError: (error) => {
       console.log('Login onError called:', error);
