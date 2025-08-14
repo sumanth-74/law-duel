@@ -18,19 +18,6 @@ export default function Login() {
   const [lawSchool, setLawSchool] = useState('');
 
   const { login, register } = useAuth();
-  
-  // Clear old cookies when login page loads to fix persistent session issues
-  useEffect(() => {
-    // Clear any stale session cookies on page load
-    fetch('/api/auth/clear-cookies', {
-      method: 'POST',
-      credentials: 'include',
-    }).then(() => {
-      console.log('Cleared old session cookies');
-    }).catch(err => {
-      console.error('Error clearing cookies:', err);
-    });
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

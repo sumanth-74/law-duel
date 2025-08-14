@@ -58,45 +58,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
   
   app.use(session({
-    // Don't specify name - use default 'connect.sid' to match existing browser cookies
+    name: 'sid', // Use 'sid' as the cookie name
     secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
     store: sessionStore,
-    resave: false, // Don't resave unchanged sessions
-    saveUninitialized: false, // Don't save empty sessions
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: 'lax', // Use 'lax' for both dev and prod - we're same-origin
-      secure: false, // Don't require HTTPS (Replit handles SSL termination)
+      sameSite: PROD ? 'lax' : 'none', // same-origin in prod, cross-origin in dev
+      secure: PROD, // HTTPS cookie in prod
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      path: '/',
-      // DO NOT set domain - let it be host-only
+      path: '/'
+      // DO NOT set domain
     },
   }));
 
-  // Force clear cookies endpoint
-  app.post("/api/auth/clear-cookies", (req, res) => {
-    // Clear the session cookie with all possible options
-    res.clearCookie('connect.sid', { 
-      path: '/',
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: false
-    });
-    
-    // Also try clearing with just the name
-    res.clearCookie('connect.sid');
-    
-    // Destroy session if it exists
-    if (req.session) {
-      req.session.destroy((err) => {
-        if (err) {
-          console.error('Session destroy error:', err);
-        }
-      });
-    }
-    
-    res.json({ ok: true, message: 'Cookies cleared' });
-  });
+
   
   // Debug endpoint to check session configuration
   app.get("/api/debug/session", (req, res) => {
@@ -124,6 +101,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(sessionInfo);
   });
   
+  // Serve test authentication page
+  app.get('/test-auth', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'test-auth-fixed.html'));
+  });
+  
   // Health check endpoint for OpenAI
   app.get("/health/openai", async (req, res) => {
     try {
@@ -139,10 +121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Serve fix-login page for clearing session issues
-  app.get('/fix-login', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'fix-login.html'));
-  });
+
   
   // Pool status endpoint - check pre-generated questions
   app.get("/api/pool-status", async (req, res) => {

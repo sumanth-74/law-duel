@@ -58,9 +58,9 @@ export function useAuth() {
       console.log('Login onSuccess called with user:', user.username);
       // Set the user data in the cache
       queryClient.setQueryData(['/api/auth/me'], user);
-      // Hard navigate to home page to avoid SPA routing race conditions
+      // Hard navigate to play page to avoid SPA routing race conditions
       // This ensures the page fully reloads with the authenticated session
-      window.location.assign('/');
+      window.location.assign('/play');
     },
     onError: (error) => {
       console.log('Login onError called:', error);
@@ -93,9 +93,9 @@ export function useAuth() {
       console.log('Registration successful for user:', user.username);
       // Set the user data in the cache
       queryClient.setQueryData(['/api/auth/me'], user);
-      // Hard navigate to home page to avoid SPA routing race conditions
+      // Hard navigate to play page to avoid SPA routing race conditions
       // This ensures the page fully reloads with the authenticated session
-      window.location.assign('/');
+      window.location.assign('/play');
     },
   });
 
