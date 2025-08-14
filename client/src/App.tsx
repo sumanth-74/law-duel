@@ -10,6 +10,7 @@ import Landing from "@/pages/Landing";
 import Stats from "@/pages/Stats";
 import DailyCasefile from "@/pages/DailyCasefile";
 import DuelTestPage from "@/pages/DuelTestPage";
+import LoginTest from "@/pages/LoginTest";
 import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
 import EmailAdmin from "@/pages/EmailAdmin";
@@ -49,6 +50,7 @@ function Router() {
         </>
       )}
       <Route path="/duel-test" component={DuelTestPage} />
+      <Route path="/login-test" component={LoginTest} />
       <Route component={NotFound} />
     </Switch>
   );
