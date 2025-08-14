@@ -3,7 +3,9 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import session from "express-session";
 import MemoryStore from "memorystore";
-import ConnectPgSimple from "connect-pg-simple";
+import connectPgSimple from "connect-pg-simple";
+import pg from "pg";
+import crypto from "crypto";
 import path from "path";
 import fs from "fs/promises";
 import { storage } from "./storage";
@@ -36,9 +38,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Use PostgreSQL for persistent session storage in production
   let sessionStore: any;
   if (PROD && process.env.DATABASE_URL) {
-    const PgSession = ConnectPgSimple(session);
+    const PgSession = connectPgSimple(session);
+    const pool = new pg.Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: PROD ? { rejectUnauthorized: false } : false
+    });
     sessionStore = new PgSession({
-      conString: process.env.DATABASE_URL,
+      pool,
       tableName: 'user_sessions',
       createTableIfMissing: true,
       pruneSessionInterval: 60 * 15, // Prune every 15 minutes
@@ -1470,7 +1476,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
 
   function fingerprintStem(stem) {
-    const crypto = require('crypto');
     return crypto.createHash("sha1")
       .update(String(stem).toLowerCase().replace(/\s+/g, " "))
       .digest("hex");
