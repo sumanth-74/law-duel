@@ -166,9 +166,9 @@
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 14,
-    "points": 2756,
+    "points": 2771,
     "totalWins": 45,
-    "totalLosses": 12,
+    "totalLosses": 13,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#F4A460",
@@ -181,16 +181,16 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-14T16:31:35.170Z"
+    "lastActive": "2025-08-14T17:08:46.300Z"
   },
   {
     "id": "bot_legal_eagle_420",
     "username": "LegalEagle420",
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
-    "level": 13,
-    "points": 2598,
-    "totalWins": 40,
+    "level": 14,
+    "points": 2638,
+    "totalWins": 41,
     "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
@@ -202,7 +202,7 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-14T16:17:15.906Z"
+    "lastActive": "2025-08-14T17:08:46.300Z"
   },
   {
     "id": "bot_verdict_viper",
