@@ -9,7 +9,7 @@ const sizeMap = {
   md: 24,
   lg: 32,
   xl: 48,
-  '2xl': 64
+  '2xl': 80
 };
 
 /**
