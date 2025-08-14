@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import session from "express-session";
 import MemoryStore from "memorystore";
+import ConnectPgSimple from "connect-pg-simple";
 import path from "path";
 import fs from "fs/promises";
 import { storage } from "./storage";
@@ -35,7 +36,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Use PostgreSQL for persistent session storage in production
   let sessionStore: any;
   if (PROD && process.env.DATABASE_URL) {
-    const PgSession = require('connect-pg-simple')(session);
+    const PgSession = ConnectPgSimple(session);
     sessionStore = new PgSession({
       conString: process.env.DATABASE_URL,
       tableName: 'user_sessions',

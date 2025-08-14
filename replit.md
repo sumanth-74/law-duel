@@ -4,6 +4,7 @@
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
 ## Recent Changes (Aug 14, 2025)
+- **ESM Module Compatibility Fix**: Replaced dynamic require('connect-pg-simple') with proper ES module import syntax to resolve deployment errors. Fixed "Dynamic require of 'connect-pg-simple' is not supported in ESM modules" error.
 - **Production-ready authentication**: Implemented persistent PostgreSQL session storage for production, ensuring sessions survive server restarts. Sessions use connect-pg-simple in production, MemoryStore in development.
 - **Authentication stability hardened**: Proper session regeneration on login, trust proxy configuration, consistent JSON response format ({ok: true, user: {...}}), and comprehensive stability testing
 - **Fixed daily streak tracking**: Completely rewrote streak calculation to check actual attempt history rather than simple date comparison
