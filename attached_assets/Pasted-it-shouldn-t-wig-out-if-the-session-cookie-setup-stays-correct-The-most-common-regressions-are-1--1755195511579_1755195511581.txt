@@ -1,0 +1,109 @@
+it shouldn’t wig out if the session/cookie setup stays correct. The most common regressions are (1) cross-origin cookies not being sent, or (2) sessions dying because they’re stored in memory. Here’s a fast, no-nonsense go/no-go and the exact hardening to prevent relapse.
+
+5-minute stability drill (do these now)
+
+Cookie actually set
+
+Log in on the test page → DevTools → Application → Cookies.
+
+You should see a cookie (e.g., sid) with:
+
+Path /
+
+HttpOnly: true
+
+SameSite: "lax" if front+API same origin; otherwise "none"
+
+Secure: true if HTTPS
+
+Session survives navigation
+
+Refresh the browser hard (⌘⇧R/Ctrl+F5) → /api/auth/me still returns 200 and you land on /play, not landing.
+
+Cross-device check
+
+Open the URL on your phone or a friend’s laptop (not logged into Replit).
+
+Log in once → navigate to /play → refresh → still in.
+
+Curl proof (from anywhere)
+
+curl -i -c jar.txt -H 'Content-Type: application/json' -d '{"username":"debuguser","password":"test123"}' https://<your-app>/api/auth/login
+
+curl -i -b jar.txt https://<your-app>/api/auth/me → must return 200 with user.
+
+If any of those fail, it will wig out again. Use the fixes below.
+
+Lock it down so it stays fixed
+1) Single-origin in production (best)
+
+Serve the React build from the same origin as the API. Then:
+
+Cookie: SameSite: "lax", Secure: true (HTTPS), HttpOnly: true
+
+No CORS complexity, far fewer ways to break.
+
+2) If you must run two origins in dev
+
+Server CORS: credentials: true, origin: ["http://localhost:5173", "<your-dev-front-url>"]
+
+Cookie: SameSite: "none", Secure: true (dev over HTTPS) or Secure: false only if local HTTP
+
+Client every fetch: credentials: "include"
+
+Quick grep to catch regressions:
+
+Search for fetch( and ensure each has credentials: "include" (or your axios equivalent withCredentials: true).
+
+3) Use a persistent session store
+
+The in-memory session store will drop sessions on restarts (classic wig-out).
+
+Add Redis (or equivalent) via connect-redis:
+
+import session from "express-session";
+import connectRedis from "connect-redis";
+import { createClient } from "redis";
+
+const RedisStore = connectRedis(session);
+const redis = createClient({ url: process.env.REDIS_URL });
+await redis.connect();
+
+app.use(session({
+  store: new RedisStore({ client: redis }),
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, sameSite: PROD ? "lax" : "none", secure: PROD, maxAge: 30*24*60*60*1000 }
+}));
+
+
+Set a strong SESSION_SECRET.
+
+4) Trust proxy is required behind Replit/HTTPS
+
+You already added app.set("trust proxy", 1) — keep it. Without it, secure cookies won’t set reliably.
+
+5) Don’t redirect on login from the server
+
+Return JSON {ok:true, user} and let the SPA route to /play after /auth/me succeeds. Server-side redirects can race the SPA and cause loops.
+
+Go/No-Go checklist (copy to Replit issue if anything fails)
+
+GO when:
+
+Cookie attributes are correct for your deployment mode
+
+/api/auth/me stays 200 after a full refresh and on a second device
+
+Sessions persist across server restarts (Redis store)
+
+All client requests send credentials
+
+NO-GO fix phrases:
+
+“Cookies not sent cross-origin → set SameSite:'none', credentials:true CORS, and credentials:'include' on client.”
+
+“Session lost on restart → use Redis session store (no MemoryStore in prod).”
+
+“Login loops after redirect → stop server redirects; return JSON and route in SPA.”

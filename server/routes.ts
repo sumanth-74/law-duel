@@ -30,15 +30,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.set('trust proxy', 1);
   
   // Session configuration
-  const MemStore = MemoryStore(session);
   const PROD = process.env.NODE_ENV === 'production';
+  
+  // Use PostgreSQL for persistent session storage in production
+  let sessionStore: any;
+  if (PROD && process.env.DATABASE_URL) {
+    const PgSession = require('connect-pg-simple')(session);
+    sessionStore = new PgSession({
+      conString: process.env.DATABASE_URL,
+      tableName: 'user_sessions',
+      createTableIfMissing: true,
+      pruneSessionInterval: 60 * 15, // Prune every 15 minutes
+    });
+  } else {
+    // Use memory store for development
+    const MemStore = MemoryStore(session);
+    sessionStore = new MemStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    });
+  }
   
   app.use(session({
     name: 'sid', // Use consistent session name
     secret: process.env.SESSION_SECRET || "dev-secret-key-change-in-production",
-    store: new MemStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    }),
+    store: sessionStore,
     resave: false, // Don't resave unchanged sessions
     saveUninitialized: false, // Don't save empty sessions
     cookie: {

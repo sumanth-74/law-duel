@@ -189,8 +189,8 @@
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 14,
-    "points": 2694,
-    "totalWins": 42,
+    "points": 2743,
+    "totalWins": 43,
     "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
@@ -202,7 +202,7 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-14T17:49:06.348Z"
+    "lastActive": "2025-08-14T18:20:43.782Z"
   },
   {
     "id": "bot_verdict_viper",
@@ -210,8 +210,8 @@
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
     "level": 13,
-    "points": 2490,
-    "totalWins": 38,
+    "points": 2505,
+    "totalWins": 39,
     "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
@@ -225,7 +225,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-14T18:11:20.922Z"
+    "lastActive": "2025-08-14T18:20:43.782Z"
   },
   {
     "id": "bot_objection_hero",
