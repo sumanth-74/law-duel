@@ -15,6 +15,7 @@ export interface IStorage {
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
   updateUserStats(id: string, won: boolean, xpGained: number, pointsChange: number): Promise<User | undefined>;
   getTopPlayers(limit: number): Promise<User[]>;
+  recordDailyActivity(userId: string): Promise<{ streakUpdated: boolean; newStreak: number }>;  // Track daily activity from any game mode
 
   // Match methods
   createMatch(match: InsertMatch): Promise<Match>;
@@ -136,6 +137,54 @@ export class DatabaseStorage implements IStorage {
       .from(users)
       .orderBy(desc(users.points))
       .limit(limit);
+  }
+
+  // Track daily activity from any game mode (solo, vs friends, daily casefile)
+  async recordDailyActivity(userId: string): Promise<{ streakUpdated: boolean; newStreak: number }> {
+    const [user] = await db.select().from(users).where(eq(users.id, userId));
+    if (!user) {
+      return { streakUpdated: false, newStreak: 0 };
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const lastActivityDate = user.lastDailyDate;
+    
+    // If already played today, don't update streak
+    if (lastActivityDate === today) {
+      return { streakUpdated: false, newStreak: user.dailyStreak };
+    }
+
+    let newStreak = 1;
+    
+    // Calculate new streak
+    if (lastActivityDate) {
+      const lastDate = new Date(lastActivityDate);
+      const todayDate = new Date(today);
+      const daysDiff = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysDiff === 1) {
+        // Consecutive day - increment streak
+        newStreak = user.dailyStreak + 1;
+      } else {
+        // Streak broken - reset to 1
+        newStreak = 1;
+      }
+    }
+
+    // Update user's daily streak and last activity date
+    const bestStreak = Math.max(user.bestDailyStreak, newStreak);
+    await db
+      .update(users)
+      .set({
+        dailyStreak: newStreak,
+        bestDailyStreak: bestStreak,
+        lastDailyDate: today,
+      })
+      .where(eq(users.id, userId));
+
+    console.log(`📅 Daily activity recorded for ${user.username}: streak ${user.dailyStreak} → ${newStreak}`);
+    
+    return { streakUpdated: true, newStreak };
   }
 
   // Match methods

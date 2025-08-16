@@ -40,6 +40,7 @@ Preferred communication style: Simple, everyday language.
 - **Game Mode Structure**: Two main modes - Solo Mode (single player with lives) and VS Mode (multiplayer with Live Duel and Friend Challenge)
 - **Daily Casefile System**: Automated daily question generation with fresh content every 24 hours at midnight UTC
 - **Daily Question Rotation**: Questions automatically regenerate with cleanup system removing old questions after 7 days
+- **Universal Daily Streak Tracking**: Daily streak now increases from any game activity (solo challenges, friend matches, live duels, or daily casefile), not just daily casefile completion
 
 ## System Architecture
 

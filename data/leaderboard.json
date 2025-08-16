@@ -143,8 +143,8 @@
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
     "level": 17,
-    "points": 3259,
-    "totalWins": 56,
+    "points": 3300,
+    "totalWins": 57,
     "totalLosses": 10,
     "avatarData": {
       "baseModel": "female",
@@ -158,7 +158,7 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-15T22:03:15.899Z"
+    "lastActive": "2025-08-16T01:43:54.990Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -233,8 +233,8 @@
     "displayName": "ObjectionHero",
     "lawSchool": "UChicago Law",
     "level": 12,
-    "points": 2339,
-    "totalWins": 36,
+    "points": 2385,
+    "totalWins": 37,
     "totalLosses": 17,
     "avatarData": {
       "baseModel": "male",
@@ -248,16 +248,16 @@
       ],
       "accessoryColor": "#2F4F4F"
     },
-    "lastActive": "2025-08-14T22:02:15.562Z"
+    "lastActive": "2025-08-16T01:43:54.990Z"
   },
   {
     "id": "bot_statute_slayer",
     "username": "StatuteSlayer",
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
-    "level": 11,
-    "points": 2153,
-    "totalWins": 31,
+    "level": 12,
+    "points": 2207,
+    "totalWins": 32,
     "totalLosses": 24,
     "avatarData": {
       "baseModel": "female",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-14T22:35:19.850Z"
+    "lastActive": "2025-08-16T01:43:54.990Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

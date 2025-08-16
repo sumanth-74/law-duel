@@ -575,6 +575,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
+      // Record daily activity for streak tracking (live duels count!)
+      await storage.recordDailyActivity(req.params.id);
+      
       // Sync with leaderboard JSON file to ensure real users appear on leaderboard
       updatePlayerStats(req.params.id, user.username, user.points, user.level);
       
@@ -808,12 +811,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/solo-challenge/answer', requireAuth, async (req: any, res) => {
     try {
       const { challengeId, questionId, userAnswer } = req.body;
+      const userId = req.session.userId;
       
       if (challengeId === undefined || questionId === undefined || userAnswer === undefined) {
         return res.status(400).json({ message: "challengeId, questionId, and userAnswer are required" });
       }
 
       const result = await soloChallengeService.submitAnswer(challengeId, questionId, userAnswer);
+      
+      // Record daily activity for streak tracking (solo mode counts!)
+      await storage.recordDailyActivity(userId);
+      
       res.json(result);
     } catch (error: any) {
       console.error("Error submitting solo challenge answer:", error);
@@ -996,6 +1004,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.session.userId;
       
       const match = await asyncDuels.submitAnswer(matchId, userId, answerIndex, responseTime);
+      
+      // Record daily activity for streak tracking (friend matches count!)
+      await storage.recordDailyActivity(userId);
+      
       res.json({ success: true, match });
     } catch (error: any) {
       console.error('Error submitting answer:', error);
@@ -1620,6 +1632,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const result = await dailyCasefileService.submitDailyAnswer(userId, questionId, choiceIndex);
+      
+      // Also call the general daily activity tracker (daily casefile also counts!)
+      // This ensures consistency across all game modes
+      await storage.recordDailyActivity(userId);
+      
       res.json(result);
     } catch (error: any) {
       console.error("Error submitting daily answer:", error);
