@@ -153,21 +153,10 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
 
       // Check if game over (no lives left)
       if (updatedChallenge.livesRemaining === 0) {
-        setTimeout(() => {
-          if (onLivesLost) {
-            onLivesLost(updatedChallenge);
-          } else {
-            setGameState('game-over');
-          }
-          setShowResult(null);
-        }, 3000);
+        // Don't auto-advance, wait for user to read explanation
+        // Will trigger onLivesLost when user clicks continue
       } else {
-        // Continue with next question after delay
-        setTimeout(async () => {
-          setShowResult(null);
-          setSelectedAnswer(null);
-          await loadNextQuestion(updatedChallenge);
-        }, 3000);
+        // Don't auto-advance, wait for user to click continue
       }
 
     } catch (error: any) {
@@ -178,6 +167,24 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleContinue = async () => {
+    if (!challenge) return;
+    
+    // Check if game is over
+    if (challenge.livesRemaining === 0) {
+      if (onLivesLost) {
+        onLivesLost(challenge);
+      } else {
+        setGameState('game-over');
+      }
+    } else {
+      // Continue to next question
+      setShowResult(null);
+      setSelectedAnswer(null);
+      await loadNextQuestion(challenge);
     }
   };
 
@@ -368,7 +375,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-sm mb-4">
                 <div>
                   {showResult.isCorrect ? 
                     <span className="text-green-400">+{showResult.pointsEarned} points earned</span> :
@@ -379,6 +386,16 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                   <span className="text-red-400 font-semibold">All lives lost!</span>
                 )}
               </div>
+
+              {/* Continue button - user can take as much time as needed to read */}
+              <Button 
+                onClick={handleContinue}
+                className="w-full bg-arcane hover:bg-arcane/80"
+                size="lg"
+                data-testid="button-continue"
+              >
+                {challenge.livesRemaining === 0 ? 'Continue to Atticus Challenge' : 'Continue to Next Question'}
+              </Button>
             </div>
           ) : (
             <>
