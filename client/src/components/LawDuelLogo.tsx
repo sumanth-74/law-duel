@@ -58,13 +58,24 @@ export default function LawDuelLogo({ size = 'md', showText = false, className =
           strokeWidth="1"
         />
         
-        {/* Cat silhouette - positioned above LD */}
+        {/* Cat silhouette with wizard hat - positioned above LD */}
         <g transform="translate(50, 30)">
+          {/* Wizard hat */}
+          <g transform="translate(0, -6)">
+            {/* Hat brim */}
+            <ellipse cx="0" cy="0" rx="10" ry="2" fill="#4C1D95" opacity="0.9"/>
+            {/* Hat cone */}
+            <polygon points="0,-10 -6,0 6,0" fill="#4C1D95" opacity="0.9"/>
+            {/* Hat stars */}
+            <text x="-2" y="-5" fontSize="4" fill="#FBBF24">★</text>
+            <text x="2" y="-3" fontSize="3" fill="#F59E0B">✦</text>
+          </g>
+          
           {/* Cat head */}
           <ellipse cx="0" cy="0" rx="8" ry="6" fill="url(#purpleGradient)" opacity="0.8"/>
-          {/* Cat ears */}
-          <polygon points="-6,-4 -8,-10 -2,-6" fill="url(#purpleGradient)" opacity="0.8"/>
-          <polygon points="6,-4 8,-10 2,-6" fill="url(#purpleGradient)" opacity="0.8"/>
+          {/* Cat ears - slightly hidden by hat */}
+          <polygon points="-6,-4 -8,-10 -2,-6" fill="url(#purpleGradient)" opacity="0.5"/>
+          <polygon points="6,-4 8,-10 2,-6" fill="url(#purpleGradient)" opacity="0.5"/>
           {/* Cat eyes */}
           <circle cx="-3" cy="-1" r="1" fill="#e9d5ff"/>
           <circle cx="3" cy="-1" r="1" fill="#e9d5ff"/>
