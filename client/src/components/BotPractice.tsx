@@ -268,18 +268,24 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
               <Button
                 variant={questionType === 'bar-exam' ? 'default' : 'outline'}
                 onClick={() => setQuestionType('bar-exam')}
-                className={`justify-start ${questionType === 'bar-exam' ? 'bg-arcane' : ''}`}
+                className={`justify-start flex-col items-start py-3 ${questionType === 'bar-exam' ? 'bg-arcane' : ''}`}
               >
-                <GraduationCap className="w-4 h-4 mr-2" />
-                Bar Exam / Law School
+                <div className="flex items-center mb-1">
+                  <GraduationCap className="w-4 h-4 mr-2" />
+                  <span className="font-semibold">Bar Study</span>
+                </div>
+                <span className="text-xs text-muted ml-6">1L exam & MBE review</span>
               </Button>
               <Button
                 variant={questionType === 'real-world' ? 'default' : 'outline'}
                 onClick={() => setQuestionType('real-world')}
-                className={`justify-start ${questionType === 'real-world' ? 'bg-arcane' : ''}`}
+                className={`justify-start flex-col items-start py-3 ${questionType === 'real-world' ? 'bg-arcane' : ''}`}
               >
-                <Shield className="w-4 h-4 mr-2" />
-                Real-World Law
+                <div className="flex items-center mb-1">
+                  <Shield className="w-4 h-4 mr-2" />
+                  <span className="font-semibold">Legal Trivia</span>
+                </div>
+                <span className="text-xs text-muted ml-6">Test your everyday law smarts</span>
               </Button>
             </div>
           </div>
