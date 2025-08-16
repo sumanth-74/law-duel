@@ -246,6 +246,234 @@ async function seedLeaderboardWithBots() {
   await writeLeaderboard(botPlayers);
 }
 
+// Force reset bots with correct avatar data
+export async function initializeBots() {
+  try {
+    const leaderboard = await readLeaderboard();
+    // Remove all existing bots
+    const humanPlayers = leaderboard.filter(player => !player.id.startsWith('bot_'));
+    
+    // Add bots with correct avatar data
+    const botPlayers = [
+      {
+        id: 'bot_precedent_pro',
+        username: 'PrecedentPro',
+        displayName: 'PrecedentPro',
+        lawSchool: 'Cooley Law School',
+        level: 20,
+        points: 3700,
+        totalWins: 67,
+        totalLosses: 6,
+        avatarData: {
+          base: 'arcane',
+          palette: '#1e90ff',
+          props: ['law_diploma', 'briefcase'],
+          archetypeId: 'equal-protection-paladin'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_mbe_destroyer',
+        username: 'MBEDestroyer',
+        displayName: 'MBEDestroyer',
+        lawSchool: 'Thomas Jefferson Law',
+        level: 21,
+        points: 3850,
+        totalWins: 71,
+        totalLosses: 5,
+        avatarData: {
+          base: 'construct',
+          palette: '#ff4500',
+          props: ['gavel', 'scales'],
+          archetypeId: 'takeover-titan'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_brief_sniper',
+        username: 'BriefSniper',
+        displayName: 'BriefSniper',
+        lawSchool: 'Duke Law',
+        level: 19,
+        points: 3450,
+        totalWins: 62,
+        totalLosses: 8,
+        avatarData: {
+          base: 'humanoid',
+          palette: '#9370db',
+          props: ['briefcase'],
+          archetypeId: 'whistleblower-wyvern'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_tort_master_x',
+        username: 'TortMasterX',
+        displayName: 'TortMasterX',
+        lawSchool: 'Golden Gate Law',
+        level: 18,
+        points: 3200,
+        totalWins: 56,
+        totalLosses: 9,
+        avatarData: {
+          base: 'arcane',
+          palette: '#8b008b',
+          props: ['codex'],
+          archetypeId: 'strict-scrutiny-sphinx'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_gavel_crusher',
+        username: 'GavelCrusher',
+        displayName: 'GavelCrusher',
+        lawSchool: 'UPenn Law',
+        level: 17,
+        points: 3100,
+        totalWins: 52,
+        totalLosses: 6,
+        avatarData: {
+          base: 'elemental',
+          palette: '#dc143c',
+          props: ['scales'],
+          archetypeId: 'subpoena-phoenix'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_contracts_wizard',
+        username: 'ContractsWizard',
+        displayName: 'ContractsWizard',
+        lawSchool: 'NYU Law',
+        level: 16,
+        points: 2950,
+        totalWins: 49,
+        totalLosses: 7,
+        avatarData: {
+          base: 'celestial',
+          palette: '#ff69b4',
+          props: ['law_diploma'],
+          archetypeId: 'fiduciary-seraph'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_lawbeast_99',
+        username: 'LawBeast99',
+        displayName: 'LawBeast99',
+        lawSchool: 'Harvard Law',
+        level: 15,
+        points: 2850,
+        totalWins: 47,
+        totalLosses: 8,
+        avatarData: {
+          base: 'humanoid',
+          palette: '#dc143c',
+          props: ['gavel'],
+          archetypeId: 'due-diligence-dragon'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_justice_ninja',
+        username: 'JusticeNinja',
+        displayName: 'JusticeNinja',
+        lawSchool: 'Columbia Law',
+        level: 14,
+        points: 2650,
+        totalWins: 42,
+        totalLosses: 11,
+        avatarData: {
+          base: 'undead',
+          palette: '#2e8b57',
+          props: ['briefcase'],
+          archetypeId: 'suppression-wraith'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_legal_eagle_420',
+        username: 'LegalEagle420',
+        displayName: 'LegalEagle420',
+        lawSchool: 'Yale Law',
+        level: 12,
+        points: 2400,
+        totalWins: 38,
+        totalLosses: 12,
+        avatarData: {
+          base: 'beast',
+          palette: '#4169e1',
+          props: ['scales'],
+          archetypeId: 'miranda-hawk'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_verdict_viper',
+        username: 'VerdictViper',
+        displayName: 'VerdictViper',
+        lawSchool: 'Georgetown Law',
+        level: 13,
+        points: 2300,
+        totalWins: 35,
+        totalLosses: 13,
+        avatarData: {
+          base: 'alien',
+          palette: '#32cd32',
+          props: ['legal_pad'],
+          archetypeId: 'viewpoint-viper'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_objection_hero',
+        username: 'ObjectionHero',
+        displayName: 'ObjectionHero',
+        lawSchool: 'UChicago Law',
+        level: 11,
+        points: 2100,
+        totalWins: 32,
+        totalLosses: 15,
+        avatarData: {
+          base: 'construct',
+          palette: '#ff8c00',
+          props: ['gavel'],
+          archetypeId: 'covenant-golem'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'bot_statute_slayer',
+        username: 'StatuteSlayer',
+        displayName: 'StatuteSlayer',
+        lawSchool: 'Berkeley Law',
+        level: 10,
+        points: 1850,
+        totalWins: 28,
+        totalLosses: 18,
+        avatarData: {
+          base: 'undead',
+          palette: '#ff1493',
+          props: ['codex'],
+          archetypeId: 'brady-banshee'
+        },
+        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      }
+    ];
+    
+    // Combine human players with new bots
+    const updatedLeaderboard = [...humanPlayers, ...botPlayers];
+    
+    // Sort by points descending
+    updatedLeaderboard.sort((a, b) => b.points - a.points);
+    await writeLeaderboard(updatedLeaderboard);
+    
+    console.log('Bots reset with correct avatar data');
+  } catch (error) {
+    console.error('Failed to reset bots:', error);
+  }
+}
+
 // Periodically update bot activity to make them appear more active
 export async function updateBotActivity() {
   try {

@@ -1,95 +1,62 @@
 [
   {
-    "id": "bot_precedent_pro",
-    "username": "PrecedentPro",
-    "displayName": "PrecedentPro",
-    "lawSchool": "Cooley Law School",
-    "level": 23,
-    "points": 4416,
-    "totalWins": 82,
-    "totalLosses": 11,
-    "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#FFE4B5",
-      "hairStyle": "professional",
-      "hairColor": "#A52A2A",
-      "clothingStyle": "jacket",
-      "clothingColor": "#000080",
-      "accessories": [
-        "bowtie"
-      ],
-      "accessoryColor": "#8B0000"
-    },
-    "lastActive": "2025-08-16T16:12:51.308Z"
-  },
-  {
     "id": "bot_mbe_destroyer",
     "username": "MBEDestroyer",
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
-    "level": 22,
-    "points": 4275,
-    "totalWins": 80,
+    "level": 21,
+    "points": 3850,
+    "totalWins": 71,
+    "totalLosses": 5,
+    "avatarData": {
+      "base": "construct",
+      "palette": "#ff4500",
+      "props": [
+        "gavel",
+        "scales"
+      ],
+      "archetypeId": "takeover-titan"
+    },
+    "lastActive": "2025-08-15T18:32:29.722Z"
+  },
+  {
+    "id": "bot_precedent_pro",
+    "username": "PrecedentPro",
+    "displayName": "PrecedentPro",
+    "lawSchool": "Cooley Law School",
+    "level": 20,
+    "points": 3700,
+    "totalWins": 67,
     "totalLosses": 6,
     "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#FFDAB9",
-      "hairStyle": "slicked",
-      "hairColor": "#D2691E",
-      "clothingStyle": "sweater",
-      "clothingColor": "#556B2F",
-      "accessories": [
-        "watch"
+      "base": "arcane",
+      "palette": "#1e90ff",
+      "props": [
+        "law_diploma",
+        "briefcase"
       ],
-      "accessoryColor": "#DAA520"
+      "archetypeId": "equal-protection-paladin"
     },
-    "lastActive": "2025-08-16T03:17:08.857Z"
+    "lastActive": "2025-08-16T01:53:20.706Z"
   },
   {
     "id": "bot_brief_sniper",
     "username": "BriefSniper",
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
-    "level": 20,
-    "points": 3881,
-    "totalWins": 67,
-    "totalLosses": 15,
+    "level": 19,
+    "points": 3450,
+    "totalWins": 62,
+    "totalLosses": 8,
     "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#F5DEB3",
-      "hairStyle": "bob",
-      "hairColor": "#4B0082",
-      "clothingStyle": "dress",
-      "clothingColor": "#B22222",
-      "accessories": [
-        "brooch"
+      "base": "humanoid",
+      "palette": "#9370db",
+      "props": [
+        "briefcase"
       ],
-      "accessoryColor": "#E6E6FA"
+      "archetypeId": "whistleblower-wyvern"
     },
-    "lastActive": "2025-08-16T03:48:38.510Z"
-  },
-  {
-    "id": "bot_contracts_wizard",
-    "username": "ContractsWizard",
-    "displayName": "ContractsWizard",
-    "lawSchool": "NYU Law",
-    "level": 18,
-    "points": 3563,
-    "totalWins": 60,
-    "totalLosses": 15,
-    "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#FFDAB9",
-      "hairStyle": "straight",
-      "hairColor": "#000000",
-      "clothingStyle": "blouse",
-      "clothingColor": "#8B008B",
-      "accessories": [
-        "earrings"
-      ],
-      "accessoryColor": "#FFB6C1"
-    },
-    "lastActive": "2025-08-16T16:37:45.392Z"
+    "lastActive": "2025-08-16T04:26:00.796Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -97,181 +64,170 @@
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
     "level": 18,
-    "points": 3545,
-    "totalWins": 63,
-    "totalLosses": 12,
+    "points": 3200,
+    "totalWins": 56,
+    "totalLosses": 9,
     "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#D2691E",
-      "hairStyle": "medium",
-      "hairColor": "#1C1C1C",
-      "clothingStyle": "professional",
-      "clothingColor": "#4B0082",
-      "accessories": [
-        "necklace"
+      "base": "arcane",
+      "palette": "#8b008b",
+      "props": [
+        "codex"
       ],
-      "accessoryColor": "#FFD700"
+      "archetypeId": "strict-scrutiny-sphinx"
     },
-    "lastActive": "2025-08-16T04:22:59.618Z"
+    "lastActive": "2025-08-16T03:10:23.702Z"
   },
   {
     "id": "bot_gavel_crusher",
     "username": "GavelCrusher",
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
-    "level": 18,
-    "points": 3456,
-    "totalWins": 60,
-    "totalLosses": 8,
+    "level": 17,
+    "points": 3100,
+    "totalWins": 52,
+    "totalLosses": 6,
     "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#FFE4E1",
-      "hairStyle": "curly",
-      "hairColor": "#FF6347",
-      "clothingStyle": "professional",
-      "clothingColor": "#008080",
-      "accessories": [
-        "scarf"
+      "base": "elemental",
+      "palette": "#dc143c",
+      "props": [
+        "scales"
       ],
-      "accessoryColor": "#FF1493"
+      "archetypeId": "subpoena-phoenix"
     },
-    "lastActive": "2025-08-16T16:37:45.392Z"
+    "lastActive": "2025-08-16T04:50:26.783Z"
+  },
+  {
+    "id": "bot_contracts_wizard",
+    "username": "ContractsWizard",
+    "displayName": "ContractsWizard",
+    "lawSchool": "NYU Law",
+    "level": 16,
+    "points": 2950,
+    "totalWins": 49,
+    "totalLosses": 7,
+    "avatarData": {
+      "base": "celestial",
+      "palette": "#ff69b4",
+      "props": [
+        "law_diploma"
+      ],
+      "archetypeId": "fiduciary-seraph"
+    },
+    "lastActive": "2025-08-16T15:49:57.520Z"
   },
   {
     "id": "bot_lawbeast_99",
     "username": "LawBeast99",
     "displayName": "LawBeast99",
     "lawSchool": "Harvard Law",
-    "level": 18,
-    "points": 3442,
-    "totalWins": 55,
-    "totalLosses": 16,
+    "level": 15,
+    "points": 2850,
+    "totalWins": 47,
+    "totalLosses": 8,
     "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#fdbcb4",
-      "hairStyle": "long",
-      "hairColor": "#8B4513",
-      "clothingStyle": "blazer",
-      "clothingColor": "#1c1c1c",
-      "accessories": [
-        "glasses"
+      "base": "humanoid",
+      "palette": "#dc143c",
+      "props": [
+        "gavel"
       ],
-      "accessoryColor": "#333333"
+      "archetypeId": "due-diligence-dragon"
     },
-    "lastActive": "2025-08-16T16:37:45.392Z"
-  },
-  {
-    "id": "bot_legal_eagle_420",
-    "username": "LegalEagle420",
-    "displayName": "LegalEagle420",
-    "lawSchool": "Yale Law",
-    "level": 16,
-    "points": 3117,
-    "totalWins": 49,
-    "totalLosses": 18,
-    "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#ffdbac",
-      "hairStyle": "short",
-      "hairColor": "#000000",
-      "clothingStyle": "suit",
-      "clothingColor": "#2C3E50",
-      "accessories": [],
-      "accessoryColor": "#000000"
-    },
-    "lastActive": "2025-08-16T04:40:11.923Z"
+    "lastActive": "2025-08-15T21:12:09.496Z"
   },
   {
     "id": "bot_justice_ninja",
     "username": "JusticeNinja",
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
-    "level": 16,
-    "points": 3022,
-    "totalWins": 53,
-    "totalLosses": 15,
+    "level": 14,
+    "points": 2650,
+    "totalWins": 42,
+    "totalLosses": 11,
     "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#F4A460",
-      "hairStyle": "wavy",
-      "hairColor": "#8B4513",
-      "clothingStyle": "shirt",
-      "clothingColor": "#4169E1",
-      "accessories": [
-        "watch"
+      "base": "undead",
+      "palette": "#2e8b57",
+      "props": [
+        "briefcase"
       ],
-      "accessoryColor": "#C0C0C0"
+      "archetypeId": "suppression-wraith"
     },
-    "lastActive": "2025-08-16T16:07:51.307Z"
+    "lastActive": "2025-08-16T01:58:31.364Z"
+  },
+  {
+    "id": "bot_legal_eagle_420",
+    "username": "LegalEagle420",
+    "displayName": "LegalEagle420",
+    "lawSchool": "Yale Law",
+    "level": 12,
+    "points": 2400,
+    "totalWins": 38,
+    "totalLosses": 12,
+    "avatarData": {
+      "base": "beast",
+      "palette": "#4169e1",
+      "props": [
+        "scales"
+      ],
+      "archetypeId": "miranda-hawk"
+    },
+    "lastActive": "2025-08-16T08:25:48.975Z"
   },
   {
     "id": "bot_verdict_viper",
     "username": "VerdictViper",
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
-    "level": 14,
-    "points": 2639,
-    "totalWins": 44,
-    "totalLosses": 15,
+    "level": 13,
+    "points": 2300,
+    "totalWins": 35,
+    "totalLosses": 13,
     "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#DEB887",
-      "hairStyle": "neat",
-      "hairColor": "#2F4F4F",
-      "clothingStyle": "polo",
-      "clothingColor": "#228B22",
-      "accessories": [
-        "badge"
+      "base": "alien",
+      "palette": "#32cd32",
+      "props": [
+        "legal_pad"
       ],
-      "accessoryColor": "#FFD700"
+      "archetypeId": "viewpoint-viper"
     },
-    "lastActive": "2025-08-16T16:46:10.541Z"
+    "lastActive": "2025-08-16T11:12:04.490Z"
   },
   {
     "id": "bot_objection_hero",
     "username": "ObjectionHero",
     "displayName": "ObjectionHero",
     "lawSchool": "UChicago Law",
-    "level": 13,
-    "points": 2476,
-    "totalWins": 38,
-    "totalLosses": 18,
+    "level": 11,
+    "points": 2100,
+    "totalWins": 32,
+    "totalLosses": 15,
     "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#FFCCCB",
-      "hairStyle": "short",
-      "hairColor": "#696969",
-      "clothingStyle": "suit",
-      "clothingColor": "#191970",
-      "accessories": [
-        "glasses"
+      "base": "construct",
+      "palette": "#ff8c00",
+      "props": [
+        "gavel"
       ],
-      "accessoryColor": "#2F4F4F"
+      "archetypeId": "covenant-golem"
     },
-    "lastActive": "2025-08-16T04:40:11.923Z"
+    "lastActive": "2025-08-15T17:28:44.827Z"
   },
   {
     "id": "bot_statute_slayer",
     "username": "StatuteSlayer",
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
-    "level": 12,
-    "points": 2223,
-    "totalWins": 32,
-    "totalLosses": 25,
+    "level": 10,
+    "points": 1850,
+    "totalWins": 28,
+    "totalLosses": 18,
     "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#CD853F",
-      "hairStyle": "braided",
-      "hairColor": "#000000",
-      "clothingStyle": "cardigan",
-      "clothingColor": "#FF6B6B",
-      "accessories": [
-        "pendant"
+      "base": "undead",
+      "palette": "#ff1493",
+      "props": [
+        "codex"
       ],
-      "accessoryColor": "#4169E1"
+      "archetypeId": "brady-banshee"
     },
-    "lastActive": "2025-08-16T02:57:53.039Z"
+    "lastActive": "2025-08-16T04:47:14.357Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

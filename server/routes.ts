@@ -1895,6 +1895,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to reinitialize bots with correct avatar data
+  app.post("/api/admin/init-bots", async (req, res) => {
+    try {
+      const leaderboard = await import('./services/leaderboard.js');
+      await leaderboard.initializeBots();
+      res.json({ success: true, message: "Bots reinitialized with correct avatar data" });
+    } catch (error) {
+      console.error("Error initializing bots:", error);
+      res.status(500).json({ message: "Failed to initialize bots" });
+    }
+  });
+
   // Admin endpoint to load cached questions into database
   app.post("/api/admin/load-cached-questions", async (req, res) => {
     try {
