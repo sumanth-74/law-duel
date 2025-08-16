@@ -5,9 +5,10 @@ Law Duel is a competitive legal education game designed for bar exam preparation
 
 ## Recent Changes (Aug 16, 2025)
 - **Fixed friend challenge system**: Replaced mock/placeholder code with real API integration for friend matches. Friend challenges now properly search for users, create async matches on the server, and store them in the database.
+- **Prevented duplicate matches**: Added logic to ensure only one active match can exist between any two players. When attempting to create a new match with someone you're already playing, the system returns the existing match instead.
 - **Token-based authentication implemented**: Added JWT token authentication as a fallback to bypass persistent cookie/session issues across different domains. System now supports dual authentication (cookies + Bearer tokens).
 - **Authentication flow enhanced**: Server issues JWT tokens on login/register, client stores them in localStorage, and all API requests include Authorization headers. This ensures authentication works on any domain including lawduel.net.
-- **Friend match flow working**: Users can now enter a friend's username, the system verifies they exist, creates an async match, and both players can access it through their inbox for asynchronous gameplay.
+- **Friend match flow working**: Users can now enter a friend's username, the system verifies they exist, creates or returns existing async match, and both players can access it through their inbox for asynchronous gameplay.
 - **Beta-ready system**: Both authentication and friend challenges work reliably across all environments, ready for immediate beta launch on lawduel.net
 
 ## User Preferences

@@ -76,6 +76,25 @@ class AsyncDuels {
       // Direct challenge by username
       opponent = await storage.getUserByUsername(opponentUsername.replace('@', ''));
       if (!opponent) throw new Error('Opponent not found');
+      
+      // Check if an active match already exists between these two players
+      const existingMatch = Object.values(this.matches).find(match => {
+        if (match.status !== 'active') return false;
+        if (match.isBotMatch) return false; // Allow multiple bot matches
+        
+        const playerIds = match.players.map(p => p.id);
+        return playerIds.includes(userId) && playerIds.includes(opponent.id);
+      });
+      
+      if (existingMatch) {
+        // Return the existing match instead of creating a new one
+        console.log(`Found existing active match between ${user.username} and ${opponent.username}: ${existingMatch.id}`);
+        return { 
+          matchId: existingMatch.id, 
+          match: existingMatch,
+          existing: true 
+        };
+      }
     } else {
       // Quick Match - check queue first
       const queueKey = `${subject}_Bar`; // Assume Bar for now

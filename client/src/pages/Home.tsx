@@ -200,17 +200,27 @@ export default function Home() {
         }
       );
 
-      toast({
-        title: "Game Started!",
-        description: `New game with ${gameSettings.friendUsername}`,
-        variant: "default"
-      });
+      const data = await response.json();
+      
+      // Check if this is an existing match or a new one
+      if (data.existing) {
+        toast({
+          title: "Existing Match Found",
+          description: `You already have an active match with ${gameSettings.friendUsername}. Opening that match.`,
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "Game Started!",
+          description: `New game with ${gameSettings.friendUsername}`,
+          variant: "default"
+        });
+      }
 
       // Clear the username field
       setGameSettings(prev => ({ ...prev, friendUsername: '' }));
       
       // Open the async match directly
-      const data = await response.json();
       if (data.matchId) {
         setShowAsyncMatch(data.matchId);
       }
@@ -461,31 +471,43 @@ export default function Home() {
       
       const matchData = await createMatchResponse.json();
       
-      // Set up the duel data with the friend
-      setOpponent(friendData);
-      setDuelData({
-        roomCode: matchData.matchId,
-        subject: gameSettings.subject,
-        bestOf: 10,
-        ranked: true,
-        stake: 10,
-        asyncMatch: matchData.match // Store the async match data
-      });
-      
-      toast({
-        title: "Match created!",
-        description: `Started async duel with ${friendData.displayName || friendData.username}`,
-      });
-      
-      // For async matches, we should navigate to a different view
-      // For now, show the match has been created and return to menu
-      setTimeout(() => {
-        setGameMode('menu');
+      // Check if this is an existing match or a new one
+      if (matchData.existing) {
         toast({
-          title: "Check your inbox",
-          description: "Your async match has been created. Check your inbox to play!",
+          title: "Existing match found",
+          description: `You already have an active match with ${friendData.displayName || friendData.username}. Opening that match instead.`,
         });
-      }, 2000);
+        
+        // Open the existing match
+        setShowAsyncMatch(matchData.matchId);
+        setGameMode('menu');
+      } else {
+        // New match created
+        setOpponent(friendData);
+        setDuelData({
+          roomCode: matchData.matchId,
+          subject: gameSettings.subject,
+          bestOf: 10,
+          ranked: true,
+          stake: 10,
+          asyncMatch: matchData.match // Store the async match data
+        });
+        
+        toast({
+          title: "Match created!",
+          description: `Started async duel with ${friendData.displayName || friendData.username}`,
+        });
+        
+        // For async matches, we should navigate to a different view
+        // For now, show the match has been created and return to menu
+        setTimeout(() => {
+          setGameMode('menu');
+          toast({
+            title: "Check your inbox",
+            description: "Your async match has been created. Check your inbox to play!",
+          });
+        }, 2000);
+      }
       
     } catch (error) {
       console.error('Error creating friend match:', error);
