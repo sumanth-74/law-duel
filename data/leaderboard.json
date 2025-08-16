@@ -166,9 +166,9 @@
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 15,
-    "points": 2919,
+    "points": 2974,
     "totalWins": 46,
-    "totalLosses": 17,
+    "totalLosses": 18,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#ffdbac",
@@ -179,7 +179,7 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-16T01:49:51.785Z"
+    "lastActive": "2025-08-16T02:39:01.224Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -209,9 +209,9 @@
     "username": "VerdictViper",
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
-    "level": 13,
-    "points": 2590,
-    "totalWins": 42,
+    "level": 14,
+    "points": 2600,
+    "totalWins": 43,
     "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
@@ -225,7 +225,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-15T21:58:15.899Z"
+    "lastActive": "2025-08-16T02:32:07.086Z"
   },
   {
     "id": "bot_objection_hero",
@@ -452,5 +452,25 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-14T21:47:31.866Z"
+  },
+  {
+    "id": "e36e0bc8-a22b-4af9-a7e8-c4176c794d58",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-16T02:42:19.570Z"
+  },
+  {
+    "id": "e8798666-c812-4d92-9490-92ae23bedd4c",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-16T02:42:50.736Z"
   }
 ]

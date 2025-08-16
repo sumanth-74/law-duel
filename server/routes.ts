@@ -793,13 +793,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/solo-challenge/start', requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;
-      const { subject } = req.body;
+      const { subject, questionType } = req.body;
       
       if (!subject) {
         return res.status(400).json({ message: "Subject is required" });
       }
 
-      const result = await soloChallengeService.startChallenge(userId, subject);
+      const result = await soloChallengeService.startChallenge(userId, subject, questionType || 'bar-exam');
       res.json(result);
     } catch (error: any) {
       console.error("Error starting solo challenge:", error);

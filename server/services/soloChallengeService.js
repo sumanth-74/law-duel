@@ -41,7 +41,7 @@ class SoloChallengeService {
   }
 
   // Start a new solo challenge
-  async startChallenge(userId, subject) {
+  async startChallenge(userId, subject, questionType = 'bar-exam') {
     // Check if user has exhausted their lives and is in cooldown
     const existingChallenge = this.getTodaysChallenge(userId);
     if (existingChallenge && existingChallenge.livesRemaining === 0) {
@@ -58,12 +58,13 @@ class SoloChallengeService {
     const challengeId = `solo_${userId}_${Date.now()}`;
     
     // Get first question (difficulty 1)
-    const firstQuestion = await this.generateQuestion(subject, 1);
+    const firstQuestion = await this.generateQuestion(subject, 1, questionType);
     
     const challenge = {
       id: challengeId,
       userId,
       subject,
+      questionType, // Store the question type in the challenge
       livesRemaining: 3, // 3 lives total
       round: 1,
       score: 0,
@@ -96,11 +97,11 @@ class SoloChallengeService {
   }
 
   // Generate a question based on difficulty level
-  async generateQuestion(subject, difficulty) {
+  async generateQuestion(subject, difficulty, questionType = 'bar-exam') {
     try {
       // Use the question cache for instant questions
       const questionCache = (await import('./questionCache.js')).default;
-      const question = await questionCache.getQuestion(subject, false); // Use cache for speed
+      const question = await questionCache.getQuestion(subject, false, questionType); // Pass questionType to cache
       
       // Ensure we have a proper explanation
       const explanation = question.explanationLong || question.explanation || 
@@ -114,6 +115,7 @@ class SoloChallengeService {
         explanation: explanation,
         subject,
         difficulty,
+        questionType,
         round: difficulty // Essentially the same for solo challenges
       };
     } catch (error) {
@@ -157,7 +159,7 @@ class SoloChallengeService {
     
     // Generate a question for the current difficulty to check the answer
     // This ensures consistency even with dynamic question generation
-    const question = await this.generateQuestion(challenge.subject, challenge.difficulty);
+    const question = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
     const isCorrect = userAnswer === question.correctAnswer;
     
     let livesLost = 0;
@@ -248,7 +250,7 @@ class SoloChallengeService {
       throw new Error('No lives remaining');
     }
 
-    const nextQuestion = await this.generateQuestion(challenge.subject, challenge.difficulty);
+    const nextQuestion = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
     challenge.currentQuestionId = nextQuestion.id;
     
     await this.saveToFile();
@@ -267,7 +269,7 @@ class SoloChallengeService {
     
     if (challenge) {
       // Re-generate the same question details (this is a limitation but workable)
-      const question = await this.generateQuestion(challenge.subject, challenge.difficulty);
+      const question = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
       return {
         id: questionId,
         correctAnswer: question.correctAnswer,

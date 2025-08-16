@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Heart, Flame, Trophy, Crown, Zap } from 'lucide-react';
+import { ArrowLeft, Heart, Flame, Trophy, Crown, Zap, Shield, GraduationCap, BookOpen } from 'lucide-react';
 import LawDuelLogo from '@/components/LawDuelLogo';
 
 
@@ -58,6 +58,7 @@ interface QuestionResult {
 export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const { toast } = useToast();
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'result' | 'game-over'>('setup');
+  const [questionType, setQuestionType] = useState<'bar-exam' | 'real-world'>('bar-exam');
   const [subject, setSubject] = useState('Mixed Questions');
   const [challenge, setChallenge] = useState<SoloChallenge | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<SoloQuestion | null>(null);
@@ -95,7 +96,10 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       setGeneratingQuestion(true);
       const response = await fetch('/api/solo-challenge/start', {
         method: 'POST',
-        body: JSON.stringify({ subject }),
+        body: JSON.stringify({ 
+          subject,
+          questionType // Pass the question type to the backend
+        }),
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });
@@ -249,6 +253,28 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div>
+            <label className="text-sm font-medium mb-2 block text-ink">Question Type</label>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                variant={questionType === 'bar-exam' ? 'default' : 'outline'}
+                onClick={() => setQuestionType('bar-exam')}
+                className={`justify-start ${questionType === 'bar-exam' ? 'bg-arcane' : ''}`}
+              >
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Bar Exam / Law School
+              </Button>
+              <Button
+                variant={questionType === 'real-world' ? 'default' : 'outline'}
+                onClick={() => setQuestionType('real-world')}
+                className={`justify-start ${questionType === 'real-world' ? 'bg-arcane' : ''}`}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Real-World Law
+              </Button>
+            </div>
+          </div>
+
           <div>
             <label className="text-sm font-medium mb-2 block text-ink">Subject</label>
             <Select value={subject} onValueChange={setSubject}>

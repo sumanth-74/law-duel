@@ -63,8 +63,13 @@ function ruleHint(subject, topic) {
 }
 
 // Build a strong prompt with freshness nonce and difficulty
-function buildPrompt(subject, topic, rule, difficulty = 1) {
+function buildPrompt(subject, topic, rule, difficulty = 1, questionType = 'bar-exam') {
   const nonce = crypto.randomBytes(6).toString("hex");
+  
+  // Generate real-world law questions for practical legal knowledge
+  if (questionType === 'real-world') {
+    return buildRealWorldPrompt(subject, topic, difficulty, nonce);
+  }
   
   // Difficulty modifiers similar to solo challenges
   const difficultyDescriptions = {
@@ -125,11 +130,85 @@ CRITICAL:
 Freshness token: ${nonce}`;
 }
 
+// Build prompt for real-world law questions (street law, practical legal knowledge)
+function buildRealWorldPrompt(subject, topic, difficulty = 1, nonce) {
+  // Map subjects to real-world scenarios
+  const realWorldTopics = {
+    "Criminal Law": ["Traffic stops", "Miranda rights", "DUI laws", "Self-defense", "Drug possession", "Theft", "Assault"],
+    "Constitutional Law": ["Free speech", "Search and seizure", "Right to remain silent", "Protests", "Recording police", "Privacy rights"],
+    "Torts": ["Car accidents", "Slip and fall", "Dog bites", "Product liability", "Defamation", "Medical malpractice"],
+    "Contracts": ["Apartment leases", "Employment contracts", "Consumer rights", "Return policies", "Warranties", "Online purchases"],
+    "Property": ["Landlord-tenant", "Homeowner rights", "Easements", "Tree disputes", "Fences", "HOA rules"],
+    "Evidence": ["What can be used in court", "Witness testimony", "Text messages as evidence", "Social media evidence", "Recording conversations"],
+    "Civil Procedure": ["Small claims court", "Serving papers", "Filing deadlines", "Jurisdiction", "Discovery process"],
+    "Mixed Questions": ["General legal knowledge", "Common legal myths", "Practical rights and responsibilities"]
+  };
+  
+  // Select appropriate real-world topic
+  const availableTopics = realWorldTopics[subject] || realWorldTopics["Mixed Questions"];
+  const realWorldTopic = availableTopics[Math.floor(Math.random() * availableTopics.length)];
+  
+  const difficultyDesc = difficulty <= 3 ? "basic" : difficulty <= 6 ? "intermediate" : "advanced";
+  
+  return `
+Generate a practical legal trivia question about real-world law that regular people encounter in everyday life.
+
+REQUIREMENTS:
+- Subject Area: ${subject}
+- Real-World Topic: ${realWorldTopic}
+- Difficulty: ${difficultyDesc}
+- EXACTLY 4 answer choices (no more, no less)
+- One correct answer
+- Scenario: Practical, relatable situation (50-100 words)
+- Focus on what people actually need to know about the law
+- No legal jargon - use plain English
+- Make it interesting and relevant to social media audiences
+
+STYLE:
+- Think "viral legal TikTok" or "street law" content
+- Questions people argue about at dinner parties
+- Legal myths vs reality
+- "What would you do?" scenarios
+- Rights people don't know they have (or don't have)
+
+RESPONSE FORMAT (JSON only):
+{
+  "subject": "${subject}",
+  "stem": "Your practical scenario here...",
+  "choices": [
+    "First answer option",
+    "Second answer option", 
+    "Third answer option",
+    "Fourth answer option"
+  ],
+  "correctIndex": 0,
+  "explanation": "Quick explanation of the correct answer",
+  "explanationLong": "Fun, engaging 3-5 sentence explanation that teaches the legal principle in plain English. Include a practical tip or surprising fact. Make it shareable!",
+  "topic": "${realWorldTopic}",
+  "difficulty": ${difficulty}
+}
+
+CRITICAL: 
+- Make it engaging and shareable
+- Test practical knowledge, not academic theory
+- Include common misconceptions as wrong answers
+- Keep language conversational
+Freshness token: ${nonce}`;
+}
+
 // OpenAI call using the working Responses API
-async function callOpenAI(prompt) {
+async function callOpenAI(prompt, questionType = 'bar-exam') {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("Missing OPENAI_API_KEY");
   }
+  
+  // Different system prompts for different question types
+  const systemPrompts = {
+    'bar-exam': "You are an expert bar exam question writer and legal educator. Generate MBE-style questions with ACCURATE legal analysis. Your explanations must cite the correct legal rules and explain precisely why each answer is right or wrong. Return ONLY valid JSON with this exact structure: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[4 complete answer texts],\"correctIndex\":0-3,\"explanation\":\"brief rule statement\",\"explanationLong\":\"comprehensive 4-7 sentence analysis with accurate legal reasoning\",\"topic\":\"...\"}",
+    'real-world': "You are a legal educator who makes law accessible and fun for everyone. Generate practical legal trivia questions about real-world situations. Use plain English, avoid jargon, and make it engaging. Think viral legal TikTok content that teaches important legal concepts. Return ONLY valid JSON with this exact structure: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[4 complete answer texts],\"correctIndex\":0-3,\"explanation\":\"quick practical explanation\",\"explanationLong\":\"engaging 3-5 sentence explanation with practical tips\",\"topic\":\"...\"}"
+  };
+  
+  const systemPrompt = systemPrompts[questionType] || systemPrompts['bar-exam'];
   
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -143,7 +222,7 @@ async function callOpenAI(prompt) {
       messages: [
         { 
           role: "system", 
-          content: "You are an expert bar exam question writer and legal educator. Generate MBE-style questions with ACCURATE legal analysis. Your explanations must cite the correct legal rules and explain precisely why each answer is right or wrong. Return ONLY valid JSON with this exact structure: {\"subject\":\"...\",\"stem\":\"...\",\"choices\":[4 complete answer texts],\"correctIndex\":0-3,\"explanation\":\"brief rule statement\",\"explanationLong\":\"comprehensive 4-7 sentence analysis with accurate legal reasoning\",\"topic\":\"...\"}" 
+          content: systemPrompt
         },
         { role: "user", content: prompt }
       ],
@@ -173,18 +252,33 @@ function normalizeChoices(raw) {
   return cleaned;
 }
 
-export async function generateFreshQuestion(subject, difficulty = 1) {
+export async function generateFreshQuestion(subject, questionTypeOrDifficulty = 1, realQuestionType = null) {
   try {
+    // Handle both old signature (subject, difficulty) and new (subject, questionType, difficulty)
+    let difficulty = 1;
+    let questionType = 'bar-exam';
+    
+    if (typeof questionTypeOrDifficulty === 'string') {
+      // New signature: (subject, questionType)
+      questionType = questionTypeOrDifficulty;
+    } else {
+      // Old signature: (subject, difficulty) or (subject, questionType, difficulty)
+      difficulty = questionTypeOrDifficulty;
+      if (realQuestionType) {
+        questionType = realQuestionType;
+      }
+    }
+    
     // Map to canonical subject name
     const canonicalSubject = SUBJECT_MAP[subject] || subject;
     const topic = randomTopic(canonicalSubject);
     const rule = ruleHint(canonicalSubject, topic);
-    const prompt = buildPrompt(canonicalSubject, topic, rule, difficulty);
+    const prompt = buildPrompt(canonicalSubject, topic, rule, difficulty, questionType);
 
     // Retry up to 3 times for novelty/validity
     let item, err;
     for (let i = 0; i < 3; i++) {
-      item = await callOpenAI(prompt);
+      item = await callOpenAI(prompt, questionType);
       item.subject = canonicalSubject;
       item.topic = item.topic || topic;
       

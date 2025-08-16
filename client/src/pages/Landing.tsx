@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import LawDuelLogo from '@/components/LawDuelLogo';
-import { BookOpen, Scale, Users, GraduationCap } from 'lucide-react';
+import { BookOpen, Scale, Users, GraduationCap, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -127,7 +127,7 @@ export default function Landing() {
           </h1>
           
           <p className="text-lg md:text-xl text-purple-200 mb-8 max-w-3xl mx-auto">
-            Master law school exams and bar review through competitive duels and daily challenges. Test your knowledge, track progress, and play with friends.
+            Master the law through competitive duels. From real-world legal knowledge to bar exam mastery. Test yourself, track progress, challenge friends.
           </p>
 
           {/* Login/Signup Form */}
@@ -179,15 +179,27 @@ export default function Landing() {
           </div>
 
           {/* Features */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <Card className="bg-black/40 border-purple-500/20">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-8 h-8 text-purple-400" />
+                </div>
+                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Real-World Law</h3>
+                <p className="text-purple-300/80 text-sm">
+                  Traffic stops, Miranda rights, DUI laws, and everyday legal knowledge
+                </p>
+              </CardContent>
+            </Card>
+
             <Card className="bg-black/40 border-purple-500/20">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <GraduationCap className="w-8 h-8 text-purple-400" />
                 </div>
-                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Law School Exams</h3>
+                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Law School</h3>
                 <p className="text-purple-300/80 text-sm">
-                  Constitutional Law, Contracts, Torts, Civil Procedure, Criminal Law, Property Law
+                  Con Law, Contracts, Torts, Civ Pro, Criminal, Property
                 </p>
               </CardContent>
             </Card>
@@ -197,9 +209,9 @@ export default function Landing() {
                 <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Scale className="w-8 h-8 text-purple-400" />
                 </div>
-                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Bar Exam Prep</h3>
+                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Bar Exam</h3>
                 <p className="text-purple-300/80 text-sm">
-                  MBE-style questions with detailed explanations and answer breakdowns
+                  MBE-style questions with detailed explanations
                 </p>
               </CardContent>
             </Card>
@@ -209,9 +221,9 @@ export default function Landing() {
                 <div className="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-purple-400" />
                 </div>
-                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Competitive Study</h3>
+                <h3 className="font-cinzel text-lg font-bold text-purple-200 mb-3">Compete</h3>
                 <p className="text-purple-300/80 text-sm">
-                  Duel other students, track progress, and climb the leaderboard
+                  Duel friends, track progress, climb leaderboard
                 </p>
               </CardContent>
             </Card>

@@ -65,30 +65,33 @@ class QuestionCacheService {
   }
 
   // Get a question from cache or generate if empty
-  async getQuestion(subject, forceNew = false) {
+  async getQuestion(subject, forceNew = false, questionType = 'bar-exam') {
     // If forcing new, generate directly without using cache
     if (forceNew) {
-      console.log(`🔥 Force generating new question for ${subject}`);
-      const question = await this.generateQuestionWithRetry(subject);
+      console.log(`🔥 Force generating new question for ${subject} (${questionType})`);
+      const question = await this.generateQuestionWithRetry(subject, questionType);
       // Don't add forced questions to cache to maintain freshness
       return question;
     }
 
-    // Initialize cache for subject if needed
-    if (!this.cache.has(subject)) {
-      this.cache.set(subject, []);
+    // Use different cache keys for different question types
+    const cacheKey = `${subject}_${questionType}`;
+    
+    // Initialize cache for subject/type if needed
+    if (!this.cache.has(cacheKey)) {
+      this.cache.set(cacheKey, []);
     }
 
-    const cachedQuestions = this.cache.get(subject);
+    const cachedQuestions = this.cache.get(cacheKey);
     
     // If we have cached questions, use one
     if (cachedQuestions.length > 0) {
       const question = cachedQuestions.shift();
-      console.log(`⚡ Using cached question for ${subject} (${cachedQuestions.length} remaining)`);
+      console.log(`⚡ Using cached question for ${subject} (${questionType}) - ${cachedQuestions.length} remaining`);
       
       // Trigger background refill if getting low
       if (cachedQuestions.length < 3) {
-        this.refillCache(subject);
+        this.refillCache(subject, questionType);
       }
       
       await this.saveCache();
@@ -96,20 +99,20 @@ class QuestionCacheService {
     }
 
     // No cached questions, generate one immediately
-    console.log(`⏰ Cache empty for ${subject}, generating question...`);
-    const question = await this.generateQuestionWithRetry(subject);
+    console.log(`⏰ Cache empty for ${subject} (${questionType}), generating question...`);
+    const question = await this.generateQuestionWithRetry(subject, questionType);
     
     // Start refilling cache in background
-    this.refillCache(subject);
+    this.refillCache(subject, questionType);
     
     return question;
   }
 
   // Generate a question with retry logic and better explanations
-  async generateQuestionWithRetry(subject, maxRetries = 3) {
+  async generateQuestionWithRetry(subject, questionType = 'bar-exam', maxRetries = 3) {
     for (let i = 0; i < maxRetries; i++) {
       try {
-        const question = await generateFreshQuestion(subject);
+        const question = await generateFreshQuestion(subject, questionType);
         
         // Ensure explanations are complete and accurate
         if (!question.explanation || question.explanation.length < 50) {
@@ -117,8 +120,9 @@ class QuestionCacheService {
           continue;
         }
         
-        // Add timestamp for cache management
+        // Add timestamp and type for cache management
         question.generatedAt = Date.now();
+        question.questionType = questionType;
         
         return question;
       } catch (error) {
@@ -129,39 +133,41 @@ class QuestionCacheService {
   }
 
   // Refill cache for a specific subject in the background
-  async refillCache(subject) {
+  async refillCache(subject, questionType = 'bar-exam') {
+    const cacheKey = `${subject}_${questionType}`;
+    
     // Prevent duplicate generation tasks
-    if (this.isGenerating.has(subject)) {
+    if (this.isGenerating.has(cacheKey)) {
       return;
     }
 
-    this.isGenerating.add(subject);
+    this.isGenerating.add(cacheKey);
     
     setTimeout(async () => {
       try {
-        const cachedQuestions = this.cache.get(subject) || [];
+        const cachedQuestions = this.cache.get(cacheKey) || [];
         const needed = this.cacheSize - cachedQuestions.length;
         
         if (needed > 0) {
-          console.log(`🔄 Refilling cache for ${subject} (generating ${needed} questions)...`);
+          console.log(`🔄 Refilling cache for ${subject} (${questionType}) - generating ${needed} questions...`);
           
           // Generate questions in parallel for speed
           const promises = [];
           for (let i = 0; i < Math.min(needed, 3); i++) { // Max 3 parallel to avoid rate limits
-            promises.push(this.generateQuestionWithRetry(subject));
+            promises.push(this.generateQuestionWithRetry(subject, questionType));
           }
           
           const newQuestions = await Promise.all(promises);
           cachedQuestions.push(...newQuestions);
-          this.cache.set(subject, cachedQuestions);
+          this.cache.set(cacheKey, cachedQuestions);
           
           await this.saveCache();
-          console.log(`✅ Cache refilled for ${subject} (now has ${cachedQuestions.length} questions)`);
+          console.log(`✅ Cache refilled for ${subject} (${questionType}) - now has ${cachedQuestions.length} questions`);
         }
       } catch (error) {
-        console.error(`Failed to refill cache for ${subject}:`, error);
+        console.error(`Failed to refill cache for ${subject} (${questionType}):`, error);
       } finally {
-        this.isGenerating.delete(subject);
+        this.isGenerating.delete(cacheKey);
       }
     }, 100); // Small delay to avoid blocking
   }
