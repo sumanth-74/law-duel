@@ -25,6 +25,12 @@ import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 import { LEVEL_TITLES, RANK_TIERS, RANK_COLORS } from '@shared/schema';
 
+// Import premium game images
+import magicalCourtroomImg from '@assets/generated_images/Magical_courtroom_library_d630a7a8.png';
+import legalWizardImg from '@assets/generated_images/Legal_wizard_character_9ff25884.png';
+import duelArenaImg from '@assets/generated_images/Duel_arena_scene_cd6aa9fd.png';
+import magicalTomeImg from '@assets/generated_images/Magical_law_tome_103fa743.png';
+
 const SUBJECTS = [
   'Mixed Questions',
   'Evidence',
@@ -848,6 +854,26 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Epic Hero Banner */}
+        <div className="mb-8 relative rounded-lg overflow-hidden">
+          <div 
+            className="absolute inset-0 opacity-40"
+            style={{
+              backgroundImage: `url(${magicalCourtroomImg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          />
+          <div className="relative z-10 bg-gradient-to-b from-transparent to-black/80 p-8 text-center">
+            <h2 className="font-cinzel text-4xl font-bold text-purple-300 mb-3">
+              ENTER THE ARCANE COURT
+            </h2>
+            <p className="text-slate-300 text-lg">
+              Master the mystical laws of the realm through epic duels
+            </p>
+          </div>
+        </div>
+
         {/* Daily Challenge */}
         <div className="mb-8">
           <Card className="bg-slate-950/80 border border-amber-500/40 hover:border-amber-500/60 transition-colors">
@@ -890,10 +916,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* Solo Mode */}
             <div>
-              <Card className="bg-slate-950/80 border border-purple-500/40 hover:border-purple-500/60 transition-colors h-full">
-
+              <Card className="bg-slate-950/80 border border-purple-500/40 hover:border-purple-500/60 transition-colors h-full overflow-hidden relative">
+                {/* Premium background image */}
+                <div 
+                  className="absolute inset-0 opacity-20 transition-opacity hover:opacity-30"
+                  style={{
+                    backgroundImage: `url(${magicalTomeImg})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                />
                 
-                <CardHeader className="pb-4">
+                <CardHeader className="pb-4 relative z-10">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-purple-600 rounded-lg flex items-center justify-center">
                       <UserIcon className="w-8 h-8 text-white" />
@@ -907,7 +941,7 @@ export default function Home() {
                   </div>
                 </CardHeader>
                 
-                <CardContent className="px-6 space-y-4">
+                <CardContent className="px-6 space-y-4 relative z-10">
                   <div className="text-slate-300 text-sm space-y-2">
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-purple-400" />
@@ -942,8 +976,17 @@ export default function Home() {
 
             {/* VS Mode */}
             <div>
-              <Card className="bg-slate-950/80 border border-orange-500/40 hover:border-orange-500/60 transition-colors h-full">
-                <CardHeader className="pb-4">
+              <Card className="bg-slate-950/80 border border-orange-500/40 hover:border-orange-500/60 transition-colors h-full overflow-hidden relative">
+                {/* Premium background image */}
+                <div 
+                  className="absolute inset-0 opacity-20 transition-opacity hover:opacity-30"
+                  style={{
+                    backgroundImage: `url(${duelArenaImg})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                />
+                <CardHeader className="pb-4 relative z-10">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-orange-600 rounded-lg flex items-center justify-center">
                       <Users className="w-8 h-8 text-white" />
@@ -957,7 +1000,7 @@ export default function Home() {
                   </div>
                 </CardHeader>
                 
-                <CardContent className="px-6 space-y-4">
+                <CardContent className="px-6 space-y-4 relative z-10">
                   <div className="space-y-3">
                     <Button 
                       onClick={() => setGameMode('vs-selection')}

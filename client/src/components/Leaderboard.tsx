@@ -12,8 +12,6 @@ interface LeaderboardProps {
 }
 
 export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
-  const [timeframe, setTimeframe] = useState<'weekly' | 'alltime'>('weekly');
-
   const { data: players = [], isLoading, error } = useQuery<User[]>({
     queryKey: [`/api/leaderboard?limit=${limit}`], // Proper query string
     refetchInterval: realTimeData ? 60000 : 30000, // Slower refresh when real-time is available
@@ -44,32 +42,13 @@ export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <h3 className="font-cinzel text-2xl font-bold">Leaderboard</h3>
+            <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">This Week</span>
             {realTimeData && realTimeData.length > 0 && (
               <div className="flex items-center gap-1 text-green-400 text-sm">
                 <Wifi className="w-4 h-4" />
                 <span>Live</span>
               </div>
             )}
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              size="sm"
-              variant={timeframe === 'weekly' ? 'default' : 'outline'}
-              onClick={() => setTimeframe('weekly')}
-              className={timeframe === 'weekly' ? 'bg-arcane text-white' : ''}
-              data-testid="button-weekly-leaderboard"
-            >
-              Weekly
-            </Button>
-            <Button
-              size="sm"
-              variant={timeframe === 'alltime' ? 'default' : 'outline'}
-              onClick={() => setTimeframe('alltime')}
-              className={timeframe === 'alltime' ? 'bg-arcane text-white' : ''}
-              data-testid="button-alltime-leaderboard"
-            >
-              All Time
-            </Button>
           </div>
         </div>
         

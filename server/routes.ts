@@ -550,15 +550,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/leaderboard", async (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 20;
+      // Use weekly ladder for the main leaderboard
+      const { getWeeklyTop50 } = await import("./services/weeklyLadder.js");
+      const weeklyLadder = await getWeeklyTop50();
       
-      // Use the leaderboard service which properly filters zero-point players
-      const { getLeaderboard } = await import("./services/leaderboard.js");
-      const leaderboard = await getLeaderboard(Math.min(limit, 12)); // Cap at 12 to avoid zero-point players
+      // Transform to match expected format
+      const leaderboard = weeklyLadder.slice(0, 12).map(player => ({
+        id: player.userId,
+        username: player.username,
+        displayName: player.username,
+        level: 1,
+        points: player.weeklyRating,
+        totalWins: player.weeklyWins,
+        totalLosses: player.weeklyLosses,
+        lawSchool: player.lawSchool
+      }));
       
       res.json(leaderboard);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch leaderboard", error: error.message });
+      res.status(500).json({ message: "Failed to fetch weekly leaderboard", error: error.message });
     }
   });
 

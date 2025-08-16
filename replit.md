@@ -3,7 +3,14 @@
 ## Overview
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
-## Recent Changes (Aug 16, 2025 - Latest)
+## Recent Changes (Aug 16, 2025 - Latest Session)
+- **WEEKLY LEADERBOARD FULLY IMPLEMENTED**: Updated API endpoint to use weekly data instead of all-time, removed toggle UI to show "This Week" permanently
+- **PREMIUM GAME IMAGES ADDED**: Generated and integrated 4 Harry Potter meets Elden Ring aesthetic images (magical courtroom, legal wizard, duel arena, magical tome) into game UI
+- **UI RESPONSIVENESS COMPLETED**: Fixed logout button overflow with responsive header layout, compact button sizing, and proper flex wrapping for mobile
+- **EPIC HERO BANNER ADDED**: New premium hero section with magical courtroom background for AAA gaming aesthetic
+- **GAME MODE CARDS ENHANCED**: Solo Mode and VS Mode cards now feature premium background images with opacity transitions
+
+## Recent Changes (Aug 16, 2025 - Earlier)
 - **Implemented 10-tier rank progression system**: Replaced old rank system with fantasy-legal hybrid ranks: Novice Scribe → Apprentice Clerk → Pupil Advocate → Journeyman Counsel → Adept Barrister → Master Pleader → Counselor of the Realm → Magister of Law → Archon Jurist → Supreme Arbiter
 - **Added rank color-coding**: Bronze (tiers 1-2) → Silver (3-4) → Gold (5-6) → Purple (7-8) → Obsidian (9-10) for visual progression and dopamine hits
 - **Removed ALL casino animations**: Eliminated all animate-pulse, shimmer, and scale effects per user feedback about "tacky overdone" appearance
