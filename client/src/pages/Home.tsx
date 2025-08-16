@@ -969,7 +969,7 @@ export default function Home() {
                       <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-xl"></div>
                       <div className="relative">
                         <div className="text-xs text-purple-300 mb-1 font-bold uppercase tracking-wider">Mode</div>
-                        <div className="text-lg font-black text-transparent bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text">ADAPTIVE</div>
+                        <div className="text-base font-black text-transparent bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text">DYNAMIC</div>
                       </div>
                     </div>
                     <div className="relative bg-gradient-to-br from-red-900/50 via-pink-900/50 to-red-900/50 rounded-xl p-4 border-2 border-red-400/40 group-hover:border-red-400/60 transition-all shadow-inner">
@@ -987,7 +987,7 @@ export default function Home() {
                       <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-emerald-600/10 rounded-xl"></div>
                       <div className="relative">
                         <div className="text-xs text-green-300 mb-1 font-bold uppercase tracking-wider">Reward</div>
-                        <div className="text-lg font-black text-transparent bg-gradient-to-r from-green-200 to-emerald-200 bg-clip-text">EPIC XP</div>
+                        <div className="text-base font-black text-transparent bg-gradient-to-r from-green-200 to-emerald-200 bg-clip-text">MASTERY</div>
                       </div>
                     </div>
                   </div>
