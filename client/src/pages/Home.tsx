@@ -720,15 +720,15 @@ export default function Home() {
           {/* Header card */}
           <div className="bg-slate-950/80 rounded-2xl border border-purple-500/30 p-6 shadow-lg">
             
-            <div className="relative flex items-center justify-between">
-              <div className="flex items-center space-x-6">
+            <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
                 {/* Logo */}
-                <LawDuelLogo size="lg" showText={true} />
+                <LawDuelLogo size="lg" showText={true} className="flex-shrink-0" />
                 
                 {/* Character Profile */}
-                <div className="flex items-center space-x-5">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
                   {/* Avatar */}
-                  <div className="bg-slate-900 rounded-full p-1">
+                  <div className="bg-slate-900 rounded-full p-1 flex-shrink-0">
                     <AvatarRenderer
                       avatarData={character.avatarData as any}
                       level={character.level}
@@ -736,17 +736,17 @@ export default function Home() {
                     />
                   </div>
                   
-                  <div>
+                  <div className="flex-1 min-w-0">
                     {/* Name and badges */}
-                    <div className="flex items-center gap-3 flex-wrap mb-2">
-                      <h1 className="font-cinzel text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <h1 className="font-cinzel text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
                         {character.displayName}
                       </h1>
-                      <Badge className="bg-purple-600/30 text-purple-200 border-purple-500/50 px-3 py-1">
+                      <Badge className="bg-purple-600/30 text-purple-200 border-purple-500/50 px-2 py-1 text-xs">
                         @{character.username}
                       </Badge>
                       {character.lawSchool && (
-                        <Badge className="bg-amber-600/30 text-amber-200 border-amber-500/50 px-3 py-1">
+                        <Badge className="bg-amber-600/30 text-amber-200 border-amber-500/50 px-2 py-1 text-xs">
                           {character.lawSchool.includes('Law School') ? 
                             character.lawSchool.split(' Law School')[0] : 
                             character.lawSchool.split(' ')[0]
@@ -756,53 +756,51 @@ export default function Home() {
                     </div>
                     
                     {/* Stats bar */}
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <div className="text-cyan-400 text-sm">LEVEL</div>
-                        <div className="bg-gradient-to-r from-cyan-600/30 to-blue-600/30 px-3 py-1 rounded-lg border border-cyan-500/30">
-                          <span className="font-bold text-cyan-200">{character.level}</span>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <div className="flex items-center gap-1">
+                        <div className="text-cyan-400 text-xs">LEVEL</div>
+                        <div className="bg-gradient-to-r from-cyan-600/30 to-blue-600/30 px-2 py-0.5 rounded border border-cyan-500/30">
+                          <span className="font-bold text-cyan-200 text-sm">{character.level}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-purple-400 text-sm">POINTS</div>
-                        <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 px-3 py-1 rounded-lg border border-purple-500/30">
-                          <span className="font-bold text-purple-200">{character.points.toLocaleString()}</span>
+                      <div className="flex items-center gap-1">
+                        <div className="text-purple-400 text-xs">POINTS</div>
+                        <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 px-2 py-0.5 rounded border border-purple-500/30">
+                          <span className="font-bold text-purple-200 text-sm">{character.points.toLocaleString()}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-green-400 text-sm">PROGRESS</div>
-                        <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 px-3 py-1 rounded-lg border border-green-500/30">
-                          <span className="font-bold text-green-200">{character.xp}</span>
+                      <div className="flex items-center gap-1">
+                        <div className="text-green-400 text-xs">XP</div>
+                        <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 px-2 py-0.5 rounded border border-green-500/30">
+                          <span className="font-bold text-green-200 text-sm">{character.xp}</span>
                         </div>
                       </div>
                     </div>
                     
                     {/* Rank Display */}
-                    <div className="mt-3 flex items-center gap-4">
+                    <div className="mt-2 flex items-center gap-3 flex-wrap">
                       {(() => {
                         const currentRank = RANK_TIERS.find(tier => character.overallElo >= tier.minElo && character.overallElo <= tier.maxElo) || RANK_TIERS[0];
                         const rankColor = RANK_COLORS[currentRank.color as keyof typeof RANK_COLORS];
                         const nextRank = RANK_TIERS[RANK_TIERS.indexOf(currentRank) + 1];
-                        const progressToNext = nextRank ? character.overallElo - currentRank.minElo : 0;
-                        const totalNeeded = nextRank ? nextRank.minElo - currentRank.minElo : 0;
                         
                         return (
                           <>
-                            <div className={`flex items-center gap-2 px-3 py-1 rounded-lg ${rankColor.bg} ${rankColor.border} border`}>
-                              <Trophy className={`w-4 h-4 ${rankColor.text}`} />
-                              <span className={`${rankColor.text} font-cinzel font-bold text-sm`}>
+                            <div className={`flex items-center gap-1 px-2 py-0.5 rounded ${rankColor.bg} ${rankColor.border} border`}>
+                              <Trophy className={`w-3 h-3 ${rankColor.text}`} />
+                              <span className={`${rankColor.text} font-cinzel font-bold text-xs`}>
                                 {currentRank.name}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <div className="text-slate-400 text-sm">ELO</div>
-                              <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 px-2 py-1 rounded">
-                                <span className="font-bold text-slate-200">{character.overallElo}</span>
+                            <div className="flex items-center gap-1">
+                              <div className="text-slate-400 text-xs">ELO</div>
+                              <div className="bg-slate-800/50 px-2 py-0.5 rounded">
+                                <span className="font-bold text-slate-200 text-sm">{character.overallElo}</span>
                               </div>
                             </div>
                             {nextRank && (
-                              <div className="text-purple-300 text-sm">
-                                Next: <span className="font-bold text-cyan-300">{nextRank.name}</span> at {nextRank.minElo} ELO
+                              <div className="text-purple-300 text-xs">
+                                Next: <span className="font-bold text-cyan-300">{nextRank.name}</span> ({nextRank.minElo})
                               </div>
                             )}
                           </>
@@ -814,37 +812,34 @@ export default function Home() {
               </div>
               
               {/* Action buttons - Premium Style */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <Button 
                   onClick={() => setShowCharacterCreation(true)} 
-                  className="relative group bg-gradient-to-r from-purple-900/70 to-indigo-900/70 hover:from-purple-800/80 hover:to-indigo-800/80 border-2 border-purple-500/60 hover:border-purple-400/80 text-purple-100 px-4 py-2 transition-all duration-300 shadow-lg hover:shadow-purple-500/40"
+                  className="bg-purple-900/70 hover:bg-purple-800/80 border border-purple-500/60 hover:border-purple-400/80 text-purple-100 px-3 py-1.5 transition-all duration-200"
                   size="sm"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-md"></span>
-                  <span className="relative flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
-                    <Edit className="h-4 w-4" />
+                  <span className="flex items-center gap-1 font-bold text-xs">
+                    <Edit className="h-3 w-3" />
                     EDIT
                   </span>
                 </Button>
                 <Button
                   onClick={() => window.location.href = '/stats'}
-                  className="relative group bg-gradient-to-r from-cyan-900/70 to-blue-900/70 hover:from-cyan-800/80 hover:to-blue-800/80 border-2 border-cyan-500/60 hover:border-cyan-400/80 text-cyan-100 px-4 py-2 transition-all duration-300 shadow-lg hover:shadow-cyan-500/40"
+                  className="bg-cyan-900/70 hover:bg-cyan-800/80 border border-cyan-500/60 hover:border-cyan-400/80 text-cyan-100 px-3 py-1.5 transition-all duration-200"
                   size="sm"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-md"></span>
-                  <span className="relative flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
-                    <BarChart3 className="h-4 w-4" />
+                  <span className="flex items-center gap-1 font-bold text-xs">
+                    <BarChart3 className="h-3 w-3" />
                     STATS
                   </span>
                 </Button>
                 <Button 
                   onClick={() => logout.mutate()} 
-                  className="relative group bg-gradient-to-r from-red-900/70 to-orange-900/70 hover:from-red-800/80 hover:to-orange-800/80 border-2 border-red-500/60 hover:border-red-400/80 text-red-100 px-4 py-2 transition-all duration-300 shadow-lg hover:shadow-red-500/40"
+                  className="bg-red-900/70 hover:bg-red-800/80 border border-red-500/60 hover:border-red-400/80 text-red-100 px-3 py-1.5 transition-all duration-200"
                   size="sm"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-red-600 to-orange-600 opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-md"></span>
-                  <span className="relative flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
-                    <LogOut className="h-4 w-4" />
+                  <span className="flex items-center gap-1 font-bold text-xs">
+                    <LogOut className="h-3 w-3" />
                     LOGOUT
                   </span>
                 </Button>
