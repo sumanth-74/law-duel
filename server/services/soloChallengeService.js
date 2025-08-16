@@ -143,7 +143,7 @@ class SoloChallengeService {
   }
 
   // Submit an answer to a challenge
-  async submitAnswer(challengeId, questionId, userAnswer) {
+  async submitAnswer(challengeId, questionId, userAnswer, timeToAnswer = null) {
     // Import subtopic tracking
     const { subtopicProgressService } = await import('./subtopicProgressService.js');
     const challenge = this.activeChallenges.get(challengeId);
@@ -162,11 +162,29 @@ class SoloChallengeService {
     
     let livesLost = 0;
     let pointsEarned = 0;
+    let speedBonus = 0;
     let newDifficulty = challenge.difficulty;
 
     if (isCorrect) {
-      // Correct answer: earn points based on difficulty
-      pointsEarned = challenge.difficulty * 10 + 5; // Higher difficulty = more points
+      // Calculate base points based on difficulty
+      const basePoints = challenge.difficulty * 10 + 5;
+      
+      // Calculate speed bonus (scaled by difficulty - harder questions give more bonus)
+      if (timeToAnswer !== null) {
+        const difficultyMultiplier = 1 + (challenge.difficulty * 0.1); // 1.1x at diff 1, 2.0x at diff 10
+        
+        if (timeToAnswer <= 5) {
+          speedBonus = Math.floor(basePoints * 0.5 * difficultyMultiplier); // 50% bonus for ≤5s
+        } else if (timeToAnswer <= 10) {
+          speedBonus = Math.floor(basePoints * 0.3 * difficultyMultiplier); // 30% bonus for ≤10s
+        } else if (timeToAnswer <= 15) {
+          speedBonus = Math.floor(basePoints * 0.15 * difficultyMultiplier); // 15% bonus for ≤15s
+        } else if (timeToAnswer <= 20) {
+          speedBonus = Math.floor(basePoints * 0.05 * difficultyMultiplier); // 5% bonus for ≤20s
+        }
+      }
+      
+      pointsEarned = basePoints + speedBonus;
       newDifficulty = Math.min(challenge.difficulty + 1, 10); // Cap at difficulty 10
     } else {
       // Wrong answer: lose a life
@@ -214,7 +232,8 @@ class SoloChallengeService {
       explanation: question.explanation,
       livesLost,
       newDifficulty,
-      pointsEarned
+      pointsEarned,
+      speedBonus
     };
   }
 

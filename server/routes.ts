@@ -810,14 +810,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submit answer to solo challenge
   app.post('/api/solo-challenge/answer', requireAuth, async (req: any, res) => {
     try {
-      const { challengeId, questionId, userAnswer } = req.body;
+      const { challengeId, questionId, userAnswer, timeToAnswer } = req.body;
       const userId = req.session.userId;
       
       if (challengeId === undefined || questionId === undefined || userAnswer === undefined) {
         return res.status(400).json({ message: "challengeId, questionId, and userAnswer are required" });
       }
 
-      const result = await soloChallengeService.submitAnswer(challengeId, questionId, userAnswer);
+      const result = await soloChallengeService.submitAnswer(challengeId, questionId, userAnswer, timeToAnswer);
       
       // Record daily activity for streak tracking (solo mode counts!)
       await storage.recordDailyActivity(userId);

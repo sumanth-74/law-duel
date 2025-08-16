@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Heart, Flame, Trophy, Crown } from 'lucide-react';
+import { ArrowLeft, Heart, Flame, Trophy, Crown, Zap } from 'lucide-react';
 import LawDuelLogo from '@/components/LawDuelLogo';
 
 
@@ -52,6 +52,7 @@ interface QuestionResult {
   livesLost: number;
   newDifficulty: number;
   pointsEarned: number;
+  speedBonus?: number;
 }
 
 export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
@@ -64,6 +65,8 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const [showResult, setShowResult] = useState<QuestionResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatingQuestion, setGeneratingQuestion] = useState(false);
+  const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
+  const [timeToAnswer, setTimeToAnswer] = useState<number | null>(null);
 
 
   // Check existing challenge status on component mount
@@ -105,6 +108,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       const challengeData = await response.json();
       setChallenge(challengeData.challenge);
       setCurrentQuestion(challengeData.question);
+      setQuestionStartTime(Date.now()); // Start timing
       setGameState('playing');
       setGeneratingQuestion(false);
     } catch (error: any) {
@@ -120,6 +124,10 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const submitAnswer = async () => {
     if (selectedAnswer === null || !challenge || !currentQuestion) return;
 
+    // Calculate time taken to answer
+    const answerTime = questionStartTime ? Math.floor((Date.now() - questionStartTime) / 1000) : 0;
+    setTimeToAnswer(answerTime);
+
     setIsSubmitting(true);
     try {
       const response = await fetch('/api/solo-challenge/answer', {
@@ -127,7 +135,8 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
         body: JSON.stringify({
           challengeId: challenge.id,
           questionId: currentQuestion.id,
-          userAnswer: selectedAnswer
+          userAnswer: selectedAnswer,
+          timeToAnswer: answerTime
         }),
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -205,6 +214,8 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       
       const data = await response.json();
       setCurrentQuestion(data);
+      setQuestionStartTime(Date.now()); // Start timing for new question
+      setTimeToAnswer(null); // Reset time
       setGeneratingQuestion(false);
     } catch (error: any) {
       setGeneratingQuestion(false);
@@ -269,6 +280,10 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
               <li className="flex items-center gap-2">
                 <Crown className="w-4 h-4 text-purple-400" />
                 Higher difficulty = more points
+              </li>
+              <li className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-blue-400" />
+                Speed bonus: Answer faster for extra points!
               </li>
             </ul>
           </div>
@@ -377,10 +392,25 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
 
               <div className="flex items-center justify-between text-sm mb-4">
                 <div>
-                  {showResult.isCorrect ? 
-                    <span className="text-green-400">+{showResult.pointsEarned} points earned</span> :
+                  {showResult.isCorrect ? (
+                    <div className="space-y-1">
+                      {showResult.speedBonus && showResult.speedBonus > 0 ? (
+                        <>
+                          <span className="text-green-400 block">
+                            +{showResult.pointsEarned} total points
+                          </span>
+                          <span className="text-blue-400 text-xs flex items-center gap-1">
+                            <Zap className="w-3 h-3" />
+                            {showResult.pointsEarned - showResult.speedBonus} base + {showResult.speedBonus} speed bonus ({timeToAnswer}s)
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-green-400 block">+{showResult.pointsEarned} points earned</span>
+                      )}
+                    </div>
+                  ) : (
                     <span className="text-red-400">-1 life lost</span>
-                  }
+                  )}
                 </div>
                 {!showResult.isCorrect && challenge.livesRemaining === 0 && (
                   <span className="text-red-400 font-semibold">All lives lost!</span>
