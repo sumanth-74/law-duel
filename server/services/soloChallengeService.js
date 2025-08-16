@@ -259,6 +259,23 @@ class SoloChallengeService {
     throw new Error('Question not found');
   }
 
+  // Restore lives after defeating Atticus
+  async restoreLives(userId) {
+    const todaysChallenge = this.getTodaysChallenge(userId);
+    
+    if (todaysChallenge) {
+      // Restore all lives
+      todaysChallenge.livesRemaining = 5;
+      todaysChallenge.isDailyComplete = false;
+      delete todaysChallenge.lostAllLivesAt;
+      
+      await this.saveToFile();
+      return true;
+    }
+    
+    return false;
+  }
+
   // Get challenge status
   getChallengeStatus(userId) {
     const todaysChallenge = this.getTodaysChallenge(userId);

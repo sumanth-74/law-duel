@@ -23,6 +23,7 @@ const SUBJECTS = [
 
 interface BotPracticeProps {
   onBack: () => void;
+  onLivesLost?: (challenge: SoloChallenge) => void;
 }
 
 interface SoloQuestion {
@@ -34,7 +35,7 @@ interface SoloQuestion {
   round: number;
 }
 
-interface SoloChallenge {
+export interface SoloChallenge {
   id: string;
   subject: string;
   livesRemaining: number;
@@ -53,7 +54,7 @@ interface QuestionResult {
   pointsEarned: number;
 }
 
-export default function BotPractice({ onBack }: BotPracticeProps) {
+export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const { toast } = useToast();
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'result' | 'game-over'>('setup');
   const [subject, setSubject] = useState('Mixed Questions');
@@ -153,7 +154,11 @@ export default function BotPractice({ onBack }: BotPracticeProps) {
       // Check if game over (no lives left)
       if (updatedChallenge.livesRemaining === 0) {
         setTimeout(() => {
-          setGameState('game-over');
+          if (onLivesLost) {
+            onLivesLost(updatedChallenge);
+          } else {
+            setGameState('game-over');
+          }
           setShowResult(null);
         }, 3000);
       } else {

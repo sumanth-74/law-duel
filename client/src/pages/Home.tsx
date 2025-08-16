@@ -16,6 +16,7 @@ import AsyncMatch from '@/components/AsyncMatch';
 import BotPractice from '@/components/BotPractice';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { ChatbotButton } from '@/components/ChatbotButton';
+import { AtticusDuel } from '@/components/AtticusDuel';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -68,6 +69,8 @@ export default function Home() {
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
   const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
+  const [showAtticusDuel, setShowAtticusDuel] = useState(false);
+  const [atticusCooldown, setAtticusCooldown] = useState<number | null>(null);
 
   // Fetch async inbox notifications count
   useEffect(() => {
@@ -577,6 +580,57 @@ export default function Home() {
   }
 
   if (gameMode === 'bot-practice') {
+    // If Atticus duel is active, show that instead
+    if (showAtticusDuel) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+          {/* Daily Streak at top */}
+          <div className="fixed top-4 left-4 right-4 z-10">
+            <StreakIndicator />
+          </div>
+          
+          {/* Persistent Logo and Gamer Tag - Below Streak */}
+          <div className="fixed top-20 left-4 right-4 z-10 flex items-center justify-between">
+            <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
+            <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
+              @{character.username}
+            </Badge>
+          </div>
+          
+          <div className="pt-36 px-4">
+            <AtticusDuel 
+              userId={user!.id}
+              onVictory={() => {
+                setShowAtticusDuel(false);
+                // Return to menu after victory
+                setGameMode('menu');
+                toast({
+                  title: "Victory!",
+                  description: "You've defeated Atticus and restored your lives! +100 XP bonus!",
+                  variant: "default"
+                });
+              }}
+              onDefeat={() => {
+                setShowAtticusDuel(false);
+                // Set cooldown for 24 hours
+                setAtticusCooldown(Date.now() + 24 * 60 * 60 * 1000);
+                setGameMode('menu');
+                toast({
+                  title: "Defeated",
+                  description: "Atticus has bested you. Come back tomorrow or pay to retry.",
+                  variant: "destructive"
+                });
+              }}
+              onRetreat={() => {
+                setShowAtticusDuel(false);
+                setGameMode('menu');
+              }}
+            />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         {/* Daily Streak at top */}
@@ -593,7 +647,18 @@ export default function Home() {
         </div>
         
         <div className="pt-36 px-4">
-          <BotPractice onBack={() => setGameMode('menu')} />
+          <BotPractice 
+            onBack={() => setGameMode('menu')} 
+            onLivesLost={(challenge) => {
+              // Trigger Atticus duel when lives are lost
+              setShowAtticusDuel(true);
+              toast({
+                title: "No Lives Remaining!",
+                description: "Atticus the Purple Wizard Cat challenges you!",
+                variant: "default"
+              });
+            }}
+          />
         </div>
       </div>
     );

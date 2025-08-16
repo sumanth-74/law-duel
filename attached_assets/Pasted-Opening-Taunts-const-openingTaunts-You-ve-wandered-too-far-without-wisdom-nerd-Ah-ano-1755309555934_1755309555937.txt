@@ -1,0 +1,78 @@
+Opening Taunts
+const openingTaunts = [
+  "You’ve wandered too far without wisdom, nerd.",
+  "Ah, another life squandered in folly.",
+  "Your reflexes are as dull as your legal arguments.",
+  "Behold — the purple storm of your humiliation.",
+  "I’ve batted better challengers into the litter box."
+];
+
+When Atticus Hits You
+const missTaunts = [
+  "Too slow, fledgling.",
+  "Were you aiming for me, or just swatting flies?",
+  "Missed again — your bar card is in peril.",
+  "Pathetic. I’ve seen interns with quicker paws.",
+  "That was adorable. Wrong, but adorable."
+];
+
+When You Hit Atticus
+const hitLines = [
+  "Hmph. Beginner’s luck.",
+  "A scratch? I’ve had worse in nap time.",
+  "Don’t get cocky, kitten.",
+  "You’ve got claws… but I have spells.",
+  "Impressive. Now try that twice."
+];
+
+
+If you want, I can bake these directly into your Option B reflex-duel code so they appear at the right time — Atticus would taunt you when the duel starts, after every miss, and grudgingly acknowledge hits. That would make the whole “beat me to get your lives back” moment feel more alive and memorable.
+
+Do you want me to go ahead and integrate them?
+
+You said:
+yes
+ChatGPT said:
+Answer in chat instead
+
+I can integrate those taunts directly into your Option B reflex duel so Atticus cycles between snarky openings, hit responses, and miss insults.
+
+You’d just add:
+
+// Taunt pools
+const openingTaunts = [
+  "You’ve wandered too far without wisdom, nerd.",
+  "Ah, another life squandered in folly.",
+  "Your reflexes are as dull as your legal arguments.",
+  "Behold — the purple storm of your humiliation.",
+  "I’ve batted better challengers into the litter box."
+];
+
+const missTaunts = [
+  "Too slow, fledgling.",
+  "Were you aiming for me, or just swatting flies?",
+  "Missed again — your bar card is in peril.",
+  "Pathetic. I’ve seen interns with quicker paws.",
+  "That was adorable. Wrong, but adorable."
+];
+
+const hitLines = [
+  "Hmph. Beginner’s luck.",
+  "A scratch? I’ve had worse in nap time.",
+  "Don’t get cocky, kitten.",
+  "You’ve got claws… but I have spells.",
+  "Impressive. Now try that twice."
+];
+
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+
+Then in your duel logic:
+
+Game start → setMessage(randomFrom(openingTaunts))
+
+On hit → setMessage(randomFrom(hitLines))
+
+On miss/late/early → setMessage(randomFrom(missTaunts))

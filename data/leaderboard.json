@@ -5,8 +5,8 @@
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
     "level": 22,
-    "points": 4275,
-    "totalWins": 80,
+    "points": 4330,
+    "totalWins": 81,
     "totalLosses": 10,
     "avatarData": {
       "baseModel": "male",
@@ -20,7 +20,7 @@
       ],
       "accessoryColor": "#8B0000"
     },
-    "lastActive": "2025-08-15T22:18:15.899Z"
+    "lastActive": "2025-08-16T02:04:44.703Z"
   },
   {
     "id": "bot_mbe_destroyer",
@@ -74,8 +74,8 @@
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
     "level": 18,
-    "points": 3467,
-    "totalWins": 61,
+    "points": 3485,
+    "totalWins": 62,
     "totalLosses": 11,
     "avatarData": {
       "baseModel": "female",
@@ -89,7 +89,7 @@
       ],
       "accessoryColor": "#FFD700"
     },
-    "lastActive": "2025-08-14T21:57:15.562Z"
+    "lastActive": "2025-08-16T02:04:44.703Z"
   },
   {
     "id": "bot_gavel_crusher",
@@ -120,8 +120,8 @@
     "displayName": "LawBeast99",
     "lawSchool": "Harvard Law",
     "level": 17,
-    "points": 3302,
-    "totalWins": 53,
+    "points": 3335,
+    "totalWins": 54,
     "totalLosses": 14,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#333333"
     },
-    "lastActive": "2025-08-15T22:40:47.881Z"
+    "lastActive": "2025-08-16T01:54:51.785Z"
   },
   {
     "id": "bot_contracts_wizard",
@@ -143,9 +143,9 @@
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
     "level": 17,
-    "points": 3300,
+    "points": 3316,
     "totalWins": 57,
-    "totalLosses": 10,
+    "totalLosses": 11,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#FFDAB9",
@@ -158,7 +158,28 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-16T01:43:54.990Z"
+    "lastActive": "2025-08-16T02:04:44.703Z"
+  },
+  {
+    "id": "bot_legal_eagle_420",
+    "username": "LegalEagle420",
+    "displayName": "LegalEagle420",
+    "lawSchool": "Yale Law",
+    "level": 15,
+    "points": 2919,
+    "totalWins": 46,
+    "totalLosses": 17,
+    "avatarData": {
+      "baseModel": "male",
+      "skinColor": "#ffdbac",
+      "hairStyle": "short",
+      "hairColor": "#000000",
+      "clothingStyle": "suit",
+      "clothingColor": "#2C3E50",
+      "accessories": [],
+      "accessoryColor": "#000000"
+    },
+    "lastActive": "2025-08-16T01:49:51.785Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -166,9 +187,9 @@
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 15,
-    "points": 2895,
+    "points": 2919,
     "totalWins": 49,
-    "totalLosses": 13,
+    "totalLosses": 14,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#F4A460",
@@ -181,28 +202,7 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-14T22:47:30.966Z"
-  },
-  {
-    "id": "bot_legal_eagle_420",
-    "username": "LegalEagle420",
-    "displayName": "LegalEagle420",
-    "lawSchool": "Yale Law",
-    "level": 15,
-    "points": 2887,
-    "totalWins": 45,
-    "totalLosses": 17,
-    "avatarData": {
-      "baseModel": "male",
-      "skinColor": "#ffdbac",
-      "hairStyle": "short",
-      "hairColor": "#000000",
-      "clothingStyle": "suit",
-      "clothingColor": "#2C3E50",
-      "accessories": [],
-      "accessoryColor": "#000000"
-    },
-    "lastActive": "2025-08-14T23:26:27.916Z"
+    "lastActive": "2025-08-16T02:04:44.703Z"
   },
   {
     "id": "bot_verdict_viper",
