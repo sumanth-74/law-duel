@@ -477,7 +477,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                       ✨ BEAT HIM = RESTORE ALL 3 LIVES + 100 XP! ✨
                     </div>
                     <div className="text-xs text-gray-400">
-                      (Lose and you'll have to wait 24 hours)
+                      (Lose and you'll have to wait 3 hours)
                     </div>
                   </div>
                 </div>
@@ -569,9 +569,9 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                 Difficulty level: <span className="text-purple-300 font-bold">{challenge?.difficulty || 1}</span>
               </p>
               <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-lg mt-3">
-                <p className="text-sm text-red-300 font-semibold">All 5 lives used!</p>
+                <p className="text-sm text-red-300 font-semibold">All 3 lives used!</p>
                 <p className="text-xs text-gray-400 mt-1">
-                  Come back tomorrow for 5 fresh lives. You'll need to wait 24 hours before playing again.
+                  Come back in 3 hours for 3 fresh lives. You'll need to wait 3 hours before playing again.
                 </p>
               </div>
             </div>

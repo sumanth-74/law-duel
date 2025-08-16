@@ -45,12 +45,12 @@ class SoloChallengeService {
     // Check if user has exhausted their lives and is in cooldown
     const existingChallenge = this.getTodaysChallenge(userId);
     if (existingChallenge && existingChallenge.livesRemaining === 0) {
-      // Check if 24 hours have passed since they lost all lives
+      // Check if 3 hours have passed since they lost all lives
       const lostAllLivesAt = new Date(existingChallenge.lostAllLivesAt || existingChallenge.startedAt);
       const hoursSince = (Date.now() - lostAllLivesAt.getTime()) / (1000 * 60 * 60);
       
-      if (hoursSince < 24) {
-        const hoursRemaining = Math.ceil(24 - hoursSince);
+      if (hoursSince < 3) {
+        const hoursRemaining = Math.ceil(3 - hoursSince);
         throw new Error(`All lives lost! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`);
       }
     }

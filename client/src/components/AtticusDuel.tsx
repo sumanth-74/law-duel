@@ -361,7 +361,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive }: AtticusDu
                     {battlePhase === 'defeat' && onRevive && (
                       <div className="mt-4 space-y-3">
                         <div className="text-purple-300 text-sm">
-                          24-hour cooldown activated. Come back tomorrow, or...
+                          3-hour cooldown activated. Come back in 3 hours, or...
                         </div>
                         <Button
                           onClick={onRevive}
