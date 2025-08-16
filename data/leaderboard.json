@@ -27,9 +27,9 @@
     "username": "MBEDestroyer",
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
-    "level": 21,
-    "points": 4187,
-    "totalWins": 78,
+    "level": 22,
+    "points": 4244,
+    "totalWins": 79,
     "totalLosses": 6,
     "avatarData": {
       "baseModel": "male",
@@ -43,7 +43,7 @@
       ],
       "accessoryColor": "#DAA520"
     },
-    "lastActive": "2025-08-14T22:47:30.966Z"
+    "lastActive": "2025-08-16T03:02:53.040Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -120,9 +120,9 @@
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
     "level": 17,
-    "points": 3344,
+    "points": 3354,
     "totalWins": 57,
-    "totalLosses": 12,
+    "totalLosses": 13,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#FFDAB9",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-16T02:48:12.225Z"
+    "lastActive": "2025-08-16T03:02:53.040Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -165,9 +165,9 @@
     "username": "LegalEagle420",
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
-    "level": 15,
-    "points": 2974,
-    "totalWins": 46,
+    "level": 16,
+    "points": 3022,
+    "totalWins": 47,
     "totalLosses": 18,
     "avatarData": {
       "baseModel": "male",
@@ -179,7 +179,7 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-16T02:39:01.224Z"
+    "lastActive": "2025-08-16T03:07:53.041Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -256,9 +256,9 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 12,
-    "points": 2207,
+    "points": 2223,
     "totalWins": 32,
-    "totalLosses": 24,
+    "totalLosses": 25,
     "avatarData": {
       "baseModel": "female",
       "skinColor": "#CD853F",
@@ -271,7 +271,7 @@
       ],
       "accessoryColor": "#4169E1"
     },
-    "lastActive": "2025-08-16T01:43:54.990Z"
+    "lastActive": "2025-08-16T02:57:53.039Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

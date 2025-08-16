@@ -17,10 +17,11 @@ import BotPractice from '@/components/BotPractice';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { ChatbotButton } from '@/components/ChatbotButton';
 import { AtticusDuel } from '@/components/AtticusDuel';
+import { DailyChallenges } from '@/components/DailyChallenges';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 
@@ -71,6 +72,7 @@ export default function Home() {
   const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
   const [showAtticusDuel, setShowAtticusDuel] = useState(false);
   const [atticusCooldown, setAtticusCooldown] = useState<number | null>(null);
+  const [showDailyChallenges, setShowDailyChallenges] = useState(false);
 
   // Fetch async inbox notifications count
   useEffect(() => {
@@ -783,6 +785,25 @@ export default function Home() {
           </CardContent>
         </Card>
 
+        {/* Daily Challenges & Rewards Button */}
+        <Card 
+          className="bg-gradient-to-r from-yellow-900/40 via-orange-900/40 to-yellow-900/40 border-yellow-500/30 hover:border-yellow-400/50 transition-all cursor-pointer mb-6"
+          onClick={() => setShowDailyChallenges(true)}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Trophy className="w-8 h-8 text-yellow-400" />
+                <div>
+                  <h3 className="font-cinzel text-lg font-bold text-yellow-200">Daily Challenges & Rewards</h3>
+                  <p className="text-yellow-300/70 text-sm">Complete challenges to earn XP, points and streak rewards!</p>
+                </div>
+              </div>
+              <ChevronRight className="w-6 h-6 text-yellow-400" />
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Main Game Mode Selection */}
         {gameMode === 'menu' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -1066,6 +1087,11 @@ export default function Home() {
           />
         )}
         
+        {/* Daily Challenges Modal */}
+        {showDailyChallenges && (
+          <DailyChallenges onClose={() => setShowDailyChallenges(false)} />
+        )}
+
         {/* Floating Chatbot Button */}
         <ChatbotButton 
           variant="floating"

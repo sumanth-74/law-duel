@@ -1918,6 +1918,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Daily Challenge and Rewards endpoints
+  app.get("/api/daily-challenges", requireAuth, async (req, res) => {
+    try {
+      const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
+      const challenges = dailyChallengeRewards.default.getUserDailyChallenges(req.user.id);
+      res.json({ challenges });
+    } catch (error) {
+      console.error("Error getting daily challenges:", error);
+      res.status(500).json({ message: "Failed to get daily challenges" });
+    }
+  });
+
+  app.post("/api/daily-challenges/claim/:challengeId", requireAuth, async (req, res) => {
+    try {
+      const { challengeId } = req.params;
+      const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
+      const result = dailyChallengeRewards.default.claimChallengeReward(req.user.id, challengeId);
+      
+      if (result.success) {
+        // Update user's XP and points
+        const user = await storage.getUser(req.user.id);
+        if (user) {
+          user.xp += result.rewards.xp;
+          user.points += result.rewards.points;
+          await storage.updateUser(req.user.id, user);
+        }
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error("Error claiming challenge reward:", error);
+      res.status(500).json({ message: "Failed to claim reward" });
+    }
+  });
+
+  app.get("/api/rewards/summary", requireAuth, async (req, res) => {
+    try {
+      const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
+      const summary = dailyChallengeRewards.default.getUserRewardSummary(req.user.id);
+      res.json(summary);
+    } catch (error) {
+      console.error("Error getting reward summary:", error);
+      res.status(500).json({ message: "Failed to get reward summary" });
+    }
+  });
+
+  app.get("/api/weekly-challenges", requireAuth, async (req, res) => {
+    try {
+      const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
+      const challenges = dailyChallengeRewards.default.getWeeklyChallengeProgress(req.user.id);
+      res.json({ challenges });
+    } catch (error) {
+      console.error("Error getting weekly challenges:", error);
+      res.status(500).json({ message: "Failed to get weekly challenges" });
+    }
+  });
+
   // === DUEL API ENDPOINTS ===
   
   // Duel state storage
