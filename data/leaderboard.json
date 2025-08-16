@@ -4,9 +4,9 @@
     "username": "MBEDestroyer",
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
-    "level": 21,
-    "points": 3850,
-    "totalWins": 71,
+    "level": 20,
+    "points": 3904,
+    "totalWins": 72,
     "totalLosses": 5,
     "avatarData": {
       "base": "construct",
@@ -17,7 +17,7 @@
       ],
       "archetypeId": "takeover-titan"
     },
-    "lastActive": "2025-08-15T18:32:29.722Z"
+    "lastActive": "2025-08-16T17:18:50.148Z"
   },
   {
     "id": "bot_precedent_pro",
