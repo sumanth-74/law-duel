@@ -1055,73 +1055,111 @@ export default function Home() {
           </div>
         )}
 
-        {/* VS Mode Selection Screen */}
+        {/* VS Mode Selection Screen - Premium Edition */}
         {gameMode === 'vs-selection' && (
-          <Card className="bg-black/40 border-purple-500/20 max-w-2xl mx-auto">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
-                  ⚔️ Live Duel Setup
-                </CardTitle>
-                <Button
-                  onClick={() => setGameMode('menu')}
-                  variant="ghost"
-                  size="sm"
-                  className="text-purple-400 hover:text-purple-300"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
+          <div className="relative max-w-2xl mx-auto">
+            {/* Animated glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
+            
+            <Card className="relative bg-gradient-to-br from-slate-950/95 via-purple-950/95 to-slate-950/95 border-2 border-purple-500/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+              {/* Animated background mesh */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.1)_50%,transparent_75%,transparent_100%)] bg-[length:250px_250px] animate-[shimmer_3s_linear_infinite]"></div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Question Type Selection */}
-              <div>
-                <label className="text-sm font-medium mb-3 block text-purple-300">Question Type</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
-                    variant={gameSettings.questionType === 'bar' ? 'default' : 'outline'}
-                    className={`h-auto p-4 ${
-                      gameSettings.questionType === 'bar' 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
-                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
-                    }`}
-                  >
-                    <div className="text-center">
-                      <GraduationCap className="w-6 h-6 mx-auto mb-2" />
-                      <div className="font-semibold">Bar Exam</div>
-                      <div className="text-xs opacity-80 mt-1">Professional MBE questions</div>
+              
+              <CardHeader className="relative border-b border-purple-500/20 pb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <Zap className="w-7 h-7 text-white" />
                     </div>
-                  </Button>
+                    <CardTitle className="font-cinzel text-2xl font-bold bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
+                      LIVE DUEL CONFIGURATION
+                    </CardTitle>
+                  </div>
                   <Button
-                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
-                    variant={gameSettings.questionType === 'realWorld' ? 'default' : 'outline'}
-                    className={`h-auto p-4 ${
-                      gameSettings.questionType === 'realWorld' 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
-                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
-                    }`}
+                    onClick={() => setGameMode('menu')}
+                    className="bg-gradient-to-r from-red-600/20 to-orange-600/20 hover:from-red-600/30 hover:to-orange-600/30 border border-red-500/50 text-red-200"
+                    size="sm"
                   >
-                    <div className="text-center">
-                      <Globe className="w-6 h-6 mx-auto mb-2" />
-                      <div className="font-semibold">Real-World Law</div>
-                      <div className="text-xs opacity-80 mt-1">Practical legal knowledge</div>
-                    </div>
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    BACK
                   </Button>
                 </div>
-              </div>
+              </CardHeader>
+              
+              <CardContent className="relative space-y-6 p-6">
+                {/* Question Type Selection - Premium Cards */}
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">SELECT BATTLE MODE</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="relative group">
+                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                        gameSettings.questionType === 'bar' 
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 opacity-75' 
+                          : 'opacity-0 group-hover:opacity-50'
+                      }`}></div>
+                      <Button
+                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
+                        className={`relative w-full h-auto p-5 transition-all duration-300 ${
+                          gameSettings.questionType === 'bar' 
+                            ? 'bg-gradient-to-br from-purple-900/90 to-pink-900/90 border-2 border-purple-400/60 scale-105' 
+                            : 'bg-slate-900/80 border border-purple-500/30 hover:bg-purple-950/60'
+                        }`}
+                      >
+                        <div className="text-center">
+                          <div className="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <GraduationCap className="w-8 h-8 text-white" />
+                          </div>
+                          <div className="font-bold text-lg text-purple-100">BAR EXAM</div>
+                          <div className="text-xs text-purple-300/80 mt-1">Professional MBE questions</div>
+                          {gameSettings.questionType === 'bar' && (
+                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                          )}
+                        </div>
+                      </Button>
+                    </div>
+                    
+                    <div className="relative group">
+                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                        gameSettings.questionType === 'realWorld' 
+                          ? 'bg-gradient-to-r from-cyan-600 to-blue-600 opacity-75' 
+                          : 'opacity-0 group-hover:opacity-50'
+                      }`}></div>
+                      <Button
+                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
+                        className={`relative w-full h-auto p-5 transition-all duration-300 ${
+                          gameSettings.questionType === 'realWorld' 
+                            ? 'bg-gradient-to-br from-cyan-900/90 to-blue-900/90 border-2 border-cyan-400/60 scale-105' 
+                            : 'bg-slate-900/80 border border-cyan-500/30 hover:bg-cyan-950/60'
+                        }`}
+                      >
+                        <div className="text-center">
+                          <div className="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <Globe className="w-8 h-8 text-white" />
+                          </div>
+                          <div className="font-bold text-lg text-cyan-100">REAL-WORLD</div>
+                          <div className="text-xs text-cyan-300/80 mt-1">Practical legal knowledge</div>
+                          {gameSettings.questionType === 'realWorld' && (
+                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                          )}
+                        </div>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block text-purple-300">Subject</label>
-                <Select 
-                  value={gameSettings.subject} 
-                  onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
-                >
-                  <SelectTrigger className="bg-purple-950/40 border-purple-500/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+                {/* Subject Selection - Premium Dropdown */}
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">CHOOSE BATTLEFIELD</label>
+                  <Select 
+                    value={gameSettings.subject} 
+                    onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                  >
+                    <SelectTrigger className="bg-gradient-to-r from-purple-950/60 to-pink-950/60 border border-purple-500/40 hover:border-purple-400/60 h-14 text-purple-100 font-medium">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-950/95 border-purple-500/40 backdrop-blur-xl">
                     {SUBJECTS.map(subject => (
                       <SelectItem key={subject} value={subject}>{subject}</SelectItem>
                     ))}
@@ -1129,214 +1167,272 @@ export default function Home() {
                 </Select>
               </div>
                     
+                    {/* Opponent Skill Level - Premium Selection */}
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Opponent Skill Level</label>
-                      <Select 
-                        value={gameSettings.botDifficulty}
-                        onValueChange={(value) => setGameSettings(prev => ({ ...prev, botDifficulty: value }))}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="easy">
-                            <div>
-                              <div className="font-medium">Novice</div>
-                              <div className="text-xs text-muted">Beginner level opponents</div>
+                      <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">OPPONENT DIFFICULTY</label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {[
+                          { value: 'easy', label: 'NOVICE', color: 'green', icon: '🌱' },
+                          { value: 'medium', label: 'SKILLED', color: 'yellow', icon: '⚡' },
+                          { value: 'hard', label: 'EXPERT', color: 'orange', icon: '🔥' },
+                          { value: 'expert', label: 'MASTER', color: 'red', icon: '👑' }
+                        ].map(({ value, label, color, icon }) => (
+                          <Button
+                            key={value}
+                            onClick={() => setGameSettings(prev => ({ ...prev, botDifficulty: value }))}
+                            className={`relative h-auto p-4 transition-all duration-300 ${
+                              gameSettings.botDifficulty === value
+                                ? `bg-gradient-to-br from-${color}-900/90 to-${color}-800/90 border-2 border-${color}-400/60 scale-105`
+                                : `bg-slate-900/60 border border-${color}-500/30 hover:bg-${color}-950/40`
+                            }`}
+                          >
+                            <div className="text-center">
+                              <div className="text-2xl mb-1">{icon}</div>
+                              <div className={`font-bold text-sm ${
+                                gameSettings.botDifficulty === value ? `text-${color}-100` : `text-${color}-300`
+                              }`}>
+                                {label}
+                              </div>
                             </div>
-                          </SelectItem>
-                          <SelectItem value="medium">
-                            <div>
-                              <div className="font-medium">Intermediate</div>
-                              <div className="text-xs text-muted">Average skill level</div>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="hard">
-                            <div>
-                              <div className="font-medium">Advanced</div>
-                              <div className="text-xs text-muted">Experienced players</div>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="expert">
-                            <div>
-                              <div className="font-medium">Expert</div>
-                              <div className="text-xs text-muted">Top tier opponents</div>
-                            </div>
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                            {gameSettings.botDifficulty === value && (
+                              <div className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            )}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                     
-                    <div className="pt-4">
-                      <Button onClick={handleStartBotGame} className="w-full bg-purple-600 hover:bg-purple-700 text-white" size="lg">
-                        Start Live Duel
+                    {/* Start Button - Epic Style */}
+                    <div className="pt-2">
+                      <Button 
+                        onClick={handleStartBotGame} 
+                        className="w-full relative group bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 hover:from-purple-500 hover:via-pink-500 hover:to-purple-500 text-white font-bold py-6 text-xl shadow-2xl transition-all duration-300 border-2 border-purple-400/50"
+                        size="lg"
+                      >
+                        <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                        <span className="relative flex items-center justify-center gap-3">
+                          ⚔️ INITIATE DUEL
+                          <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                        </span>
                       </Button>
-                      <p className="text-xs text-purple-300/60 text-center mt-2">
-                        Matches you with a random player or bot
+                      <p className="text-xs text-center mt-3 text-purple-300/60 uppercase tracking-wider">
+                        Instant matchmaking enabled
                       </p>
                     </div>
                   </CardContent>
                 </Card>
+              </div>
         )}
 
-        {/* Friend Challenge Screen */}
+        {/* Friend Challenge Screen - Premium Edition */}
         {gameMode === 'friend-challenge' && (
-          <Card className="bg-black/40 border-purple-500/20 max-w-2xl mx-auto">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="font-cinzel text-xl flex items-center gap-2 text-purple-300">
-                  👥 Friend Challenge
-                </CardTitle>
-                <Button
-                  onClick={() => setGameMode('menu')}
-                  variant="ghost"
-                  size="sm"
-                  className="text-purple-400 hover:text-purple-300"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
+          <div className="relative max-w-2xl mx-auto">
+            {/* Animated glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
+            
+            <Card className="relative bg-gradient-to-br from-slate-950/95 via-purple-950/95 to-slate-950/95 border-2 border-pink-500/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+              {/* Animated background mesh */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0 bg-[linear-gradient(-45deg,transparent_25%,rgba(236,72,153,0.1)_50%,transparent_75%,transparent_100%)] bg-[length:250px_250px] animate-[shimmer_3s_linear_infinite]"></div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Quick Share Section */}
-              <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 rounded-lg p-4 border border-purple-500/30">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-purple-300 flex items-center gap-2">
-                    <Share2 className="w-4 h-4" />
-                    Share Challenge Link
-                  </h3>
-                </div>
-                <div className="flex gap-2">
-                  <Input
-                    value={`${window.location.origin}/challenge/${user?.username || 'yourname'}`}
-                    readOnly
-                    className="flex-1 bg-purple-950/50 border-purple-500/30 text-purple-200"
-                  />
+              
+              <CardHeader className="relative border-b border-pink-500/20 pb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <UserPlus className="w-7 h-7 text-white" />
+                    </div>
+                    <CardTitle className="font-cinzel text-2xl font-bold bg-gradient-to-r from-pink-200 to-purple-200 bg-clip-text text-transparent">
+                      FRIEND CHALLENGE
+                    </CardTitle>
+                  </div>
                   <Button
-                    onClick={() => {
-                      const link = `${window.location.origin}/challenge/${user?.username || 'yourname'}`;
-                      navigator.clipboard.writeText(link);
-                      toast({
-                        title: "Link copied!",
-                        description: "Share this link with friends to challenge them",
-                      });
-                    }}
-                    className="bg-purple-600 hover:bg-purple-700"
+                    onClick={() => setGameMode('menu')}
+                    className="bg-gradient-to-r from-red-600/20 to-orange-600/20 hover:from-red-600/30 hover:to-orange-600/30 border border-red-500/50 text-red-200"
                     size="sm"
                   >
-                    <Copy className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    BACK
                   </Button>
                 </div>
-                <p className="text-xs text-purple-300/60 mt-2">
-                  Friends can click this link to challenge you directly
-                </p>
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-purple-500/20" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-black px-2 text-purple-400">or challenge by username</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block text-purple-300">Friend's Username</label>
-                <Input
-                  placeholder="Enter friend's username"
-                  value={gameSettings.friendUsername}
-                  onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
-                  className="w-full bg-purple-950/40 border-purple-500/30"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
-                      handleStartAsyncFriendGame();
-                    }
-                  }}
-                />
-              </div>
-
-              {/* Question Type Selection */}
-              <div>
-                <label className="text-sm font-medium mb-3 block text-purple-300">Question Type</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
-                    variant={gameSettings.questionType === 'bar' ? 'default' : 'outline'}
-                    className={`h-auto p-3 ${
-                      gameSettings.questionType === 'bar' 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
-                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
-                    }`}
-                  >
-                    <div className="text-center">
-                      <GraduationCap className="w-5 h-5 mx-auto mb-1" />
-                      <div className="font-semibold text-sm">Bar Exam</div>
-                      <div className="text-xs opacity-80">MBE questions</div>
+              </CardHeader>
+              
+              <CardContent className="relative space-y-6 p-6">
+                {/* Quick Share Section - Premium Style */}
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <div className="relative bg-gradient-to-r from-purple-900/60 to-pink-900/60 rounded-xl p-5 border border-purple-500/40">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                        <Share2 className="w-4 h-4" />
+                        SHARE YOUR BATTLE LINK
+                      </h3>
                     </div>
-                  </Button>
-                  <Button
-                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
-                    variant={gameSettings.questionType === 'realWorld' ? 'default' : 'outline'}
-                    className={`h-auto p-3 ${
-                      gameSettings.questionType === 'realWorld' 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
-                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
-                    }`}
-                  >
-                    <div className="text-center">
-                      <Globe className="w-5 h-5 mx-auto mb-1" />
-                      <div className="font-semibold text-sm">Real-World</div>
-                      <div className="text-xs opacity-80">Street law</div>
+                    <div className="flex gap-3">
+                      <Input
+                        value={`${window.location.origin}/challenge/${user?.username || 'yourname'}`}
+                        readOnly
+                        className="flex-1 bg-slate-900/60 border-purple-500/40 text-purple-100 font-mono text-sm"
+                      />
+                      <Button
+                        onClick={() => {
+                          const link = `${window.location.origin}/challenge/${user?.username || 'yourname'}`;
+                          navigator.clipboard.writeText(link);
+                          toast({
+                            title: "Link copied!",
+                            description: "Share this link with friends to challenge them",
+                          });
+                        }}
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border border-purple-400/50"
+                        size="sm"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
                     </div>
+                    <p className="text-xs text-purple-300/60 mt-3 uppercase tracking-wider">
+                      Send this to friends for instant battle invites
+                    </p>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-purple-500/30" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-gradient-to-r from-purple-950 to-pink-950 px-4 py-1 rounded-full border border-purple-500/30 text-purple-300 font-bold tracking-wider">
+                      OR CHALLENGE DIRECTLY
+                    </span>
+                  </div>
+                </div>
+
+                {/* Username Input - Premium Style */}
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">ENTER OPPONENT USERNAME</label>
+                  <Input
+                    placeholder="Type username here..."
+                    value={gameSettings.friendUsername}
+                    onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
+                    className="w-full h-14 bg-gradient-to-r from-purple-950/60 to-pink-950/60 border border-purple-500/40 hover:border-purple-400/60 text-purple-100 font-medium text-lg placeholder:text-purple-400/50"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
+                        handleStartAsyncFriendGame();
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* Question Type Selection - Premium Cards */}
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">SELECT BATTLE MODE</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="relative group">
+                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                        gameSettings.questionType === 'bar' 
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 opacity-75' 
+                          : 'opacity-0 group-hover:opacity-50'
+                      }`}></div>
+                      <Button
+                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
+                        className={`relative w-full h-auto p-4 transition-all duration-300 ${
+                          gameSettings.questionType === 'bar' 
+                            ? 'bg-gradient-to-br from-purple-900/90 to-pink-900/90 border-2 border-purple-400/60 scale-105' 
+                            : 'bg-slate-900/80 border border-purple-500/30 hover:bg-purple-950/60'
+                        }`}
+                      >
+                        <div className="text-center">
+                          <GraduationCap className="w-7 h-7 mx-auto mb-2" />
+                          <div className="font-bold text-sm text-purple-100">BAR EXAM</div>
+                          <div className="text-xs text-purple-300/80">MBE questions</div>
+                          {gameSettings.questionType === 'bar' && (
+                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                          )}
+                        </div>
+                      </Button>
+                    </div>
+                    
+                    <div className="relative group">
+                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                        gameSettings.questionType === 'realWorld' 
+                          ? 'bg-gradient-to-r from-cyan-600 to-blue-600 opacity-75' 
+                          : 'opacity-0 group-hover:opacity-50'
+                      }`}></div>
+                      <Button
+                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
+                        className={`relative w-full h-auto p-4 transition-all duration-300 ${
+                          gameSettings.questionType === 'realWorld' 
+                            ? 'bg-gradient-to-br from-cyan-900/90 to-blue-900/90 border-2 border-cyan-400/60 scale-105' 
+                            : 'bg-slate-900/80 border border-cyan-500/30 hover:bg-cyan-950/60'
+                        }`}
+                      >
+                        <div className="text-center">
+                          <Globe className="w-7 h-7 mx-auto mb-2" />
+                          <div className="font-bold text-sm text-cyan-100">REAL-WORLD</div>
+                          <div className="text-xs text-cyan-300/80">Street law</div>
+                          {gameSettings.questionType === 'realWorld' && (
+                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                          )}
+                        </div>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              
+                {/* Subject Selection - Premium Style */}
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">CHOOSE BATTLEFIELD</label>
+                  <Select 
+                    value={gameSettings.subject}
+                    onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
+                  >
+                    <SelectTrigger className="bg-gradient-to-r from-purple-950/60 to-pink-950/60 border border-purple-500/40 hover:border-purple-400/60 h-14 text-purple-100 font-medium">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-950/95 border-purple-500/40 backdrop-blur-xl">
+                      {SUBJECTS.map(subject => (
+                        <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Challenge Button - Epic Style */}
+                <div className="pt-2">
+                  <Button 
+                    onClick={handleStartAsyncFriendGame}
+                    className="w-full relative group bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 hover:from-pink-500 hover:via-purple-500 hover:to-pink-500 text-white font-bold py-6 text-xl shadow-2xl transition-all duration-300 border-2 border-pink-400/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    size="lg"
+                    disabled={!gameSettings.friendUsername.trim()}
+                  >
+                    <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                    <span className="relative flex items-center justify-center gap-3">
+                      👥 SEND CHALLENGE
+                      <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                    </span>
                   </Button>
                 </div>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium mb-2 block text-purple-300">Subject</label>
-                <Select 
-                  value={gameSettings.subject}
-                  onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
-                >
-                  <SelectTrigger className="bg-purple-950/40 border-purple-500/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SUBJECTS.map(subject => (
-                      <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="pt-4">
-                <Button 
-                  onClick={handleStartAsyncFriendGame}
-                  className="w-full bg-pink-600 hover:bg-pink-700 text-white" 
-                  size="lg"
-                  disabled={!gameSettings.friendUsername.trim()}
-                >
-                  Challenge Friend
-                </Button>
-              </div>
-              
-              <div className="border-t border-purple-500/20 pt-4">
-                <Button 
-                  onClick={() => setShowAsyncInbox(true)}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white" 
-                  size="lg"
-                >
-                  <Bell className={`h-4 w-4 mr-2 ${asyncNotificationCount > 0 ? 'animate-pulse' : ''}`} />
-                  View Active Games
-                  {asyncNotificationCount > 0 && (
-                    <Badge className="ml-2 bg-red-500 text-white">{asyncNotificationCount}</Badge>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                
+                {/* Active Games Button */}
+                <div className="border-t border-purple-500/30 pt-6">
+                  <Button 
+                    onClick={() => setShowAsyncInbox(true)}
+                    className="w-full relative group bg-gradient-to-r from-purple-900/60 to-indigo-900/60 hover:from-purple-800/70 hover:to-indigo-800/70 border border-purple-500/40 hover:border-purple-400/60 text-purple-100 py-5 transition-all duration-300"
+                    size="lg"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-md"></span>
+                    <span className="relative flex items-center justify-center gap-3">
+                      <Bell className={`h-5 w-5 ${asyncNotificationCount > 0 ? 'animate-pulse text-yellow-400' : ''}`} />
+                      VIEW ACTIVE GAMES
+                      {asyncNotificationCount > 0 && (
+                        <Badge className="bg-red-500 text-white animate-pulse">{asyncNotificationCount}</Badge>
+                      )}
+                    </span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* Leaderboard - Always visible on the right side */}
