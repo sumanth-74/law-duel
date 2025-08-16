@@ -17,6 +17,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useStreak } from '@/contexts/StreakContext';
 
 interface AsyncMatchProps {
   matchId: string;
@@ -49,6 +50,7 @@ interface AsyncMatchData {
 export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { incrementStreak, resetStreak } = useStreak();
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answering, setAnswering] = useState(false);
   const [showResignDialog, setShowResignDialog] = useState(false);
@@ -58,6 +60,33 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
     enabled: isOpen && !!matchId,
     refetchInterval: 10000 // Refresh every 10s
   });
+  
+  // Track streak when turn is revealed
+  useEffect(() => {
+    if (!match) return;
+    
+    const currentTurn = match.turns[match.turns.length - 1];
+    if (!currentTurn || !currentTurn.revealed) return;
+    
+    // Check if user has answered this turn
+    const userId = match.players[0].id; // Assuming first player is current user
+    const userAnswer = currentTurn.answers[userId];
+    if (!userAnswer) return;
+    
+    // Check if user got it correct
+    const isCorrect = userAnswer.idx === currentTurn.correctIndex;
+    
+    // Track streak (only once per turn)
+    const turnKey = `streak_tracked_${match.id}_${match.round}`;
+    if (!localStorage.getItem(turnKey)) {
+      if (isCorrect) {
+        incrementStreak();
+      } else {
+        resetStreak();
+      }
+      localStorage.setItem(turnKey, 'true');
+    }
+  }, [match, incrementStreak, resetStreak]);
 
   const answerMutation = useMutation({
     mutationFn: async ({ answerIndex, responseTime }: { answerIndex: number; responseTime: number }) => {

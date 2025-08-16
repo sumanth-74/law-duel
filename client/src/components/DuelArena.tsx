@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AvatarRenderer } from './AvatarRenderer';
 import { AtticusCat } from './AtticusCat';
 import { FeedbackChip, MatchSummaryChips } from './FeedbackChip';
+import { useStreak } from '@/contexts/StreakContext';
 import type { User, QuestionData, DuelResultData, DuelFinishedData } from '@shared/schema';
 
 // Match the server's MATCH_QUESTIONS constant
@@ -52,6 +53,7 @@ interface DuelState {
 }
 
 export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: DuelArenaProps) {
+  const { incrementStreak, resetStreak } = useStreak();
   const [duelState, setDuelState] = useState<DuelState>({
     round: 0,
     scores: [0, 0],
@@ -206,6 +208,13 @@ export function DuelArena({ user, opponent, isVisible, websocket, onDuelEnd }: D
   const handleQuestionResult = (resultData: any) => {
     const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
     const opponentCorrect = resultData.opponentAnswer === resultData.correctIndex;
+    
+    // Track streak for achievements
+    if (isCorrect) {
+      incrementStreak();
+    } else {
+      resetStreak();
+    }
     
     // Use progress data from server if available, otherwise use defaults
     const progressData = resultData.progressResult || {};

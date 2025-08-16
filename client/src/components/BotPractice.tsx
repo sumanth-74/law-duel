@@ -8,6 +8,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Heart, Flame, Trophy, Crown, Zap, Shield, GraduationCap, BookOpen } from 'lucide-react';
 import LawDuelLogo from '@/components/LawDuelLogo';
+import { useStreak } from '@/contexts/StreakContext';
 
 
 const SUBJECTS = [
@@ -57,6 +58,7 @@ interface QuestionResult {
 
 export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const { toast } = useToast();
+  const { incrementStreak, resetStreak } = useStreak();
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'result' | 'game-over'>('setup');
   const [questionType, setQuestionType] = useState<'bar-exam' | 'real-world'>('bar-exam');
   const [subject, setSubject] = useState('Mixed Questions');
@@ -153,6 +155,13 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
 
       const data = await response.json();
       setShowResult(data);
+      
+      // Track streak for achievements
+      if (data.isCorrect) {
+        incrementStreak();
+      } else {
+        resetStreak();
+      }
       
       // Update challenge state
       const updatedChallenge = {
