@@ -166,8 +166,8 @@
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 16,
-    "points": 3022,
-    "totalWins": 47,
+    "points": 3081,
+    "totalWins": 48,
     "totalLosses": 18,
     "avatarData": {
       "baseModel": "male",
@@ -179,7 +179,7 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-16T03:07:53.041Z"
+    "lastActive": "2025-08-16T04:05:18.461Z"
   },
   {
     "id": "bot_justice_ninja",

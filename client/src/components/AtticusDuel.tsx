@@ -54,11 +54,12 @@ interface AtticusDuelProps {
   onVictory: () => void;
   onDefeat: () => void;
   onExit: () => void;
+  onRevive?: () => void; // Optional revive callback for $1 payment
 }
 
-export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
+export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive }: AtticusDuelProps) {
   const [playerHealth, setPlayerHealth] = useState(100);
-  const [atticusHealth, setAtticusHealth] = useState(100);
+  const [atticusHealth, setAtticusHealth] = useState(150); // Increased from 100 to 150
   const [currentMessage, setCurrentMessage] = useState(randomFrom(openingTaunts));
   const [battlePhase, setBattlePhase] = useState<'intro' | 'battle' | 'victory' | 'defeat'>('intro');
   const [currentSpell, setCurrentSpell] = useState<string | null>(null);
@@ -67,12 +68,12 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
   const [effectActive, setEffectActive] = useState<'hit' | 'miss' | null>(null);
   const [round, setRound] = useState(0);
 
-  // Spell patterns for the reflex game
+  // Spell patterns for the reflex game - reduced damage to make it harder
   const spells = [
-    { name: 'Arcane Bolt', key: 'Q', damage: 20, color: 'bg-purple-500' },
-    { name: 'Lightning Strike', key: 'W', damage: 25, color: 'bg-blue-500' },
-    { name: 'Shadow Blast', key: 'E', damage: 30, color: 'bg-gray-700' },
-    { name: 'Mystic Shield', key: 'R', damage: 15, color: 'bg-green-500' },
+    { name: 'Arcane Bolt', key: 'Q', damage: 12, color: 'bg-purple-500' }, // Reduced from 20
+    { name: 'Lightning Strike', key: 'W', damage: 15, color: 'bg-blue-500' }, // Reduced from 25
+    { name: 'Shadow Blast', key: 'E', damage: 18, color: 'bg-gray-700' }, // Reduced from 30
+    { name: 'Mystic Shield', key: 'R', damage: 10, color: 'bg-green-500' }, // Reduced from 15
   ];
 
   // Start the battle
@@ -90,10 +91,10 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
     setCurrentSpell(spell.name);
     setSpellCasting(true);
     
-    // Random timing window (1-3 seconds after spell appears)
-    const delay = 1000 + Math.random() * 2000;
+    // Random timing window (0.8-2.5 seconds after spell appears) - shorter delay
+    const delay = 800 + Math.random() * 1700;
     const windowStart = Date.now() + delay;
-    const windowEnd = windowStart + 800; // 800ms window to cast
+    const windowEnd = windowStart + 500; // 500ms window to cast, reduced from 800ms
     
     setTimeout(() => {
       setTimeWindow({ start: windowStart, end: windowEnd });
@@ -161,7 +162,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
     setTimeWindow(null);
     setEffectActive('miss');
     
-    const damage = 15 + Math.floor(Math.random() * 10);
+    const damage = 20 + Math.floor(Math.random() * 15); // Increased from 15-25 to 20-35
     const newPlayerHealth = Math.max(0, playerHealth - damage);
     setPlayerHealth(newPlayerHealth);
     setCurrentMessage(randomFrom(missTaunts));
@@ -231,8 +232,8 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
                 {/* Atticus Health */}
                 <div className="flex items-center justify-center gap-2 mt-4">
                   <Shield className="w-5 h-5 text-purple-400" />
-                  <Progress value={atticusHealth} className="w-48 h-3 bg-purple-950" />
-                  <span className="text-purple-300 text-sm font-mono">{atticusHealth}/100</span>
+                  <Progress value={(atticusHealth / 150) * 100} className="w-48 h-3 bg-purple-950" />
+                  <span className="text-purple-300 text-sm font-mono">{atticusHealth}/150</span>
                 </div>
               </div>
 
@@ -356,6 +357,23 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
                     </div>
                     {battlePhase === 'victory' && (
                       <div className="text-purple-300">+3 Lives Restored!</div>
+                    )}
+                    {battlePhase === 'defeat' && onRevive && (
+                      <div className="mt-4 space-y-3">
+                        <div className="text-purple-300 text-sm">
+                          24-hour cooldown activated. Come back tomorrow, or...
+                        </div>
+                        <Button
+                          onClick={onRevive}
+                          className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold px-6 py-3"
+                        >
+                          <Heart className="w-4 h-4 mr-2" />
+                          Revive Now for $1
+                        </Button>
+                        <div className="text-purple-400 text-xs">
+                          Skip the cooldown and restore your lives instantly!
+                        </div>
+                      </div>
                     )}
                   </motion.div>
                 )}

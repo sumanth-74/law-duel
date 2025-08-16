@@ -23,6 +23,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Gamepad2 } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
+import { LEVEL_TITLES } from '@shared/schema';
 
 const SUBJECTS = [
   'Mixed Questions',
@@ -788,6 +789,23 @@ export default function Home() {
                         <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 px-3 py-1 rounded-lg border border-green-500/30">
                           <span className="font-bold text-green-200">{character.xp}</span>
                         </div>
+                      </div>
+                    </div>
+                    
+                    {/* Rank Display */}
+                    <div className="mt-3 flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <Trophy className="w-4 h-4 text-amber-400" />
+                        <span className="text-amber-200 font-cinzel font-bold">
+                          {LEVEL_TITLES[Math.min(character.level - 1, LEVEL_TITLES.length - 1)] || "Novice Scribe"}
+                        </span>
+                      </div>
+                      <div className="text-purple-300 text-sm">
+                        {character.level < 30 ? (
+                          <>Next rank at <span className="font-bold text-cyan-300">{(character.level + 1) * 200}</span> points</>
+                        ) : (
+                          <span className="text-amber-300 font-bold">MAX RANK</span>
+                        )}
                       </div>
                     </div>
                   </div>
