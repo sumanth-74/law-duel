@@ -412,43 +412,90 @@ export default function Home() {
     setGameMode('searching');
   };
 
-  const handleStartFriendGame = () => {
+  const handleStartFriendGame = async () => {
     if (!gameSettings.friendUsername.trim()) return;
     
     setGameMode('searching');
-    // This would normally search for the friend and initiate a match
-    // For now, we'll simulate finding them
-    setTimeout(() => {
-      const friendOpponent: User = {
-        id: `friend_${Date.now()}`,
-        username: gameSettings.friendUsername,
-        displayName: gameSettings.friendUsername,
-        password: '', // Not used for simulated friends
-        email: null,
-        level: Math.floor(Math.random() * 10) + 1,
-        xp: 0,
-        points: Math.floor(Math.random() * 2000),
-        totalWins: Math.floor(Math.random() * 100),
-        totalLosses: Math.floor(Math.random() * 50),
-        createdAt: new Date(),
-        lastLoginAt: null,
-        avatarData: {
-          base: 'human',
-          palette: '#8b5cf6',
-          props: ['hood', 'staff']
-        }
-      };
+    
+    try {
+      // First, search for the friend to verify they exist
+      const searchResponse = await fetch('/api/auth/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: gameSettings.friendUsername.trim() })
+      });
       
-      setOpponent(friendOpponent);
+      if (!searchResponse.ok) {
+        const error = await searchResponse.json();
+        toast({
+          title: "Friend not found",
+          description: `Could not find user "${gameSettings.friendUsername}"`,
+          variant: "destructive"
+        });
+        setGameMode('menu');
+        return;
+      }
+      
+      const friendData = await searchResponse.json();
+      
+      // Create async match with friend
+      const createMatchResponse = await fetch('/api/async/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: gameSettings.subject,
+          opponentUsername: gameSettings.friendUsername.trim()
+        })
+      });
+      
+      if (!createMatchResponse.ok) {
+        const error = await createMatchResponse.json();
+        toast({
+          title: "Failed to create match",
+          description: error.message || "Could not start a match with this friend",
+          variant: "destructive"
+        });
+        setGameMode('menu');
+        return;
+      }
+      
+      const matchData = await createMatchResponse.json();
+      
+      // Set up the duel data with the friend
+      setOpponent(friendData);
       setDuelData({
-        roomCode: `friend_${Date.now()}`,
+        roomCode: matchData.matchId,
         subject: gameSettings.subject,
         bestOf: 10,
         ranked: true,
-        stake: 10
+        stake: 10,
+        asyncMatch: matchData.match // Store the async match data
       });
-      setGameMode('duel');
-    }, 2000);
+      
+      toast({
+        title: "Match created!",
+        description: `Started async duel with ${friendData.displayName || friendData.username}`,
+      });
+      
+      // For async matches, we should navigate to a different view
+      // For now, show the match has been created and return to menu
+      setTimeout(() => {
+        setGameMode('menu');
+        toast({
+          title: "Check your inbox",
+          description: "Your async match has been created. Check your inbox to play!",
+        });
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error creating friend match:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create match. Please try again.",
+        variant: "destructive"
+      });
+      setGameMode('menu');
+    }
   };
 
   const handleDuelEnd = () => {

@@ -449,5 +449,52 @@
     "isBotMatch": false,
     "createdAt": 1755206420084,
     "updatedAt": 1755294271579
+  },
+  "m_1755308156444_htnbgplmj": {
+    "id": "m_1755308156444_htnbgplmj",
+    "mode": "async",
+    "subject": "Torts",
+    "audience": "Bar",
+    "bestOf": 7,
+    "players": [
+      {
+        "id": "1bfb5d3d-d360-4425-a89d-6ea56b1ea94a",
+        "username": "admin"
+      },
+      {
+        "id": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+        "username": "debuguser"
+      }
+    ],
+    "scores": {
+      "1bfb5d3d-d360-4425-a89d-6ea56b1ea94a": 0,
+      "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": 0
+    },
+    "round": 1,
+    "difficulty": 1,
+    "turns": [
+      {
+        "qid": "fallback_Torts_1755308198580_7swb",
+        "stem": "In a products liability case based on strict liability, which element is NOT required to be proven?",
+        "choices": [
+          "The product was defective",
+          "The defect caused plaintiff's injury",
+          "The defendant was negligent",
+          "The product was unreasonably dangerous"
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755394598581,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 2,
+        "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
+      }
+    ],
+    "status": "active",
+    "winnerId": null,
+    "isBotMatch": false,
+    "createdAt": 1755308156504,
+    "updatedAt": 1755308198581
   }
 }

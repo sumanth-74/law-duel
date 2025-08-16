@@ -3,12 +3,12 @@
 ## Overview
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
-## Recent Changes (Aug 14, 2025)
+## Recent Changes (Aug 16, 2025)
+- **Fixed friend challenge system**: Replaced mock/placeholder code with real API integration for friend matches. Friend challenges now properly search for users, create async matches on the server, and store them in the database.
 - **Token-based authentication implemented**: Added JWT token authentication as a fallback to bypass persistent cookie/session issues across different domains. System now supports dual authentication (cookies + Bearer tokens).
 - **Authentication flow enhanced**: Server issues JWT tokens on login/register, client stores them in localStorage, and all API requests include Authorization headers. This ensures authentication works on any domain including lawduel.net.
-- **Fixed critical UI bugs**: Resolved TypeScript errors in Home component that were preventing the game interface from loading after successful authentication.
-- **Dual authentication support**: Both session cookies and Bearer tokens are supported, with tokens providing a reliable fallback when cookies fail due to browser restrictions or domain issues.
-- **Beta-ready authentication**: Authentication system now works reliably across all environments and domains, ready for immediate beta launch on lawduel.net
+- **Friend match flow working**: Users can now enter a friend's username, the system verifies they exist, creates an async match, and both players can access it through their inbox for asynchronous gameplay.
+- **Beta-ready system**: Both authentication and friend challenges work reliably across all environments, ready for immediate beta launch on lawduel.net
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
