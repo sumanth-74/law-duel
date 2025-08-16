@@ -14,7 +14,7 @@ Law Duel is a competitive legal education game designed for bar exam preparation
 - **Unlimited explanation reading time**: Removed auto-advance timer after answering questions. Players now have unlimited time to read explanations and must click "Continue" to proceed to the next question.
 - **Speed bonus system added**: Players earn bonus points for answering quickly. Bonus tiers: ≤5s (50%), ≤10s (30%), ≤15s (15%), ≤20s (5%). Speed bonus scales with difficulty level.
 - **Solo challenge lives reduced to 3**: Changed from 5 lives to 3 lives total. When all 3 lives are lost, players must defeat Atticus to restore their lives and continue playing.
-- **Daily Challenges & Rewards system added**: Comprehensive gamified learning streak system with 5 daily challenges (Daily Dedication, Accuracy Master, Speed Demon, Perfect Round, Subject Explorer), 3 weekly goals, and 6 streak milestones. Players earn XP and points for completing challenges, with automatic progress tracking and reward claiming functionality.
+- **UI simplified**: Removed the "Daily Challenges & Rewards" section per user feedback (found it "goofy"). Renamed "Daily Casefile" to "Daily Challenge" with trophy icon, keeping the same daily question functionality.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

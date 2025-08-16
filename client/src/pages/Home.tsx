@@ -17,7 +17,6 @@ import BotPractice from '@/components/BotPractice';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { ChatbotButton } from '@/components/ChatbotButton';
 import { AtticusDuel } from '@/components/AtticusDuel';
-import { DailyChallenges } from '@/components/DailyChallenges';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -73,7 +72,6 @@ export default function Home() {
   const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
   const [showAtticusDuel, setShowAtticusDuel] = useState(false);
   const [atticusCooldown, setAtticusCooldown] = useState<number | null>(null);
-  const [showDailyChallenges, setShowDailyChallenges] = useState(false);
 
   // Handle auto-open match from challenge link
   useEffect(() => {
@@ -777,14 +775,14 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Daily Casefile Banner */}
+        {/* Daily Challenge Banner */}
         <Card className="bg-gradient-to-r from-amber-900/40 via-yellow-900/40 to-orange-900/40 border-amber-500/30 mb-6">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <CalendarDays className="w-8 h-8 text-amber-400" />
+                <Trophy className="w-8 h-8 text-amber-400" />
                 <div>
-                  <h3 className="font-cinzel text-lg font-bold text-amber-200">Daily Casefile</h3>
+                  <h3 className="font-cinzel text-lg font-bold text-amber-200">Daily Challenge</h3>
                   <p className="text-amber-300 text-sm">Hard question • Enhanced rewards • Resets daily</p>
                 </div>
               </div>
@@ -793,25 +791,6 @@ export default function Home() {
                   Take Challenge
                 </Button>
               </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Daily Challenges & Rewards Button */}
-        <Card 
-          className="bg-gradient-to-r from-yellow-900/40 via-orange-900/40 to-yellow-900/40 border-yellow-500/30 hover:border-yellow-400/50 transition-all cursor-pointer mb-6"
-          onClick={() => setShowDailyChallenges(true)}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Trophy className="w-8 h-8 text-yellow-400" />
-                <div>
-                  <h3 className="font-cinzel text-lg font-bold text-yellow-200">Daily Challenges & Rewards</h3>
-                  <p className="text-yellow-300/70 text-sm">Complete challenges to earn XP, points and streak rewards!</p>
-                </div>
-              </div>
-              <ChevronRight className="w-6 h-6 text-yellow-400" />
             </div>
           </CardContent>
         </Card>
@@ -1214,11 +1193,6 @@ export default function Home() {
               setShowAsyncInbox(true); // Return to inbox
             }}
           />
-        )}
-        
-        {/* Daily Challenges Modal */}
-        {showDailyChallenges && (
-          <DailyChallenges onClose={() => setShowDailyChallenges(false)} />
         )}
 
         {/* Floating Chatbot Button */}
