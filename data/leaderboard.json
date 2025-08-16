@@ -92,6 +92,29 @@
     "lastActive": "2025-08-16T02:04:44.703Z"
   },
   {
+    "id": "bot_contracts_wizard",
+    "username": "ContractsWizard",
+    "displayName": "ContractsWizard",
+    "lawSchool": "NYU Law",
+    "level": 18,
+    "points": 3455,
+    "totalWins": 59,
+    "totalLosses": 13,
+    "avatarData": {
+      "baseModel": "female",
+      "skinColor": "#FFDAB9",
+      "hairStyle": "straight",
+      "hairColor": "#000000",
+      "clothingStyle": "blouse",
+      "clothingColor": "#8B008B",
+      "accessories": [
+        "earrings"
+      ],
+      "accessoryColor": "#FFB6C1"
+    },
+    "lastActive": "2025-08-16T03:53:38.510Z"
+  },
+  {
     "id": "bot_gavel_crusher",
     "username": "GavelCrusher",
     "displayName": "GavelCrusher",
@@ -113,29 +136,6 @@
       "accessoryColor": "#FF1493"
     },
     "lastActive": "2025-08-15T22:08:15.898Z"
-  },
-  {
-    "id": "bot_contracts_wizard",
-    "username": "ContractsWizard",
-    "displayName": "ContractsWizard",
-    "lawSchool": "NYU Law",
-    "level": 18,
-    "points": 3406,
-    "totalWins": 58,
-    "totalLosses": 13,
-    "avatarData": {
-      "baseModel": "female",
-      "skinColor": "#FFDAB9",
-      "hairStyle": "straight",
-      "hairColor": "#000000",
-      "clothingStyle": "blouse",
-      "clothingColor": "#8B008B",
-      "accessories": [
-        "earrings"
-      ],
-      "accessoryColor": "#FFB6C1"
-    },
-    "lastActive": "2025-08-16T03:17:08.857Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -187,9 +187,9 @@
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 15,
-    "points": 2932,
+    "points": 2978,
     "totalWins": 50,
-    "totalLosses": 14,
+    "totalLosses": 15,
     "avatarData": {
       "baseModel": "male",
       "skinColor": "#F4A460",
@@ -202,7 +202,7 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-16T03:48:38.510Z"
+    "lastActive": "2025-08-16T03:53:38.510Z"
   },
   {
     "id": "bot_verdict_viper",

@@ -20,7 +20,7 @@ import { AtticusDuel } from '@/components/AtticusDuel';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Gamepad2 } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 
@@ -794,34 +794,39 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Action buttons */}
-              <div className="flex items-center space-x-3">
+              {/* Action buttons - Premium Style */}
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => setShowCharacterCreation(true)} 
-                  className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 hover:from-purple-600/40 hover:to-pink-600/40 border border-purple-500/50 text-purple-200 hover:border-purple-400"
+                  className="relative group bg-gradient-to-r from-purple-900/70 to-indigo-900/70 hover:from-purple-800/80 hover:to-indigo-800/80 border-2 border-purple-500/60 hover:border-purple-400/80 text-purple-100 px-4 py-2 transition-all duration-300 shadow-lg hover:shadow-purple-500/40"
                   size="sm"
                 >
-                  <span className="flex items-center gap-2">
-                    ✏️ Edit
+                  <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-md"></span>
+                  <span className="relative flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
+                    <Edit className="h-4 w-4" />
+                    EDIT
                   </span>
                 </Button>
                 <Button
                   onClick={() => window.location.href = '/stats'}
-                  className="bg-gradient-to-r from-cyan-600/30 to-blue-600/30 hover:from-cyan-600/40 hover:to-blue-600/40 border border-cyan-500/50 text-cyan-200 hover:border-cyan-400"
+                  className="relative group bg-gradient-to-r from-cyan-900/70 to-blue-900/70 hover:from-cyan-800/80 hover:to-blue-800/80 border-2 border-cyan-500/60 hover:border-cyan-400/80 text-cyan-100 px-4 py-2 transition-all duration-300 shadow-lg hover:shadow-cyan-500/40"
                   size="sm"
                 >
-                  <span className="flex items-center gap-2">
-                    📊 Stats
+                  <span className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-md"></span>
+                  <span className="relative flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
+                    <BarChart3 className="h-4 w-4" />
+                    STATS
                   </span>
                 </Button>
                 <Button 
                   onClick={() => logout.mutate()} 
-                  className="bg-gradient-to-r from-red-600/30 to-orange-600/30 hover:from-red-600/40 hover:to-orange-600/40 border border-red-500/50 text-red-200 hover:border-red-400"
+                  className="relative group bg-gradient-to-r from-red-900/70 to-orange-900/70 hover:from-red-800/80 hover:to-orange-800/80 border-2 border-red-500/60 hover:border-red-400/80 text-red-100 px-4 py-2 transition-all duration-300 shadow-lg hover:shadow-red-500/40"
                   size="sm"
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="absolute inset-0 bg-gradient-to-r from-red-600 to-orange-600 opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-md"></span>
+                  <span className="relative flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
                     <LogOut className="h-4 w-4" />
-                    Logout
+                    LOGOUT
                   </span>
                 </Button>
               </div>
@@ -865,14 +870,17 @@ export default function Home() {
                       LEGENDARY DAILY QUEST
                     </h3>
                     <div className="flex items-center gap-3 mt-2">
-                      <Badge className="bg-gradient-to-r from-red-900/50 to-orange-900/50 text-red-200 border border-red-400/60 text-xs font-bold uppercase tracking-wider shadow-lg">
-                        ⚡ EXTREME MODE
+                      <Badge className="bg-gradient-to-r from-red-900/50 to-orange-900/50 text-red-200 border border-red-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
+                        <Zap className="w-3 h-3" />
+                        EXTREME MODE
                       </Badge>
-                      <Badge className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 text-green-200 border border-green-400/60 text-xs font-bold uppercase tracking-wider shadow-lg">
-                        💎 3X REWARDS
+                      <Badge className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 text-green-200 border border-green-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
+                        <Trophy className="w-3 h-3" />
+                        3X REWARDS
                       </Badge>
-                      <Badge className="bg-gradient-to-r from-blue-900/50 to-indigo-900/50 text-blue-200 border border-blue-400/60 text-xs font-bold uppercase tracking-wider shadow-lg">
-                        ⏱️ LIMITED TIME
+                      <Badge className="bg-gradient-to-r from-blue-900/50 to-indigo-900/50 text-blue-200 border border-blue-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
+                        <Shield className="w-3 h-3" />
+                        LIMITED TIME
                       </Badge>
                     </div>
                   </div>
@@ -881,7 +889,8 @@ export default function Home() {
                   <Button className="relative group/btn bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600 hover:from-amber-500 hover:via-yellow-500 hover:to-amber-500 text-white border-2 border-amber-400/60 px-12 py-7 text-xl font-black shadow-[0_6px_30px_rgba(251,191,36,0.5)] hover:shadow-[0_8px_40px_rgba(251,191,36,0.7)] transition-all duration-500 transform hover:scale-110">
                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
                     <span className="relative flex items-center gap-3 epic-text-glow">
-                      ⚔️ ACCEPT QUEST ⚔️
+                      <Sword className="w-6 h-6" />
+                      ACCEPT QUEST
                       <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-3 transition-transform" />
                     </span>
                   </Button>
@@ -927,8 +936,9 @@ export default function Home() {
                       <CardTitle className="font-cinzel text-4xl font-black epic-text-glow bg-gradient-to-r from-purple-100 via-pink-100 to-purple-100 bg-clip-text text-transparent tracking-wider">
                         SOLO MODE
                       </CardTitle>
-                      <p className="text-purple-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em]">
-                        ⚔️ LEGENDARY CAMPAIGN
+                      <p className="text-purple-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Sword className="w-4 h-4" />
+                        LEGENDARY CAMPAIGN
                       </p>
                     </div>
                   </div>
@@ -996,7 +1006,8 @@ export default function Home() {
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
                     <span className="relative flex items-center justify-center gap-3 epic-text-glow">
-                      ⚔️ ENTER THE ARENA ⚔️
+                      <Sword className="w-6 h-6" />
+                      ENTER THE ARENA
                       <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform" />
                     </span>
                   </Button>
@@ -1037,8 +1048,9 @@ export default function Home() {
                       <CardTitle className="font-cinzel text-4xl font-black epic-text-glow bg-gradient-to-r from-orange-100 via-yellow-100 to-orange-100 bg-clip-text text-transparent tracking-wider">
                         VS MODE
                       </CardTitle>
-                      <p className="text-orange-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em]">
-                        ⚔️ MULTIPLAYER WARFARE
+                      <p className="text-orange-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Sword className="w-4 h-4" />
+                        MULTIPLAYER WARFARE
                       </p>
                     </div>
                   </div>
