@@ -829,43 +829,60 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Daily Challenge Banner - Epic Style */}
-        <div className="relative mb-6 group">
-          {/* Animated glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-yellow-500 to-orange-600 opacity-50 blur-xl group-hover:opacity-75 transition-opacity duration-500 animate-pulse"></div>
+        {/* LEGENDARY DAILY QUEST - EPIC GOLDEN BANNER */}
+        <div className="relative mb-8 group">
+          {/* Multiple magical glows for legendary effect */}
+          <div className="absolute -inset-2 opacity-80">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-yellow-500 to-orange-600 blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 animate-[pulseGlow_2s_ease-in-out_infinite]"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-amber-400 blur-2xl opacity-40 animate-pulse"></div>
+          </div>
           
-          <Card className="relative bg-gradient-to-r from-amber-950/90 via-yellow-950/90 to-orange-950/90 border-2 border-amber-500/50 hover:border-amber-400 transition-all duration-300 backdrop-blur-xl overflow-hidden">
-            {/* Animated background pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(251,191,36,0.3),transparent_50%)]"></div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(251,146,60,0.3),transparent_50%)]"></div>
+          <Card className="relative luxury-card border-2 border-amber-400/60 hover:border-amber-300/80 transition-all duration-500 backdrop-blur-2xl overflow-hidden shadow-[0_0_60px_rgba(251,191,36,0.5)] group-hover:shadow-[0_0_100px_rgba(251,191,36,0.7)] transform group-hover:scale-[1.01]">
+            {/* Epic shimmer overlay */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+              <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_30%,rgba(255,255,255,0.2)_50%,transparent_70%)] animate-shimmer bg-[length:200%_100%]"></div>
             </div>
             
-            <CardContent className="relative p-6">
+            {/* Animated magical particles */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(251,191,36,0.4),transparent_40%)]"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(251,146,60,0.4),transparent_40%)]"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.3),transparent_60%)]"></div>
+            </div>
+            
+            <CardContent className="relative p-8">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-5">
-                  {/* Animated trophy icon */}
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-amber-400 blur-lg opacity-50 animate-pulse"></div>
-                    <Trophy className="relative w-10 h-10 text-amber-400 animate-bounce" style={{ animationDuration: '3s' }} />
+                <div className="flex items-center gap-6">
+                  {/* Epic floating trophy */}
+                  <div className="relative animate-[orbFloat_4s_ease-in-out_infinite]">
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-400 blur-2xl opacity-70"></div>
+                    <div className="relative w-16 h-16 bg-gradient-to-br from-amber-500 via-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-[0_0_50px_rgba(251,191,36,0.7)] animate-[legendaryGlow_3s_ease-in-out_infinite]">
+                      <Trophy className="w-10 h-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" />
+                    </div>
                   </div>
                   <div>
-                    <h3 className="font-cinzel text-xl font-bold bg-gradient-to-r from-amber-200 to-yellow-200 bg-clip-text text-transparent">
-                      DAILY CHALLENGE
+                    <h3 className="font-cinzel text-3xl font-black animate-[textGlowPulse_3s_ease-in-out_infinite] bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-100 bg-clip-text text-transparent tracking-wide">
+                      LEGENDARY DAILY QUEST
                     </h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge className="bg-red-600/30 text-red-300 border-red-500/50 text-xs">HARD MODE</Badge>
-                      <Badge className="bg-green-600/30 text-green-300 border-green-500/50 text-xs">2X REWARDS</Badge>
-                      <Badge className="bg-blue-600/30 text-blue-300 border-blue-500/50 text-xs">24H TIMER</Badge>
+                    <div className="flex items-center gap-3 mt-2">
+                      <Badge className="bg-gradient-to-r from-red-900/50 to-orange-900/50 text-red-200 border border-red-400/60 text-xs font-bold uppercase tracking-wider shadow-lg">
+                        ⚡ EXTREME MODE
+                      </Badge>
+                      <Badge className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 text-green-200 border border-green-400/60 text-xs font-bold uppercase tracking-wider shadow-lg">
+                        💎 3X REWARDS
+                      </Badge>
+                      <Badge className="bg-gradient-to-r from-blue-900/50 to-indigo-900/50 text-blue-200 border border-blue-400/60 text-xs font-bold uppercase tracking-wider shadow-lg">
+                        ⏱️ LIMITED TIME
+                      </Badge>
                     </div>
                   </div>
                 </div>
                 <Link href="/daily">
-                  <Button className="relative group/btn bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white border-0 px-8 py-6 text-lg font-bold shadow-2xl">
-                    <span className="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
-                    <span className="relative flex items-center gap-2">
-                      PLAY NOW
-                      <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                  <Button className="relative group/btn bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600 hover:from-amber-500 hover:via-yellow-500 hover:to-amber-500 text-white border-2 border-amber-400/60 px-12 py-7 text-xl font-black shadow-[0_6px_30px_rgba(251,191,36,0.5)] hover:shadow-[0_8px_40px_rgba(251,191,36,0.7)] transition-all duration-500 transform hover:scale-110">
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
+                    <span className="relative flex items-center gap-3 epic-text-glow">
+                      ⚔️ ACCEPT QUEST ⚔️
+                      <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-3 transition-transform" />
                     </span>
                   </Button>
                 </Link>
@@ -877,71 +894,95 @@ export default function Home() {
         {/* Main Game Mode Selection - Epic Gaming Style */}
         {gameMode === 'menu' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {/* Solo Mode - Epic Card */}
+            {/* Solo Mode - EPIC MAGICAL CARD */}
             <div className="relative group">
-              {/* Animated glow */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition duration-500 animate-pulse"></div>
+              {/* Multiple animated glows for magical effect */}
+              <div className="absolute -inset-2 opacity-75">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 rounded-2xl blur-2xl opacity-50 group-hover:opacity-80 transition duration-700 animate-[gradientShift_3s_ease-in-out_infinite]"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl blur-3xl opacity-30 animate-pulse"></div>
+              </div>
               
-              <Card className="relative h-full bg-gradient-to-br from-slate-950/95 via-blue-950/95 to-slate-950/95 border-2 border-cyan-500/40 hover:border-cyan-400/60 transition-all duration-300 backdrop-blur-xl overflow-hidden hover:scale-[1.02]">
-                {/* Animated background mesh */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+              <Card className="relative h-full luxury-card border-2 border-purple-500/50 hover:border-purple-400/80 transition-all duration-500 backdrop-blur-2xl overflow-hidden hover:scale-[1.03] hover:-translate-y-2 shadow-[0_0_50px_rgba(168,85,247,0.4)] group-hover:shadow-[0_0_80px_rgba(168,85,247,0.6)]">
+                {/* Epic shimmer overlay */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                  <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.15)_50%,transparent_60%)] animate-shimmer bg-[length:200%_100%]"></div>
                 </div>
                 
-                <CardHeader className="relative pb-2">
-                  <div className="flex items-center gap-4 mb-3">
-                    {/* Animated icon container */}
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-cyan-400 blur-xl opacity-50"></div>
-                      <div className="relative w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-2xl">
-                        <UserIcon className="w-9 h-9 text-white" />
+                {/* Magical corner accents */}
+                <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-purple-400/60 rounded-tl-xl"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-purple-400/60 rounded-tr-xl"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-purple-400/60 rounded-bl-xl"></div>
+                <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-purple-400/60 rounded-br-xl"></div>
+                
+                <CardHeader className="relative pb-4">
+                  <div className="flex items-center gap-5 mb-4">
+                    {/* Epic floating icon */}
+                    <div className="relative group-hover:animate-[float_3s_ease-in-out_infinite]">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 blur-2xl opacity-70"></div>
+                      <div className="relative w-20 h-20 bg-gradient-to-br from-purple-600 via-pink-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(168,85,247,0.6)] animate-[pulseGlow_2s_ease-in-out_infinite]">
+                        <UserIcon className="w-11 h-11 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                       </div>
                     </div>
                     <div>
-                      <CardTitle className="font-cinzel text-3xl font-bold bg-gradient-to-r from-cyan-200 via-blue-200 to-cyan-200 bg-clip-text text-transparent">
+                      <CardTitle className="font-cinzel text-4xl font-black epic-text-glow bg-gradient-to-r from-purple-100 via-pink-100 to-purple-100 bg-clip-text text-transparent tracking-wider">
                         SOLO MODE
                       </CardTitle>
-                      <p className="text-cyan-300/80 text-sm font-medium mt-1">
-                        SINGLE PLAYER CAMPAIGN
+                      <p className="text-purple-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em]">
+                        ⚔️ LEGENDARY CAMPAIGN
                       </p>
                     </div>
                   </div>
                 </CardHeader>
                 
-                <CardContent className="relative space-y-4">
-                  {/* Stats Display */}
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 rounded-lg p-3 border border-cyan-500/30">
-                      <div className="text-xs text-cyan-400 mb-1">DIFFICULTY</div>
-                      <div className="text-lg font-bold text-cyan-200">ADAPTIVE</div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-900/40 to-pink-900/40 rounded-lg p-3 border border-red-500/30">
-                      <div className="text-xs text-red-400 mb-1">LIVES</div>
-                      <div className="flex gap-1 justify-center">
-                        <Heart className="w-5 h-5 text-red-400 fill-red-400 animate-pulse" />
-                        <Heart className="w-5 h-5 text-red-400 fill-red-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
-                        <Heart className="w-5 h-5 text-red-400 fill-red-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
+                <CardContent className="relative space-y-5 px-6">
+                  {/* Epic Stats Display */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="relative bg-gradient-to-br from-purple-900/50 via-indigo-900/50 to-purple-900/50 rounded-xl p-4 border-2 border-purple-400/40 group-hover:border-purple-400/60 transition-all shadow-inner">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-xl"></div>
+                      <div className="relative">
+                        <div className="text-xs text-purple-300 mb-1 font-bold uppercase tracking-wider">Mode</div>
+                        <div className="text-lg font-black text-transparent bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text">ADAPTIVE</div>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 rounded-lg p-3 border border-green-500/30">
-                      <div className="text-xs text-green-400 mb-1">REWARDS</div>
-                      <div className="text-lg font-bold text-green-200">XP+</div>
+                    <div className="relative bg-gradient-to-br from-red-900/50 via-pink-900/50 to-red-900/50 rounded-xl p-4 border-2 border-red-400/40 group-hover:border-red-400/60 transition-all shadow-inner">
+                      <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-pink-600/10 rounded-xl"></div>
+                      <div className="relative">
+                        <div className="text-xs text-red-300 mb-1 font-bold uppercase tracking-wider">Lives</div>
+                        <div className="flex gap-1 justify-center">
+                          <Heart className="w-5 h-5 text-red-400 fill-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)] animate-pulse" />
+                          <Heart className="w-5 h-5 text-red-400 fill-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)] animate-pulse" style={{ animationDelay: '0.2s' }} />
+                          <Heart className="w-5 h-5 text-red-400 fill-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)] animate-pulse" style={{ animationDelay: '0.4s' }} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="relative bg-gradient-to-br from-green-900/50 via-emerald-900/50 to-green-900/50 rounded-xl p-4 border-2 border-green-400/40 group-hover:border-green-400/60 transition-all shadow-inner">
+                      <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-emerald-600/10 rounded-xl"></div>
+                      <div className="relative">
+                        <div className="text-xs text-green-300 mb-1 font-bold uppercase tracking-wider">Reward</div>
+                        <div className="text-lg font-black text-transparent bg-gradient-to-r from-green-200 to-emerald-200 bg-clip-text">EPIC XP</div>
+                      </div>
                     </div>
                   </div>
                   
-                  {/* Features */}
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4 text-cyan-400" />
-                      <span className="text-cyan-300 text-sm">Progressive difficulty scaling</span>
+                  {/* Premium Features */}
+                  <div className="space-y-3 py-2">
+                    <div className="flex items-center gap-3 group/feature">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Progressive difficulty mastery system</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4 text-cyan-400" />
-                      <span className="text-cyan-300 text-sm">Unlock Atticus boss battle</span>
+                    <div className="flex items-center gap-3 group/feature">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Epic Atticus legendary boss battles</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4 text-cyan-400" />
-                      <span className="text-cyan-300 text-sm">Earn massive XP rewards</span>
+                    <div className="flex items-center gap-3 group/feature">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Massive XP & achievement rewards</span>
                     </div>
                   </div>
                   
@@ -950,103 +991,132 @@ export default function Home() {
                       console.log('Solo Challenge clicked, setting gameMode to bot-practice');
                       setGameMode('bot-practice');
                     }}
-                    className="w-full relative group/btn bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-6 text-lg shadow-2xl transition-all duration-300"
+                    className="w-full relative group/btn bg-gradient-to-r from-purple-700 via-pink-700 to-purple-700 hover:from-purple-600 hover:via-pink-600 hover:to-purple-600 text-white font-black py-7 text-xl shadow-[0_6px_30px_rgba(168,85,247,0.5)] hover:shadow-[0_8px_40px_rgba(168,85,247,0.7)] transition-all duration-500 transform hover:scale-105 border-2 border-purple-400/50"
                     size="lg"
                   >
-                    <span className="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
-                    <span className="relative flex items-center justify-center gap-3">
-                      ⚔️ ENTER ARENA
-                      <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
+                    <span className="relative flex items-center justify-center gap-3 epic-text-glow">
+                      ⚔️ ENTER THE ARENA ⚔️
+                      <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform" />
                     </span>
                   </Button>
                 </CardContent>
               </Card>
             </div>
 
-            {/* VS Mode - Epic Card */}
+            {/* VS Mode - LEGENDARY PVP BATTLES */}
             <div className="relative group">
-              {/* Animated glow */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition duration-500 animate-pulse"></div>
+              {/* Multiple magical glows for epic effect */}
+              <div className="absolute -inset-2 opacity-75">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 rounded-2xl blur-2xl opacity-50 group-hover:opacity-80 transition duration-700 animate-[gradientShift_3s_ease-in-out_infinite]"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur-3xl opacity-30 animate-pulse"></div>
+              </div>
               
-              <Card className="relative h-full bg-gradient-to-br from-slate-950/95 via-purple-950/95 to-slate-950/95 border-2 border-purple-500/40 hover:border-purple-400/60 transition-all duration-300 backdrop-blur-xl overflow-hidden hover:scale-[1.02]">
-                {/* Animated background mesh */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+              <Card className="relative h-full luxury-card border-2 border-orange-500/50 hover:border-orange-400/80 transition-all duration-500 backdrop-blur-2xl overflow-hidden hover:scale-[1.03] hover:-translate-y-2 shadow-[0_0_50px_rgba(251,146,60,0.4)] group-hover:shadow-[0_0_80px_rgba(251,146,60,0.6)]">
+                {/* Epic shimmer overlay */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                  <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.15)_50%,transparent_60%)] animate-shimmer bg-[length:200%_100%]"></div>
                 </div>
                 
-                <CardHeader className="relative pb-2">
-                  <div className="flex items-center gap-4 mb-3">
-                    {/* Animated icon container */}
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-purple-400 blur-xl opacity-50"></div>
-                      <div className="relative w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-2xl">
-                        <Users className="w-9 h-9 text-white" />
+                {/* Magical corner accents */}
+                <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-orange-400/60 rounded-tl-xl"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-orange-400/60 rounded-tr-xl"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-orange-400/60 rounded-bl-xl"></div>
+                <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-orange-400/60 rounded-br-xl"></div>
+                
+                <CardHeader className="relative pb-4">
+                  <div className="flex items-center gap-5 mb-4">
+                    {/* Epic floating icon */}
+                    <div className="relative group-hover:animate-[float_3s_ease-in-out_infinite]">
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 blur-2xl opacity-70"></div>
+                      <div className="relative w-20 h-20 bg-gradient-to-br from-orange-600 via-red-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(251,146,60,0.6)] animate-[pulseGlow_2s_ease-in-out_infinite]">
+                        <Users className="w-11 h-11 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                       </div>
                     </div>
                     <div>
-                      <CardTitle className="font-cinzel text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                      <CardTitle className="font-cinzel text-4xl font-black epic-text-glow bg-gradient-to-r from-orange-100 via-yellow-100 to-orange-100 bg-clip-text text-transparent tracking-wider">
                         VS MODE
                       </CardTitle>
-                      <p className="text-purple-300/80 text-sm font-medium mt-1">
-                        MULTIPLAYER BATTLES
+                      <p className="text-orange-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em]">
+                        ⚔️ MULTIPLAYER WARFARE
                       </p>
                     </div>
                   </div>
                 </CardHeader>
                 
-                <CardContent className="relative space-y-4">
-                  {/* Battle Modes */}
-                  <div className="space-y-3">
+                <CardContent className="relative space-y-5 px-6">
+                  {/* Epic Battle Mode Buttons */}
+                  <div className="space-y-4">
                     <Button 
                       onClick={() => setGameMode('vs-selection')}
-                      className="w-full relative group/btn bg-gradient-to-r from-violet-900/80 to-purple-900/80 hover:from-violet-800/90 hover:to-purple-800/90 border border-purple-500/40 hover:border-purple-400/60 text-white py-5 transition-all duration-300"
+                      className="w-full relative group/btn bg-gradient-to-r from-yellow-900 via-orange-900 to-yellow-900 hover:from-yellow-800 hover:via-orange-800 hover:to-yellow-800 border-2 border-yellow-400/50 hover:border-yellow-300/70 text-white py-6 transition-all duration-500 shadow-[0_4px_20px_rgba(250,204,21,0.3)] hover:shadow-[0_6px_30px_rgba(250,204,21,0.5)] transform hover:scale-105"
                       size="lg"
                     >
-                      <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
                       <div className="relative flex items-center justify-between w-full">
-                        <span className="flex items-center gap-3">
-                          <Zap className="w-6 h-6 text-yellow-400 animate-pulse" />
+                        <span className="flex items-center gap-4">
+                          <Zap className="w-8 h-8 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.7)] animate-pulse" />
                           <div className="text-left">
-                            <div className="font-bold text-base">LIVE DUEL</div>
-                            <div className="text-xs text-purple-300">Instant matchmaking</div>
+                            <div className="font-black text-lg uppercase tracking-wide">LIVE DUEL</div>
+                            <div className="text-xs text-yellow-200/80 font-medium">Instant PvP matchmaking</div>
                           </div>
                         </span>
-                        <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                        <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform duration-300" />
                       </div>
                     </Button>
                     
                     <Button 
                       onClick={() => setGameMode('friend-challenge')}
-                      className="w-full relative group/btn bg-gradient-to-r from-pink-900/80 to-rose-900/80 hover:from-pink-800/90 hover:to-rose-800/90 border border-pink-500/40 hover:border-pink-400/60 text-white py-5 transition-all duration-300"
+                      className="w-full relative group/btn bg-gradient-to-r from-pink-900 via-rose-900 to-pink-900 hover:from-pink-800 hover:via-rose-800 hover:to-pink-800 border-2 border-pink-400/50 hover:border-pink-300/70 text-white py-6 transition-all duration-500 shadow-[0_4px_20px_rgba(236,72,153,0.3)] hover:shadow-[0_6px_30px_rgba(236,72,153,0.5)] transform hover:scale-105"
                       size="lg"
                     >
-                      <span className="absolute inset-0 bg-gradient-to-r from-pink-600 to-rose-600 opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
                       <div className="relative flex items-center justify-between w-full">
-                        <span className="flex items-center gap-3">
-                          <UserPlus className="w-6 h-6 text-pink-400" />
+                        <span className="flex items-center gap-4">
+                          <UserPlus className="w-8 h-8 text-pink-400 drop-shadow-[0_0_10px_rgba(236,72,153,0.7)]" />
                           <div className="text-left">
-                            <div className="font-bold text-base">FRIEND BATTLE</div>
-                            <div className="text-xs text-pink-300">Challenge by username</div>
+                            <div className="font-black text-lg uppercase tracking-wide">FRIEND BATTLE</div>
+                            <div className="text-xs text-pink-200/80 font-medium">Challenge your allies</div>
                           </div>
                         </span>
-                        <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                        <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform duration-300" />
                       </div>
                     </Button>
                   </div>
                   
-                  {/* Features */}
-                  <div className="space-y-2 mt-4">
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4 text-purple-400" />
-                      <span className="text-purple-300 text-sm">Real-time PvP battles</span>
+                  {/* Epic Features List */}
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center gap-3 group/feature">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-orange-200 text-sm font-semibold group-hover/feature:text-orange-100 transition-colors">Real-time PvP combat system</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4 text-purple-400" />
-                      <span className="text-purple-300 text-sm">Async friend challenges</span>
+                    <div className="flex items-center gap-3 group/feature">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-orange-200 text-sm font-semibold group-hover/feature:text-orange-100 transition-colors">Asynchronous friend warfare</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="w-4 h-4 text-purple-400" />
-                      <span className="text-purple-300 text-sm">Climb the leaderboard</span>
+                    <div className="flex items-center gap-3 group/feature">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-orange-200 text-sm font-semibold group-hover/feature:text-orange-100 transition-colors">Dominate the global leaderboard</span>
+                    </div>
+                  </div>
+                  
+                  {/* Epic Stats Badge */}
+                  <div className="relative bg-gradient-to-r from-orange-950/60 via-red-950/60 to-orange-950/60 rounded-2xl p-5 border-2 border-orange-400/30 shadow-inner">
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-red-600/5 rounded-2xl"></div>
+                    <div className="relative flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Trophy className="w-6 h-6 text-yellow-400 animate-pulse" />
+                        <span className="text-orange-200 font-bold uppercase tracking-wider text-sm">Ranked Battles</span>
+                      </div>
+                      <Badge className="bg-gradient-to-r from-yellow-600/30 to-orange-600/30 text-yellow-300 border border-yellow-500/50 font-bold">
+                        EARN ELO
+                      </Badge>
                     </div>
                   </div>
                 </CardContent>

@@ -51,8 +51,8 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 20,
-    "points": 3844,
-    "totalWins": 66,
+    "points": 3881,
+    "totalWins": 67,
     "totalLosses": 15,
     "avatarData": {
       "baseModel": "female",
@@ -66,7 +66,7 @@
       ],
       "accessoryColor": "#E6E6FA"
     },
-    "lastActive": "2025-08-15T22:40:47.881Z"
+    "lastActive": "2025-08-16T03:48:38.510Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -187,8 +187,8 @@
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 15,
-    "points": 2919,
-    "totalWins": 49,
+    "points": 2932,
+    "totalWins": 50,
     "totalLosses": 14,
     "avatarData": {
       "baseModel": "male",
@@ -202,7 +202,7 @@
       ],
       "accessoryColor": "#C0C0C0"
     },
-    "lastActive": "2025-08-16T02:04:44.703Z"
+    "lastActive": "2025-08-16T03:48:38.510Z"
   },
   {
     "id": "bot_verdict_viper",
