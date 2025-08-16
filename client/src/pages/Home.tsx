@@ -21,7 +21,7 @@ import { DailyChallenges } from '@/components/DailyChallenges';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 
@@ -65,7 +65,8 @@ export default function Home() {
   const [gameSettings, setGameSettings] = useState({
     subject: 'Mixed Questions',
     botDifficulty: 'medium',
-    friendUsername: ''
+    friendUsername: '',
+    questionType: 'bar' as 'bar' | 'realWorld'
   });
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
@@ -73,6 +74,15 @@ export default function Home() {
   const [showAtticusDuel, setShowAtticusDuel] = useState(false);
   const [atticusCooldown, setAtticusCooldown] = useState<number | null>(null);
   const [showDailyChallenges, setShowDailyChallenges] = useState(false);
+
+  // Handle auto-open match from challenge link
+  useEffect(() => {
+    const autoOpenMatchId = localStorage.getItem('autoOpenMatch');
+    if (autoOpenMatchId && user) {
+      setShowAsyncMatch(autoOpenMatchId);
+      localStorage.removeItem('autoOpenMatch');
+    }
+  }, [user]);
 
   // Fetch async inbox notifications count
   useEffect(() => {
@@ -201,7 +211,8 @@ export default function Home() {
         '/api/async/create',
         {
           opponentUsername: gameSettings.friendUsername,
-          subject: gameSettings.subject
+          subject: gameSettings.subject,
+          questionType: gameSettings.questionType
         }
       );
 
@@ -394,7 +405,8 @@ export default function Home() {
         type: 'queue:join',
         payload: { 
           subject: gameSettings.subject,
-          botDifficulty: gameSettings.botDifficulty
+          botDifficulty: gameSettings.botDifficulty,
+          questionType: gameSettings.questionType
         }
       }));
     };
@@ -911,13 +923,50 @@ export default function Home() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Question Type Selection */}
               <div>
-                <label className="text-sm font-medium mb-2 block">Subject</label>
+                <label className="text-sm font-medium mb-3 block text-purple-300">Question Type</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
+                    variant={gameSettings.questionType === 'bar' ? 'default' : 'outline'}
+                    className={`h-auto p-4 ${
+                      gameSettings.questionType === 'bar' 
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
+                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <GraduationCap className="w-6 h-6 mx-auto mb-2" />
+                      <div className="font-semibold">Bar Exam</div>
+                      <div className="text-xs opacity-80 mt-1">Professional MBE questions</div>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
+                    variant={gameSettings.questionType === 'realWorld' ? 'default' : 'outline'}
+                    className={`h-auto p-4 ${
+                      gameSettings.questionType === 'realWorld' 
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
+                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <Globe className="w-6 h-6 mx-auto mb-2" />
+                      <div className="font-semibold">Real-World Law</div>
+                      <div className="text-xs opacity-80 mt-1">Practical legal knowledge</div>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block text-purple-300">Subject</label>
                 <Select 
                   value={gameSettings.subject} 
                   onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-purple-950/40 border-purple-500/30">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -926,7 +975,7 @@ export default function Home() {
                     ))}
                   </SelectContent>
                 </Select>
-                    </div>
+              </div>
                     
                     <div>
                       <label className="text-sm font-medium mb-2 block">Opponent Skill Level</label>
@@ -998,13 +1047,56 @@ export default function Home() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Quick Share Section */}
+              <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 rounded-lg p-4 border border-purple-500/30">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-purple-300 flex items-center gap-2">
+                    <Share2 className="w-4 h-4" />
+                    Share Challenge Link
+                  </h3>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    value={`${window.location.origin}/challenge/${user?.username || 'yourname'}`}
+                    readOnly
+                    className="flex-1 bg-purple-950/50 border-purple-500/30 text-purple-200"
+                  />
+                  <Button
+                    onClick={() => {
+                      const link = `${window.location.origin}/challenge/${user?.username || 'yourname'}`;
+                      navigator.clipboard.writeText(link);
+                      toast({
+                        title: "Link copied!",
+                        description: "Share this link with friends to challenge them",
+                      });
+                    }}
+                    className="bg-purple-600 hover:bg-purple-700"
+                    size="sm"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-purple-300/60 mt-2">
+                  Friends can click this link to challenge you directly
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-purple-500/20" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-black px-2 text-purple-400">or challenge by username</span>
+                </div>
+              </div>
+
               <div>
-                <label className="text-sm font-medium mb-2 block">Friend's Username</label>
+                <label className="text-sm font-medium mb-2 block text-purple-300">Friend's Username</label>
                 <Input
                   placeholder="Enter friend's username"
                   value={gameSettings.friendUsername}
                   onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
-                  className="w-full"
+                  className="w-full bg-purple-950/40 border-purple-500/30"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
                       handleStartAsyncFriendGame();
@@ -1012,14 +1104,51 @@ export default function Home() {
                   }}
                 />
               </div>
+
+              {/* Question Type Selection */}
+              <div>
+                <label className="text-sm font-medium mb-3 block text-purple-300">Question Type</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
+                    variant={gameSettings.questionType === 'bar' ? 'default' : 'outline'}
+                    className={`h-auto p-3 ${
+                      gameSettings.questionType === 'bar' 
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
+                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <GraduationCap className="w-5 h-5 mx-auto mb-1" />
+                      <div className="font-semibold text-sm">Bar Exam</div>
+                      <div className="text-xs opacity-80">MBE questions</div>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
+                    variant={gameSettings.questionType === 'realWorld' ? 'default' : 'outline'}
+                    className={`h-auto p-3 ${
+                      gameSettings.questionType === 'realWorld' 
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400' 
+                        : 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400/50'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <Globe className="w-5 h-5 mx-auto mb-1" />
+                      <div className="font-semibold text-sm">Real-World</div>
+                      <div className="text-xs opacity-80">Street law</div>
+                    </div>
+                  </Button>
+                </div>
+              </div>
               
               <div>
-                <label className="text-sm font-medium mb-2 block">Subject</label>
+                <label className="text-sm font-medium mb-2 block text-purple-300">Subject</label>
                 <Select 
                   value={gameSettings.subject}
                   onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-purple-950/40 border-purple-500/30">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

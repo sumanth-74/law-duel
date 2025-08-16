@@ -28,8 +28,8 @@
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
     "level": 22,
-    "points": 4244,
-    "totalWins": 79,
+    "points": 4275,
+    "totalWins": 80,
     "totalLosses": 6,
     "avatarData": {
       "baseModel": "male",
@@ -43,7 +43,7 @@
       ],
       "accessoryColor": "#DAA520"
     },
-    "lastActive": "2025-08-16T03:02:53.040Z"
+    "lastActive": "2025-08-16T03:17:08.857Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -119,9 +119,9 @@
     "username": "ContractsWizard",
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
-    "level": 17,
-    "points": 3354,
-    "totalWins": 57,
+    "level": 18,
+    "points": 3406,
+    "totalWins": 58,
     "totalLosses": 13,
     "avatarData": {
       "baseModel": "female",
@@ -135,7 +135,7 @@
       ],
       "accessoryColor": "#FFB6C1"
     },
-    "lastActive": "2025-08-16T03:02:53.040Z"
+    "lastActive": "2025-08-16T03:17:08.857Z"
   },
   {
     "id": "bot_lawbeast_99",

@@ -15,6 +15,7 @@ import NotFound from "@/pages/not-found";
 import Signup from "@/pages/Signup";
 import EmailAdmin from "@/pages/EmailAdmin";
 import AuthDebug from "@/pages/AuthDebug";
+import Challenge from "@/pages/Challenge";
 import { Loader2 } from "lucide-react";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/" component={Landing} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
+          <Route path="/challenge/:username" component={Challenge} />
         </>
       ) : (
         <>
@@ -49,6 +51,7 @@ function Router() {
           <Route path="/stats" component={Stats} />
           <Route path="/stats/:userId" component={Stats} />
           <Route path="/admin/emails" component={EmailAdmin} />
+          <Route path="/challenge/:username" component={Challenge} />
         </>
       )}
       <Route path="/duel-test" component={DuelTestPage} />
