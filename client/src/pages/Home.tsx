@@ -866,10 +866,10 @@ export default function Home() {
           />
           <div className="relative z-10 bg-gradient-to-b from-transparent to-black/80 p-8 text-center">
             <h2 className="font-cinzel text-4xl font-bold text-purple-300 mb-3">
-              ENTER THE ARCANE COURT
+              MASTER THE BAR EXAM
             </h2>
             <p className="text-slate-300 text-lg">
-              Master the mystical laws of the realm through epic duels
+              Dominate American law through epic legal duels
             </p>
           </div>
         </div>
@@ -1046,7 +1046,7 @@ export default function Home() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-orange-400" />
-                      <span>Async friend matches</span>
+                      <span>Friend matches</span>
                     </div>
                   </div>
                 </CardContent>

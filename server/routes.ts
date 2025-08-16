@@ -550,25 +550,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/leaderboard", async (req, res) => {
     try {
-      // Use weekly ladder for the main leaderboard
+      // Get weekly ladder data
       const { getWeeklyTop50 } = await import("./services/weeklyLadder.js");
       const weeklyLadder = await getWeeklyTop50();
       
-      // Transform to match expected format
-      const leaderboard = weeklyLadder.slice(0, 12).map(player => ({
-        id: player.userId,
-        username: player.username,
-        displayName: player.username,
-        level: 1,
-        points: player.weeklyRating,
-        totalWins: player.weeklyWins,
-        totalLosses: player.weeklyLosses,
-        lawSchool: player.lawSchool
-      }));
-      
-      res.json(leaderboard);
+      // If weekly ladder is empty, fall back to regular leaderboard with bots
+      if (weeklyLadder.length === 0) {
+        const { getLeaderboard } = await import("./services/leaderboard.js");
+        const leaderboard = await getLeaderboard(12);
+        res.json(leaderboard);
+      } else {
+        // Transform weekly data to match expected format
+        const leaderboard = weeklyLadder.slice(0, 12).map(player => ({
+          id: player.userId,
+          username: player.username,
+          displayName: player.username,
+          level: 1,
+          points: player.weeklyRating,
+          totalWins: player.weeklyWins,
+          totalLosses: player.weeklyLosses,
+          lawSchool: player.lawSchool
+        }));
+        res.json(leaderboard);
+      }
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch weekly leaderboard", error: error.message });
+      res.status(500).json({ message: "Failed to fetch leaderboard", error: error.message });
     }
   });
 
