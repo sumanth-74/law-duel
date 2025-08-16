@@ -707,178 +707,351 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container max-w-4xl mx-auto py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Animated background effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+      
+      <div className="container max-w-4xl mx-auto py-8 px-4 relative">
         {/* Daily Streak Indicator - Always at the top */}
         <div className="mb-6">
           <StreakIndicator />
         </div>
         
-        {/* Header with Logo and Persistent Gamer Tag */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-6">
-            <LawDuelLogo size="lg" showText={true} />
-            <div className="flex items-center space-x-4">
-              <AvatarRenderer
-                avatarData={character.avatarData as any}
-                level={character.level}
-                size={64}
-              />
-              <div>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="font-cinzel text-2xl font-bold text-purple-200">{character.displayName}</h1>
-                  <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/20">
-                    @{character.username}
-                  </Badge>
-                  {character.lawSchool && (
-                    <Badge variant="outline" className="border-amber-400/50 text-amber-300 bg-amber-900/20">
-                      {character.lawSchool.includes('Law School') ? 
-                        character.lawSchool.split(' Law School')[0] : 
-                        character.lawSchool.split(' ')[0]
-                      }
-                    </Badge>
-                  )}
+        {/* Epic Header Section */}
+        <div className="relative mb-8">
+          {/* Header card with glass morphism */}
+          <div className="relative bg-gradient-to-r from-slate-950/80 via-purple-950/80 to-slate-950/80 backdrop-blur-2xl rounded-2xl border border-purple-500/30 p-6 shadow-2xl overflow-hidden">
+            {/* Animated gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-purple-600/10 animate-pulse"></div>
+            
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                {/* Epic Logo */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-purple-600 blur-xl opacity-30"></div>
+                  <LawDuelLogo size="lg" showText={true} className="relative" />
                 </div>
-                <p className="text-purple-400">
-                  Level {character.level} • {character.points} Points
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button 
-              onClick={() => setShowCharacterCreation(true)} 
-              variant="outline" 
-              size="sm"
-              className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20 hover:border-purple-400"
-            >
-              Edit Character
-            </Button>
-            <Button
-              onClick={() => window.location.href = '/stats'}
-              variant="outline"
-              size="sm"
-              className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20 hover:border-purple-400"
-            >
-              <UserIcon className="h-4 w-4 mr-2" />
-              My Stats
-            </Button>
-            <Button 
-              onClick={() => logout.mutate()} 
-              variant="outline" 
-              size="sm"
-              className="border-red-500/50 text-red-400 hover:bg-red-500/20 hover:border-red-400"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          </div>
-        </div>
-
-        {/* Daily Challenge Banner */}
-        <Card className="bg-gradient-to-r from-amber-900/40 via-yellow-900/40 to-orange-900/40 border-amber-500/30 mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Trophy className="w-8 h-8 text-amber-400" />
-                <div>
-                  <h3 className="font-cinzel text-lg font-bold text-amber-200">Daily Challenge</h3>
-                  <p className="text-amber-300 text-sm">Hard question • Enhanced rewards • Resets daily</p>
-                </div>
-              </div>
-              <Link href="/daily">
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white border-0">
-                  Take Challenge
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Main Game Mode Selection */}
-        {gameMode === 'menu' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Solo Mode */}
-            <Card className="bg-gradient-to-br from-indigo-900/40 to-blue-900/40 border-indigo-500/30 hover:border-indigo-400/50 transition-all">
-              <CardHeader className="pb-4">
-                <CardTitle className="font-cinzel text-2xl flex items-center gap-3 text-indigo-300">
-                  <UserIcon className="w-8 h-8 text-indigo-400" />
-                  Solo Mode
-                </CardTitle>
-                <p className="text-indigo-300/80 text-sm mt-2">
-                  Progressive difficulty • 3 Lives system • Test your limits
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-indigo-950/40 rounded-lg p-4 space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-indigo-300">Starting Difficulty</span>
-                    <Badge className="bg-indigo-600/30 text-indigo-200 border-indigo-500/50">Level 1</Badge>
+                
+                {/* Character Profile */}
+                <div className="flex items-center space-x-5">
+                  {/* Avatar with glow effect */}
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-md opacity-50 group-hover:opacity-75 transition duration-300"></div>
+                    <div className="relative bg-slate-900 rounded-full p-1">
+                      <AvatarRenderer
+                        avatarData={character.avatarData as any}
+                        level={character.level}
+                        size={72}
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-indigo-300">Lives</span>
-                    <div className="flex gap-1">
-                      <Heart className="w-4 h-4 text-red-400 fill-red-400" />
-                      <Heart className="w-4 h-4 text-red-400 fill-red-400" />
-                      <Heart className="w-4 h-4 text-red-400 fill-red-400" />
+                  
+                  <div>
+                    {/* Name and badges */}
+                    <div className="flex items-center gap-3 flex-wrap mb-2">
+                      <h1 className="font-cinzel text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                        {character.displayName}
+                      </h1>
+                      <Badge className="bg-purple-600/30 text-purple-200 border-purple-500/50 px-3 py-1">
+                        @{character.username}
+                      </Badge>
+                      {character.lawSchool && (
+                        <Badge className="bg-amber-600/30 text-amber-200 border-amber-500/50 px-3 py-1">
+                          {character.lawSchool.includes('Law School') ? 
+                            character.lawSchool.split(' Law School')[0] : 
+                            character.lawSchool.split(' ')[0]
+                          }
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    {/* Stats bar */}
+                    <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-2">
+                        <div className="text-cyan-400 text-sm">LEVEL</div>
+                        <div className="bg-gradient-to-r from-cyan-600/30 to-blue-600/30 px-3 py-1 rounded-lg border border-cyan-500/30">
+                          <span className="font-bold text-cyan-200">{character.level}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-purple-400 text-sm">POINTS</div>
+                        <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 px-3 py-1 rounded-lg border border-purple-500/30">
+                          <span className="font-bold text-purple-200">{character.points.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-green-400 text-sm">XP</div>
+                        <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 px-3 py-1 rounded-lg border border-green-500/30">
+                          <span className="font-bold text-green-200">{character.xp}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              
+              {/* Action buttons */}
+              <div className="flex items-center space-x-3">
                 <Button 
-                  onClick={() => {
-                    console.log('Solo Challenge clicked, setting gameMode to bot-practice');
-                    setGameMode('bot-practice');
-                  }}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-                  size="lg"
+                  onClick={() => setShowCharacterCreation(true)} 
+                  className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 hover:from-purple-600/40 hover:to-pink-600/40 border border-purple-500/50 text-purple-200 hover:border-purple-400"
+                  size="sm"
                 >
-                  Start Solo Challenge
+                  <span className="flex items-center gap-2">
+                    ✏️ Edit
+                  </span>
                 </Button>
-              </CardContent>
-            </Card>
+                <Button
+                  onClick={() => window.location.href = '/stats'}
+                  className="bg-gradient-to-r from-cyan-600/30 to-blue-600/30 hover:from-cyan-600/40 hover:to-blue-600/40 border border-cyan-500/50 text-cyan-200 hover:border-cyan-400"
+                  size="sm"
+                >
+                  <span className="flex items-center gap-2">
+                    📊 Stats
+                  </span>
+                </Button>
+                <Button 
+                  onClick={() => logout.mutate()} 
+                  className="bg-gradient-to-r from-red-600/30 to-orange-600/30 hover:from-red-600/40 hover:to-orange-600/40 border border-red-500/50 text-red-200 hover:border-red-400"
+                  size="sm"
+                >
+                  <span className="flex items-center gap-2">
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            {/* VS Mode */}
-            <Card className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border-purple-500/30 hover:border-purple-400/50 transition-all">
-              <CardHeader className="pb-4">
-                <CardTitle className="font-cinzel text-2xl flex items-center gap-3 text-purple-300">
-                  <Users className="w-8 h-8 text-purple-400" />
-                  VS Mode
-                </CardTitle>
-                <p className="text-purple-300/80 text-sm mt-2">
-                  Play against friends or random opponents
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-purple-950/40 rounded-lg p-4 space-y-2">
+        {/* Daily Challenge Banner - Epic Style */}
+        <div className="relative mb-6 group">
+          {/* Animated glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-yellow-500 to-orange-600 opacity-50 blur-xl group-hover:opacity-75 transition-opacity duration-500 animate-pulse"></div>
+          
+          <Card className="relative bg-gradient-to-r from-amber-950/90 via-yellow-950/90 to-orange-950/90 border-2 border-amber-500/50 hover:border-amber-400 transition-all duration-300 backdrop-blur-xl overflow-hidden">
+            {/* Animated background pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(251,191,36,0.3),transparent_50%)]"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(251,146,60,0.3),transparent_50%)]"></div>
+            </div>
+            
+            <CardContent className="relative p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                  {/* Animated trophy icon */}
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-amber-400 blur-lg opacity-50 animate-pulse"></div>
+                    <Trophy className="relative w-10 h-10 text-amber-400 animate-bounce" style={{ animationDuration: '3s' }} />
+                  </div>
+                  <div>
+                    <h3 className="font-cinzel text-xl font-bold bg-gradient-to-r from-amber-200 to-yellow-200 bg-clip-text text-transparent">
+                      DAILY CHALLENGE
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge className="bg-red-600/30 text-red-300 border-red-500/50 text-xs">HARD MODE</Badge>
+                      <Badge className="bg-green-600/30 text-green-300 border-green-500/50 text-xs">2X REWARDS</Badge>
+                      <Badge className="bg-blue-600/30 text-blue-300 border-blue-500/50 text-xs">24H TIMER</Badge>
+                    </div>
+                  </div>
+                </div>
+                <Link href="/daily">
+                  <Button className="relative group/btn bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white border-0 px-8 py-6 text-lg font-bold shadow-2xl">
+                    <span className="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                    <span className="relative flex items-center gap-2">
+                      PLAY NOW
+                      <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                    </span>
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Game Mode Selection - Epic Gaming Style */}
+        {gameMode === 'menu' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            {/* Solo Mode - Epic Card */}
+            <div className="relative group">
+              {/* Animated glow */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition duration-500 animate-pulse"></div>
+              
+              <Card className="relative h-full bg-gradient-to-br from-slate-950/95 via-blue-950/95 to-slate-950/95 border-2 border-cyan-500/40 hover:border-cyan-400/60 transition-all duration-300 backdrop-blur-xl overflow-hidden hover:scale-[1.02]">
+                {/* Animated background mesh */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                </div>
+                
+                <CardHeader className="relative pb-2">
+                  <div className="flex items-center gap-4 mb-3">
+                    {/* Animated icon container */}
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-cyan-400 blur-xl opacity-50"></div>
+                      <div className="relative w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-2xl">
+                        <UserIcon className="w-9 h-9 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <CardTitle className="font-cinzel text-3xl font-bold bg-gradient-to-r from-cyan-200 via-blue-200 to-cyan-200 bg-clip-text text-transparent">
+                        SOLO MODE
+                      </CardTitle>
+                      <p className="text-cyan-300/80 text-sm font-medium mt-1">
+                        SINGLE PLAYER CAMPAIGN
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="relative space-y-4">
+                  {/* Stats Display */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 rounded-lg p-3 border border-cyan-500/30">
+                      <div className="text-xs text-cyan-400 mb-1">DIFFICULTY</div>
+                      <div className="text-lg font-bold text-cyan-200">ADAPTIVE</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-900/40 to-pink-900/40 rounded-lg p-3 border border-red-500/30">
+                      <div className="text-xs text-red-400 mb-1">LIVES</div>
+                      <div className="flex gap-1 justify-center">
+                        <Heart className="w-5 h-5 text-red-400 fill-red-400 animate-pulse" />
+                        <Heart className="w-5 h-5 text-red-400 fill-red-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                        <Heart className="w-5 h-5 text-red-400 fill-red-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 rounded-lg p-3 border border-green-500/30">
+                      <div className="text-xs text-green-400 mb-1">REWARDS</div>
+                      <div className="text-lg font-bold text-green-200">XP+</div>
+                    </div>
+                  </div>
+                  
+                  {/* Features */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-cyan-400" />
+                      <span className="text-cyan-300 text-sm">Progressive difficulty scaling</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-cyan-400" />
+                      <span className="text-cyan-300 text-sm">Unlock Atticus boss battle</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-cyan-400" />
+                      <span className="text-cyan-300 text-sm">Earn massive XP rewards</span>
+                    </div>
+                  </div>
+                  
                   <Button 
-                    onClick={() => setGameMode('vs-selection')}
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white justify-between"
+                    onClick={() => {
+                      console.log('Solo Challenge clicked, setting gameMode to bot-practice');
+                      setGameMode('bot-practice');
+                    }}
+                    className="w-full relative group/btn bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-6 text-lg shadow-2xl transition-all duration-300"
                     size="lg"
                   >
-                    <span className="flex items-center gap-2">
-                      <Zap className="w-5 h-5" />
-                      Live Duel
+                    <span className="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                    <span className="relative flex items-center justify-center gap-3">
+                      ⚔️ ENTER ARENA
+                      <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                     </span>
-                    <ChevronRight className="w-5 h-5" />
                   </Button>
-                  <p className="text-xs text-purple-300/60 text-center">Match with random player or bot instantly</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* VS Mode - Epic Card */}
+            <div className="relative group">
+              {/* Animated glow */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition duration-500 animate-pulse"></div>
+              
+              <Card className="relative h-full bg-gradient-to-br from-slate-950/95 via-purple-950/95 to-slate-950/95 border-2 border-purple-500/40 hover:border-purple-400/60 transition-all duration-300 backdrop-blur-xl overflow-hidden hover:scale-[1.02]">
+                {/* Animated background mesh */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
                 </div>
-                <div className="bg-purple-950/40 rounded-lg p-4 space-y-2">
-                  <Button 
-                    onClick={() => setGameMode('friend-challenge')}
-                    className="w-full bg-pink-600 hover:bg-pink-700 text-white justify-between"
-                    size="lg"
-                  >
-                    <span className="flex items-center gap-2">
-                      <UserPlus className="w-5 h-5" />
-                      Friend Challenge
-                    </span>
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                  <p className="text-xs text-purple-300/60 text-center">Challenge a specific friend by username</p>
-                </div>
-              </CardContent>
-            </Card>
+                
+                <CardHeader className="relative pb-2">
+                  <div className="flex items-center gap-4 mb-3">
+                    {/* Animated icon container */}
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-purple-400 blur-xl opacity-50"></div>
+                      <div className="relative w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-2xl">
+                        <Users className="w-9 h-9 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <CardTitle className="font-cinzel text-3xl font-bold bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                        VS MODE
+                      </CardTitle>
+                      <p className="text-purple-300/80 text-sm font-medium mt-1">
+                        MULTIPLAYER BATTLES
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="relative space-y-4">
+                  {/* Battle Modes */}
+                  <div className="space-y-3">
+                    <Button 
+                      onClick={() => setGameMode('vs-selection')}
+                      className="w-full relative group/btn bg-gradient-to-r from-violet-900/80 to-purple-900/80 hover:from-violet-800/90 hover:to-purple-800/90 border border-purple-500/40 hover:border-purple-400/60 text-white py-5 transition-all duration-300"
+                      size="lg"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                      <div className="relative flex items-center justify-between w-full">
+                        <span className="flex items-center gap-3">
+                          <Zap className="w-6 h-6 text-yellow-400 animate-pulse" />
+                          <div className="text-left">
+                            <div className="font-bold text-base">LIVE DUEL</div>
+                            <div className="text-xs text-purple-300">Instant matchmaking</div>
+                          </div>
+                        </span>
+                        <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                      </div>
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => setGameMode('friend-challenge')}
+                      className="w-full relative group/btn bg-gradient-to-r from-pink-900/80 to-rose-900/80 hover:from-pink-800/90 hover:to-rose-800/90 border border-pink-500/40 hover:border-pink-400/60 text-white py-5 transition-all duration-300"
+                      size="lg"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-pink-600 to-rose-600 opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300 rounded-md"></span>
+                      <div className="relative flex items-center justify-between w-full">
+                        <span className="flex items-center gap-3">
+                          <UserPlus className="w-6 h-6 text-pink-400" />
+                          <div className="text-left">
+                            <div className="font-bold text-base">FRIEND BATTLE</div>
+                            <div className="text-xs text-pink-300">Challenge by username</div>
+                          </div>
+                        </span>
+                        <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                      </div>
+                    </Button>
+                  </div>
+                  
+                  {/* Features */}
+                  <div className="space-y-2 mt-4">
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-purple-400" />
+                      <span className="text-purple-300 text-sm">Real-time PvP battles</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-purple-400" />
+                      <span className="text-purple-300 text-sm">Async friend challenges</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-purple-400" />
+                      <span className="text-purple-300 text-sm">Climb the leaderboard</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
 
