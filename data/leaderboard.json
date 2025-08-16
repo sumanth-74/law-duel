@@ -140,8 +140,8 @@
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
     "level": 14,
-    "points": 2650,
-    "totalWins": 42,
+    "points": 2671,
+    "totalWins": 43,
     "totalLosses": 11,
     "avatarData": {
       "base": "undead",
@@ -151,7 +151,7 @@
       ],
       "archetypeId": "suppression-wraith"
     },
-    "lastActive": "2025-08-16T01:58:31.364Z"
+    "lastActive": "2025-08-16T17:12:48.864Z"
   },
   {
     "id": "bot_legal_eagle_420",
@@ -216,8 +216,8 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 10,
-    "points": 1850,
-    "totalWins": 28,
+    "points": 1873,
+    "totalWins": 29,
     "totalLosses": 18,
     "avatarData": {
       "base": "undead",
@@ -227,7 +227,7 @@
       ],
       "archetypeId": "brady-banshee"
     },
-    "lastActive": "2025-08-16T04:47:14.357Z"
+    "lastActive": "2025-08-16T17:12:48.864Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

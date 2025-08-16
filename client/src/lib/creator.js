@@ -17,6 +17,9 @@ import necromancerPortrait from '@assets/generated_images/Photorealistic_necroma
 import elementalPortrait from '@assets/generated_images/Photorealistic_fire_elemental_portrait_dbddd022.png';
 import sorcererPortrait from '@assets/generated_images/Photorealistic_dark_sorcerer_portrait_8eaaf1ab.png';
 
+// Special character - Atticus the Purple Wizard Cat
+import atticusPortrait from '@assets/generated_images/atticus_purple_wizard_cat.svg';
+
 // Corporate characters
 import dueDiligenceDragonPortrait from '@assets/generated_images/due_diligence_dragon_cd8c2457.png';
 import covenantGolemPortrait from '@assets/generated_images/covenant_golem_lawyer_efb72961.png';
@@ -63,8 +66,16 @@ import ineffectiveAssistanceShadePortrait from '@assets/generated_images/ineffec
  * @returns {string} - Image URL for the character
  */
 export function getCharacterImage(base = "humanoid", archetypeId = null) {
+  // Special characters first
+  if (archetypeId === 'atticus' || base === 'atticus') {
+    return atticusPortrait;
+  }
+  
   // Premium character mappings - each with professionally crafted unique portrait
   const specificArchetypes = {
+    // Atticus the Purple Wizard Cat
+    'atticus': atticusPortrait,
+    
     // Corporate characters - 8 unique business professionals
     'due-diligence-dragon': dueDiligenceDragonPortrait,
     'covenant-golem': covenantGolemPortrait,

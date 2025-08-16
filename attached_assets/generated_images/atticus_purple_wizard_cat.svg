@@ -1,0 +1,99 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#6D28D9;stop-opacity:1"/>
+    </linearGradient>
+    <radialGradient id="eyeGlow">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FBBF24;stop-opacity:0.8"/>
+    </radialGradient>
+    <linearGradient id="hatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4C1D95;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Glow -->
+  <ellipse cx="256" cy="400" rx="200" ry="40" fill="#6D28D9" opacity="0.3"/>
+  
+  <!-- Cat Body -->
+  <ellipse cx="256" cy="350" rx="100" ry="120" fill="url(#purpleGrad)"/>
+  
+  <!-- Cat Chest Fur -->
+  <ellipse cx="256" cy="360" rx="60" ry="80" fill="#A78BFA"/>
+  
+  <!-- Cat Head -->
+  <ellipse cx="256" cy="200" rx="90" ry="80" fill="url(#purpleGrad)"/>
+  
+  <!-- Cat Ears -->
+  <path d="M 180 180 L 160 120 L 200 160 Z" fill="url(#purpleGrad)"/>
+  <path d="M 332 180 L 352 120 L 312 160 Z" fill="url(#purpleGrad)"/>
+  
+  <!-- Inner Ears -->
+  <path d="M 185 165 L 175 140 L 195 160 Z" fill="#DDD6FE"/>
+  <path d="M 327 165 L 337 140 L 317 160 Z" fill="#DDD6FE"/>
+  
+  <!-- Wizard Hat -->
+  <path d="M 256 140 L 200 100 L 256 20 L 312 100 Z" fill="url(#hatGrad)"/>
+  <ellipse cx="256" cy="100" rx="60" ry="15" fill="#4C1D95"/>
+  
+  <!-- Hat Stars -->
+  <text x="240" y="60" font-family="Arial" font-size="20" fill="#FBBF24">★</text>
+  <text x="260" y="80" font-family="Arial" font-size="16" fill="#FBBF24">✦</text>
+  <text x="245" y="95" font-family="Arial" font-size="14" fill="#F59E0B">★</text>
+  
+  <!-- Eyes -->
+  <ellipse cx="230" cy="200" rx="18" ry="22" fill="#1F2937"/>
+  <ellipse cx="282" cy="200" rx="18" ry="22" fill="#1F2937"/>
+  
+  <!-- Glowing Pupils -->
+  <circle cx="232" cy="198" r="12" fill="url(#eyeGlow)"/>
+  <circle cx="280" cy="198" r="12" fill="url(#eyeGlow)"/>
+  
+  <!-- Eye Highlights -->
+  <circle cx="235" cy="195" r="4" fill="white" opacity="0.9"/>
+  <circle cx="283" cy="195" r="4" fill="white" opacity="0.9"/>
+  
+  <!-- Nose -->
+  <path d="M 256 220 L 250 225 L 262 225 Z" fill="#EC4899"/>
+  
+  <!-- Mouth -->
+  <path d="M 256 225 Q 245 235 235 230" fill="none" stroke="#4C1D95" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 256 225 Q 267 235 277 230" fill="none" stroke="#4C1D95" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Whiskers -->
+  <line x1="170" y1="200" x2="120" y2="190" stroke="#4C1D95" stroke-width="2" stroke-linecap="round"/>
+  <line x1="170" y1="210" x2="120" y2="210" stroke="#4C1D95" stroke-width="2" stroke-linecap="round"/>
+  <line x1="342" y1="200" x2="392" y2="190" stroke="#4C1D95" stroke-width="2" stroke-linecap="round"/>
+  <line x1="342" y1="210" x2="392" y2="210" stroke="#4C1D95" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Wizard Robe -->
+  <path d="M 180 330 L 160 450 L 352 450 L 332 330 Q 256 340 180 330" fill="url(#hatGrad)"/>
+  
+  <!-- Robe Trim -->
+  <rect x="160" y="440" width="192" height="15" fill="#FBBF24" opacity="0.8"/>
+  
+  <!-- Magic Staff -->
+  <rect x="340" y="250" width="8" height="180" rx="4" fill="#92400E"/>
+  
+  <!-- Staff Crystal -->
+  <g transform="translate(344, 240)">
+    <polygon points="0,-15 10,-5 10,5 0,15 -10,5 -10,-5" fill="#A78BFA"/>
+    <polygon points="0,-12 8,-4 8,4 0,12 -8,4 -8,-4" fill="#DDD6FE" opacity="0.6"/>
+  </g>
+  
+  <!-- Paws -->
+  <ellipse cx="220" cy="450" rx="25" ry="15" fill="#7C3AED"/>
+  <ellipse cx="292" cy="450" rx="25" ry="15" fill="#7C3AED"/>
+  
+  <!-- Magical Sparkles -->
+  <text x="150" y="150" font-family="Arial" font-size="20" fill="#FBBF24" opacity="0.7">✦</text>
+  <text x="360" y="180" font-family="Arial" font-size="16" fill="#F59E0B" opacity="0.6">★</text>
+  <text x="380" y="280" font-family="Arial" font-size="18" fill="#FBBF24" opacity="0.5">✦</text>
+  <text x="130" y="320" font-family="Arial" font-size="14" fill="#F59E0B" opacity="0.6">★</text>
+  
+  <!-- Arcane Glow Effect -->
+  <circle cx="256" cy="256" r="230" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.3"/>
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#8B5CF6" stroke-width="0.5" opacity="0.2"/>
+</svg>

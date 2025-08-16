@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Sparkles, Heart, Zap, Clock, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AvatarRenderer } from '@/components/AvatarRenderer';
 
 // Atticus taunt pools
 const openingTaunts = [
@@ -217,16 +218,23 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive }: AtticusDu
                   className="inline-block"
                 >
                   <div className="relative inline-block">
-                    {/* Cat with wizard hat composite */}
-                    <div className="text-8xl mb-2">🐱</div>
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2">
-                      <div className="text-6xl">🎩</div>
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2">
-                        <Sparkles className="w-8 h-8 text-purple-400 animate-pulse" />
-                      </div>
+                    {/* Atticus Avatar */}
+                    <AvatarRenderer
+                      avatarData={{
+                        base: 'atticus',
+                        palette: '#8B5CF6',
+                        props: [],
+                        archetypeId: 'atticus'
+                      }}
+                      size={150}
+                      className="mx-auto"
+                      animated={true}
+                    />
+                    <div className="absolute -top-2 -right-2 animate-pulse">
+                      <Sparkles className="w-8 h-8 text-purple-400" />
                     </div>
                   </div>
-                  <div className="text-purple-300 font-cinzel text-xl">Atticus the Purple Wizard Cat</div>
+                  <div className="text-purple-300 font-cinzel text-xl mt-2">Atticus the Purple Wizard Cat</div>
                 </motion.div>
                 
                 {/* Atticus Health */}
