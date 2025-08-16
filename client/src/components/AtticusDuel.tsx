@@ -310,23 +310,36 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-6 flex justify-center gap-4">
+              <div className="mt-6">
                 {battlePhase === 'intro' && (
                   <>
-                    <Button
-                      onClick={startBattle}
-                      className="bg-purple-600 hover:bg-purple-700 text-white"
-                    >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Begin Duel
-                    </Button>
-                    <Button
-                      onClick={onExit}
-                      variant="outline"
-                      className="border-purple-400 text-purple-300 hover:bg-purple-900/50"
-                    >
-                      Flee in Terror
-                    </Button>
+                    {/* Clear Stakes Message */}
+                    <div className="bg-gradient-to-r from-green-900/40 to-purple-900/40 rounded-lg p-4 mb-4 border border-green-500/30">
+                      <div className="text-center">
+                        <div className="text-green-400 font-bold mb-1">🎯 THE STAKES 🎯</div>
+                        <div className="text-purple-200 text-sm">
+                          <div>✅ <span className="text-green-300 font-semibold">WIN:</span> Restore all 3 lives + 100 XP bonus! Continue playing immediately!</div>
+                          <div className="mt-1">❌ <span className="text-red-300 font-semibold">LOSE:</span> 24-hour cooldown. Come back tomorrow.</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-center gap-4">
+                      <Button
+                        onClick={startBattle}
+                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                      >
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Begin Duel (Win = 3 Lives)
+                      </Button>
+                      <Button
+                        onClick={onExit}
+                        variant="outline"
+                        className="border-purple-400 text-purple-300 hover:bg-purple-900/50"
+                      >
+                        Flee in Terror
+                      </Button>
+                    </div>
                   </>
                 )}
                 

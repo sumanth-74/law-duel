@@ -653,8 +653,8 @@ export default function Home() {
               // Trigger Atticus duel when lives are lost
               setShowAtticusDuel(true);
               toast({
-                title: "No Lives Remaining!",
-                description: "Atticus the Purple Wizard Cat challenges you!",
+                title: "All Lives Lost! But Wait...",
+                description: "Beat Atticus the Purple Wizard Cat to restore all 3 lives and continue playing!",
                 variant: "default"
               });
             }}

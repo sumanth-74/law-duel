@@ -369,13 +369,20 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                {[...Array(3)].map((_, i) => (
-                  <Heart 
-                    key={i} 
-                    className={`w-5 h-5 ${i < challenge.livesRemaining ? 'text-red-500 fill-red-500' : 'text-gray-400'}`}
-                  />
-                ))}
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-1">
+                  {[...Array(3)].map((_, i) => (
+                    <Heart 
+                      key={i} 
+                      className={`w-5 h-5 ${i < challenge.livesRemaining ? 'text-red-500 fill-red-500' : 'text-gray-400'}`}
+                    />
+                  ))}
+                </div>
+                {challenge.livesRemaining === 1 && (
+                  <div className="text-[10px] text-yellow-400 mt-1">
+                    Last life! Lose = Atticus!
+                  </div>
+                )}
               </div>
               <Badge variant="outline" className="text-mystic-gold border-mystic-gold/50">
                 {challenge.score} Points
@@ -443,6 +450,24 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                 )}
               </div>
 
+              {/* Special Atticus Alert when all lives lost */}
+              {challenge.livesRemaining === 0 && (
+                <div className="bg-gradient-to-r from-purple-900/40 to-green-900/40 border border-purple-500/50 rounded-lg p-4 animate-pulse">
+                  <div className="text-center space-y-2">
+                    <div className="text-xl font-bold text-purple-300">🐱🎩 ATTICUS APPROACHES! 🎩🐱</div>
+                    <div className="text-sm text-gray-200">
+                      The Purple Wizard Cat has sensed your weakness!
+                    </div>
+                    <div className="text-sm text-green-300 font-semibold">
+                      ✨ BEAT HIM = RESTORE ALL 3 LIVES + 100 XP! ✨
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      (Lose and you'll have to wait 24 hours)
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Continue button - user can take as much time as needed to read */}
               <Button 
                 onClick={handleContinue}
@@ -450,7 +475,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                 size="lg"
                 data-testid="button-continue"
               >
-                {challenge.livesRemaining === 0 ? 'Continue to Atticus Challenge' : 'Continue to Next Question'}
+                {challenge.livesRemaining === 0 ? 'Face Atticus to Restore Lives (Win = 3 Lives!)' : 'Continue to Next Question'}
               </Button>
             </div>
           ) : (
