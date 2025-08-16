@@ -24,10 +24,22 @@ import { dailyCasefileService } from './services/dailyCasefileService';
 import { emailTrackingService } from './services/emailTrackingService';
 import { chatbotService } from './services/chatbotService';
 import { signAccessToken, verifyAccessToken } from './token';
+import { RANK_TIERS } from '@shared/schema';
 
 // Initialize bot practice system
 import { BotPractice } from './services/botPractice';
 const botPractice = new BotPractice();
+
+// Helper function to add rank information to user objects
+function addRankToUser(user: any) {
+  const rankTier = RANK_TIERS.find(tier => user.overallElo >= tier.minElo && user.overallElo <= tier.maxElo) || RANK_TIERS[0];
+  return {
+    ...user,
+    rankTitle: rankTier.name,
+    rankColor: rankTier.color,
+    rankTier: RANK_TIERS.indexOf(rankTier) + 1
+  };
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Sessions are now configured in index.ts BEFORE this function is called
@@ -265,9 +277,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Generate JWT token for dual support  
           const token = signAccessToken({ id: user.id, username: user.username });
           
-          // Don't return password
+          // Don't return password and add rank info
           const { password, ...userResponse } = user;
-          res.json({ ok: true, user: userResponse, token });
+          const userWithRank = addRankToUser(userResponse);
+          res.json({ ok: true, user: userWithRank, token });
         });
       });
     } catch (error: any) {
@@ -309,15 +322,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
             return res.status(500).json({ ok: false, message: 'Session save error' });
           }
           
-          // Don't return password
+          // Don't return password and add rank info
           const { password, ...userResponse } = user;
+          const userWithRank = addRankToUser(userResponse);
           console.log('Login successful, session saved for user:', user.username);
           console.log('Session ID:', req.sessionID);
           
           // Generate JWT token for dual support
           const token = signAccessToken({ id: user.id, username: user.username });
           
-          res.json({ ok: true, user: userResponse, token });
+          res.json({ ok: true, user: userWithRank, token });
         });
       });
     } catch (error: any) {
@@ -352,7 +366,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const user = await storage.getUser(req.session.userId);
         if (user) {
           const { password, ...userResponse } = user;
-          return res.json({ ok: true, user: userResponse, mode: "session" });
+          const userWithRank = addRankToUser(userResponse);
+          return res.json({ ok: true, user: userWithRank, mode: "session" });
         }
       } catch (error: any) {
         console.error('Session user fetch error:', error);
@@ -366,7 +381,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const user = await storage.getUser(payload.sub);
         if (user) {
           const { password, ...userResponse } = user;
-          return res.json({ ok: true, user: userResponse, mode: "token" });
+          const userWithRank = addRankToUser(userResponse);
+          return res.json({ ok: true, user: userWithRank, mode: "token" });
         }
       } catch (error: any) {
         console.error('Token user fetch error:', error);
