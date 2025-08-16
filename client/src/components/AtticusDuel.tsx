@@ -83,7 +83,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
   }, []);
 
   // Start a new spell round
-  const startNewRound = useCallback(() => {
+  const startNewRound = () => {
     if (battlePhase !== 'battle') return;
     
     const spell = spells[Math.floor(Math.random() * spells.length)];
@@ -99,12 +99,16 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
       setTimeWindow({ start: windowStart, end: windowEnd });
       // Auto-fail if no input after window
       setTimeout(() => {
-        if (battlePhase === 'battle' && spellCasting) {
-          handleMiss();
-        }
+        setTimeWindow(prev => {
+          if (prev && Date.now() > prev.end) {
+            handleMiss();
+            return null;
+          }
+          return prev;
+        });
       }, 1200);
     }, delay);
-  }, [battlePhase]);
+  };
 
   // Handle keyboard input
   useEffect(() => {
@@ -150,7 +154,9 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
   };
 
   // Handle miss or wrong timing
-  const handleMiss = () => {
+  const handleMiss = useCallback(() => {
+    if (!spellCasting) return; // Prevent double-calls
+    
     setSpellCasting(false);
     setTimeWindow(null);
     setEffectActive('miss');
@@ -165,11 +171,11 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
       if (newPlayerHealth <= 0) {
         handleDefeat();
       } else {
-        setRound(round + 1);
+        setRound(r => r + 1);
         setTimeout(() => startNewRound(), 1500);
       }
     }, 1000);
-  };
+  }, [spellCasting, playerHealth]);
 
   // Handle victory
   const handleVictory = () => {
@@ -200,7 +206,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
         >
           <Card className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 border-purple-500 shadow-2xl">
             <CardContent className="p-8">
-              {/* Atticus Visual */}
+              {/* Atticus Visual - Purple Wizard Cat */}
               <div className="text-center mb-6">
                 <motion.div
                   animate={{
@@ -209,8 +215,17 @@ export function AtticusDuel({ onVictory, onDefeat, onExit }: AtticusDuelProps) {
                   }}
                   className="inline-block"
                 >
-                  <div className="text-8xl mb-2">🧙‍♂️</div>
-                  <div className="text-purple-300 font-cinzel text-xl">Atticus the Arcane</div>
+                  <div className="relative inline-block">
+                    {/* Cat with wizard hat composite */}
+                    <div className="text-8xl mb-2">🐱</div>
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2">
+                      <div className="text-6xl">🎩</div>
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2">
+                        <Sparkles className="w-8 h-8 text-purple-400 animate-pulse" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-purple-300 font-cinzel text-xl">Atticus the Purple Wizard Cat</div>
                 </motion.div>
                 
                 {/* Atticus Health */}

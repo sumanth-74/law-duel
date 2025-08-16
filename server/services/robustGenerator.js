@@ -31,20 +31,23 @@ const SUBJECT_MAP = {
 
 const SUBJECT_ENUM = Object.keys(SUBJECTS);
 
-// Avoid immediate repeats within the same session
-const recent = new Set();
+// Avoid immediate repeats within the same session (separate for each question type)
+const recentBarExam = new Set();
+const recentRealWorld = new Set();
 const cap = 100;
 
-function memoStem(stem) {
+function memoStem(stem, questionType = 'bar-exam') {
   const key = stem.toLowerCase().replace(/\s+/g, " ").slice(0, 180);
-  recent.add(key);
-  if (recent.size > cap) recent.delete([...recent][0]);
+  const recentSet = questionType === 'real-world' ? recentRealWorld : recentBarExam;
+  recentSet.add(key);
+  if (recentSet.size > cap) recentSet.delete([...recentSet][0]);
   return key;
 }
 
-function seenStem(stem) {
+function seenStem(stem, questionType = 'bar-exam') {
   const key = stem.toLowerCase().replace(/\s+/g, " ").slice(0, 180);
-  return recent.has(key);
+  const recentSet = questionType === 'real-world' ? recentRealWorld : recentBarExam;
+  return recentSet.has(key);
 }
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -322,13 +325,13 @@ export async function generateFreshQuestion(subject, questionTypeOrDifficulty = 
       }
       
       // Check for duplicates
-      if (seenStem(item.stem)) {
+      if (seenStem(item.stem, questionType)) {
         err = "Duplicate stem";
         continue;
       }
       
       // Success! 
-      memoStem(item.stem);
+      memoStem(item.stem, questionType);
       break;
     }
     

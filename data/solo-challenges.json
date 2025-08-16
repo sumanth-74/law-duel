@@ -187,5 +187,19 @@
     "isDailyComplete": false,
     "lostAllLivesAt": null,
     "currentQuestionId": "fresh_openai_1755310595361_1cc86c2d"
+  },
+  {
+    "id": "solo_ef64d748-59df-424f-b451-781222328c95_1755312296610",
+    "userId": "ef64d748-59df-424f-b451-781222328c95",
+    "subject": "Mixed Questions",
+    "questionType": "real-world",
+    "livesRemaining": 0,
+    "round": 4,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-16T02:45:12.305Z",
+    "isDailyComplete": true,
+    "lostAllLivesAt": "2025-08-16T02:46:06.251Z",
+    "currentQuestionId": "fresh_openai_1755312329932_2a5ebf19"
   }
 ]
