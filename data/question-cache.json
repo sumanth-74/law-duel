@@ -1349,64 +1349,104 @@
   ],
   "Mixed Questions": [
     {
-      "qid": "fresh_openai_1755206390919_a3b165c7",
+      "qid": "fresh_openai_1755310596407_d2d27e4a",
       "subject": "Mixed Questions",
       "topic": "General",
-      "stem": "Alice, a resident of State A, decided to sell her car to Bob, who lives in State B. They agreed on a price of $5,000, and Alice signed the bill of sale. However, Bob never paid Alice, and she later sold the car to Charlie for $6,000. Bob now wants to sue Alice for breach of contract. What is the most likely outcome?",
+      "stem": "Alice, a tenant, signed a one-year lease for an apartment. After six months, she decided to move out early and informed her landlord, Bob, that she would not be paying rent for the remaining six months. Bob wants to know if he can keep Alice's security deposit to cover the unpaid rent. What is the most likely outcome?",
       "choices": [
-        "Bob will win because Alice failed to deliver the car.",
-        "Bob will lose because Alice sold the car to Charlie.",
-        "Bob will lose because he did not pay for the car.",
-        "Bob will win because there was a valid contract."
+        "Bob can keep Alice's security deposit to cover the unpaid rent.",
+        "Bob must return the security deposit since Alice gave notice.",
+        "Bob cannot take any action against Alice since she moved out.",
+        "Bob can sue Alice for the remaining rent but cannot keep the deposit."
       ],
-      "correctIndex": 2,
-      "explanation": "Bob will lose because he did not pay for the car, which is a condition precedent to his rights under the contract.",
-      "explanationLong": "The correct answer is that Bob will lose because he did not pay for the car. Under contract law, a valid contract requires mutual assent and consideration. In this case, while Alice and Bob had an agreement, Bob's failure to pay $5,000 constitutes a breach of his own obligations under the contract. Therefore, Alice was not required to deliver the car. The other options are incorrect because: (1) Bob will not win based solely on the existence of a contract, as he failed to fulfill his payment obligation. (2) Alice's failure to deliver the car is irrelevant since she had no obligation to do so without payment. (3) While Alice's sale to Charlie is a subsequent action, it does not affect Bob's lack of payment and therefore does not create liability for Alice in this context.",
+      "correctIndex": 0,
+      "explanation": "Bob can keep Alice's security deposit to cover the unpaid rent because she broke the lease early.",
+      "explanationLong": "The correct answer is that Bob can keep Alice's security deposit to cover the unpaid rent. Under most lease agreements, if a tenant breaks the lease early, they remain liable for the rent for the entirety of the lease term unless the landlord mitigates damages by finding a new tenant. Alice's decision to move out early and stop paying rent constitutes a breach of the lease agreement. Therefore, Bob is entitled to apply the security deposit to the unpaid rent. The second option is incorrect because giving notice does not absolve Alice of her liability for the rent. The third option is incorrect as while Bob can sue Alice for the remaining rent, he is also entitled to use the security deposit to cover the unpaid rent. The fourth option is incorrect because Bob has the right to take action to recover his losses from Alice's breach of the lease.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1755206450919,
-      "generatedAt": 1755206390919
+      "deadlineTs": 1755310656407,
+      "generatedAt": 1755310596407
     },
     {
-      "qid": "fresh_openai_1755206395856_4cc4b099",
+      "qid": "fresh_openai_1755310596100_91b9318c",
       "subject": "Mixed Questions",
       "topic": "General",
-      "stem": "Alice and Bob are neighbors. One day, Alice sees Bob's dog digging in her garden and angrily shouts at Bob to control his dog. Bob, feeling insulted, decides to retaliate by letting his dog run into Alice's yard. The dog digs a hole in Alice's garden, causing damage. Alice wants to sue Bob for the damage caused by his dog. What is the most likely outcome of Alice's lawsuit against Bob?",
+      "stem": "Alice invites her friend Bob to her housewarming party. During the party, Alice serves a special punch that she made herself. Bob drinks the punch and soon after, he feels very ill and is hospitalized for food poisoning. Bob learns that Alice used expired ingredients in the punch. Can Bob successfully sue Alice for negligence?",
       "choices": [
-        "Alice will win only if she can prove Bob intended to cause damage.",
-        "Alice will lose because she provoked Bob by shouting at him.",
-        "Alice will lose because Bob's dog was acting in self-defense.",
-        "Alice will win because Bob is responsible for his dog's actions."
+        "No, because Bob assumed the risk by attending the party.",
+        "No, because Alice did not intend to harm Bob.",
+        "Yes, but only if Bob can prove that Alice acted recklessly.",
+        "Yes, because Alice had a duty to ensure the punch was safe to drink."
       ],
       "correctIndex": 3,
-      "explanation": "Alice will win because Bob is responsible for his dog's actions under the principle of strict liability.",
-      "explanationLong": "The correct answer is that Alice will win because Bob is responsible for his dog's actions. Under the doctrine of strict liability, pet owners are generally liable for damages caused by their pets, regardless of intent or negligence. In this case, Bob's dog caused damage to Alice's garden, making Bob liable. The second option is incorrect because provocation does not absolve Bob of liability for his dog's actions. The third option is also incorrect; Alice does not need to prove Bob intended to cause damage, as strict liability applies regardless of intent. Lastly, the fourth option is incorrect because dogs do not act in self-defense in a legal sense; the dog's actions do not negate Bob's responsibility for the damage caused.",
+      "explanation": "Alice can be held liable for negligence due to her duty to provide safe food and drink.",
+      "explanationLong": "The correct answer is (A): Yes, because Alice had a duty to ensure the punch was safe to drink. Under negligence law, a defendant must owe a duty of care to the plaintiff, breach that duty, and cause damages. Here, Alice had a duty to provide safe food and drink to her guests, which she breached by using expired ingredients in the punch that subsequently harmed Bob. Answer (B) is incorrect because negligence does not require intent to harm; a failure to act reasonably is sufficient. Answer (C) is incorrect because Bob does not need to prove recklessness; mere negligence suffices for liability. Finally, answer (D) is wrong because the assumption of risk defense typically applies in cases involving known dangers, and it would be unreasonable to expect Bob to know that the punch contained expired ingredients.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1755206455857,
-      "generatedAt": 1755206395857
+      "deadlineTs": 1755310656100,
+      "generatedAt": 1755310596100
     },
     {
-      "qid": "fresh_openai_1755206391420_15909d25",
+      "qid": "fresh_openai_1755310629329_840f6b39",
       "subject": "Mixed Questions",
       "topic": "General",
-      "stem": "Alice and Bob are neighbors. One day, Alice accidentally spills paint on Bob's driveway while painting her fence. Bob, frustrated, decides to clean it up without consulting Alice. He uses a harsh chemical cleaner that damages the driveway's surface. Bob then demands that Alice pay for the repairs. Which of the following is true regarding Alice's liability?",
+      "stem": "Alice is walking her dog in the park when her dog suddenly runs into a nearby flower bed, damaging several flowers owned by Bob. Bob sees this happen and demands that Alice pay for the damages. Which legal principle is most likely applicable in this situation?",
       "choices": [
-        "Alice is not liable because the damage was a natural consequence of the spill.",
-        "Alice is not liable because Bob's actions were an independent, intervening cause.",
-        "Alice is liable for the damage because she caused the initial spill.",
-        "Alice is liable for the damage because she should have cleaned up the spill herself."
+        "Alice is liable for damages under the doctrine of negligence.",
+        "Alice is not liable because the damage was unintentional.",
+        "Bob has no legal standing to demand payment for the damages.",
+        "Alice is liable for damages under the doctrine of strict liability."
       ],
-      "correctIndex": 1,
-      "explanation": "Alice is not liable for the damage because Bob's actions were an independent intervening cause that directly led to the damage.",
-      "explanationLong": "The correct answer is that Alice is not liable because Bob's actions were an independent, intervening cause. Under tort law, while Alice may be liable for her initial negligent act of spilling paint, Bob's decision to use a harsh chemical cleaner constitutes a new act that breaks the chain of causation. Therefore, Alice cannot be held responsible for the damages resulting from Bob's own negligent actions. The first answer is incorrect because it fails to consider that Bob’s actions were not a foreseeable consequence of Alice’s spill. The third answer is wrong because there is no legal obligation for Alice to clean up the spill if Bob chose to act independently. Lastly, the fourth answer misapplies the concept of liability; while the spill may have caused some initial inconvenience, Bob's subsequent actions were the direct cause of the damage to the driveway.",
+      "correctIndex": 0,
+      "explanation": "Alice may be liable for negligence because she did not control her dog, which caused damage to Bob's property.",
+      "explanationLong": "The correct answer is that Alice is liable for damages under the doctrine of negligence. In tort law, negligence occurs when a party fails to exercise a reasonable standard of care, resulting in damages to another. Here, Alice's failure to control her dog while in a public park could be seen as a breach of that duty of care. The other options are incorrect: (1) Strict liability typically applies to inherently dangerous activities, not pet ownership, making this option inapplicable. (2) If Alice's actions were unintentional, it does not absolve her of negligence if she failed to act reasonably in controlling her dog; therefore, this answer misapplies the standard of care. (3) Bob indeed has legal standing as the property owner to seek damages for the destruction of his flowers, so this option is also incorrect.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1755206451420,
-      "generatedAt": 1755206391420
+      "deadlineTs": 1755310689330,
+      "generatedAt": 1755310629330
+    },
+    {
+      "qid": "fresh_openai_1755310627739_f2c51f35",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are friends who often borrow items from each other. One day, Alice borrows Bob's camera but accidentally drops it, causing significant damage. Bob demands that Alice pay for the repairs. Which of the following is most likely true regarding Alice's liability for the damages to the camera?",
+      "choices": [
+        "Alice is not liable at all because she borrowed the camera with permission.",
+        "Alice is liable for the full cost of repairs because she borrowed the camera.",
+        "Alice is liable only if she acted negligently while using the camera.",
+        "Alice is liable only if Bob can prove she intended to damage the camera."
+      ],
+      "correctIndex": 2,
+      "explanation": "Alice is liable only if she acted negligently while using the camera, as the standard for liability in bailment situations typically requires a showing of negligence.",
+      "explanationLong": "The correct answer is that Alice is liable only if she acted negligently while using the camera. In a bailment situation, the bailee (Alice) is generally required to exercise a certain standard of care depending on the circumstances. Since Alice borrowed Bob's camera, she must act as a reasonable person would under similar circumstances. If she dropped the camera due to negligence, she would be liable for the repairs. The first choice is incorrect because liability is not automatic upon borrowing; negligence must be established. The second choice is wrong as it suggests that permission absolves all liability, which is not the case. The fourth choice is incorrect because intent to damage is not necessary; negligence suffices to establish liability in bailment situations.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755310687739,
+      "generatedAt": 1755310627739
+    },
+    {
+      "qid": "fresh_openai_1755310629445_43e38f15",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice is walking her dog in the park when she accidentally trips over a loose stone, falling and injuring her ankle. She later discovers that the park's maintenance team had been notified about the loose stone weeks before but failed to fix it. If Alice decides to sue the city for her injuries, which of the following statements is TRUE?",
+      "choices": [
+        "The city is not liable because Alice should have been watching where she was walking.",
+        "The city is liable for negligence because it had notice of the dangerous condition and failed to act.",
+        "The city is not liable because parks are inherently dangerous places.",
+        "The city is liable only if Alice can prove that the loose stone was placed there intentionally."
+      ],
+      "correctIndex": 1,
+      "explanation": "The city is liable for negligence because it had notice of the dangerous condition and failed to act.",
+      "explanationLong": "The correct answer is the first option: 'The city is liable for negligence because it had notice of the dangerous condition and failed to act.' Under the general rule of negligence, a property owner has a duty to maintain their premises in a reasonably safe condition, and if they are aware of a dangerous condition, they must take reasonable steps to fix it. Here, the city had prior notice of the loose stone but failed to address it, making it liable for Alice's injuries. The second option is incorrect because while a plaintiff should be cautious, it does not absolve the city of its duty to maintain safe conditions. The third option is wrong as liability does not depend on whether the stone was placed intentionally; negligence can arise from failure to remedy known hazards. The fourth option fails because the inherent danger of a park does not exempt the city from liability for known hazardous conditions.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1755310689445,
+      "generatedAt": 1755310629446
     }
   ]
 }

@@ -10,8 +10,10 @@ Law Duel is a competitive legal education game designed for bar exam preparation
 - **Authentication flow enhanced**: Server issues JWT tokens on login/register, client stores them in localStorage, and all API requests include Authorization headers. This ensures authentication works on any domain including lawduel.net.
 - **Friend match flow working**: Users can now enter a friend's username, the system verifies they exist, creates or returns existing async match, and both players can access it through their inbox for asynchronous gameplay.
 - **Beta-ready system**: Both authentication and friend challenges work reliably across all environments, ready for immediate beta launch on lawduel.net
-- **Atticus mini-game integrated**: Added Purple Wizard Cat "Atticus" duel that triggers when players lose all lives in solo mode. Victory restores lives + 100 XP bonus, defeat triggers 24-hour cooldown.
+- **Atticus mini-game integrated**: Added Purple Wizard Cat "Atticus" duel that triggers when players lose all 3 lives in solo mode. Victory restores 3 lives + 100 XP bonus, defeat triggers 24-hour cooldown.
 - **Unlimited explanation reading time**: Removed auto-advance timer after answering questions. Players now have unlimited time to read explanations and must click "Continue" to proceed to the next question.
+- **Speed bonus system added**: Players earn bonus points for answering quickly. Bonus tiers: ≤5s (50%), ≤10s (30%), ≤15s (15%), ≤20s (5%). Speed bonus scales with difficulty level.
+- **Solo challenge lives reduced to 3**: Changed from 5 lives to 3 lives total. When all 3 lives are lost, players must defeat Atticus to restore their lives and continue playing.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

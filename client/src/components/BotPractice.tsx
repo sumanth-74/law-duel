@@ -271,7 +271,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
             <ul className="text-sm text-muted space-y-2">
               <li className="flex items-center gap-2">
                 <Heart className="w-4 h-4 text-red-400" />
-                You get 5 lives (wrong answers)
+                You get 3 lives (wrong answers)
               </li>
               <li className="flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-yellow-400" />

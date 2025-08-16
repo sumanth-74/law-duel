@@ -174,5 +174,18 @@
     "isDailyComplete": false,
     "lostAllLivesAt": null,
     "currentQuestionId": "fresh_openai_1755114014933_5a26a38f"
+  },
+  {
+    "id": "solo_ef64d748-59df-424f-b451-781222328c95_1755310575810",
+    "userId": "ef64d748-59df-424f-b451-781222328c95",
+    "subject": "Mixed Questions",
+    "livesRemaining": 4,
+    "round": 3,
+    "score": 23,
+    "difficulty": 2,
+    "startedAt": "2025-08-16T02:16:15.814Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755310595361_1cc86c2d"
   }
 ]

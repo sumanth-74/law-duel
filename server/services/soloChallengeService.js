@@ -64,7 +64,7 @@ class SoloChallengeService {
       id: challengeId,
       userId,
       subject,
-      livesRemaining: 5, // Now 5 lives
+      livesRemaining: 3, // 3 lives total
       round: 1,
       score: 0,
       difficulty: 1,
@@ -283,8 +283,8 @@ class SoloChallengeService {
     const todaysChallenge = this.getTodaysChallenge(userId);
     
     if (todaysChallenge) {
-      // Restore all lives
-      todaysChallenge.livesRemaining = 5;
+      // Restore all 3 lives
+      todaysChallenge.livesRemaining = 3;
       todaysChallenge.isDailyComplete = false;
       delete todaysChallenge.lostAllLivesAt;
       
@@ -328,7 +328,7 @@ class SoloChallengeService {
       isDailyComplete: true, 
       canPlay: false,
       hoursRemaining,
-      message: `All 5 lives used! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`
+      message: `All 3 lives used! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`
     };
   }
 
