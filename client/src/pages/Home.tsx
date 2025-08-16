@@ -708,47 +708,32 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated background effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-      
-      <div className="container max-w-4xl mx-auto py-8 px-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="container max-w-4xl mx-auto py-8 px-4">
         {/* Daily Streak Indicator - Always at the top */}
         <div className="mb-6">
           <StreakIndicator />
         </div>
         
-        {/* Epic Header Section */}
-        <div className="relative mb-8">
-          {/* Header card with glass morphism */}
-          <div className="relative bg-gradient-to-r from-slate-950/80 via-purple-950/80 to-slate-950/80 backdrop-blur-2xl rounded-2xl border border-purple-500/30 p-6 shadow-2xl overflow-hidden">
-            {/* Animated gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-purple-600/10 animate-pulse"></div>
+        {/* Header Section */}
+        <div className="mb-8">
+          {/* Header card */}
+          <div className="bg-slate-950/80 rounded-2xl border border-purple-500/30 p-6 shadow-lg">
             
             <div className="relative flex items-center justify-between">
               <div className="flex items-center space-x-6">
-                {/* Epic Logo */}
-                <div className="relative">
-                  <div className="absolute inset-0 bg-purple-600 blur-xl opacity-30"></div>
-                  <LawDuelLogo size="lg" showText={true} className="relative" />
-                </div>
+                {/* Logo */}
+                <LawDuelLogo size="lg" showText={true} />
                 
                 {/* Character Profile */}
                 <div className="flex items-center space-x-5">
-                  {/* Avatar with glow effect */}
-                  <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-md opacity-50 group-hover:opacity-75 transition duration-300"></div>
-                    <div className="relative bg-slate-900 rounded-full p-1">
-                      <AvatarRenderer
-                        avatarData={character.avatarData as any}
-                        level={character.level}
-                        size={72}
-                      />
-                    </div>
+                  {/* Avatar */}
+                  <div className="bg-slate-900 rounded-full p-1">
+                    <AvatarRenderer
+                      avatarData={character.avatarData as any}
+                      level={character.level}
+                      size={72}
+                    />
                   </div>
                   
                   <div>
@@ -852,64 +837,35 @@ export default function Home() {
           </div>
         </div>
 
-        {/* LEGENDARY DAILY QUEST - EPIC GOLDEN BANNER */}
-        <div className="relative mb-8 group">
-          {/* Multiple magical glows for legendary effect */}
-          <div className="absolute -inset-2 opacity-80">
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-600 via-yellow-500 to-orange-600 blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 animate-[pulseGlow_2s_ease-in-out_infinite]"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-amber-400 blur-2xl opacity-40 animate-pulse"></div>
-          </div>
-          
-          <Card className="relative luxury-card border-2 border-amber-400/60 hover:border-amber-300/80 transition-all duration-500 backdrop-blur-2xl overflow-hidden shadow-[0_0_60px_rgba(251,191,36,0.5)] group-hover:shadow-[0_0_100px_rgba(251,191,36,0.7)] transform group-hover:scale-[1.01]">
-            {/* Epic shimmer overlay */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-              <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_30%,rgba(255,255,255,0.2)_50%,transparent_70%)] animate-shimmer bg-[length:200%_100%]"></div>
-            </div>
-            
-            {/* Animated magical particles */}
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(251,191,36,0.4),transparent_40%)]"></div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(251,146,60,0.4),transparent_40%)]"></div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.3),transparent_60%)]"></div>
-            </div>
-            
-            <CardContent className="relative p-8">
+        {/* Daily Challenge */}
+        <div className="mb-8">
+          <Card className="bg-slate-950/80 border border-amber-500/40 hover:border-amber-500/60 transition-colors">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  {/* Epic floating trophy */}
-                  <div className="relative animate-[orbFloat_4s_ease-in-out_infinite]">
-                    <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-400 blur-2xl opacity-70"></div>
-                    <div className="relative w-16 h-16 bg-gradient-to-br from-amber-500 via-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-[0_0_50px_rgba(251,191,36,0.7)] animate-[legendaryGlow_3s_ease-in-out_infinite]">
-                      <Trophy className="w-10 h-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]" />
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-amber-600 rounded-lg flex items-center justify-center">
+                    <Trophy className="w-8 h-8 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-cinzel text-3xl font-black animate-[textGlowPulse_3s_ease-in-out_infinite] bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-100 bg-clip-text text-transparent tracking-wide">
+                    <h3 className="font-cinzel text-2xl font-bold text-amber-300">
                       DAILY CHALLENGE
                     </h3>
-                    <div className="flex items-center gap-3 mt-2">
-                      <Badge className="bg-gradient-to-r from-red-900/50 to-orange-900/50 text-red-200 border border-red-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
-                        <Zap className="w-3 h-3" />
-                        ADVANCED MODE
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge className="bg-red-900/50 text-red-200 border border-red-500/30 text-xs">
+                        ADVANCED
                       </Badge>
-                      <Badge className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 text-green-200 border border-green-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
-                        <Trophy className="w-3 h-3" />
+                      <Badge className="bg-green-900/50 text-green-200 border border-green-500/30 text-xs">
                         3X REWARDS
-                      </Badge>
-                      <Badge className="bg-gradient-to-r from-blue-900/50 to-indigo-900/50 text-blue-200 border border-blue-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
-                        <Shield className="w-3 h-3" />
-                        LIMITED TIME
                       </Badge>
                     </div>
                   </div>
                 </div>
                 <Link href="/daily">
-                  <Button className="relative group/btn bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600 hover:from-amber-500 hover:via-yellow-500 hover:to-amber-500 text-white border-2 border-amber-400/60 px-12 py-7 text-xl font-black shadow-[0_6px_30px_rgba(251,191,36,0.5)] hover:shadow-[0_8px_40px_rgba(251,191,36,0.7)] transition-all duration-500 transform hover:scale-110">
-                    <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
-                    <span className="relative flex items-center gap-3 epic-text-glow">
-                      <Sword className="w-6 h-6" />
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-2">
+                    <span className="flex items-center gap-2">
+                      <Sword className="w-4 h-4" />
                       START CHALLENGE
-                      <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-3 transition-transform" />
+                      <ChevronRight className="w-4 h-4" />
                     </span>
                   </Button>
                 </Link>
@@ -921,96 +877,38 @@ export default function Home() {
         {/* Main Game Mode Selection - Epic Gaming Style */}
         {gameMode === 'menu' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {/* Solo Mode - EPIC MAGICAL CARD */}
-            <div className="relative group">
-              {/* Multiple animated glows for magical effect */}
-              <div className="absolute -inset-2 opacity-75">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 rounded-2xl blur-2xl opacity-50 group-hover:opacity-80 transition duration-700 animate-[gradientShift_3s_ease-in-out_infinite]"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl blur-3xl opacity-30 animate-pulse"></div>
-              </div>
-              
-              <Card className="relative h-full luxury-card border-2 border-purple-500/50 hover:border-purple-400/80 transition-all duration-500 backdrop-blur-2xl overflow-hidden hover:scale-[1.03] hover:-translate-y-2 shadow-[0_0_50px_rgba(168,85,247,0.4)] group-hover:shadow-[0_0_80px_rgba(168,85,247,0.6)]">
-                {/* Epic shimmer overlay */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                  <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.15)_50%,transparent_60%)] animate-shimmer bg-[length:200%_100%]"></div>
-                </div>
+            {/* Solo Mode */}
+            <div>
+              <Card className="bg-slate-950/80 border border-purple-500/40 hover:border-purple-500/60 transition-colors h-full">
+
                 
-                {/* Magical corner accents */}
-                <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-purple-400/60 rounded-tl-xl"></div>
-                <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-purple-400/60 rounded-tr-xl"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-purple-400/60 rounded-bl-xl"></div>
-                <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-purple-400/60 rounded-br-xl"></div>
-                
-                <CardHeader className="relative pb-4">
-                  <div className="flex items-center gap-5 mb-4">
-                    {/* Epic floating icon */}
-                    <div className="relative group-hover:animate-[float_3s_ease-in-out_infinite]">
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 blur-2xl opacity-70"></div>
-                      <div className="relative w-20 h-20 bg-gradient-to-br from-purple-600 via-pink-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(168,85,247,0.6)] animate-[pulseGlow_2s_ease-in-out_infinite]">
-                        <UserIcon className="w-11 h-11 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                      </div>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-purple-600 rounded-lg flex items-center justify-center">
+                      <UserIcon className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <CardTitle className="font-cinzel text-4xl font-black epic-text-glow bg-gradient-to-r from-purple-100 via-pink-100 to-purple-100 bg-clip-text text-transparent tracking-wider">
+                      <CardTitle className="font-cinzel text-2xl font-bold text-purple-300">
                         SOLO MODE
                       </CardTitle>
-                      <p className="text-purple-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Sword className="w-4 h-4" />
-                        ADVANCED TRAINING
-                      </p>
+                      <p className="text-slate-400 text-sm">Advanced training</p>
                     </div>
                   </div>
                 </CardHeader>
                 
-                <CardContent className="relative space-y-5 px-6">
-                  {/* Epic Stats Display */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="relative bg-gradient-to-br from-purple-900/50 via-indigo-900/50 to-purple-900/50 rounded-xl p-4 border-2 border-purple-400/40 group-hover:border-purple-400/60 transition-all shadow-inner">
-                      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-xl"></div>
-                      <div className="relative">
-                        <div className="text-xs text-purple-300 mb-1 font-bold uppercase tracking-wider">Mode</div>
-                        <div className="text-base font-black text-transparent bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text">DYNAMIC</div>
-                      </div>
+                <CardContent className="px-6 space-y-4">
+                  <div className="text-slate-300 text-sm space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-purple-400" />
+                      <span>3 attempts per session</span>
                     </div>
-                    <div className="relative bg-gradient-to-br from-red-900/50 via-pink-900/50 to-red-900/50 rounded-xl p-4 border-2 border-red-400/40 group-hover:border-red-400/60 transition-all shadow-inner">
-                      <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-pink-600/10 rounded-xl"></div>
-                      <div className="relative">
-                        <div className="text-xs text-red-300 mb-1 font-bold uppercase tracking-wider">Attempts</div>
-                        <div className="flex gap-1 justify-center">
-                          <Shield className="w-5 h-5 text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
-                          <Shield className="w-5 h-5 text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
-                          <Shield className="w-5 h-5 text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
-                        </div>
-                      </div>
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="w-4 h-4 text-purple-400" />
+                      <span>Progressive difficulty</span>
                     </div>
-                    <div className="relative bg-gradient-to-br from-green-900/50 via-emerald-900/50 to-green-900/50 rounded-xl p-4 border-2 border-green-400/40 group-hover:border-green-400/60 transition-all shadow-inner">
-                      <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-emerald-600/10 rounded-xl"></div>
-                      <div className="relative">
-                        <div className="text-xs text-green-300 mb-1 font-bold uppercase tracking-wider">Reward</div>
-                        <div className="text-base font-black text-transparent bg-gradient-to-r from-green-200 to-emerald-200 bg-clip-text">MASTERY</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Premium Features */}
-                  <div className="space-y-3 py-2">
-                    <div className="flex items-center gap-3 group/feature">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Progressive difficulty mastery system</span>
-                    </div>
-                    <div className="flex items-center gap-3 group/feature">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Advanced Atticus challenge rounds</span>
-                    </div>
-                    <div className="flex items-center gap-3 group/feature">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Substantial points & achievement rewards</span>
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-purple-400" />
+                      <span>Earn mastery points</span>
                     </div>
                   </div>
                   
@@ -1019,134 +917,82 @@ export default function Home() {
                       console.log('Solo Challenge clicked, setting gameMode to bot-practice');
                       setGameMode('bot-practice');
                     }}
-                    className="w-full relative group/btn bg-gradient-to-r from-purple-700 via-pink-700 to-purple-700 hover:from-purple-600 hover:via-pink-600 hover:to-purple-600 text-white font-black py-7 text-xl shadow-[0_6px_30px_rgba(168,85,247,0.5)] hover:shadow-[0_8px_40px_rgba(168,85,247,0.7)] transition-all duration-500 transform hover:scale-105 border-2 border-purple-400/50"
-                    size="lg"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3"
                   >
-                    <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
-                    <span className="relative flex items-center justify-center gap-3 epic-text-glow">
-                      <Sword className="w-6 h-6" />
+                    <span className="flex items-center justify-center gap-2">
+                      <Sword className="w-5 h-5" />
                       START TRAINING
-                      <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform" />
+                      <ChevronRight className="w-5 h-5" />
                     </span>
                   </Button>
                 </CardContent>
               </Card>
             </div>
 
-            {/* VS Mode - LEGENDARY PVP BATTLES */}
-            <div className="relative group">
-              {/* Multiple magical glows for epic effect */}
-              <div className="absolute -inset-2 opacity-75">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 rounded-2xl blur-2xl opacity-50 group-hover:opacity-80 transition duration-700 animate-[gradientShift_3s_ease-in-out_infinite]"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur-3xl opacity-30 animate-pulse"></div>
-              </div>
-              
-              <Card className="relative h-full luxury-card border-2 border-orange-500/50 hover:border-orange-400/80 transition-all duration-500 backdrop-blur-2xl overflow-hidden hover:scale-[1.03] hover:-translate-y-2 shadow-[0_0_50px_rgba(251,146,60,0.4)] group-hover:shadow-[0_0_80px_rgba(251,146,60,0.6)]">
-                {/* Epic shimmer overlay */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                  <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.15)_50%,transparent_60%)] animate-shimmer bg-[length:200%_100%]"></div>
-                </div>
-                
-                {/* Magical corner accents */}
-                <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-orange-400/60 rounded-tl-xl"></div>
-                <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-orange-400/60 rounded-tr-xl"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-orange-400/60 rounded-bl-xl"></div>
-                <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-orange-400/60 rounded-br-xl"></div>
-                
-                <CardHeader className="relative pb-4">
-                  <div className="flex items-center gap-5 mb-4">
-                    {/* Epic floating icon */}
-                    <div className="relative group-hover:animate-[float_3s_ease-in-out_infinite]">
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 blur-2xl opacity-70"></div>
-                      <div className="relative w-20 h-20 bg-gradient-to-br from-orange-600 via-red-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(251,146,60,0.6)] animate-[pulseGlow_2s_ease-in-out_infinite]">
-                        <Users className="w-11 h-11 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                      </div>
+            {/* VS Mode */}
+            <div>
+              <Card className="bg-slate-950/80 border border-orange-500/40 hover:border-orange-500/60 transition-colors h-full">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-orange-600 rounded-lg flex items-center justify-center">
+                      <Users className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <CardTitle className="font-cinzel text-4xl font-black epic-text-glow bg-gradient-to-r from-orange-100 via-yellow-100 to-orange-100 bg-clip-text text-transparent tracking-wider">
+                      <CardTitle className="font-cinzel text-2xl font-bold text-orange-300">
                         VS MODE
                       </CardTitle>
-                      <p className="text-orange-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Sword className="w-4 h-4" />
-                        MULTIPLAYER WARFARE
-                      </p>
+                      <p className="text-slate-400 text-sm">Multiplayer battles</p>
                     </div>
                   </div>
                 </CardHeader>
                 
-                <CardContent className="relative space-y-5 px-6">
-                  {/* Epic Battle Mode Buttons */}
-                  <div className="space-y-4">
+                <CardContent className="px-6 space-y-4">
+                  <div className="space-y-3">
                     <Button 
                       onClick={() => setGameMode('vs-selection')}
-                      className="w-full relative group/btn bg-gradient-to-r from-yellow-900 via-orange-900 to-yellow-900 hover:from-yellow-800 hover:via-orange-800 hover:to-yellow-800 border-2 border-yellow-400/50 hover:border-yellow-300/70 text-white py-6 transition-all duration-500 shadow-[0_4px_20px_rgba(250,204,21,0.3)] hover:shadow-[0_6px_30px_rgba(250,204,21,0.5)] transform hover:scale-105"
-                      size="lg"
+                      className="w-full bg-yellow-700 hover:bg-yellow-800 text-white py-3"
                     >
-                      <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
-                      <div className="relative flex items-center justify-between w-full">
-                        <span className="flex items-center gap-4">
-                          <Zap className="w-8 h-8 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.7)] animate-pulse" />
+                      <div className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-3">
+                          <Zap className="w-5 h-5" />
                           <div className="text-left">
-                            <div className="font-black text-lg uppercase tracking-wide">LIVE DUEL</div>
-                            <div className="text-xs text-yellow-200/80 font-medium">Instant PvP matchmaking</div>
+                            <div className="font-semibold">LIVE DUEL</div>
+                            <div className="text-xs opacity-90">Instant matchmaking</div>
                           </div>
                         </span>
-                        <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform duration-300" />
+                        <ChevronRight className="w-5 h-5" />
                       </div>
                     </Button>
                     
                     <Button 
                       onClick={() => setGameMode('friend-challenge')}
-                      className="w-full relative group/btn bg-gradient-to-r from-pink-900 via-rose-900 to-pink-900 hover:from-pink-800 hover:via-rose-800 hover:to-pink-800 border-2 border-pink-400/50 hover:border-pink-300/70 text-white py-6 transition-all duration-500 shadow-[0_4px_20px_rgba(236,72,153,0.3)] hover:shadow-[0_6px_30px_rgba(236,72,153,0.5)] transform hover:scale-105"
-                      size="lg"
+                      className="w-full bg-pink-700 hover:bg-pink-800 text-white py-3"
                     >
-                      <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
-                      <div className="relative flex items-center justify-between w-full">
-                        <span className="flex items-center gap-4">
-                          <UserPlus className="w-8 h-8 text-pink-400 drop-shadow-[0_0_10px_rgba(236,72,153,0.7)]" />
+                      <div className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-3">
+                          <UserPlus className="w-5 h-5" />
                           <div className="text-left">
-                            <div className="font-black text-lg uppercase tracking-wide">FRIEND BATTLE</div>
-                            <div className="text-xs text-pink-200/80 font-medium">Challenge your allies</div>
+                            <div className="font-semibold">FRIEND BATTLE</div>
+                            <div className="text-xs opacity-90">Challenge friends</div>
                           </div>
                         </span>
-                        <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform duration-300" />
+                        <ChevronRight className="w-5 h-5" />
                       </div>
                     </Button>
                   </div>
                   
-                  {/* Epic Features List */}
-                  <div className="space-y-3 pt-2">
-                    <div className="flex items-center gap-3 group/feature">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-orange-200 text-sm font-semibold group-hover/feature:text-orange-100 transition-colors">Real-time PvP combat system</span>
+                  <div className="text-slate-300 text-sm space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Swords className="w-4 h-4 text-orange-400" />
+                      <span>Real-time PvP battles</span>
                     </div>
-                    <div className="flex items-center gap-3 group/feature">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-orange-200 text-sm font-semibold group-hover/feature:text-orange-100 transition-colors">Asynchronous friend warfare</span>
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-orange-400" />
+                      <span>Earn ELO ranking</span>
                     </div>
-                    <div className="flex items-center gap-3 group/feature">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-orange-200 text-sm font-semibold group-hover/feature:text-orange-100 transition-colors">Dominate the global leaderboard</span>
-                    </div>
-                  </div>
-                  
-                  {/* Epic Stats Badge */}
-                  <div className="relative bg-gradient-to-r from-orange-950/60 via-red-950/60 to-orange-950/60 rounded-2xl p-5 border-2 border-orange-400/30 shadow-inner">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-red-600/5 rounded-2xl"></div>
-                    <div className="relative flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Trophy className="w-6 h-6 text-yellow-400 animate-pulse" />
-                        <span className="text-orange-200 font-bold uppercase tracking-wider text-sm">Ranked Battles</span>
-                      </div>
-                      <Badge className="bg-gradient-to-r from-yellow-600/30 to-orange-600/30 text-yellow-300 border border-yellow-500/50 font-bold">
-                        EARN ELO
-                      </Badge>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-orange-400" />
+                      <span>Async friend matches</span>
                     </div>
                   </div>
                 </CardContent>
@@ -1155,31 +1001,24 @@ export default function Home() {
           </div>
         )}
 
-        {/* VS Mode Selection Screen - Premium Edition */}
+        {/* VS Mode Selection Screen */}
         {gameMode === 'vs-selection' && (
-          <div className="relative max-w-2xl mx-auto">
-            {/* Animated glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
-            
-            <Card className="relative bg-gradient-to-br from-slate-950/95 via-purple-950/95 to-slate-950/95 border-2 border-purple-500/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
-              {/* Animated background mesh */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(168,85,247,0.1)_50%,transparent_75%,transparent_100%)] bg-[length:250px_250px] animate-[shimmer_3s_linear_infinite]"></div>
-              </div>
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-slate-950/80 border border-purple-500/40">
               
-              <CardHeader className="relative border-b border-purple-500/20 pb-6">
+              <CardHeader className="border-b border-purple-500/20 pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <Zap className="w-7 h-7 text-white" />
+                    <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                      <Zap className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="font-cinzel text-2xl font-bold bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
+                    <CardTitle className="font-cinzel text-xl font-bold text-purple-300">
                       LIVE DUEL CONFIGURATION
                     </CardTitle>
                   </div>
                   <Button
                     onClick={() => setGameMode('menu')}
-                    className="bg-gradient-to-r from-red-600/20 to-orange-600/20 hover:from-red-600/30 hover:to-orange-600/30 border border-red-500/50 text-red-200"
+                    className="bg-red-900/50 hover:bg-red-900/70 text-red-200"
                     size="sm"
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -1188,78 +1027,64 @@ export default function Home() {
                 </div>
               </CardHeader>
               
-              <CardContent className="relative space-y-6 p-6">
-                {/* Question Type Selection - Premium Cards */}
+              <CardContent className="space-y-6 p-6">
+                {/* Question Type Selection */}
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">SELECT BATTLE MODE</label>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="relative group">
-                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                    <Button
+                      onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
+                      className={`h-auto p-4 ${
                         gameSettings.questionType === 'bar' 
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 opacity-75' 
-                          : 'opacity-0 group-hover:opacity-50'
-                      }`}></div>
-                      <Button
-                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
-                        className={`relative w-full h-auto p-5 transition-all duration-300 ${
-                          gameSettings.questionType === 'bar' 
-                            ? 'bg-gradient-to-br from-purple-900/90 to-pink-900/90 border-2 border-purple-400/60 scale-105' 
-                            : 'bg-slate-900/80 border border-purple-500/30 hover:bg-purple-950/60'
-                        }`}
-                      >
-                        <div className="text-center">
-                          <div className="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <GraduationCap className="w-8 h-8 text-white" />
-                          </div>
-                          <div className="font-bold text-lg text-purple-100">BAR EXAM</div>
-                          <div className="text-xs text-purple-300/80 mt-1">Professional MBE questions</div>
-                          {gameSettings.questionType === 'bar' && (
-                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                          )}
+                          ? 'bg-purple-800/60 border-2 border-purple-400' 
+                          : 'bg-slate-900/60 border border-purple-500/30 hover:bg-purple-900/40'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="w-12 h-12 mx-auto mb-2 bg-purple-600 rounded-lg flex items-center justify-center">
+                          <GraduationCap className="w-7 h-7 text-white" />
                         </div>
-                      </Button>
-                    </div>
+                        <div className="font-bold text-purple-100">BAR EXAM</div>
+                        <div className="text-xs text-purple-300/80 mt-1">MBE questions</div>
+                        {gameSettings.questionType === 'bar' && (
+                          <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full"></div>
+                        )}
+                      </div>
+                    </Button>
                     
-                    <div className="relative group">
-                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                    <Button
+                      onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
+                      className={`h-auto p-4 ${
                         gameSettings.questionType === 'realWorld' 
-                          ? 'bg-gradient-to-r from-cyan-600 to-blue-600 opacity-75' 
-                          : 'opacity-0 group-hover:opacity-50'
-                      }`}></div>
-                      <Button
-                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
-                        className={`relative w-full h-auto p-5 transition-all duration-300 ${
-                          gameSettings.questionType === 'realWorld' 
-                            ? 'bg-gradient-to-br from-cyan-900/90 to-blue-900/90 border-2 border-cyan-400/60 scale-105' 
-                            : 'bg-slate-900/80 border border-cyan-500/30 hover:bg-cyan-950/60'
-                        }`}
-                      >
-                        <div className="text-center">
-                          <div className="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <Globe className="w-8 h-8 text-white" />
-                          </div>
-                          <div className="font-bold text-lg text-cyan-100">REAL-WORLD</div>
-                          <div className="text-xs text-cyan-300/80 mt-1">Practical legal knowledge</div>
-                          {gameSettings.questionType === 'realWorld' && (
-                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                          )}
+                          ? 'bg-cyan-800/60 border-2 border-cyan-400' 
+                          : 'bg-slate-900/60 border border-cyan-500/30 hover:bg-cyan-900/40'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="w-12 h-12 mx-auto mb-2 bg-cyan-600 rounded-lg flex items-center justify-center">
+                          <Globe className="w-7 h-7 text-white" />
                         </div>
-                      </Button>
-                    </div>
+                        <div className="font-bold text-cyan-100">REAL-WORLD</div>
+                        <div className="text-xs text-cyan-300/80 mt-1">Practical law</div>
+                        {gameSettings.questionType === 'realWorld' && (
+                          <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full"></div>
+                        )}
+                      </div>
+                    </Button>
                   </div>
                 </div>
 
-                {/* Subject Selection - Premium Dropdown */}
+                {/* Subject Selection */}
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">CHOOSE BATTLEFIELD</label>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">CHOOSE SUBJECT</label>
                   <Select 
                     value={gameSettings.subject} 
                     onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
                   >
-                    <SelectTrigger className="bg-gradient-to-r from-purple-950/60 to-pink-950/60 border border-purple-500/40 hover:border-purple-400/60 h-14 text-purple-100 font-medium">
+                    <SelectTrigger className="bg-slate-900/60 border border-purple-500/40 hover:border-purple-400/60 h-12 text-purple-100">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-950/95 border-purple-500/40 backdrop-blur-xl">
+                    <SelectContent className="bg-slate-950/95 border-purple-500/40">
                     {SUBJECTS.map(subject => (
                       <SelectItem key={subject} value={subject}>{subject}</SelectItem>
                     ))}
@@ -1267,52 +1092,49 @@ export default function Home() {
                 </Select>
               </div>
                     
-                    {/* Opponent Skill Level - Premium Selection */}
+                    {/* Opponent Difficulty */}
                     <div>
                       <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">OPPONENT DIFFICULTY</label>
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          { value: 'easy', label: 'NOVICE', color: 'green', icon: '🌱' },
-                          { value: 'medium', label: 'SKILLED', color: 'yellow', icon: '⚡' },
-                          { value: 'hard', label: 'EXPERT', color: 'orange', icon: '🔥' },
-                          { value: 'expert', label: 'MASTER', color: 'red', icon: '👑' }
-                        ].map(({ value, label, color, icon }) => (
+                          { value: 'easy', label: 'NOVICE', icon: '🌱' },
+                          { value: 'medium', label: 'SKILLED', icon: '⚡' },
+                          { value: 'hard', label: 'EXPERT', icon: '🔥' },
+                          { value: 'expert', label: 'MASTER', icon: '👑' }
+                        ].map(({ value, label, icon }) => (
                           <Button
                             key={value}
                             onClick={() => setGameSettings(prev => ({ ...prev, botDifficulty: value }))}
-                            className={`relative h-auto p-4 transition-all duration-300 ${
+                            className={`h-auto p-3 ${
                               gameSettings.botDifficulty === value
-                                ? `bg-gradient-to-br from-${color}-900/90 to-${color}-800/90 border-2 border-${color}-400/60 scale-105`
-                                : `bg-slate-900/60 border border-${color}-500/30 hover:bg-${color}-950/40`
+                                ? 'bg-purple-800/60 border-2 border-purple-400'
+                                : 'bg-slate-900/60 border border-purple-500/30 hover:bg-purple-900/40'
                             }`}
                           >
                             <div className="text-center">
                               <div className="text-2xl mb-1">{icon}</div>
-                              <div className={`font-bold text-sm ${
-                                gameSettings.botDifficulty === value ? `text-${color}-100` : `text-${color}-300`
-                              }`}>
+                              <div className="font-bold text-sm text-purple-200">
                                 {label}
                               </div>
                             </div>
                             {gameSettings.botDifficulty === value && (
-                              <div className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                              <div className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full"></div>
                             )}
                           </Button>
                         ))}
                       </div>
                     </div>
                     
-                    {/* Start Button - Epic Style */}
+                    {/* Start Button */}
                     <div className="pt-2">
                       <Button 
                         onClick={handleStartBotGame} 
-                        className="w-full relative group bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 hover:from-purple-500 hover:via-pink-500 hover:to-purple-500 text-white font-bold py-6 text-xl shadow-2xl transition-all duration-300 border-2 border-purple-400/50"
+                        className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 text-lg"
                         size="lg"
                       >
-                        <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
-                        <span className="relative flex items-center justify-center gap-3">
+                        <span className="flex items-center justify-center gap-3">
                           ⚔️ INITIATE DUEL
-                          <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                          <ChevronRight className="w-5 h-5" />
                         </span>
                       </Button>
                       <p className="text-xs text-center mt-3 text-purple-300/60 uppercase tracking-wider">
@@ -1324,31 +1146,23 @@ export default function Home() {
               </div>
         )}
 
-        {/* Friend Challenge Screen - Premium Edition */}
+        {/* Friend Challenge Screen */}
         {gameMode === 'friend-challenge' && (
-          <div className="relative max-w-2xl mx-auto">
-            {/* Animated glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
-            
-            <Card className="relative bg-gradient-to-br from-slate-950/95 via-purple-950/95 to-slate-950/95 border-2 border-pink-500/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
-              {/* Animated background mesh */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0 bg-[linear-gradient(-45deg,transparent_25%,rgba(236,72,153,0.1)_50%,transparent_75%,transparent_100%)] bg-[length:250px_250px] animate-[shimmer_3s_linear_infinite]"></div>
-              </div>
-              
-              <CardHeader className="relative border-b border-pink-500/20 pb-6">
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-slate-950/80 border border-pink-500/40">
+              <CardHeader className="border-b border-pink-500/20 pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <UserPlus className="w-7 h-7 text-white" />
+                    <div className="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center">
+                      <UserPlus className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="font-cinzel text-2xl font-bold bg-gradient-to-r from-pink-200 to-purple-200 bg-clip-text text-transparent">
+                    <CardTitle className="font-cinzel text-xl font-bold text-pink-300">
                       FRIEND CHALLENGE
                     </CardTitle>
                   </div>
                   <Button
                     onClick={() => setGameMode('menu')}
-                    className="bg-gradient-to-r from-red-600/20 to-orange-600/20 hover:from-red-600/30 hover:to-orange-600/30 border border-red-500/50 text-red-200"
+                    className="bg-red-900/50 hover:bg-red-900/70 text-red-200"
                     size="sm"
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -1357,42 +1171,37 @@ export default function Home() {
                 </div>
               </CardHeader>
               
-              <CardContent className="relative space-y-6 p-6">
-                {/* Quick Share Section - Premium Style */}
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                  <div className="relative bg-gradient-to-r from-purple-900/60 to-pink-900/60 rounded-xl p-5 border border-purple-500/40">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
-                        <Share2 className="w-4 h-4" />
-                        SHARE YOUR BATTLE LINK
-                      </h3>
-                    </div>
-                    <div className="flex gap-3">
-                      <Input
-                        value={`${window.location.origin}/challenge/${user?.username || 'yourname'}`}
-                        readOnly
-                        className="flex-1 bg-slate-900/60 border-purple-500/40 text-purple-100 font-mono text-sm"
-                      />
-                      <Button
-                        onClick={() => {
-                          const link = `${window.location.origin}/challenge/${user?.username || 'yourname'}`;
-                          navigator.clipboard.writeText(link);
-                          toast({
-                            title: "Link copied!",
-                            description: "Share this link with friends to challenge them",
-                          });
-                        }}
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border border-purple-400/50"
-                        size="sm"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <p className="text-xs text-purple-300/60 mt-3 uppercase tracking-wider">
-                      Send this to friends for instant battle invites
-                    </p>
+              <CardContent className="space-y-6 p-6">
+                {/* Quick Share Section */}
+                <div className="bg-purple-900/30 rounded-lg p-4 border border-purple-500/30">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2 mb-4">
+                    <Share2 className="w-4 h-4" />
+                    SHARE YOUR BATTLE LINK
+                  </h3>
+                  <div className="flex gap-3">
+                    <Input
+                      value={`${window.location.origin}/challenge/${user?.username || 'yourname'}`}
+                      readOnly
+                      className="flex-1 bg-slate-900/60 border-purple-500/40 text-purple-100 font-mono text-sm"
+                    />
+                    <Button
+                      onClick={() => {
+                        const link = `${window.location.origin}/challenge/${user?.username || 'yourname'}`;
+                        navigator.clipboard.writeText(link);
+                        toast({
+                          title: "Link copied!",
+                          description: "Share this link with friends to challenge them",
+                        });
+                      }}
+                      className="bg-purple-600 hover:bg-purple-700"
+                      size="sm"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
                   </div>
+                  <p className="text-xs text-purple-300/60 mt-3 uppercase tracking-wider">
+                    Send this to friends for instant battle invites
+                  </p>
                 </div>
 
                 {/* Divider */}
@@ -1407,14 +1216,14 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Username Input - Premium Style */}
+                {/* Username Input */}
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">ENTER OPPONENT USERNAME</label>
                   <Input
                     placeholder="Type username here..."
                     value={gameSettings.friendUsername}
                     onChange={(e) => setGameSettings(prev => ({ ...prev, friendUsername: e.target.value }))}
-                    className="w-full h-14 bg-gradient-to-r from-purple-950/60 to-pink-950/60 border border-purple-500/40 hover:border-purple-400/60 text-purple-100 font-medium text-lg placeholder:text-purple-400/50"
+                    className="w-full h-12 bg-slate-900/60 border border-purple-500/40 hover:border-purple-400/60 text-purple-100 placeholder:text-purple-400/50"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter' && gameSettings.friendUsername.trim()) {
                         handleStartAsyncFriendGame();
@@ -1423,73 +1232,59 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Question Type Selection - Premium Cards */}
+                {/* Question Type Selection */}
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">SELECT BATTLE MODE</label>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="relative group">
-                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                    <Button
+                      onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
+                      className={`h-auto p-4 ${
                         gameSettings.questionType === 'bar' 
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 opacity-75' 
-                          : 'opacity-0 group-hover:opacity-50'
-                      }`}></div>
-                      <Button
-                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'bar' }))}
-                        className={`relative w-full h-auto p-4 transition-all duration-300 ${
-                          gameSettings.questionType === 'bar' 
-                            ? 'bg-gradient-to-br from-purple-900/90 to-pink-900/90 border-2 border-purple-400/60 scale-105' 
-                            : 'bg-slate-900/80 border border-purple-500/30 hover:bg-purple-950/60'
-                        }`}
-                      >
-                        <div className="text-center">
-                          <GraduationCap className="w-7 h-7 mx-auto mb-2" />
-                          <div className="font-bold text-sm text-purple-100">BAR EXAM</div>
-                          <div className="text-xs text-purple-300/80">MBE questions</div>
-                          {gameSettings.questionType === 'bar' && (
-                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                          )}
-                        </div>
-                      </Button>
-                    </div>
+                          ? 'bg-purple-800/60 border-2 border-purple-400' 
+                          : 'bg-slate-900/60 border border-purple-500/30 hover:bg-purple-900/40'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <GraduationCap className="w-7 h-7 mx-auto mb-2" />
+                        <div className="font-bold text-sm text-purple-100">BAR EXAM</div>
+                        <div className="text-xs text-purple-300/80">MBE questions</div>
+                        {gameSettings.questionType === 'bar' && (
+                          <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full"></div>
+                        )}
+                      </div>
+                    </Button>
                     
-                    <div className="relative group">
-                      <div className={`absolute -inset-0.5 rounded-xl blur-sm transition-opacity duration-300 ${
+                    <Button
+                      onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
+                      className={`h-auto p-4 ${
                         gameSettings.questionType === 'realWorld' 
-                          ? 'bg-gradient-to-r from-cyan-600 to-blue-600 opacity-75' 
-                          : 'opacity-0 group-hover:opacity-50'
-                      }`}></div>
-                      <Button
-                        onClick={() => setGameSettings(prev => ({ ...prev, questionType: 'realWorld' }))}
-                        className={`relative w-full h-auto p-4 transition-all duration-300 ${
-                          gameSettings.questionType === 'realWorld' 
-                            ? 'bg-gradient-to-br from-cyan-900/90 to-blue-900/90 border-2 border-cyan-400/60 scale-105' 
-                            : 'bg-slate-900/80 border border-cyan-500/30 hover:bg-cyan-950/60'
-                        }`}
-                      >
-                        <div className="text-center">
-                          <Globe className="w-7 h-7 mx-auto mb-2" />
-                          <div className="font-bold text-sm text-cyan-100">REAL-WORLD</div>
-                          <div className="text-xs text-cyan-300/80">Street law</div>
-                          {gameSettings.questionType === 'realWorld' && (
-                            <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                          )}
-                        </div>
-                      </Button>
-                    </div>
+                          ? 'bg-cyan-800/60 border-2 border-cyan-400' 
+                          : 'bg-slate-900/60 border border-cyan-500/30 hover:bg-cyan-900/40'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <Globe className="w-7 h-7 mx-auto mb-2" />
+                        <div className="font-bold text-sm text-cyan-100">REAL-WORLD</div>
+                        <div className="text-xs text-cyan-300/80">Street law</div>
+                        {gameSettings.questionType === 'realWorld' && (
+                          <div className="absolute top-2 right-2 w-3 h-3 bg-green-400 rounded-full"></div>
+                        )}
+                      </div>
+                    </Button>
                   </div>
                 </div>
               
-                {/* Subject Selection - Premium Style */}
+                {/* Subject Selection */}
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">CHOOSE BATTLEFIELD</label>
+                  <label className="text-xs font-bold uppercase tracking-wider mb-4 block text-purple-300">CHOOSE SUBJECT</label>
                   <Select 
                     value={gameSettings.subject}
                     onValueChange={(value) => setGameSettings(prev => ({ ...prev, subject: value }))}
                   >
-                    <SelectTrigger className="bg-gradient-to-r from-purple-950/60 to-pink-950/60 border border-purple-500/40 hover:border-purple-400/60 h-14 text-purple-100 font-medium">
+                    <SelectTrigger className="bg-slate-900/60 border border-purple-500/40 hover:border-purple-400/60 h-12 text-purple-100">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-950/95 border-purple-500/40 backdrop-blur-xl">
+                    <SelectContent className="bg-slate-950/95 border-purple-500/40">
                       {SUBJECTS.map(subject => (
                         <SelectItem key={subject} value={subject}>{subject}</SelectItem>
                       ))}
@@ -1497,18 +1292,17 @@ export default function Home() {
                   </Select>
                 </div>
                 
-                {/* Challenge Button - Epic Style */}
+                {/* Challenge Button */}
                 <div className="pt-2">
                   <Button 
                     onClick={handleStartAsyncFriendGame}
-                    className="w-full relative group bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 hover:from-pink-500 hover:via-purple-500 hover:to-pink-500 text-white font-bold py-6 text-xl shadow-2xl transition-all duration-300 border-2 border-pink-400/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     size="lg"
                     disabled={!gameSettings.friendUsername.trim()}
                   >
-                    <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-md"></span>
-                    <span className="relative flex items-center justify-center gap-3">
+                    <span className="flex items-center justify-center gap-3">
                       👥 SEND CHALLENGE
-                      <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                      <ChevronRight className="w-5 h-5" />
                     </span>
                   </Button>
                 </div>
@@ -1517,15 +1311,14 @@ export default function Home() {
                 <div className="border-t border-purple-500/30 pt-6">
                   <Button 
                     onClick={() => setShowAsyncInbox(true)}
-                    className="w-full relative group bg-gradient-to-r from-purple-900/60 to-indigo-900/60 hover:from-purple-800/70 hover:to-indigo-800/70 border border-purple-500/40 hover:border-purple-400/60 text-purple-100 py-5 transition-all duration-300"
+                    className="w-full bg-purple-900/60 hover:bg-purple-800/70 border border-purple-500/40 hover:border-purple-400/60 text-purple-100 py-4"
                     size="lg"
                   >
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-md"></span>
-                    <span className="relative flex items-center justify-center gap-3">
-                      <Bell className={`h-5 w-5 ${asyncNotificationCount > 0 ? 'animate-pulse text-yellow-400' : ''}`} />
+                    <span className="flex items-center justify-center gap-3">
+                      <Bell className={`h-5 w-5 ${asyncNotificationCount > 0 ? 'text-yellow-400' : ''}`} />
                       VIEW ACTIVE GAMES
                       {asyncNotificationCount > 0 && (
-                        <Badge className="bg-red-500 text-white animate-pulse">{asyncNotificationCount}</Badge>
+                        <Badge className="bg-red-500 text-white">{asyncNotificationCount}</Badge>
                       )}
                     </span>
                   </Button>
