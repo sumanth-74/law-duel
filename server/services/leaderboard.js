@@ -45,14 +45,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 47,
       totalLosses: 8,
       avatarData: {
-        baseModel: 'female',
-        skinColor: '#fdbcb4',
-        hairStyle: 'long',
-        hairColor: '#8B4513',
-        clothingStyle: 'blazer',
-        clothingColor: '#1c1c1c',
-        accessories: ['glasses'],
-        accessoryColor: '#333333'
+        base: 'humanoid',
+        palette: '#dc143c',
+        props: ['gavel'],
+        archetypeId: 'due-diligence-dragon'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -66,14 +62,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 38,
       totalLosses: 12,
       avatarData: {
-        baseModel: 'male',
-        skinColor: '#ffdbac',
-        hairStyle: 'short',
-        hairColor: '#000000',
-        clothingStyle: 'suit',
-        clothingColor: '#2C3E50',
-        accessories: [],
-        accessoryColor: '#000000'
+        base: 'beast',
+        palette: '#4169e1',
+        props: ['scales'],
+        archetypeId: 'miranda-hawk'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -87,14 +79,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 56,
       totalLosses: 9,
       avatarData: {
-        baseModel: 'female',
-        skinColor: '#D2691E',
-        hairStyle: 'medium',
-        hairColor: '#1C1C1C',
-        clothingStyle: 'professional',
-        clothingColor: '#4B0082',
-        accessories: ['necklace'],
-        accessoryColor: '#FFD700'
+        base: 'arcane',
+        palette: '#8b008b',
+        props: ['codex'],
+        archetypeId: 'strict-scrutiny-sphinx'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -108,14 +96,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 42,
       totalLosses: 11,
       avatarData: {
-        baseModel: 'male',
-        skinColor: '#F4A460',
-        hairStyle: 'wavy',
-        hairColor: '#8B4513',
-        clothingStyle: 'shirt',
-        clothingColor: '#4169E1',
-        accessories: ['watch'],
-        accessoryColor: '#C0C0C0'
+        base: 'undead',
+        palette: '#2e8b57',
+        props: ['briefcase'],
+        archetypeId: 'suppression-wraith'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -129,14 +113,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 49,
       totalLosses: 7,
       avatarData: {
-        baseModel: 'female',
-        skinColor: '#FFDAB9',
-        hairStyle: 'straight',
-        hairColor: '#000000',
-        clothingStyle: 'blouse',
-        clothingColor: '#8B008B',
-        accessories: ['earrings'],
-        accessoryColor: '#FFB6C1'
+        base: 'celestial',
+        palette: '#ff69b4',
+        props: ['law_diploma'],
+        archetypeId: 'fiduciary-seraph'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -150,14 +130,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 32,
       totalLosses: 15,
       avatarData: {
-        baseModel: 'male',
-        skinColor: '#FFCCCB',
-        hairStyle: 'short',
-        hairColor: '#696969',
-        clothingStyle: 'suit',
-        clothingColor: '#191970',
-        accessories: ['glasses'],
-        accessoryColor: '#2F4F4F'
+        base: 'construct',
+        palette: '#ff8c00',
+        props: ['gavel'],
+        archetypeId: 'covenant-golem'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -171,14 +147,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 52,
       totalLosses: 6,
       avatarData: {
-        baseModel: 'female',
-        skinColor: '#FFE4E1',
-        hairStyle: 'curly',
-        hairColor: '#FF6347',
-        clothingStyle: 'professional',
-        clothingColor: '#008080',
-        accessories: ['scarf'],
-        accessoryColor: '#FF1493'
+        base: 'elemental',
+        palette: '#dc143c',
+        props: ['scales'],
+        archetypeId: 'subpoena-phoenix'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -192,14 +164,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 35,
       totalLosses: 13,
       avatarData: {
-        baseModel: 'male',
-        skinColor: '#DEB887',
-        hairStyle: 'neat',
-        hairColor: '#2F4F4F',
-        clothingStyle: 'polo',
-        clothingColor: '#228B22',
-        accessories: ['badge'],
-        accessoryColor: '#FFD700'
+        base: 'alien',
+        palette: '#32cd32',
+        props: ['legal_pad'],
+        archetypeId: 'viewpoint-viper'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -213,14 +181,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 62,
       totalLosses: 8,
       avatarData: {
-        baseModel: 'female',
-        skinColor: '#F5DEB3',
-        hairStyle: 'bob',
-        hairColor: '#4B0082',
-        clothingStyle: 'dress',
-        clothingColor: '#B22222',
-        accessories: ['brooch'],
-        accessoryColor: '#E6E6FA'
+        base: 'humanoid',
+        palette: '#9370db',
+        props: ['briefcase'],
+        archetypeId: 'whistleblower-wyvern'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -234,14 +198,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 71,
       totalLosses: 5,
       avatarData: {
-        baseModel: 'male',
-        skinColor: '#FFDAB9',
-        hairStyle: 'slicked',
-        hairColor: '#D2691E',
-        clothingStyle: 'sweater',
-        clothingColor: '#556B2F',
-        accessories: ['watch'],
-        accessoryColor: '#DAA520'
+        base: 'construct',
+        palette: '#ff4500',
+        props: ['gavel', 'scales'],
+        archetypeId: 'takeover-titan'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -255,14 +215,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 28,
       totalLosses: 18,
       avatarData: {
-        baseModel: 'female',
-        skinColor: '#CD853F',
-        hairStyle: 'braided',
-        hairColor: '#000000',
-        clothingStyle: 'cardigan',
-        clothingColor: '#FF6B6B',
-        accessories: ['pendant'],
-        accessoryColor: '#4169E1'
+        base: 'undead',
+        palette: '#ff1493',
+        props: ['codex'],
+        archetypeId: 'brady-banshee'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     },
@@ -276,14 +232,10 @@ async function seedLeaderboardWithBots() {
       totalWins: 67,
       totalLosses: 6,
       avatarData: {
-        baseModel: 'male',
-        skinColor: '#FFE4B5',
-        hairStyle: 'professional',
-        hairColor: '#A52A2A',
-        clothingStyle: 'jacket',
-        clothingColor: '#000080',
-        accessories: ['bowtie'],
-        accessoryColor: '#8B0000'
+        base: 'arcane',
+        palette: '#1e90ff',
+        props: ['law_diploma', 'briefcase'],
+        archetypeId: 'equal-protection-paladin'
       },
       lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
     }
