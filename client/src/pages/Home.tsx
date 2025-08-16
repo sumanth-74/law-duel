@@ -869,7 +869,7 @@ export default function Home() {
               MASTER THE BAR EXAM
             </h2>
             <p className="text-slate-300 text-lg">
-              Dominate American law through epic legal duels
+              Learn the law through epic legal duels
             </p>
           </div>
         </div>
