@@ -202,19 +202,28 @@ export const MBE_SUBJECTS = [
 
 export type MBESubject = typeof MBE_SUBJECTS[number];
 
-// Ranking System Constants
+// Ranking System Constants - 10 tiers mixing real legal titles with arcane fantasy flavor
 export const RANK_TIERS = [
-  { name: "Paralegal", minElo: 0, maxElo: 1049 },
-  { name: "1L", minElo: 1050, maxElo: 1149 },
-  { name: "2L", minElo: 1150, maxElo: 1249 },
-  { name: "3L", minElo: 1250, maxElo: 1349 },
-  { name: "Associate", minElo: 1350, maxElo: 1449 },
-  { name: "Senior Associate", minElo: 1450, maxElo: 1549 },
-  { name: "Counsel", minElo: 1550, maxElo: 1649 },
-  { name: "Partner", minElo: 1650, maxElo: 1799 },
-  { name: "Trialmaster", minElo: 1800, maxElo: 1949 },
-  { name: "Supreme Advocate", minElo: 1950, maxElo: 9999 }
+  { name: "Novice Scribe", minElo: 0, maxElo: 1099, color: "bronze" },       // Bronze tier - copying rules into margins
+  { name: "Apprentice Clerk", minElo: 1100, maxElo: 1199, color: "bronze" }, // Bronze tier - basic assistant
+  { name: "Pupil Advocate", minElo: 1200, maxElo: 1299, color: "silver" },   // Silver tier - starting to argue
+  { name: "Journeyman Counsel", minElo: 1300, maxElo: 1399, color: "silver" },// Silver tier - mid-level grind
+  { name: "Adept Barrister", minElo: 1400, maxElo: 1499, color: "gold" },    // Gold tier - confident litigator
+  { name: "Master Pleader", minElo: 1500, maxElo: 1599, color: "gold" },     // Gold tier - sharp with rhetoric
+  { name: "Counselor of the Realm", minElo: 1600, maxElo: 1699, color: "purple" }, // Purple tier - trusted presence
+  { name: "Magister of Law", minElo: 1700, maxElo: 1799, color: "purple" },  // Purple tier - magical authority
+  { name: "Archon Jurist", minElo: 1800, maxElo: 1899, color: "obsidian" },  // Obsidian tier - keeper of truths
+  { name: "Supreme Arbiter", minElo: 1900, maxElo: 9999, color: "obsidian" } // Obsidian tier - final word
 ] as const;
+
+// Rank tier colors for visual progression
+export const RANK_COLORS = {
+  bronze: { bg: "bg-orange-900/30", border: "border-orange-700/50", text: "text-orange-300", glow: "shadow-orange-500/20" },
+  silver: { bg: "bg-gray-800/30", border: "border-gray-600/50", text: "text-gray-300", glow: "shadow-gray-400/20" },
+  gold: { bg: "bg-yellow-900/30", border: "border-yellow-600/50", text: "text-yellow-300", glow: "shadow-yellow-500/20" },
+  purple: { bg: "bg-purple-900/30", border: "border-purple-600/50", text: "text-purple-300", glow: "shadow-purple-500/20" },
+  obsidian: { bg: "bg-slate-950/50", border: "border-slate-600/50", text: "text-slate-100", glow: "shadow-slate-400/30" }
+} as const;
 
 // Level Titles (1-30+)
 export const LEVEL_TITLES = [

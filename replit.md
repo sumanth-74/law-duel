@@ -4,12 +4,11 @@
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
 ## Recent Changes (Aug 16, 2025 - Latest)
-- **Premium UI overhaul**: Transformed entire interface with high-quality gaming aesthetics, including glass morphism effects, animated blob backgrounds, and neon glows throughout
-- **Epic header section**: Redesigned user profile header with gradient text, animated badges, and gaming-style stats display (Level/Points/XP)
-- **Enhanced VS Mode screens**: Upgraded Live Duel and Friend Challenge interfaces with shimmer effects, gradient cards, and premium selection buttons
-- **Gaming-grade components**: Added animated glow effects, dynamic hover states, and premium button designs with no "cheap shit" as requested
-- **Professional difficulty selection**: Replaced basic dropdowns with visual card-based difficulty selector using icons (🌱⚡🔥👑)
-- **Improved visual hierarchy**: Used uppercase labels, premium gradients, and consistent purple/pink color scheme throughout
+- **Implemented 10-tier rank progression system**: Replaced old rank system with fantasy-legal hybrid ranks: Novice Scribe → Apprentice Clerk → Pupil Advocate → Journeyman Counsel → Adept Barrister → Master Pleader → Counselor of the Realm → Magister of Law → Archon Jurist → Supreme Arbiter
+- **Added rank color-coding**: Bronze (tiers 1-2) → Silver (3-4) → Gold (5-6) → Purple (7-8) → Obsidian (9-10) for visual progression and dopamine hits
+- **Removed ALL casino animations**: Eliminated all animate-pulse, shimmer, and scale effects per user feedback about "tacky overdone" appearance
+- **Cleaned up interface**: Simplified Daily Challenge, Solo Mode, and VS Mode cards for faster page load and professional appearance
+- **ELO-based rank display**: User rank now displayed based on ELO rating with progress to next tier clearly shown
 
 ## Recent Changes (Aug 16, 2025 - Earlier)
 - **Fixed friend challenge system**: Replaced mock/placeholder code with real API integration for friend matches. Friend challenges now properly search for users, create async matches on the server, and store them in the database.

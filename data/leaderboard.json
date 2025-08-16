@@ -166,8 +166,8 @@
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 16,
-    "points": 3081,
-    "totalWins": 48,
+    "points": 3117,
+    "totalWins": 49,
     "totalLosses": 18,
     "avatarData": {
       "baseModel": "male",
@@ -179,7 +179,7 @@
       "accessories": [],
       "accessoryColor": "#000000"
     },
-    "lastActive": "2025-08-16T04:05:18.461Z"
+    "lastActive": "2025-08-16T04:40:11.923Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -233,8 +233,8 @@
     "displayName": "ObjectionHero",
     "lawSchool": "UChicago Law",
     "level": 13,
-    "points": 2427,
-    "totalWins": 37,
+    "points": 2476,
+    "totalWins": 38,
     "totalLosses": 18,
     "avatarData": {
       "baseModel": "male",
@@ -248,7 +248,7 @@
       ],
       "accessoryColor": "#2F4F4F"
     },
-    "lastActive": "2025-08-16T02:48:12.225Z"
+    "lastActive": "2025-08-16T04:40:11.923Z"
   },
   {
     "id": "bot_statute_slayer",

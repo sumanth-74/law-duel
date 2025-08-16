@@ -20,10 +20,10 @@ import { AtticusDuel } from '@/components/AtticusDuel';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Gamepad2, Scale, Clock } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Swords, Gamepad2, Scale, Clock } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
-import { LEVEL_TITLES } from '@shared/schema';
+import { LEVEL_TITLES, RANK_TIERS, RANK_COLORS } from '@shared/schema';
 
 const SUBJECTS = [
   'Mixed Questions',
@@ -779,19 +779,35 @@ export default function Home() {
                     
                     {/* Rank Display */}
                     <div className="mt-3 flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <Trophy className="w-4 h-4 text-amber-400" />
-                        <span className="text-amber-200 font-cinzel font-bold">
-                          {LEVEL_TITLES[Math.min(character.level - 1, LEVEL_TITLES.length - 1)] || "Novice Scribe"}
-                        </span>
-                      </div>
-                      <div className="text-purple-300 text-sm">
-                        {character.level < 30 ? (
-                          <>Next rank at <span className="font-bold text-cyan-300">{(character.level + 1) * 200}</span> points</>
-                        ) : (
-                          <span className="text-amber-300 font-bold">MAX RANK</span>
-                        )}
-                      </div>
+                      {(() => {
+                        const currentRank = RANK_TIERS.find(tier => character.overallElo >= tier.minElo && character.overallElo <= tier.maxElo) || RANK_TIERS[0];
+                        const rankColor = RANK_COLORS[currentRank.color as keyof typeof RANK_COLORS];
+                        const nextRank = RANK_TIERS[RANK_TIERS.indexOf(currentRank) + 1];
+                        const progressToNext = nextRank ? character.overallElo - currentRank.minElo : 0;
+                        const totalNeeded = nextRank ? nextRank.minElo - currentRank.minElo : 0;
+                        
+                        return (
+                          <>
+                            <div className={`flex items-center gap-2 px-3 py-1 rounded-lg ${rankColor.bg} ${rankColor.border} border`}>
+                              <Trophy className={`w-4 h-4 ${rankColor.text}`} />
+                              <span className={`${rankColor.text} font-cinzel font-bold text-sm`}>
+                                {currentRank.name}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="text-slate-400 text-sm">ELO</div>
+                              <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 px-2 py-1 rounded">
+                                <span className="font-bold text-slate-200">{character.overallElo}</span>
+                              </div>
+                            </div>
+                            {nextRank && (
+                              <div className="text-purple-300 text-sm">
+                                Next: <span className="font-bold text-cyan-300">{nextRank.name}</span> at {nextRank.minElo} ELO
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>

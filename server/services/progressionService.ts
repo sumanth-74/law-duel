@@ -49,7 +49,7 @@ export class ProgressionService {
   }
 
   // Get rank tier from ELO
-  getRankTier(elo: number): { name: string; minElo: number; maxElo: number } {
+  getRankTier(elo: number): { name: string; minElo: number; maxElo: number; color: string } {
     return RANK_TIERS.find(tier => elo >= tier.minElo && elo <= tier.maxElo) || RANK_TIERS[0];
   }
 
