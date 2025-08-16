@@ -3975,10 +3975,10 @@
       },
       "Torts": {
         "overall": {
-          "attempts": 3,
+          "attempts": 5,
           "correct": 1,
           "mastery": 0,
-          "lastSeenAt": 1755204187029
+          "lastSeenAt": 1755294255279
         },
         "subtopics": {
           "Intentional Torts - Person": {
@@ -4366,10 +4366,10 @@
             "lastSeenAt": null
           },
           "Torts": {
-            "attempts": 3,
+            "attempts": 5,
             "correct": 1,
             "mastery": 0,
-            "lastSeenAt": 1755204187029
+            "lastSeenAt": 1755294255279
           }
         }
       }
@@ -6159,10 +6159,10 @@
       },
       "Torts": {
         "overall": {
-          "attempts": 3,
+          "attempts": 5,
           "correct": 0,
           "mastery": 0,
-          "lastSeenAt": 1755204187034
+          "lastSeenAt": 1755294255307
         },
         "subtopics": {
           "Intentional Torts - Person": {
@@ -6550,10 +6550,4378 @@
             "lastSeenAt": null
           },
           "Torts": {
-            "attempts": 3,
+            "attempts": 5,
             "correct": 0,
             "mastery": 0,
-            "lastSeenAt": 1755204187034
+            "lastSeenAt": 1755294255307
+          }
+        }
+      }
+    },
+    "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": {
+      "Civil Procedure": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Subject Matter Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Federal Question": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Diversity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Supplemental": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/Minimum Contacts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/Specific Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/General Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/Long-Arm Statutes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue/Proper Venue": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue/Transfer": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue/Forum Non Conveniens": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process/Methods": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process/Waiver": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process/Constitutional Requirements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Complaint": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Answer": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Amendments": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Rule 11": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Permissive": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Compulsory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Intervention": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Interpleader": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Class Actions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Scope": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Privileges": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Work Product": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Depositions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Interrogatories": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment/Standard": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment/Burden": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment/Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process/Jury Selection": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process/Evidence Presentation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process/Motions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals/Final Judgment Rule": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals/Interlocutory Appeals": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals/Standards of Review": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata/Claim Preclusion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata/Issue Preclusion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata/Parties Bound": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine/Substance vs Procedure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine/Choice of Law": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine/Federal Common Law": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Constitutional Law": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Judicial Review": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Case or Controversy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Standing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Ripeness": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Mootness": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers/Executive Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers/Legislative Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers/Judicial Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Commerce Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Dormant Commerce": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Preemption": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Tenth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights/State Action": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights/Incorporation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights/Levels of Scrutiny": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process/Procedural": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process/Substantive": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process/Fundamental Rights": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Classifications": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Strict Scrutiny": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Intermediate": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Rational Basis": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Content-Based": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Time/Place/Manner": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Commercial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Symbolic": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion/Establishment Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion/Free Exercise": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion/Lemon Test": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings/Public Use": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings/Just Compensation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings/Regulatory Takings": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Contracts Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Contracts Clause/Impairment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Contracts Clause/Public vs Private": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Contracts": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Formation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Offer": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Acceptance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Consideration": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Mutual Assent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Capacity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Duress": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Undue Influence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Mistake": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Misrepresentation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds/Covered Contracts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds/Writing Requirements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence/Integration": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence/Interpretation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Express": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Implied": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Precedent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Subsequent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Concurrent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Material": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Minor": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Anticipatory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Adequate Assurance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Damages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Specific Performance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Restitution": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Liquidated Damages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties/Assignment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties/Delegation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties/Third-Party Beneficiaries": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Goods": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Merchants": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Battle of Forms": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Warranties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Perfect Tender": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Criminal Law/Procedure": {
+        "overall": {
+          "attempts": 1,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": 1755294255292
+        },
+        "subtopics": {
+          "Homicide": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Murder": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Voluntary Manslaughter": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Involuntary Manslaughter": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Felony Murder": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Battery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Assault": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Kidnapping": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Rape": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Larceny": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Embezzlement": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/False Pretenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Robbery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Burglary": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes/Attempt": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes/Conspiracy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes/Solicitation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability/Principal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability/Accessory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability/Withdrawal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Self-Defense": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Insanity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Intoxication": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Mistake": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Necessity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Search": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Seizure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Warrant Requirements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment/Miranda": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment/Double Jeopardy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment/Self-Incrimination": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Right to Counsel": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Confrontation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Jury Trial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Speedy Trial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial/Bail": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial/Grand Jury": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial/Preliminary Hearing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas/Voluntariness": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas/Plea Bargaining": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas/Withdrawal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Criminal Law/Procedure": {
+            "attempts": 1,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": 1755294255292
+          }
+        }
+      },
+      "Evidence": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Relevance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Relevance/Probative Value": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Relevance/Unfair Prejudice": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Relevance/Limited Admissibility": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/Civil Cases": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/Criminal Cases": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/Methods of Proof": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/MIMIC": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Prior Inconsistent Statements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Bias": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Capacity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Prior Convictions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Definition": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Non-Hearsay": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Exemptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause/Testimonial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause/Crawford": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause/Forfeiture": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Lay Witnesses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Expert Witnesses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Daubert": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Bases": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Attorney-Client": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Spousal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Doctor-Patient": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Psychotherapist": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication/Documents": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication/Real Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication/Chain of Custody": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule/Original Writing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule/Duplicates": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Real Property": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Estates": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Fee Simple": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Life Estate": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Fee Tail": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Defeasible Fees": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership/Joint Tenancy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership/Tenancy in Common": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership/Tenancy by Entirety": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Leasehold Estates": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Duties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Eviction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Assignment/Sublease": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Creation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Scope": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Termination": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Profits": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Licenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants/Real Covenants": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants/Equitable Servitudes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants/Running with Land": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales/Marketable Title": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales/Equitable Conversion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales/Risk of Loss": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Types": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Delivery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Warranties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Merger": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Creation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Foreclosure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Redemption": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Transfers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Notice": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Race": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Race-Notice": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Chain of Title": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession/Elements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession/Tacking": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession/Disabilities": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning/Nonconforming Use": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning/Variances": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning/Special Permits": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Torts": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Intentional Torts - Person": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/Battery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/Assault": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/False Imprisonment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/IIED": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property/Trespass to Land": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property/Trespass to Chattels": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property/Conversion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts/Consent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts/Self-Defense": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts/Defense of Others/Property": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty/General Duty": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty/Special Relationships": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty/Premises Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach/Reasonable Person": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach/Custom": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach/Res Ipsa Loquitur": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation/Factual": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation/Proximate": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation/Intervening Causes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages/Personal Injury": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages/Property Damage": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages/Economic Loss": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses/Contributory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses/Comparative": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses/Assumption of Risk": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability/Animals": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability/Abnormally Dangerous": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability/Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Manufacturing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Design": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Warning": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability/Respondeat Superior": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability/Independent Contractors": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability/Joint Enterprise": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance/Public": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance/Private": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance/Remedies": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Libel": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Slander": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Privileges": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Public Figures": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/Intrusion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/Disclosure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/False Light": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/Appropriation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts/Fraud": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts/Interference with Contract": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts/Interference with Prospective Advantage": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      }
+    },
+    "2b99f2f3-527d-46fc-a465-61fa1b06307f": {
+      "Civil Procedure": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Subject Matter Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Federal Question": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Diversity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Jurisdiction/Supplemental": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/Minimum Contacts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/Specific Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/General Jurisdiction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Personal Jurisdiction/Long-Arm Statutes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue/Proper Venue": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue/Transfer": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Venue/Forum Non Conveniens": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process/Methods": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process/Waiver": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Service of Process/Constitutional Requirements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Complaint": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Answer": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Amendments": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pleadings/Rule 11": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Permissive": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Compulsory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Intervention": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Interpleader": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Joinder/Class Actions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Scope": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Privileges": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Work Product": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Depositions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Discovery/Interrogatories": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment/Standard": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment/Burden": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Summary Judgment/Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process/Jury Selection": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process/Evidence Presentation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Trial Process/Motions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals/Final Judgment Rule": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals/Interlocutory Appeals": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Appeals/Standards of Review": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata/Claim Preclusion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata/Issue Preclusion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Res Judicata/Parties Bound": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine/Substance vs Procedure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine/Choice of Law": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Erie Doctrine/Federal Common Law": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Constitutional Law": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Judicial Review": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Case or Controversy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Standing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Ripeness": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Judicial Review/Mootness": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers/Executive Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers/Legislative Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Separation of Powers/Judicial Powers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Commerce Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Dormant Commerce": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Preemption": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Federalism/Tenth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights/State Action": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights/Incorporation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Individual Rights/Levels of Scrutiny": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process/Procedural": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process/Substantive": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Due Process/Fundamental Rights": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Classifications": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Strict Scrutiny": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Intermediate": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Equal Protection/Rational Basis": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Content-Based": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Time/Place/Manner": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Commercial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Speech/Symbolic": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion/Establishment Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion/Free Exercise": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "First Amendment - Religion/Lemon Test": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings/Public Use": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings/Just Compensation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Takings/Regulatory Takings": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Contracts Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Contracts Clause/Impairment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Contracts Clause/Public vs Private": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Contracts": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Formation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Offer": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Acceptance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Consideration": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Formation/Mutual Assent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Capacity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Duress": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Undue Influence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Mistake": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Misrepresentation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds/Covered Contracts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds/Writing Requirements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Statute of Frauds/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence/Integration": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Parol Evidence/Interpretation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Express": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Implied": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Precedent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Subsequent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Conditions/Concurrent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Material": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Minor": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Anticipatory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Breach/Adequate Assurance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Damages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Specific Performance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Restitution": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Remedies/Liquidated Damages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties/Assignment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties/Delegation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Third Parties/Third-Party Beneficiaries": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Goods": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Merchants": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Battle of Forms": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Warranties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "UCC Article 2/Perfect Tender": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Criminal Law/Procedure": {
+        "overall": {
+          "attempts": 1,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": 1755294255314
+        },
+        "subtopics": {
+          "Homicide": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Murder": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Voluntary Manslaughter": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Involuntary Manslaughter": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Homicide/Felony Murder": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Battery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Assault": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Kidnapping": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Person/Rape": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Larceny": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Embezzlement": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/False Pretenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Robbery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Crimes Against Property/Burglary": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes/Attempt": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes/Conspiracy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Inchoate Crimes/Solicitation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability/Principal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability/Accessory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Accomplice Liability/Withdrawal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Self-Defense": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Insanity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Intoxication": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Mistake": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses/Necessity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Search": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Seizure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Warrant Requirements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fourth Amendment/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment/Miranda": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment/Double Jeopardy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Fifth Amendment/Self-Incrimination": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Right to Counsel": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Confrontation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Jury Trial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sixth Amendment/Speedy Trial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial/Bail": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial/Grand Jury": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Pretrial/Preliminary Hearing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas/Voluntariness": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas/Plea Bargaining": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Guilty Pleas/Withdrawal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Criminal Law/Procedure": {
+            "attempts": 1,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": 1755294255314
+          }
+        }
+      },
+      "Evidence": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Relevance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Relevance/Probative Value": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Relevance/Unfair Prejudice": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Relevance/Limited Admissibility": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/Civil Cases": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/Criminal Cases": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/Methods of Proof": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Character Evidence/MIMIC": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Prior Inconsistent Statements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Bias": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Capacity": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Impeachment/Prior Convictions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Definition": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Non-Hearsay": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Exemptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Hearsay/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause/Testimonial": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause/Crawford": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Confrontation Clause/Forfeiture": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Lay Witnesses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Expert Witnesses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Daubert": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Opinion Testimony/Bases": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Attorney-Client": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Spousal": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Doctor-Patient": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privileges/Psychotherapist": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication/Documents": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication/Real Evidence": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Authentication/Chain of Custody": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule/Original Writing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule/Duplicates": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Best Evidence Rule/Exceptions": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Real Property": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Estates": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Fee Simple": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Life Estate": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Fee Tail": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Estates/Defeasible Fees": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership/Joint Tenancy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership/Tenancy in Common": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Concurrent Ownership/Tenancy by Entirety": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Leasehold Estates": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Duties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Eviction": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Landlord-Tenant/Assignment/Sublease": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Creation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Scope": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Termination": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Profits": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Easements/Licenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants/Real Covenants": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants/Equitable Servitudes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Covenants/Running with Land": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales/Marketable Title": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales/Equitable Conversion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Sales/Risk of Loss": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Types": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Delivery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Warranties": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Deeds/Merger": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Creation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Foreclosure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Redemption": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Mortgages/Transfers": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Notice": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Race": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Race-Notice": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Recording Acts/Chain of Title": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession/Elements": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession/Tacking": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Adverse Possession/Disabilities": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning/Nonconforming Use": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning/Variances": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Zoning/Special Permits": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          }
+        }
+      },
+      "Torts": {
+        "overall": {
+          "attempts": 0,
+          "correct": 0,
+          "mastery": 0,
+          "lastSeenAt": null
+        },
+        "subtopics": {
+          "Intentional Torts - Person": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/Battery": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/Assault": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/False Imprisonment": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Person/IIED": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property/Trespass to Land": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property/Trespass to Chattels": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Intentional Torts - Property/Conversion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts/Consent": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts/Self-Defense": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defenses to Intentional Torts/Defense of Others/Property": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty/General Duty": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty/Special Relationships": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Duty/Premises Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach/Reasonable Person": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach/Custom": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Breach/Res Ipsa Loquitur": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation/Factual": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation/Proximate": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Causation/Intervening Causes": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages/Personal Injury": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages/Property Damage": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Damages/Economic Loss": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses/Contributory": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses/Comparative": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Negligence - Defenses/Assumption of Risk": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability/Animals": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability/Abnormally Dangerous": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Strict Liability/Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Manufacturing": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Design": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Warning": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Products Liability/Defenses": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability/Respondeat Superior": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability/Independent Contractors": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Vicarious Liability/Joint Enterprise": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance/Public": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance/Private": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Nuisance/Remedies": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Libel": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Slander": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Privileges": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Defamation/Public Figures": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/Intrusion": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/Disclosure": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/False Light": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Privacy/Appropriation": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts/Fraud": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts/Interference with Contract": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
+          },
+          "Economic Torts/Interference with Prospective Advantage": {
+            "attempts": 0,
+            "correct": 0,
+            "mastery": 0,
+            "lastSeenAt": null
           }
         }
       }
@@ -6572,7 +10940,13 @@
     "245a4d37-b308-4df5-a463-b1688dfec89d:m_1755204031955_2doiqy03w:fallback_Torts_1755204068451_gtpb",
     "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6:m_1755204031955_2doiqy03w:fallback_Torts_1755204068451_gtpb",
     "245a4d37-b308-4df5-a463-b1688dfec89d:m_1755204146373_0cw75alpl:fallback_Torts_1755204186753_64zp",
-    "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6:m_1755204146373_0cw75alpl:fallback_Torts_1755204186753_64zp"
+    "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6:m_1755204146373_0cw75alpl:fallback_Torts_1755204186753_64zp",
+    "245a4d37-b308-4df5-a463-b1688dfec89d:m_1755204031955_2doiqy03w:fallback_Torts_1755204109248_9aab",
+    "245a4d37-b308-4df5-a463-b1688dfec89d:m_1755204146373_0cw75alpl:pool_1755204225132_xza5uylq",
+    "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5:m_1755206420024_6xg1xhfiq:pool_1755206452920_azh522q0",
+    "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6:m_1755204031955_2doiqy03w:fallback_Torts_1755204109248_9aab",
+    "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6:m_1755204146373_0cw75alpl:pool_1755204225132_xza5uylq",
+    "2b99f2f3-527d-46fc-a465-61fa1b06307f:m_1755206420024_6xg1xhfiq:pool_1755206452920_azh522q0"
   ],
-  "lastSaved": "2025-08-14T20:43:07.034Z"
+  "lastSaved": "2025-08-15T21:44:15.315Z"
 }

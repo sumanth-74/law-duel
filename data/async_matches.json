@@ -130,8 +130,8 @@
       "245a4d37-b308-4df5-a463-b1688dfec89d": 1,
       "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
     },
-    "round": 2,
-    "difficulty": 1,
+    "round": 3,
+    "difficulty": 2,
     "turns": [
       {
         "qid": "pool_1755203927872_94d8hzbk",
@@ -174,16 +174,33 @@
         "difficulty": 1,
         "deadlineTs": 1755290330169,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 0,
         "explanation": "The issue at hand is whether Corp X can be held vicariously liable for Alice's injuries resulting from a slip and fall incident that occurred while she was performing her job duties. Under the doctrine of vicarious liability, an employer can be held liable for the negligent acts of an employee if those acts occur within the scope of employment. In this case, Alice was serving customers at the time of her injury, indicating she was acting within her employment scope. Therefore, Corp X would likely be found vicariously liable for failing to maintain safe premises, particularly since there was a policy in place that required staff to monitor spills. \n\nOption B misapplies the concept of liability; while John’s actions contributed to the spill, this does not absolve Corp X of its duty to maintain safe premises. Option C incorrectly assumes that Alice's own negligence completely bars her recovery; while comparative negligence applies, it does not eliminate Corp X's liability. Lastly, Option D suggests Alice can pursue both parties, which is misleading in focusing solely on her potential recovery rather than establishing vicarious liability against Corp X. \n\nBar Exam Tip: Remember that vicarious liability hinges on the employee's actions being within the scope of employment—this is crucial for establishing employer liability in tort cases. Understanding the nuances of premises liability and employer duties can be pivotal in exam scenarios."
+      },
+      {
+        "qid": "pool_1755294271629_sjqjz4kk",
+        "stem": "On March 15, 2023, Alice, a journalist for a local newspaper, published an article claiming that Bob, a local politician, was involved in embezzlement from State Y funds. The article cited unnamed sources and included a statement that Bob had been seen leaving Corp X’s offices with large sums of cash. Bob, feeling defamed, filed a lawsuit against Alice for defamation, seeking $500,000 in damages. Alice asserts that her article was based on reasonable sources and that she believed it to be true. Meanwhile, Corp X, which was mentioned in the article, claims Alice's statements were false and damaging to its reputation. The trial court must determine whether Alice acted with actual malice and whether Bob is a public figure, thus requiring him to prove a higher standard for defamation. Additionally, the court considers whether the statement about Corp X constitutes defamation per se, as it relates to professional conduct.",
+        "choices": [
+          "The court will likely rule in favor of Bob, as he can prove Alice acted with actual malice despite her claims to the contrary.",
+          "The court will likely determine that Bob cannot recover damages since he failed to demonstrate that Alice's statements were false.",
+          "The court will likely find for Alice because she relied on reasonably credible sources, thus negating any assertion of actual malice.",
+          "The court will probably rule in favor of Corp X on defamation per se grounds, as the statements directly harmed its business reputation."
+        ],
+        "subject": "Torts",
+        "difficulty": 2,
+        "deadlineTs": 1755380671629,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 0,
+        "explanation": "The controlling rule for defamation requires that a plaintiff proves a false statement was made with fault, which can be negligence or actual malice depending on the plaintiff's status. Under *New York Times Co. v. Sullivan*, public figures must show actual malice, which requires proof that the defendant made the statement with knowledge of its falsity or with reckless disregard for the truth. In this case, Alice’s reliance on unnamed sources raises the question of her belief in the truth of the statement. The relevant facts indicate that Alice may not have acted with actual malice if she believed the sources to be credible. Therefore, Bob's ability to prove actual malice is crucial to his case. The statement made about Corp X could constitute defamation per se if it injures its reputation regarding its professional conduct, but the primary focus remains Bob's claim against Alice. Each distractor reflects common errors that examinees make when analyzing defamation claims. For instance, option B misapplies the actual malice standard by suggesting Alice’s belief alone suffices without addressing the credibility of her sources. Option C incorrectly assumes Corp X has standing to sue for defamation without analyzing Bob's claim first. Option D misunderstands the burden of proof on public figures regarding falsity. A key takeaway is to remember that public figures face a higher burden in proving defamation due to the necessity of showing actual malice."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755203898530,
-    "updatedAt": 1755203930169
+    "updatedAt": 1755294271629
   },
   "m_1755204031955_2doiqy03w": {
     "id": "m_1755204031955_2doiqy03w",
@@ -205,8 +222,8 @@
       "245a4d37-b308-4df5-a463-b1688dfec89d": 0,
       "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
     },
-    "round": 2,
-    "difficulty": 1,
+    "round": 3,
+    "difficulty": 2,
     "turns": [
       {
         "qid": "fallback_Torts_1755204068451_gtpb",
@@ -249,6 +266,23 @@
         "difficulty": 1,
         "deadlineTs": 1755290509248,
         "answers": {},
+        "revealed": true,
+        "correctIndex": 2,
+        "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
+      },
+      {
+        "qid": "fallback_Torts_1755294294452_rmw4",
+        "stem": "In a products liability case based on strict liability, which element is NOT required to be proven?",
+        "choices": [
+          "The product was defective",
+          "The defect caused plaintiff's injury",
+          "The defendant was negligent",
+          "The product was unreasonably dangerous"
+        ],
+        "subject": "Torts",
+        "difficulty": 2,
+        "deadlineTs": 1755380694452,
+        "answers": {},
         "revealed": false,
         "correctIndex": 2,
         "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
@@ -258,7 +292,7 @@
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755204032015,
-    "updatedAt": 1755204109248
+    "updatedAt": 1755294294452
   },
   "m_1755204146373_0cw75alpl": {
     "id": "m_1755204146373_0cw75alpl",
@@ -280,8 +314,8 @@
       "245a4d37-b308-4df5-a463-b1688dfec89d": 0,
       "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
     },
-    "round": 2,
-    "difficulty": 1,
+    "round": 3,
+    "difficulty": 2,
     "turns": [
       {
         "qid": "fallback_Torts_1755204186753_64zp",
@@ -324,16 +358,33 @@
         "difficulty": 1,
         "deadlineTs": 1755290625133,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 2,
         "explanation": "The key issue here is whether Corp X is vicariously liable for Alice's negligence under the doctrine of respondeat superior. Under common law, an employer may be held vicariously liable for the negligent acts of an employee if such acts occur within the scope of employment. The Restatement (Second) of Agency provides that an employee's conduct is within the scope of employment when it is of the kind the employee is employed to perform and occurs substantially within the authorized time and space limits. In this case, Alice was performing a task that was part of her job—delivering products—despite the detour. This slight deviation does not necessarily remove her actions from the scope of employment. The courts often consider whether the deviation is substantial or merely a minor detour. Therefore, Corp X is likely vicariously liable for Alice's negligence. \n\nOption B is incorrect because while the detour could suggest a deviation, it does not automatically exclude vicarious liability if the act was still related to her employment. Option C is incorrect because Alice's distraction was indeed a proximate cause of the accident, which is part of the negligence analysis. Option D misapplies the law by suggesting that any personal errand negates liability, while the deviation must be substantial to affect vicarious liability. \n\nBar Exam Tip: Remember that minor deviations from an employment task often do not eliminate vicarious liability. Focus on the connection between the employee’s actions and their job responsibilities."
+      },
+      {
+        "qid": "pool_1755294272939_dzrjujq1",
+        "stem": "On February 15, 2023, Alice, a resident of State Y, purchased a state-of-the-art blender from Corp X, a company incorporated in State Z, known for its innovative kitchen appliances. Following the instructions, Alice used the blender to prepare a smoothie. However, the blender malfunctioned, causing the blade assembly to detach violently, resulting in severe lacerations to Alice's hand. Alice filed a lawsuit against Corp X in State Y for strict product liability. Corp X argues that the blender was misused, as Alice had not secured the lid properly. Meanwhile, the blender had passed all required safety tests and had a warning label about proper use. Alice contends that the defect in the design was inherently dangerous, regardless of her actions. The trial court must decide whether Corp X is strictly liable for Alice's injuries, despite the alleged misuse.",
+        "choices": [
+          "The court might determine that the warning label provided sufficient notice to Alice, thereby negating Corp X's strict liability for her injuries.",
+          "The court will likely find Corp X strictly liable because the product was defectively designed, posing an unreasonable risk of harm to users.",
+          "The court may rule that Alice's improper use of the blender absolves Corp X of liability under the misuse defense in strict product liability cases.",
+          "The court is likely to conclude that Alice's injuries were too remote from the defect in design, thus failing to meet the causation requirement in strict liability."
+        ],
+        "subject": "Torts",
+        "difficulty": 2,
+        "deadlineTs": 1755380672939,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 1,
+        "explanation": "Under the doctrine of strict product liability, a manufacturer can be held liable for injuries caused by a defective product regardless of fault. The key elements include showing that the product was defective (either in design, manufacturing, or marketing) and that the defect caused the injuries. In this scenario, Alice argues that the design was defective, posing an unreasonable risk of harm, which aligns with the Restatement (Second) of Torts § 402A. The malfunction of the blender, leading to injury, supports Alice's claim. Importantly, although Corp X claims misuse, strict liability does not depend on the user's actions if the product was inherently dangerous. The presence of a warning label does not absolve the manufacturer if the design is defective. Thus, the court is likely to find Corp X strictly liable. \n\nOption B is incorrect because misuse does not automatically absolve a manufacturer of liability in strict product cases, especially if the defect caused the injury. Option C incorrectly suggests that a warning label negates liability; however, warnings do not protect against design defects. Lastly, Option D misunderstands the causation standard in strict liability, as the defect must be a proximate cause of the injury, which it is in this case. \n\nBar Exam Tip: Remember that in strict liability, the focus is on the product's condition rather than the user's conduct. Misuse defenses are limited and do not typically absolve liability if a defect exists. This is a crucial distinction in tort law that often trips up examinees."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755204146433,
-    "updatedAt": 1755204225133
+    "updatedAt": 1755294272939
   },
   "m_1755206420024_6xg1xhfiq": {
     "id": "m_1755206420024_6xg1xhfiq",
@@ -355,7 +406,7 @@
       "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": 0,
       "2b99f2f3-527d-46fc-a465-61fa1b06307f": 0
     },
-    "round": 1,
+    "round": 2,
     "difficulty": 1,
     "turns": [
       {
@@ -371,15 +422,32 @@
         "difficulty": 1,
         "deadlineTs": 1755292852921,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 0,
         "explanation": "The Sixth Amendment guarantees defendants the right to confront witnesses against them. In *Simmons v. United States*, the Court held that suggestive identification procedures can violate this right if they lead to a substantial likelihood of misidentification. Here, Alice's attorney objected to Bob's testimony based on the suggestive nature of the lineup, which raises significant concerns about the reliability of the identification. The trial court's failure to exclude this testimony likely constitutes a violation of Alice's rights. Furthermore, an improper admission of evidence that is prejudicial can lead to a reversal on appeal. \n\nAddressing the distractors: \n- Option B is incorrect because it misapplies the reliability standard; the suggestive lineup should have prompted exclusion rather than admission. \n- Option C, while addressing the right to present a defense, incorrectly assumes that Carol's testimony was essential without demonstrating how it would have changed the outcome. \n- Option D is wrong because it overlooks the significance of preserving confrontation rights, which is a fundamental aspect of a fair trial. \n\nBar Exam Tip: Always assess how evidence admission affects the defendant's rights, especially under the Sixth Amendment. Remember that suggestive identification can lead to a presumption of unreliability. \n\nIn summary, the appellate court is likely to reverse Alice's conviction due to the improper admission of Bob's testimony, as it infringes on her constitutional right to confront witnesses."
+      },
+      {
+        "qid": "pool_1755294271578_lp4gsiwp",
+        "stem": "On April 15, 2023, Alice was driving her car on Main Street in State Y when she collided with Bob, who was riding his bicycle. Bob was traveling in a designated bike lane when Alice, distracted by her phone, failed to notice a stop sign and struck him. Bob sustained serious injuries, including a broken leg and a concussion, resulting in $50,000 in medical bills. After the accident, Bob discovered that Alice had a history of distracted driving citations. Bob's attorney filed a lawsuit against Alice and her employer, Corp X, claiming that Alice was acting within the scope of her employment while driving to a client meeting. Alice's defense is that Bob was partially at fault for riding too close to the road's edge. As the case progresses, the court must determine whether Alice's negligence caused Bob's injuries and to what extent comparative fault may apply.",
+        "choices": [
+          "The court may find that Alice is partially liable, but Bob's contributory negligence in riding too close to the road could reduce his damages significantly.",
+          "The court is likely to rule in favor of Bob, finding Alice fully liable due to her clear negligence and failure to exercise reasonable care while driving.",
+          "The court will rule in favor of Corp X, determining that Alice was not acting within the scope of her employment at the time of the accident.",
+          "The court is expected to dismiss Alice's defense, concluding that her history of distracted driving establishes a pattern of negligence that directly caused the accident."
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755380671579,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 1,
+        "explanation": "Under the doctrine of negligence, a plaintiff must establish that the defendant owed a duty of care, breached that duty, and caused damages. Alice had a duty to operate her vehicle with reasonable care, which she breached by being distracted and failing to stop at a stop sign, directly causing Bob's injuries. The standard for negligence requires that the defendant's conduct be measured against that of a reasonably prudent person in similar circumstances. In this case, Alice's behavior clearly fell below that standard, especially given her distracted driving history. \n\nNow, assessing the options: \n- Option A is correct because it accurately applies the law of negligence, illustrating that Alice's actions directly resulted in Bob's injuries, and she is likely to be found fully liable. \n- Option B misapplies the comparative fault doctrine. Although Bob's conduct could be scrutinized, the primary cause of the accident was Alice's negligence, and comparative fault would not eliminate her liability entirely. \n- Option C is incorrect because Alice was indeed acting within the scope of her employment as she was traveling to a client meeting at the time of the incident, making Corp X potentially liable under vicarious liability principles. \n- Option D is misleading as it suggests that Alice's history alone suffices to dismiss her defense, while it should be considered as evidence of her negligence rather than a standalone basis for liability. \n\nBar Exam Tip: Always remember the elements of negligence and how they interact with defenses like comparative fault; the focus should be on the actions of the defendant and the standard of care owed. Common traps include misunderstanding the application of liability in employer-employee relationships."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755206420084,
-    "updatedAt": 1755206452921
+    "updatedAt": 1755294271579
   }
 }
