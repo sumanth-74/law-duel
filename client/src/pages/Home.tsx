@@ -20,7 +20,7 @@ import { AtticusDuel } from '@/components/AtticusDuel';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Gamepad2 } from 'lucide-react';
+import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Gamepad2, Scale, Clock } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
 import { LEVEL_TITLES } from '@shared/schema';
@@ -785,7 +785,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="text-green-400 text-sm">XP</div>
+                        <div className="text-green-400 text-sm">PROGRESS</div>
                         <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 px-3 py-1 rounded-lg border border-green-500/30">
                           <span className="font-bold text-green-200">{character.xp}</span>
                         </div>
@@ -885,12 +885,12 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-cinzel text-3xl font-black animate-[textGlowPulse_3s_ease-in-out_infinite] bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-100 bg-clip-text text-transparent tracking-wide">
-                      LEGENDARY DAILY QUEST
+                      DAILY CHALLENGE
                     </h3>
                     <div className="flex items-center gap-3 mt-2">
                       <Badge className="bg-gradient-to-r from-red-900/50 to-orange-900/50 text-red-200 border border-red-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
                         <Zap className="w-3 h-3" />
-                        EXTREME MODE
+                        ADVANCED MODE
                       </Badge>
                       <Badge className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 text-green-200 border border-green-400/60 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
                         <Trophy className="w-3 h-3" />
@@ -908,7 +908,7 @@ export default function Home() {
                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
                     <span className="relative flex items-center gap-3 epic-text-glow">
                       <Sword className="w-6 h-6" />
-                      ACCEPT QUEST
+                      START CHALLENGE
                       <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-3 transition-transform" />
                     </span>
                   </Button>
@@ -956,7 +956,7 @@ export default function Home() {
                       </CardTitle>
                       <p className="text-purple-200/90 text-sm font-black mt-2 uppercase tracking-[0.2em] flex items-center gap-2">
                         <Sword className="w-4 h-4" />
-                        LEGENDARY CAMPAIGN
+                        ADVANCED TRAINING
                       </p>
                     </div>
                   </div>
@@ -975,11 +975,11 @@ export default function Home() {
                     <div className="relative bg-gradient-to-br from-red-900/50 via-pink-900/50 to-red-900/50 rounded-xl p-4 border-2 border-red-400/40 group-hover:border-red-400/60 transition-all shadow-inner">
                       <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-pink-600/10 rounded-xl"></div>
                       <div className="relative">
-                        <div className="text-xs text-red-300 mb-1 font-bold uppercase tracking-wider">Lives</div>
+                        <div className="text-xs text-red-300 mb-1 font-bold uppercase tracking-wider">Attempts</div>
                         <div className="flex gap-1 justify-center">
-                          <Heart className="w-5 h-5 text-red-400 fill-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)] animate-pulse" />
-                          <Heart className="w-5 h-5 text-red-400 fill-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)] animate-pulse" style={{ animationDelay: '0.2s' }} />
-                          <Heart className="w-5 h-5 text-red-400 fill-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)] animate-pulse" style={{ animationDelay: '0.4s' }} />
+                          <Shield className="w-5 h-5 text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
+                          <Shield className="w-5 h-5 text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
+                          <Shield className="w-5 h-5 text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]" />
                         </div>
                       </div>
                     </div>
@@ -1004,13 +1004,13 @@ export default function Home() {
                       <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
                         <ChevronRight className="w-4 h-4 text-white" />
                       </div>
-                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Epic Atticus legendary boss battles</span>
+                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Advanced Atticus challenge rounds</span>
                     </div>
                     <div className="flex items-center gap-3 group/feature">
                       <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
                         <ChevronRight className="w-4 h-4 text-white" />
                       </div>
-                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Massive XP & achievement rewards</span>
+                      <span className="text-purple-200 text-sm font-semibold group-hover/feature:text-purple-100 transition-colors">Substantial points & achievement rewards</span>
                     </div>
                   </div>
                   
@@ -1025,7 +1025,7 @@ export default function Home() {
                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700 rounded-md"></span>
                     <span className="relative flex items-center justify-center gap-3 epic-text-glow">
                       <Sword className="w-6 h-6" />
-                      ENTER THE ARENA
+                      START TRAINING
                       <ChevronRight className="w-6 h-6 group-hover/btn:translate-x-2 transition-transform" />
                     </span>
                   </Button>
