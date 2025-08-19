@@ -130,7 +130,7 @@
       "245a4d37-b308-4df5-a463-b1688dfec89d": 1,
       "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
     },
-    "round": 3,
+    "round": 4,
     "difficulty": 2,
     "turns": [
       {
@@ -191,16 +191,33 @@
         "difficulty": 2,
         "deadlineTs": 1755380671629,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 0,
         "explanation": "The controlling rule for defamation requires that a plaintiff proves a false statement was made with fault, which can be negligence or actual malice depending on the plaintiff's status. Under *New York Times Co. v. Sullivan*, public figures must show actual malice, which requires proof that the defendant made the statement with knowledge of its falsity or with reckless disregard for the truth. In this case, Alice’s reliance on unnamed sources raises the question of her belief in the truth of the statement. The relevant facts indicate that Alice may not have acted with actual malice if she believed the sources to be credible. Therefore, Bob's ability to prove actual malice is crucial to his case. The statement made about Corp X could constitute defamation per se if it injures its reputation regarding its professional conduct, but the primary focus remains Bob's claim against Alice. Each distractor reflects common errors that examinees make when analyzing defamation claims. For instance, option B misapplies the actual malice standard by suggesting Alice’s belief alone suffices without addressing the credibility of her sources. Option C incorrectly assumes Corp X has standing to sue for defamation without analyzing Bob's claim first. Option D misunderstands the burden of proof on public figures regarding falsity. A key takeaway is to remember that public figures face a higher burden in proving defamation due to the necessity of showing actual malice."
+      },
+      {
+        "qid": "pool_1755404065842_3d1s4xa1",
+        "stem": "On September 1, 2023, Alice purchased a new kitchen blender from Corp X's store in State Y for $200. After using the blender for a smoothie, it suddenly exploded, causing burns to Alice’s hand. The blender was manufactured in a foreign country and had been recalled due to similar incidents, but Corp X failed to notify its customers. Alice, seeking damages, sued Corp X for negligence and strict products liability. During the trial, Corp X argued that Alice’s use of the blender was negligent because she did not follow the user manual's warning about overfilling. Alice contended that the blender was defectively designed and unreasonably dangerous, and that Corp X should be held liable despite her potential comparative fault. The judge allowed evidence of the recall but limited its admissibility to negligence claims only. The jury is deliberating on whether Corp X is liable and how Alice's actions factor into the case.",
+        "choices": [
+          "Corp X is likely liable under strict products liability because the blender was defectively designed and unreasonably dangerous, regardless of Alice's actions.",
+          "Alice will likely prevail on her strict liability claim, but the court may deny her damages based on her own negligence in using the blender.",
+          "Alice is likely barred from recovery due to her failure to follow the user manual, which constitutes contributory negligence under the law of State Y.",
+          "The court may find Corp X liable for negligence, but Alice's comparative fault will reduce her recovery since she misused the product."
+        ],
+        "subject": "Torts",
+        "difficulty": 2,
+        "deadlineTs": 1755490465842,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 3,
+        "explanation": "The key issue in this scenario is whether Corp X can be held liable under strict products liability and negligence principles. Under the doctrine of strict liability, a manufacturer is liable for injuries caused by a defect in its product if the product was unreasonably dangerous and not altered after leaving the manufacturer's control. Here, Alice argues that the blender was defectively designed, supporting her strict liability claim. However, the issue of comparative fault arises due to Alice's alleged misuse. Under comparative negligence principles, a plaintiff’s recovery may be reduced by the percentage of their fault. In State Y, if the jury finds Alice partially at fault for overfilling the blender, her damages may be reduced accordingly but not barred entirely. This is critical because the jury must weigh the design defect against Alice's actions. The fact that the recall was not properly communicated may strengthen Alice's argument for negligence, but it does not negate her comparative fault. \n\nOption A is incorrect because while strict liability may apply, Alice's misuse is a significant factor affecting recovery. Option B misapplies contributory negligence; State Y follows comparative fault, not contributory. Option D incorrectly suggests that Alice will be barred from recovery entirely, which does not align with comparative fault principles. \n\nBar Exam Tip: Always consider how comparative fault interacts with strict liability claims, as this can significantly influence the outcome of a case."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755203898530,
-    "updatedAt": 1755294271629
+    "updatedAt": 1755404065842
   },
   "m_1755204031955_2doiqy03w": {
     "id": "m_1755204031955_2doiqy03w",
@@ -222,7 +239,7 @@
       "245a4d37-b308-4df5-a463-b1688dfec89d": 0,
       "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
     },
-    "round": 3,
+    "round": 4,
     "difficulty": 2,
     "turns": [
       {
@@ -283,16 +300,33 @@
         "difficulty": 2,
         "deadlineTs": 1755380694452,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 2,
         "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
+      },
+      {
+        "qid": "pool_1755404066508_f26tvupx",
+        "stem": "On July 10, 2023, Alice was driving on Main Street in Springfield when she received a text from Bob, her co-worker at Corp X, asking about a project deadline. Despite being aware of the dangers of texting while driving, Alice glanced at her phone and swerved into the opposite lane, colliding with a vehicle driven by Charlie, who was traveling within the speed limit. Charlie sustained severe injuries, leading to $100,000 in medical expenses. Alice was cited for distracted driving. On August 5, 2023, Charlie filed a lawsuit against Alice and Corp X, claiming negligence. Bob, knowing Alice was driving, had sent the text minutes before the accident. Charlie seeks damages, arguing that Bob's text contributed to Alice's distraction. The court must now determine whether Alice's actions constitute negligence and if Bob can be held liable as well.",
+        "choices": [
+          "Corp X will be liable for Alice's negligence under the doctrine of respondeat superior, as she was acting within the scope of her employment when the accident occurred.",
+          "Alice will likely be found liable for negligence since she breached her duty of care by texting while driving, directly causing Charlie's injuries.",
+          "Bob could be held liable for negligence because his text distracted Alice, but only if it is proven that he knew she was driving at the time.",
+          "Charlie may face comparative fault for not wearing a seatbelt, which could reduce his recovery despite Alice's clear negligence."
+        ],
+        "subject": "Torts",
+        "difficulty": 2,
+        "deadlineTs": 1755490466510,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 1,
+        "explanation": "Under the tort law principle of negligence, a plaintiff must prove four elements: duty, breach, causation, and damages. In this scenario, Alice clearly owed a duty of care to other drivers, including Charlie, to operate her vehicle safely. By texting while driving, Alice breached that duty, as this behavior is considered unreasonable and poses a risk of harm to others. The direct causation is evident, as Alice's distraction directly led to the collision resulting in Charlie's injuries and medical expenses. Therefore, Alice will most likely be found liable for negligence. \n\nOption B is incorrect because while Bob's text may have contributed to Alice's distraction, liability requires a direct act that breaches a duty owed to the injured party. Bob's actions do not rise to the level of negligence without showing he had a specific duty to refrain from texting Alice while she was driving. \n\nOption C misapplies the doctrine of respondeat superior. For Corp X to be liable, Alice must have been acting within the scope of her employment at the time of the accident, which is not established by the fact pattern. \n\nOption D incorrectly assumes Charlie's potential comparative fault can affect Alice's liability. In most jurisdictions, a failure to wear a seatbelt does not bar recovery but may reduce damages, which does not negate Alice's negligence. \n\nBar Exam Tip: Remember that negligence relies heavily on the breach of duty, and distractions like texting create a clear breach of the reasonable person standard. Assessing the connection between the act and the harm is crucial in negligence cases."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755204032015,
-    "updatedAt": 1755294294452
+    "updatedAt": 1755404066510
   },
   "m_1755204146373_0cw75alpl": {
     "id": "m_1755204146373_0cw75alpl",
@@ -314,7 +348,7 @@
       "245a4d37-b308-4df5-a463-b1688dfec89d": 0,
       "2cffd8c5-281c-4c5e-bb40-32f83ea31bc6": 0
     },
-    "round": 3,
+    "round": 4,
     "difficulty": 2,
     "turns": [
       {
@@ -375,16 +409,33 @@
         "difficulty": 2,
         "deadlineTs": 1755380672939,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 1,
         "explanation": "Under the doctrine of strict product liability, a manufacturer can be held liable for injuries caused by a defective product regardless of fault. The key elements include showing that the product was defective (either in design, manufacturing, or marketing) and that the defect caused the injuries. In this scenario, Alice argues that the design was defective, posing an unreasonable risk of harm, which aligns with the Restatement (Second) of Torts § 402A. The malfunction of the blender, leading to injury, supports Alice's claim. Importantly, although Corp X claims misuse, strict liability does not depend on the user's actions if the product was inherently dangerous. The presence of a warning label does not absolve the manufacturer if the design is defective. Thus, the court is likely to find Corp X strictly liable. \n\nOption B is incorrect because misuse does not automatically absolve a manufacturer of liability in strict product cases, especially if the defect caused the injury. Option C incorrectly suggests that a warning label negates liability; however, warnings do not protect against design defects. Lastly, Option D misunderstands the causation standard in strict liability, as the defect must be a proximate cause of the injury, which it is in this case. \n\nBar Exam Tip: Remember that in strict liability, the focus is on the product's condition rather than the user's conduct. Misuse defenses are limited and do not typically absolve liability if a defect exists. This is a crucial distinction in tort law that often trips up examinees."
+      },
+      {
+        "qid": "pool_1755404093422_k6dn0yc7",
+        "stem": "On June 5, 2023, Alice, a pedestrian, was walking across Main Street in Springfield when she was struck by a delivery truck owned by Corp X. The driver, Bob, was using a company vehicle while delivering packages for Corp X. Witnesses noted that Bob was speeding and was distracted by his phone at the time of the accident. Alice suffered severe injuries, including a broken leg and a concussion. On July 1, 2023, Alice filed a lawsuit against Corp X for negligence, claiming that Bob's actions constituted a breach of the duty of care owed to her. Corp X responded by asserting that Bob was not acting within the scope of his employment during the incident because he was on a personal phone call. Alice contends that Bob was performing his job duties at the time and that the company should be held vicariously liable for his actions. The court must determine whether Bob's distraction and speeding were substantial factors in causing Alice's injuries and whether Corp X can be held liable based on the nature of Bob's employment at the time.",
+        "choices": [
+          "The court might conclude that the evidence of Bob's speeding is insufficient to establish a breach of duty, resulting in a dismissal of Alice's claims.",
+          "The court may rule that Bob's personal phone call absolves Corp X of liability, as he was not performing work-related tasks at that moment.",
+          "The court could determine that Alice's own actions contributed to her injuries, which may reduce any damages she can recover from Corp X.",
+          "The court is likely to find Corp X vicariously liable for Bob's negligence, as he was acting within the scope of his employment during the incident."
+        ],
+        "subject": "Torts",
+        "difficulty": 2,
+        "deadlineTs": 1755490493423,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 3,
+        "explanation": "The controlling rule for vicarious liability, as established in *Respondeat Superior*, holds that an employer can be liable for torts committed by an employee if those acts occur within the scope of employment. In this case, Bob was driving a delivery truck for Corp X while engaged in his job. Although he was distracted by his phone, the primary purpose of his trip was work-related, thus satisfying the requirement of acting within the scope of employment. The key legal issue is whether Bob's actions (speeding and being distracted) constitute a breach of the duty of care. Given that drivers owe a duty to operate their vehicles safely, this breach directly resulted in Alice's injuries, providing a solid basis for Corp X's liability. \n\nOption B is incorrect because the scope of employment includes acts that are incidental to work duties, such as making a call related to work matters, even if personal. Option C misapplies comparative fault principles; while Alice's actions could be relevant, they do not negate Corp X's vicarious liability. Option D fails as it overlooks the evidence of negligence by Bob, which is crucial for establishing liability.\n\n**Bar Exam Tip**: When analyzing vicarious liability, always assess the employee's conduct in relation to the employer's business purposes, considering exceptions and nuances of scope. Remember that minor deviations in work tasks do not automatically absolve employers of responsibility."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755204146433,
-    "updatedAt": 1755294272939
+    "updatedAt": 1755404093423
   },
   "m_1755206420024_6xg1xhfiq": {
     "id": "m_1755206420024_6xg1xhfiq",
@@ -406,8 +457,8 @@
       "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": 0,
       "2b99f2f3-527d-46fc-a465-61fa1b06307f": 0
     },
-    "round": 2,
-    "difficulty": 1,
+    "round": 3,
+    "difficulty": 2,
     "turns": [
       {
         "qid": "pool_1755206452920_azh522q0",
@@ -439,16 +490,33 @@
         "difficulty": 1,
         "deadlineTs": 1755380671579,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 1,
         "explanation": "Under the doctrine of negligence, a plaintiff must establish that the defendant owed a duty of care, breached that duty, and caused damages. Alice had a duty to operate her vehicle with reasonable care, which she breached by being distracted and failing to stop at a stop sign, directly causing Bob's injuries. The standard for negligence requires that the defendant's conduct be measured against that of a reasonably prudent person in similar circumstances. In this case, Alice's behavior clearly fell below that standard, especially given her distracted driving history. \n\nNow, assessing the options: \n- Option A is correct because it accurately applies the law of negligence, illustrating that Alice's actions directly resulted in Bob's injuries, and she is likely to be found fully liable. \n- Option B misapplies the comparative fault doctrine. Although Bob's conduct could be scrutinized, the primary cause of the accident was Alice's negligence, and comparative fault would not eliminate her liability entirely. \n- Option C is incorrect because Alice was indeed acting within the scope of her employment as she was traveling to a client meeting at the time of the incident, making Corp X potentially liable under vicarious liability principles. \n- Option D is misleading as it suggests that Alice's history alone suffices to dismiss her defense, while it should be considered as evidence of her negligence rather than a standalone basis for liability. \n\nBar Exam Tip: Always remember the elements of negligence and how they interact with defenses like comparative fault; the focus should be on the actions of the defendant and the standard of care owed. Common traps include misunderstanding the application of liability in employer-employee relationships."
+      },
+      {
+        "qid": "pool_1755404065163_c74gx2mq",
+        "stem": "On June 15, 2023, Alice, a police officer in State Y, received a tip from an anonymous informant about Bob selling illegal drugs from his apartment located at 123 Elm Street. Believing the informant's claim, Alice approached the apartment without a warrant and peered through the window. She observed Bob packaging what appeared to be narcotics. Subsequently, Alice returned with a warrant and found significant quantities of drugs in Bob's apartment. Bob was charged with possession with intent to distribute. However, Bob's attorney argues that the initial observation through the window violated his Fourth Amendment rights. The case is currently before the trial court, which must decide whether the evidence obtained should be admissible at trial.",
+        "choices": [
+          "The court may rule that the evidence is admissible under the inevitable discovery doctrine since a warrant was obtained shortly after the observation.",
+          "The court is likely to rule that the evidence is admissible because Alice's observation occurred in a public space and did not constitute a search.",
+          "The court might decide that Alice's actions constituted a search, but the warrant later issued validated the seizure of evidence.",
+          "It is probable that the court will find the evidence inadmissible due to the violation of Bob's reasonable expectation of privacy when Alice peered through the window."
+        ],
+        "subject": "Crim",
+        "difficulty": 2,
+        "deadlineTs": 1755490465164,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 3,
+        "explanation": "The Fourth Amendment protects against unreasonable searches and seizures, and the key issue here is whether Alice's peering through the window constituted a search. Under *Katz v. United States*, a search occurs when a person's reasonable expectation of privacy is violated. Bob had a reasonable expectation of privacy in his apartment, which extends to the view from within. Although the police do have some leeway in public observation, peering into a home crosses a threshold into an area where privacy is expected. The evidence obtained as a result of this initial unauthorized observation would likely be inadmissible. \n\nRegarding the options: \n- Option A is incorrect because while police observations in public are allowed, peering into a private home is not. \n- Option C misapplies the inevitable discovery doctrine; it cannot apply unless the warrant was obtained based on lawful observation. \n- Option D acknowledges the search but fails to recognize that the initial observation was unconstitutional, thus making the warrant later irrelevant to that evidence. \n\nBar Exam Tip: Remember that the key distinction for Fourth Amendment protections lies in the expectation of privacy; if a person has a reasonable expectation of privacy, unauthorized intrusions violate the Fourth Amendment.\n"
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755206420084,
-    "updatedAt": 1755294271579
+    "updatedAt": 1755404065164
   },
   "m_1755308156444_htnbgplmj": {
     "id": "m_1755308156444_htnbgplmj",
@@ -470,7 +538,7 @@
       "1bfb5d3d-d360-4425-a89d-6ea56b1ea94a": 0,
       "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": 0
     },
-    "round": 1,
+    "round": 2,
     "difficulty": 1,
     "turns": [
       {
@@ -486,15 +554,32 @@
         "difficulty": 1,
         "deadlineTs": 1755394598581,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 2,
         "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
+      },
+      {
+        "qid": "pool_1755404065933_5kkz24vw",
+        "stem": "On April 15, 2023, Alice, a construction worker, was injured when a large steel beam fell from the roof of a building owned by Corp X in State Y. Bob, a subcontractor hired by Corp X, had been working on scaffolding but failed to secure the beam properly. Alice was standing below, inspecting the site for safety compliance. She suffered a broken leg and significant medical expenses totaling $50,000. Alice filed a negligence lawsuit against both Corp X and Bob. During the trial, Bob argued that Corp X was responsible for the unsafe working conditions, while Corp X claimed that Bob was an independent contractor and therefore not an employee. The court had to decide whether Bob's actions constituted negligence and whether Corp X could be held vicariously liable for Bob's conduct.",
+        "choices": [
+          "The court may find that Bob exercised independent judgment as a contractor, absolving Corp X of any responsibility for his negligence.",
+          "Corp X may be held liable under the doctrine of vicarious liability, as they had control over the worksite and Bob was acting within the scope of his duties.",
+          "A court will likely find Bob liable for negligence, as he breached his duty by failing to secure the beam, directly causing Alice's injuries.",
+          "Alice's comparative fault could be argued by Corp X, suggesting she failed to take adequate precautions while inspecting the site, which contributed to her injuries."
+        ],
+        "subject": "Torts",
+        "difficulty": 1,
+        "deadlineTs": 1755490465933,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 2,
+        "explanation": "The issue at hand is whether Bob can be held liable for negligence resulting in Alice’s injuries. The rule of negligence consists of four elements: duty, breach, causation, and damages. Here, Bob owed a duty to Alice to act as a reasonable subcontractor would, ensuring that the construction site was safe. By failing to secure the beam, he breached this duty. The direct causation between Bob's breach and Alice’s injury is evident, as the beam fell due to Bob's negligence, leading to Alice's broken leg and medical expenses. Therefore, Bob is likely liable for negligence. \n\nAddressing the distractors: \n- Option B misapplies the vicarious liability concept. While Corp X may be liable under certain circumstances, it is essential to establish that Bob acted within the scope of his employment, which is in question due to the independent contractor status. \n- Option C incorrectly assumes Alice's comparative fault diminishes Bob's liability. While comparative fault could be a factor, it does not negate Bob's primary liability for his negligent act. \n- Option D misinterprets Bob’s role; even as an independent contractor, he can still be liable for negligence if he failed to exercise reasonable care. \n\nBar Exam Tip: Remember that vicarious liability applies mainly when employees act within their employment scope; independent contractors present a different liability issue. Understanding the nuances in the employer-contractor relationship is crucial for these analyses."
       }
     ],
     "status": "active",
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755308156504,
-    "updatedAt": 1755308198581
+    "updatedAt": 1755404065933
   }
 }

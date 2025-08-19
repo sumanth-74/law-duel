@@ -5,9 +5,9 @@
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
     "level": 21,
-    "points": 4171,
-    "totalWins": 80,
-    "totalLosses": 6,
+    "points": 4119,
+    "totalWins": 78,
+    "totalLosses": 5,
     "avatarData": {
       "base": "construct",
       "palette": "#ff4500",
@@ -17,7 +17,7 @@
       ],
       "archetypeId": "takeover-titan"
     },
-    "lastActive": "2025-08-18T02:43:57.103Z"
+    "lastActive": "2025-08-18T01:23:57.096Z"
   },
   {
     "id": "bot_precedent_pro",
@@ -25,8 +25,8 @@
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
     "level": 21,
-    "points": 4039,
-    "totalWins": 74,
+    "points": 4014,
+    "totalWins": 73,
     "totalLosses": 8,
     "avatarData": {
       "base": "arcane",
@@ -37,7 +37,7 @@
       ],
       "archetypeId": "equal-protection-paladin"
     },
-    "lastActive": "2025-08-18T02:43:57.103Z"
+    "lastActive": "2025-08-18T01:08:57.094Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -45,8 +45,8 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 19,
-    "points": 3691,
-    "totalWins": 68,
+    "points": 3649,
+    "totalWins": 66,
     "totalLosses": 10,
     "avatarData": {
       "base": "humanoid",
@@ -56,7 +56,7 @@
       ],
       "archetypeId": "whistleblower-wyvern"
     },
-    "lastActive": "2025-08-18T02:43:57.103Z"
+    "lastActive": "2025-08-18T00:48:57.092Z"
   },
   {
     "id": "bot_gavel_crusher",
@@ -82,10 +82,10 @@
     "username": "TortMasterX",
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
-    "level": 18,
-    "points": 3405,
-    "totalWins": 61,
-    "totalLosses": 11,
+    "level": 17,
+    "points": 3360,
+    "totalWins": 60,
+    "totalLosses": 10,
     "avatarData": {
       "base": "arcane",
       "palette": "#8b008b",
@@ -94,7 +94,7 @@
       ],
       "archetypeId": "strict-scrutiny-sphinx"
     },
-    "lastActive": "2025-08-18T02:43:57.103Z"
+    "lastActive": "2025-08-18T02:03:57.101Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -120,9 +120,9 @@
     "username": "ContractsWizard",
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
-    "level": 17,
-    "points": 3211,
-    "totalWins": 57,
+    "level": 16,
+    "points": 3185,
+    "totalWins": 56,
     "totalLosses": 7,
     "avatarData": {
       "base": "celestial",
@@ -132,7 +132,7 @@
       ],
       "archetypeId": "fiduciary-seraph"
     },
-    "lastActive": "2025-08-18T02:08:57.101Z"
+    "lastActive": "2025-08-18T01:08:57.094Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -159,9 +159,9 @@
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
     "level": 14,
-    "points": 2724,
+    "points": 2688,
     "totalWins": 43,
-    "totalLosses": 17,
+    "totalLosses": 16,
     "avatarData": {
       "base": "beast",
       "palette": "#4169e1",
@@ -170,7 +170,7 @@
       ],
       "archetypeId": "miranda-hawk"
     },
-    "lastActive": "2025-08-18T02:08:57.101Z"
+    "lastActive": "2025-08-18T01:58:57.101Z"
   },
   {
     "id": "bot_verdict_viper",
