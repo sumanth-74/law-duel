@@ -6,6 +6,7 @@ import LawDuelLogo from '@/components/LawDuelLogo';
 import { BookOpen, Scale, Users, GraduationCap, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import heroBg from '@assets/ChatGPT Image Aug 25, 2025, 09_43_19 AM_1756136620886.png';
 
 export default function Landing() {
   const { toast } = useToast();
@@ -116,7 +117,7 @@ export default function Landing() {
       <div 
         className="relative pt-24 pb-16 bg-cover bg-center bg-no-repeat"
         style={{ 
-          backgroundImage: 'url("/assets/hero/hero-bg.png")',
+          backgroundImage: `url(${heroBg})`,
         }}
       >
         {/* Gradient Overlay for readability */}
