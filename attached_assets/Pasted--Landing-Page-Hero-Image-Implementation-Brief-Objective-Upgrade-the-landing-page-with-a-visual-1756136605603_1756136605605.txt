@@ -1,0 +1,70 @@
+🚀 Landing Page Hero Image — Implementation Brief
+
+Objective:
+Upgrade the landing page with a visually arresting hero section that feels Elden Ring x Harry Potter, but keeps the current Law Duel vibe and logo intact.
+
+🔮 Visual Requirements
+
+Color & Brand Consistency:
+
+Stick with the existing purple gradient palette.
+
+Atticus the Purple Wizard Cat (our logo mascot) must remain the central symbol.
+
+Image Concept:
+
+A fantasy courtroom/arena where Atticus presides.
+
+Think arcane legal duel — glowing runes, magical law books, ethereal light.
+
+Quality bar = cinematic fantasy art (Elden Ring atmospherics, Harry Potter magic).
+
+Composition:
+
+Hero image fills the top section of the landing page.
+
+Overlay current logo + tagline (“Learn the law through epic legal duels”).
+
+Buttons (Sign Up / Play Now) must stand out against the background (use a dark gradient overlay for readability).
+
+⚙️ Technical Steps in Replit
+
+Generate the artwork
+
+AI prompt example:
+
+“Purple wizard cat in robes, glowing staff, magical courtroom, arcane runes, law tomes floating, Elden Ring x Harry Potter dark fantasy style, premium, cinematic, purple tones.”
+
+Export at 2560x1440px (for desktop retina) + generate smaller responsive versions.
+
+Place in public/assets/hero/hero-bg.png.
+
+Update landing page component (Landing.tsx or similar):
+
+Wrap hero section with a div that uses the image as a background-image (via Tailwind classes or inline CSS).
+
+Add a linear-gradient overlay (bg-gradient-to-b from-black/60 via-purple-900/60 to-black/80) for readability.
+
+Keep Logo & Branding
+
+Position Atticus logo front and center, over the image.
+
+Below logo, show the tagline.
+
+Place CTAs (Sign Up, Play Now) below tagline, styled in the current premium purple scheme.
+
+Responsiveness
+
+Ensure mobile view crops the image elegantly (center Atticus, avoid cutting important detail).
+
+Use object-cover and Tailwind’s responsive classes for scaling.
+
+✅ Success Criteria
+
+When you open lawduel.net, the first thing you see is a dramatic fantasy scene that feels magical and premium — but still matches the purple vibe and keeps Atticus as the brand anchor.
+
+The logo is visible and unchanged.
+
+Tagline + buttons are easy to read and click.
+
+Works smoothly on desktop + mobile (no janky scaling).
