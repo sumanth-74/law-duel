@@ -115,13 +115,14 @@ export default function Landing() {
 
       {/* Hero Section with Background Image */}
       <div 
-        className="relative pt-24 pb-16 bg-cover bg-center bg-no-repeat"
+        className="relative pt-24 pb-16 bg-cover bg-top bg-no-repeat"
         style={{ 
           backgroundImage: `url(${heroBg})`,
+          backgroundPosition: '50% 20%', // Position to show more of the wizard cat, less of the text area
         }}
       >
-        {/* Gradient Overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-purple-900/70 to-black/80"></div>
+        {/* Strong gradient overlay to hide image text and make our text pop */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/85 to-purple-900/90"></div>
         
         {/* Content */}
         <div className="relative container mx-auto px-4 text-center">

@@ -45,8 +45,8 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 22,
-    "points": 4260,
-    "totalWins": 78,
+    "points": 4276,
+    "totalWins": 79,
     "totalLosses": 15,
     "avatarData": {
       "base": "humanoid",
@@ -56,7 +56,7 @@
       ],
       "archetypeId": "whistleblower-wyvern"
     },
-    "lastActive": "2025-08-25T17:31:17.172Z"
+    "lastActive": "2025-08-25T17:53:21.604Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -158,9 +158,9 @@
     "username": "LegalEagle420",
     "displayName": "LegalEagle420",
     "lawSchool": "Yale Law",
-    "level": 17,
-    "points": 3384,
-    "totalWins": 53,
+    "level": 18,
+    "points": 3440,
+    "totalWins": 54,
     "totalLosses": 25,
     "avatarData": {
       "base": "beast",
@@ -170,16 +170,16 @@
       ],
       "archetypeId": "miranda-hawk"
     },
-    "lastActive": "2025-08-25T07:52:42.878Z"
+    "lastActive": "2025-08-25T17:53:21.604Z"
   },
   {
     "id": "bot_verdict_viper",
     "username": "VerdictViper",
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
-    "level": 16,
-    "points": 3198,
-    "totalWins": 58,
+    "level": 17,
+    "points": 3237,
+    "totalWins": 59,
     "totalLosses": 17,
     "avatarData": {
       "base": "alien",
@@ -189,7 +189,7 @@
       ],
       "archetypeId": "viewpoint-viper"
     },
-    "lastActive": "2025-08-25T16:01:08.635Z"
+    "lastActive": "2025-08-25T17:53:21.604Z"
   },
   {
     "id": "bot_objection_hero",
