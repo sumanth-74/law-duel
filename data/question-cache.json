@@ -1451,108 +1451,66 @@
   ],
   "Mixed Questions_real-world": [
     {
-      "qid": "fresh_openai_1755312358758_a40d4715",
+      "qid": "fresh_openai_1756109391136_66d44fd5",
       "subject": "Mixed Questions",
       "topic": "Practical rights and responsibilities",
-      "stem": "Imagine you’re at a friend's party and someone accidentally spills a drink on your new shoes. Can you sue your friend for the damage?",
+      "stem": "Imagine you're at a friend's housewarming party and accidentally break a decorative vase. Your friend insists you should pay for it. What’s the legal truth? Can they really make you pay?",
       "choices": [
-        "Yes, if you have a receipt for the shoes.",
-        "Yes, because they invited you over.",
-        "No, but you can ask them to clean them.",
-        "No, it's just an accident and you should let it go."
-      ],
-      "correctIndex": 3,
-      "explanation": "You can't sue for accidental spills at a friend's house; it's considered part of the risks of socializing.",
-      "explanationLong": "In social situations, accidents happen, and spilling a drink on your shoes is generally just a part of life. You can definitely express your frustration, but suing your friend isn't a practical or realistic option. Remember, the law often looks at intent and responsibility, and in this case, it's just an innocent mistake. Next time you're at a party, keep in mind that sometimes, it's best to just laugh it off and enjoy the fun!",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755312418759,
-      "generatedAt": 1755312358759,
-      "questionType": "real-world"
-    },
-    {
-      "qid": "fresh_openai_1755312358443_fcbb80e5",
-      "subject": "Mixed Questions",
-      "topic": "Common legal myths",
-      "stem": "Imagine you're at a party and someone says, 'If you get arrested, you can just refuse to answer any questions and they'll have to let you go.' Is that true?",
-      "choices": [
-        "Yes, but only if you ask for a lawyer first.",
-        "Yes, you can remain silent and they must release you.",
-        "No, you have to answer their questions.",
-        "No, you can only stay silent during a trial."
-      ],
-      "correctIndex": 0,
-      "explanation": "You can remain silent, but it's better to ask for a lawyer first.",
-      "explanationLong": "In the U.S., you have the right to remain silent, but it’s crucial to specifically request a lawyer. This protects you from self-incrimination and ensures you have professional guidance. Just refusing to answer without mentioning a lawyer might not help you as much as you think. So next time someone talks about their rights, remind them that asking for a lawyer is key to protecting themselves!",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755312418443,
-      "generatedAt": 1755312358444,
-      "questionType": "real-world"
-    },
-    {
-      "qid": "fresh_openai_1755312380182_99e8dd7c",
-      "subject": "Mixed Questions",
-      "topic": "General legal knowledge",
-      "stem": "Imagine you're at a friend's party and someone accidentally spills red wine on your favorite white shirt. Can you legally make them pay for the cleaning costs?",
-      "choices": [
-        "Yes, it's their fault for spilling it.",
-        "Yes, but only if they were being reckless.",
-        "No, it's just an accident and you should let it go.",
-        "Only if you ask them politely first."
+        "Only if you signed a contract agreeing to pay for damages.",
+        "No, you can just leave without paying.",
+        "Yes, you are legally required to pay for it.",
+        "Only if you broke it on purpose."
       ],
       "correctIndex": 2,
-      "explanation": "Accidents happen, and in most cases, you can't make someone pay for a small mishap like spilled wine.",
-      "explanationLong": "While it might feel unfair to have your shirt ruined, legally, most spills at friendly gatherings are considered accidents. You can bring it up with your friend, but demanding payment can strain your relationship. A good practical tip? Always wear clothes you don't mind getting a bit messy at parties! Plus, understanding that accidents are part of life can help keep the peace among friends.",
+      "explanation": "Yes, you are generally responsible for damages you cause, even accidentally.",
+      "explanationLong": "In most cases, if you accidentally break something at a friend's house, you can be held responsible for the damage. This principle is part of the law of negligence, which means you have a duty to be careful with others' property. A fun tip: always check if your friend has homeowners' insurance, as it might cover accidents like this! Understanding your responsibilities can save you from awkward situations and keep friendships intact.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1755312440182,
-      "generatedAt": 1755312380182,
+      "deadlineTs": 1756109451136,
+      "generatedAt": 1756109391136,
       "questionType": "real-world"
     },
     {
-      "qid": "fresh_openai_1755312380851_09cdbfcc",
-      "subject": "Mixed Questions",
-      "topic": "Practical rights and responsibilities",
-      "stem": "Imagine you’re at a friend's house party and you accidentally spill red wine on their new carpet. What are you legally required to do?",
-      "choices": [
-        "Pay for the carpet right away.",
-        "Apologize and offer to help clean it up.",
-        "Leave the party and ignore it.",
-        "Nothing, it was an accident."
-      ],
-      "correctIndex": 1,
-      "explanation": "You should apologize and offer to help clean it up.",
-      "explanationLong": "When you accidentally damage someone else's property, it's all about taking responsibility! Apologizing and offering to help clean shows you care and can prevent hard feelings. Legally, you might not be forced to pay, but being courteous goes a long way in maintaining friendships. Remember, a little kindness can turn a mishap into a bonding moment!",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1755312440851,
-      "generatedAt": 1755312380851,
-      "questionType": "real-world"
-    },
-    {
-      "qid": "fresh_openai_1755312380202_0bb04bee",
+      "qid": "fresh_openai_1756109390559_dde2de6a",
       "subject": "Mixed Questions",
       "topic": "General legal knowledge",
-      "stem": "You’re at a friend's house party and accidentally spill a drink on their new carpet. They demand you pay for the cleaning. Do you have to pay for the damage?",
+      "stem": "Imagine you bought a brand new phone and it broke within a week. The store refuses to give you a refund, saying their policy is no returns. What can you do?",
       "choices": [
-        "Only if they can prove you were being careless.",
-        "Only if you were invited and not just a guest.",
-        "Yes, you must pay for the cleaning.",
-        "No, it's just an accident and you're not responsible."
+        "You should just buy a new phone from a different store.",
+        "You can only get a store credit, not a refund.",
+        "You can demand a refund because the phone is defective.",
+        "You have to keep the broken phone, no refunds allowed."
       ],
-      "correctIndex": 0,
-      "explanation": "You only have to pay if they can show you were careless.",
-      "explanationLong": "In most situations, accidents happen, and you might not have to pay for damages unless you were being reckless. If your friend can prove you were acting carelessly—like running around with a full drink—then you might be on the hook. It's a good reminder to keep an eye on your drink and be mindful of your surroundings! So next time, maybe just sip slowly and enjoy the party without the stress!",
+      "correctIndex": 2,
+      "explanation": "You can demand a refund because the phone is defective.",
+      "explanationLong": "If you buy a product that doesn't work as promised, like a broken phone, you often have the right to a refund or replacement. This falls under consumer protection laws that say items should be fit for use. Always check your local laws, and remember, just because a store has a policy doesn’t mean they can ignore your rights! Keep your receipt and know your rights to stand firm!",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1755312440202,
-      "generatedAt": 1755312380202,
+      "deadlineTs": 1756109450559,
+      "generatedAt": 1756109390560,
+      "questionType": "real-world"
+    },
+    {
+      "qid": "fresh_openai_1756109389697_4d3b21e0",
+      "subject": "Mixed Questions",
+      "topic": "General legal knowledge",
+      "stem": "You’re at a friend's house party, and someone accidentally spills red wine on your favorite shirt. They offer to pay for the cleaning. Do you have to accept their offer?",
+      "choices": [
+        "No, you can decline and still be friends.",
+        "No, you have to pay for it yourself.",
+        "Yes, it's polite to accept their offer.",
+        "Yes, you must accept because it's the law."
+      ],
+      "correctIndex": 0,
+      "explanation": "You can decline their offer without hurting your friendship.",
+      "explanationLong": "In this situation, you absolutely can decline your friend's offer to pay for the cleaning. It's a nice gesture, but you’re not legally obligated to accept it. Remember, friendships thrive on communication, so if you prefer to handle it yourself, just let them know! This scenario highlights that while kindness is important, you have the right to choose how to deal with accidents. Plus, it’s a good reminder to keep a stain remover handy at parties!",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756109449697,
+      "generatedAt": 1756109389697,
       "questionType": "real-world"
     }
   ]

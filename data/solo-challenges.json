@@ -201,5 +201,33 @@
     "isDailyComplete": true,
     "lostAllLivesAt": "2025-08-16T02:46:06.251Z",
     "currentQuestionId": "fresh_openai_1755312329932_2a5ebf19"
+  },
+  {
+    "id": "solo_9e21253c-6bbd-46cd-aa43-d8fc2f2bfa0c_1755796536173",
+    "userId": "9e21253c-6bbd-46cd-aa43-d8fc2f2bfa0c",
+    "subject": "Mixed Questions",
+    "questionType": "real-world",
+    "livesRemaining": 2,
+    "round": 2,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-21T17:15:36.183Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1755312358758_a40d4715"
+  },
+  {
+    "id": "solo_83402602-5107-45f2-8d4c-18ce73793665_1756109298234",
+    "userId": "83402602-5107-45f2-8d4c-18ce73793665",
+    "subject": "Mixed Questions",
+    "questionType": "real-world",
+    "livesRemaining": 0,
+    "round": 4,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-25T08:08:18.242Z",
+    "isDailyComplete": true,
+    "lostAllLivesAt": "2025-08-25T08:10:08.150Z",
+    "currentQuestionId": "fresh_openai_1756109316954_4837dd4d"
   }
 ]
