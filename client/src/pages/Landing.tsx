@@ -95,9 +95,9 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-slate-900">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-sm border-b border-purple-500/20">
+      <nav className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-sm border-b border-purple-500/20">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <LawDuelLogo size="md" showText={true} />
           <div className="flex gap-2">
@@ -112,9 +112,18 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="pt-24 pb-16">
-        <div className="container mx-auto px-4 text-center">
+      {/* Hero Section with Background Image */}
+      <div 
+        className="relative pt-24 pb-16 bg-cover bg-center bg-no-repeat"
+        style={{ 
+          backgroundImage: 'url("/assets/hero/hero-bg.png")',
+        }}
+      >
+        {/* Gradient Overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-purple-900/70 to-black/80"></div>
+        
+        {/* Content */}
+        <div className="relative container mx-auto px-4 text-center">
           {/* Large Logo */}
           <div className="mb-8 flex justify-center">
             <LawDuelLogo size="xl" className="scale-150" />
@@ -231,8 +240,15 @@ export default function Landing() {
         </div>
       </div>
 
+      {/* Features Section Background */}
+      <div className="bg-gradient-to-b from-slate-900 to-purple-900/20 py-16">
+        <div className="container mx-auto px-4">
+          {/* Additional content or features could go here */}
+        </div>
+      </div>
+
       {/* Footer */}
-      <footer className="border-t border-purple-500/20 bg-black/20">
+      <footer className="border-t border-purple-500/20 bg-black/40">
         <div className="container mx-auto px-4 py-8 text-center">
           <LawDuelLogo size="sm" showText={true} className="justify-center mb-4" />
 

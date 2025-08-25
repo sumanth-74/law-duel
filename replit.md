@@ -3,7 +3,11 @@
 ## Overview
 Law Duel is a competitive legal education game designed for bar exam preparation and law school finals. It features 1v1 duels, character creation, real-time matchmaking, a comprehensive leaderboard, and progressive solo challenges. The game allows players to choose law-themed archetypes, level up avatars through XP, and compete across various legal subjects. The platform aims to provide an engaging and competitive environment for legal education, including a monetized Solo Challenge mode.
 
-## Recent Changes (Aug 16, 2025 - Latest Session)
+## Recent Changes (Aug 25, 2025 - Latest Session)
+- **EPIC HERO BACKGROUND INTEGRATED**: Added premium Harry Potter meets Elden Ring hero image featuring purple wizard cat in magical courtroom to landing page
+- **HERO SECTION ENHANCED**: Landing page now features dramatic fantasy scene as background with gradient overlay for text readability while keeping all existing content
+
+## Recent Changes (Aug 16, 2025 - Previous Session)
 - **ATTICUS IS THE LOGO**: Purple wizard cat with wizard hat is now the official Law Duel logo and mascot
 - **LOGO WIZARD HAT ADDED**: Enhanced the logo cat with a purple wizard hat featuring magical stars
 - **ATTICUS AVATAR CREATED**: Designed and integrated unique purple wizard cat avatar for Atticus, Law Duel's magical AI companion
