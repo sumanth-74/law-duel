@@ -1005,5 +1005,33 @@
     "masteryDelta": -4.2,
     "ts": 1756084145417,
     "timestamp": "2025-08-25T01:09:05.417Z"
+  },
+  {
+    "userId": "1bfb5d3d-d360-4425-a89d-6ea56b1ea94a",
+    "duelId": "m_1755308156444_htnbgplmj",
+    "questionId": "fallback_Torts_1756084200778_fzu1",
+    "subject": "Torts",
+    "subtopic": "Torts",
+    "difficulty": 4,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -4.8,
+    "ts": 1756471214189,
+    "timestamp": "2025-08-29T12:40:14.189Z"
+  },
+  {
+    "userId": "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5",
+    "duelId": "m_1755308156444_htnbgplmj",
+    "questionId": "fallback_Torts_1756084200778_fzu1",
+    "subject": "Torts",
+    "subtopic": "Torts",
+    "difficulty": 4,
+    "msToAnswer": 60000,
+    "masteryBefore": 0,
+    "masteryAfter": 0,
+    "masteryDelta": -4.8,
+    "ts": 1756471214207,
+    "timestamp": "2025-08-29T12:40:14.207Z"
   }
 ]

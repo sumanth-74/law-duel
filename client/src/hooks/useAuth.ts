@@ -2,15 +2,26 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { setToken, getToken } from "@/authToken";
 import type { User } from "@shared/schema";
+import { useState } from "react";
 
 export function useAuth() {
   const queryClient = useQueryClient();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { data: user, isLoading, error } = useQuery({
     queryKey: ['/api/auth/me'],
     retry: false,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: !isLoggingOut, // Disable refetch when logging out
+    refetchOnMount: !isLoggingOut, // Disable refetch on mount when logging out
+    refetchOnReconnect: !isLoggingOut, // Disable refetch on reconnect when logging out
+    enabled: !isLoggingOut, // Disable query when logging out
     queryFn: async () => {
+      // Don't make API calls if we're logging out
+      if (isLoggingOut) {
+        console.log('Auth check disabled - logging out');
+        return null;
+      }
+      
       console.log('Checking auth status...');
       const token = getToken();
       const headers: Record<string, string> = {};
@@ -122,6 +133,15 @@ export function useAuth() {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
+      // Set logging out flag immediately to prevent API calls
+      setIsLoggingOut(true);
+      
+      // Immediately clear user data to prevent error page flash
+      queryClient.setQueryData(['/api/auth/me'], null);
+      
+      // Cancel any ongoing queries to prevent API calls
+      queryClient.cancelQueries({ queryKey: ['/api/auth/me'] });
+      
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
@@ -132,8 +152,13 @@ export function useAuth() {
       // Clear the token on logout
       setToken(null);
       console.log('Token cleared');
-      queryClient.setQueryData(['/api/auth/me'], null);
-      window.location.reload();
+      
+      // Clear all query cache to ensure clean state
+      queryClient.clear();
+      
+      // Force a clean navigation to the landing page
+      // This bypasses any cached authentication state
+      window.location.replace('/');
     },
   });
 

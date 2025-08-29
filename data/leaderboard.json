@@ -25,8 +25,8 @@
     "displayName": "MBEDestroyer",
     "lawSchool": "Thomas Jefferson Law",
     "level": 23,
-    "points": 4552,
-    "totalWins": 89,
+    "points": 4562,
+    "totalWins": 90,
     "totalLosses": 8,
     "avatarData": {
       "base": "construct",
@@ -37,7 +37,7 @@
       ],
       "archetypeId": "takeover-titan"
     },
-    "lastActive": "2025-08-25T08:32:42.875Z"
+    "lastActive": "2025-08-29T13:24:15.026Z"
   },
   {
     "id": "bot_brief_sniper",
@@ -45,8 +45,8 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 22,
-    "points": 4276,
-    "totalWins": 79,
+    "points": 4359,
+    "totalWins": 81,
     "totalLosses": 15,
     "avatarData": {
       "base": "humanoid",
@@ -56,7 +56,7 @@
       ],
       "archetypeId": "whistleblower-wyvern"
     },
-    "lastActive": "2025-08-25T17:53:21.604Z"
+    "lastActive": "2025-08-29T12:59:14.922Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -64,8 +64,8 @@
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
     "level": 21,
-    "points": 4063,
-    "totalWins": 72,
+    "points": 4096,
+    "totalWins": 73,
     "totalLosses": 20,
     "avatarData": {
       "base": "arcane",
@@ -75,17 +75,17 @@
       ],
       "archetypeId": "strict-scrutiny-sphinx"
     },
-    "lastActive": "2025-08-25T17:26:17.171Z"
+    "lastActive": "2025-08-29T12:44:14.869Z"
   },
   {
     "id": "bot_contracts_wizard",
     "username": "ContractsWizard",
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
-    "level": 20,
-    "points": 3917,
-    "totalWins": 71,
-    "totalLosses": 11,
+    "level": 21,
+    "points": 4017,
+    "totalWins": 72,
+    "totalLosses": 12,
     "avatarData": {
       "base": "celestial",
       "palette": "#ff69b4",
@@ -94,7 +94,7 @@
       ],
       "archetypeId": "fiduciary-seraph"
     },
-    "lastActive": "2025-08-25T17:36:17.176Z"
+    "lastActive": "2025-08-29T13:09:14.955Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -121,9 +121,9 @@
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 19,
-    "points": 3744,
+    "points": 3754,
     "totalWins": 67,
-    "totalLosses": 10,
+    "totalLosses": 11,
     "avatarData": {
       "base": "elemental",
       "palette": "#dc143c",
@@ -132,17 +132,17 @@
       ],
       "archetypeId": "subpoena-phoenix"
     },
-    "lastActive": "2025-08-25T17:36:17.176Z"
+    "lastActive": "2025-08-29T12:59:14.922Z"
   },
   {
     "id": "bot_justice_ninja",
     "username": "JusticeNinja",
     "displayName": "JusticeNinja",
     "lawSchool": "Columbia Law",
-    "level": 18,
-    "points": 3558,
-    "totalWins": 63,
-    "totalLosses": 15,
+    "level": 19,
+    "points": 3639,
+    "totalWins": 64,
+    "totalLosses": 16,
     "avatarData": {
       "base": "undead",
       "palette": "#2e8b57",
@@ -151,7 +151,7 @@
       ],
       "archetypeId": "suppression-wraith"
     },
-    "lastActive": "2025-08-25T17:36:17.176Z"
+    "lastActive": "2025-08-29T13:19:14.979Z"
   },
   {
     "id": "bot_legal_eagle_420",
@@ -178,8 +178,8 @@
     "displayName": "VerdictViper",
     "lawSchool": "Georgetown Law",
     "level": 17,
-    "points": 3237,
-    "totalWins": 59,
+    "points": 3286,
+    "totalWins": 60,
     "totalLosses": 17,
     "avatarData": {
       "base": "alien",
@@ -189,7 +189,7 @@
       ],
       "archetypeId": "viewpoint-viper"
     },
-    "lastActive": "2025-08-25T17:53:21.604Z"
+    "lastActive": "2025-08-29T13:24:15.026Z"
   },
   {
     "id": "bot_objection_hero",
@@ -216,8 +216,8 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 13,
-    "points": 2448,
-    "totalWins": 43,
+    "points": 2498,
+    "totalWins": 44,
     "totalLosses": 23,
     "avatarData": {
       "base": "undead",
@@ -227,7 +227,7 @@
       ],
       "archetypeId": "brady-banshee"
     },
-    "lastActive": "2025-08-25T17:31:17.172Z"
+    "lastActive": "2025-08-29T13:04:14.933Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",
@@ -448,5 +448,25 @@
     "totalWins": 0,
     "totalLosses": 0,
     "lastActive": "2025-08-25T07:58:24.567Z"
+  },
+  {
+    "id": "0c60393a-0e7e-4de6-92a5-a6273f991c3b",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-29T12:47:43.820Z"
+  },
+  {
+    "id": "93febce1-ed68-42cb-a1fd-501d9fdc3fe0",
+    "username": "Anonymous",
+    "displayName": "Anonymous",
+    "level": 1,
+    "points": 0,
+    "totalWins": 0,
+    "totalLosses": 0,
+    "lastActive": "2025-08-29T12:54:43.323Z"
   }
 ]

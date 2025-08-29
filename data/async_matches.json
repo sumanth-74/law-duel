@@ -759,7 +759,7 @@
       "1bfb5d3d-d360-4425-a89d-6ea56b1ea94a": 0,
       "5b3bd896-d9e3-46df-b3bf-1a9aaf619ef5": 0
     },
-    "round": 7,
+    "round": 8,
     "difficulty": 4,
     "turns": [
       {
@@ -877,7 +877,7 @@
         "difficulty": 4,
         "deadlineTs": 1756170600778,
         "answers": {},
-        "revealed": false,
+        "revealed": true,
         "correctIndex": 2,
         "explanation": "Strict products liability does not require proof of negligence - only that the product was defective and unreasonably dangerous."
       }
@@ -886,6 +886,6 @@
     "winnerId": null,
     "isBotMatch": false,
     "createdAt": 1755308156504,
-    "updatedAt": 1756084200778
+    "updatedAt": 1756471214216
   }
 }
