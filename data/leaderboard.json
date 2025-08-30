@@ -5,8 +5,8 @@
     "displayName": "PrecedentPro",
     "lawSchool": "Cooley Law School",
     "level": 24,
-    "points": 4611,
-    "totalWins": 83,
+    "points": 4716,
+    "totalWins": 85,
     "totalLosses": 14,
     "avatarData": {
       "base": "arcane",
@@ -17,7 +17,7 @@
       ],
       "archetypeId": "equal-protection-paladin"
     },
-    "lastActive": "2025-08-25T17:26:17.171Z"
+    "lastActive": "2025-08-29T13:54:15.153Z"
   },
   {
     "id": "bot_mbe_destroyer",
@@ -45,9 +45,9 @@
     "displayName": "BriefSniper",
     "lawSchool": "Duke Law",
     "level": 22,
-    "points": 4359,
-    "totalWins": 81,
-    "totalLosses": 15,
+    "points": 4394,
+    "totalWins": 82,
+    "totalLosses": 16,
     "avatarData": {
       "base": "humanoid",
       "palette": "#9370db",
@@ -56,7 +56,7 @@
       ],
       "archetypeId": "whistleblower-wyvern"
     },
-    "lastActive": "2025-08-29T12:59:14.922Z"
+    "lastActive": "2025-08-30T10:35:37.227Z"
   },
   {
     "id": "bot_tort_master_x",
@@ -64,8 +64,8 @@
     "displayName": "TortMasterX",
     "lawSchool": "Golden Gate Law",
     "level": 21,
-    "points": 4096,
-    "totalWins": 73,
+    "points": 4122,
+    "totalWins": 74,
     "totalLosses": 20,
     "avatarData": {
       "base": "arcane",
@@ -75,7 +75,7 @@
       ],
       "archetypeId": "strict-scrutiny-sphinx"
     },
-    "lastActive": "2025-08-29T12:44:14.869Z"
+    "lastActive": "2025-08-29T13:54:15.153Z"
   },
   {
     "id": "bot_contracts_wizard",
@@ -83,8 +83,8 @@
     "displayName": "ContractsWizard",
     "lawSchool": "NYU Law",
     "level": 21,
-    "points": 4017,
-    "totalWins": 72,
+    "points": 4057,
+    "totalWins": 73,
     "totalLosses": 12,
     "avatarData": {
       "base": "celestial",
@@ -94,7 +94,7 @@
       ],
       "archetypeId": "fiduciary-seraph"
     },
-    "lastActive": "2025-08-29T13:09:14.955Z"
+    "lastActive": "2025-08-29T13:54:15.153Z"
   },
   {
     "id": "bot_lawbeast_99",
@@ -121,8 +121,8 @@
     "displayName": "GavelCrusher",
     "lawSchool": "UPenn Law",
     "level": 19,
-    "points": 3754,
-    "totalWins": 67,
+    "points": 3787,
+    "totalWins": 68,
     "totalLosses": 11,
     "avatarData": {
       "base": "elemental",
@@ -132,7 +132,7 @@
       ],
       "archetypeId": "subpoena-phoenix"
     },
-    "lastActive": "2025-08-29T12:59:14.922Z"
+    "lastActive": "2025-08-29T13:49:15.113Z"
   },
   {
     "id": "bot_justice_ninja",
@@ -216,9 +216,9 @@
     "displayName": "StatuteSlayer",
     "lawSchool": "Berkeley Law",
     "level": 13,
-    "points": 2498,
-    "totalWins": 44,
-    "totalLosses": 23,
+    "points": 2589,
+    "totalWins": 46,
+    "totalLosses": 24,
     "avatarData": {
       "base": "undead",
       "palette": "#ff1493",
@@ -227,7 +227,7 @@
       ],
       "archetypeId": "brady-banshee"
     },
-    "lastActive": "2025-08-29T13:04:14.933Z"
+    "lastActive": "2025-08-30T10:42:34.672Z"
   },
   {
     "id": "3432e5cc-5965-4b92-9bd1-51e86a2fcf74",

@@ -37,12 +37,24 @@ class QuestionPool {
     const hoursUntilReset = Math.floor(msUntilReset / (1000 * 60 * 60));
     const minutesUntilReset = Math.floor((msUntilReset % (1000 * 60 * 60)) / (1000 * 60));
     
-    // TEMPORARILY DISABLED - OpenAI rate limit hit (10k requests/day)
-    console.log('⚠️ Auto-generation disabled due to OpenAI rate limit');
-    console.log('   Pool has 116 questions ready to play!');
-    console.log('   Will resume generation after rate limit resets tomorrow');
+    // OpenAI API key is working now - enable auto-generation!
+    console.log('✅ OpenAI API key working - enabling auto-generation');
+    console.log(`⏰ Rate limit resets in ${hoursUntilReset}h ${minutesUntilReset}m`);
     
-    // For now, log pool status
+    // Start generating critical questions immediately
+    await this.generateCriticalQuestions();
+    
+    // Fill all pools in the background
+    this.fillAllPools().catch(err => {
+      console.error('Failed to fill all pools:', err);
+    });
+    
+    // Schedule periodic pool refills
+    setInterval(() => {
+      this.refillLowPools();
+    }, 2 * 60 * 1000); // Check every 2 minutes
+    
+    // Log initial pool status
     this.logPoolStatus();
   }
   
@@ -83,8 +95,24 @@ class QuestionPool {
   }
   
   async fillAllPools() {
-    // DISABLED - Rate limit hit
-    return;
+    // OpenAI API key is working - enable pool filling
+    console.log('🚀 Filling all question pools...');
+    
+    const subjects = Object.keys(SUBJECTS);
+    for (const subject of subjects) {
+      for (let difficulty = 1; difficulty <= 4; difficulty++) {
+        const pool = this.pools.get(subject).get(difficulty);
+        const needed = this.TARGET_POOL_SIZE - pool.length;
+        
+        if (needed > 0) {
+          // Add small delays to avoid overwhelming the API
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          this.generateQuestionsForPool(subject, difficulty, needed).catch(err => {
+            console.error(`Failed to fill ${subject} D${difficulty}:`, err);
+          });
+        }
+      }
+    }
   }
   
   async fillHigherDifficulties() {
@@ -99,6 +127,21 @@ class QuestionPool {
           await new Promise(resolve => setTimeout(resolve, 2000));
           this.generateQuestionsForPool(subject, difficulty, needed).catch(err => {
             console.error(`Failed to generate higher difficulty:`, err);
+          });
+        }
+      }
+    }
+  }
+  
+  // Refill pools that are running low
+  async refillLowPools() {
+    for (const [subject, difficulties] of this.pools.entries()) {
+      for (const [difficulty, pool] of difficulties.entries()) {
+        if (pool.length < this.MIN_POOL_SIZE) {
+          const needed = this.TARGET_POOL_SIZE - pool.length;
+          console.log(`🔄 Refilling ${subject} D${difficulty} pool (${pool.length}/${this.TARGET_POOL_SIZE})`);
+          this.generateQuestionsForPool(subject, difficulty, needed).catch(err => {
+            console.error(`Failed to refill ${subject} D${difficulty}:`, err);
           });
         }
       }
