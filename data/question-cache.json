@@ -1451,67 +1451,174 @@
   ],
   "Mixed Questions_real-world": [
     {
-      "qid": "fresh_openai_1756109391136_66d44fd5",
+      "qid": "fresh_openai_1756566558385_241a45c8",
       "subject": "Mixed Questions",
-      "topic": "Practical rights and responsibilities",
-      "stem": "Imagine you're at a friend's housewarming party and accidentally break a decorative vase. Your friend insists you should pay for it. What’s the legal truth? Can they really make you pay?",
+      "topic": "Common legal myths",
+      "stem": "Imagine you’re at a party and your friend insists that if someone breaks into their car, they can just take whatever they want from it without any legal consequences. Is this true?",
       "choices": [
-        "Only if you signed a contract agreeing to pay for damages.",
-        "No, you can just leave without paying.",
-        "Yes, you are legally required to pay for it.",
-        "Only if you broke it on purpose."
+        "No, but only if the car is unlocked.",
+        "Yes, they can take anything from the car legally.",
+        "Yes, but only if they really need it.",
+        "No, it's illegal to take anything from someone else's property."
       ],
-      "correctIndex": 2,
-      "explanation": "Yes, you are generally responsible for damages you cause, even accidentally.",
-      "explanationLong": "In most cases, if you accidentally break something at a friend's house, you can be held responsible for the damage. This principle is part of the law of negligence, which means you have a duty to be careful with others' property. A fun tip: always check if your friend has homeowners' insurance, as it might cover accidents like this! Understanding your responsibilities can save you from awkward situations and keep friendships intact.",
+      "correctIndex": 3,
+      "explanation": "It's illegal to take anything from someone else's property, regardless of the situation.",
+      "explanationLong": "Many people think they can just take stuff from a car that isn't theirs if it’s left unlocked or broken into, but that's a myth! Taking anything from another person's property without permission is theft, and it can land you in legal trouble. Always remember, just because something looks abandoned or unattended doesn’t mean it’s free for the taking. If you're ever unsure, it's best to ask the owner or contact the authorities to handle the situation properly.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1756109451136,
-      "generatedAt": 1756109391136,
+      "deadlineTs": 1756566618385,
+      "generatedAt": 1756566558385,
       "questionType": "real-world"
     },
     {
-      "qid": "fresh_openai_1756109390559_dde2de6a",
+      "qid": "fresh_openai_1756566556083_b6e6d20e",
       "subject": "Mixed Questions",
       "topic": "General legal knowledge",
-      "stem": "Imagine you bought a brand new phone and it broke within a week. The store refuses to give you a refund, saying their policy is no returns. What can you do?",
+      "stem": "Imagine you're at a friend's house party and someone accidentally spills a drink on your favorite shirt. Can you sue your friend for damages?",
       "choices": [
-        "You should just buy a new phone from a different store.",
-        "You can only get a store credit, not a refund.",
-        "You can demand a refund because the phone is defective.",
-        "You have to keep the broken phone, no refunds allowed."
+        "Yes, if I have a receipt for the shirt.",
+        "No, unless they did it on purpose.",
+        "Yes, because it's their fault my shirt got ruined.",
+        "No, it's just an accident and I should let it go."
       ],
-      "correctIndex": 2,
-      "explanation": "You can demand a refund because the phone is defective.",
-      "explanationLong": "If you buy a product that doesn't work as promised, like a broken phone, you often have the right to a refund or replacement. This falls under consumer protection laws that say items should be fit for use. Always check your local laws, and remember, just because a store has a policy doesn’t mean they can ignore your rights! Keep your receipt and know your rights to stand firm!",
+      "correctIndex": 3,
+      "explanation": "You can't sue for accidents like this; it's part of social life.",
+      "explanationLong": "In social situations, accidents happen, and it's usually understood that you can't sue someone just because they spilled a drink on you. These little mishaps are part of being human! However, if someone purposely damaged your property, that might be a different story. Always remember, it's often better to talk things out rather than jump to legal action—after all, you want to keep your friendships intact! Plus, it's a good reminder that life is too short to sweat the small stuff.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1756109450559,
-      "generatedAt": 1756109390560,
+      "deadlineTs": 1756566616083,
+      "generatedAt": 1756566556083,
       "questionType": "real-world"
     },
     {
-      "qid": "fresh_openai_1756109389697_4d3b21e0",
+      "qid": "fresh_openai_1756566563151_7bd00ae5",
       "subject": "Mixed Questions",
-      "topic": "General legal knowledge",
-      "stem": "You’re at a friend's house party, and someone accidentally spills red wine on your favorite shirt. They offer to pay for the cleaning. Do you have to accept their offer?",
+      "topic": "Common legal myths",
+      "stem": "Imagine you're at a party and someone claims they can record your conversation without your permission since it’s in a public place. Is that true?",
       "choices": [
-        "No, you can decline and still be friends.",
-        "No, you have to pay for it yourself.",
-        "Yes, it's polite to accept their offer.",
-        "Yes, you must accept because it's the law."
+        "It depends on what state you're in.",
+        "No, they need your permission to record any conversation.",
+        "Yes, they can record without permission in public.",
+        "Only if they tell you they're recording."
       ],
       "correctIndex": 0,
-      "explanation": "You can decline their offer without hurting your friendship.",
-      "explanationLong": "In this situation, you absolutely can decline your friend's offer to pay for the cleaning. It's a nice gesture, but you’re not legally obligated to accept it. Remember, friendships thrive on communication, so if you prefer to handle it yourself, just let them know! This scenario highlights that while kindness is important, you have the right to choose how to deal with accidents. Plus, it’s a good reminder to keep a stain remover handy at parties!",
+      "explanation": "The correct answer is that it depends on what state you're in. Some states allow recording conversations without consent, while others do not.",
+      "explanationLong": "In the U.S., laws about recording conversations can vary widely by state. Some places are 'one-party consent' states, meaning only one person needs to know about the recording. Others are 'two-party consent' states, where everyone involved must agree to the recording. Always be aware of your state's laws before hitting that record button! It's a good rule of thumb to get consent whenever possible to avoid any legal trouble.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1756109449697,
-      "generatedAt": 1756109389697,
+      "deadlineTs": 1756566623152,
+      "generatedAt": 1756566563152,
       "questionType": "real-world"
+    }
+  ],
+  "Mixed Questions_bar-exam": [
+    {
+      "qid": "fresh_openai_1756589880067_717b0b52",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice, a homeowner, discovers that her neighbor Bob has built a fence that extends two feet onto Alice's property. Alice confronts Bob, who claims that he has owned the land for years and believes the fence is on his property. What legal principle governs Alice's ability to reclaim her property?",
+      "choices": [
+        "Alice can reclaim her property through the doctrine of easement.",
+        "Alice can reclaim her property because Bob is required to obtain a permit for any construction.",
+        "Alice can reclaim her property based on the doctrine of adverse possession.",
+        "Alice can reclaim her property because she has a right to exclude others from her property."
+      ],
+      "correctIndex": 3,
+      "explanation": "Alice can reclaim her property because she has a right to exclude others from her property.",
+      "explanationLong": "The correct answer is that Alice can reclaim her property because she has a right to exclude others from her property. Under property law, homeowners have the right to assert ownership and exclude others from their land. Bob's claim of adverse possession fails because he has not met the required elements, such as continuous and open use for a statutory period. The first option is incorrect because adverse possession requires specific conditions, which Bob has not satisfied. The third option regarding easements is irrelevant, as this situation concerns ownership rather than a right of way. The fourth option about permits is also incorrect; while permits may be required for construction, they do not affect the ownership rights of Alice in this scenario. Thus, Alice's right to exclude Bob from her property is the controlling legal principle.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756589940067,
+      "generatedAt": 1756589880067,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756589881234_d2722931",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are friends who often lend each other money. One day, Alice lends Bob $1,000, and they agree that Bob will repay her in one month. However, Bob forgets to repay Alice on the due date. What legal remedy does Alice have against Bob?",
+      "choices": [
+        "Alice has no legal remedy against Bob.",
+        "Alice can take Bob's property without a court order.",
+        "Alice can sue Bob for breach of contract.",
+        "Alice can demand payment immediately without any legal action."
+      ],
+      "correctIndex": 2,
+      "explanation": "Alice can sue Bob for breach of contract, as there was a clear agreement for repayment.",
+      "explanationLong": "The correct answer is that Alice can sue Bob for breach of contract. In this scenario, there was a valid contract formed when Alice lent Bob $1,000 with a specific repayment term of one month. Bob's failure to repay Alice on the due date constitutes a breach of that contract, thereby giving Alice the right to seek legal remedies. The first answer is correct as it directly addresses the breach and the available legal remedy. The second answer is incorrect because, although Alice can demand payment, she must follow legal procedures to enforce her rights, which may include filing a lawsuit. The third answer is incorrect because self-help remedies, like taking property, are generally not permitted without a court order unless there is an immediate right to possession. The fourth answer is also incorrect; Alice does have a legal remedy, which is to sue Bob for breach of contract.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756589941234,
+      "generatedAt": 1756589881235,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756590518170_caa1ed64",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice is walking her dog in a public park when she accidentally trips over a loose brick and falls, injuring her ankle. She notices that the park management had received complaints about the loose brick weeks before her accident but did not take any action. If Alice decides to sue the park management for her injuries, which of the following is most likely to be true about her claim?",
+      "choices": [
+        "Alice will likely fail because she assumed the risk by walking in the park.",
+        "Alice will likely fail because she was not paying attention when she tripped.",
+        "Alice will likely succeed because she was a licensee on the property.",
+        "Alice will likely succeed because the park management had a duty to maintain the park."
+      ],
+      "correctIndex": 3,
+      "explanation": "Alice will likely succeed because the park management had a duty to maintain the park.",
+      "explanationLong": "The correct answer is that Alice will likely succeed because the park management had a duty to maintain the park in a safe condition. Under premises liability law, landowners have a duty to inspect and repair dangerous conditions that they know of or should know about. The park management received complaints about the loose brick, indicating they were aware of the hazardous condition. The second choice is incorrect because Alice's lack of attention does not negate the park's duty to maintain safety; her negligence does not bar her claim. The third choice is misleading; while she was a licensee, this status does not significantly change the park's duty to keep the premises safe. The fourth choice fails because merely walking in the park does not equate to assuming the risk of a known hazard, especially when the park management had prior notice of the danger and did not act.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756590578171,
+      "generatedAt": 1756590518171,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756590516631_e5679cce",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are neighbors. One day, Bob's dog runs into Alice's yard and digs up her flower bed, causing damage. Alice wants to sue Bob for the damage. What is the most likely outcome of Alice's lawsuit against Bob?",
+      "choices": [
+        "Alice will win because Bob is strictly liable for his dog's actions.",
+        "Alice will lose because Bob did not intend for his dog to damage Alice's property.",
+        "Alice will win because Bob was negligent in controlling his dog.",
+        "Alice will lose because Bob's dog was acting in self-defense."
+      ],
+      "correctIndex": 2,
+      "explanation": "Alice is likely to win her lawsuit against Bob due to his negligence in controlling his dog.",
+      "explanationLong": "The correct answer is that Alice will win because Bob was negligent in controlling his dog. Under tort law, a pet owner can be held liable for damages caused by their pet if they fail to exercise reasonable care in controlling it. In this case, Bob's dog running into Alice's yard and causing damage suggests a lack of control, indicating negligence. The first answer is incorrect because strict liability typically applies to abnormally dangerous activities, not to pets unless they have a history of aggression. The third answer is incorrect because intent is not required in negligence claims; rather, it focuses on whether Bob acted reasonably. The fourth answer is incorrect as self-defense is not a relevant concept for a dog causing property damage; it pertains to personal harm or threat situations, not property disputes.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756590576633,
+      "generatedAt": 1756590516634,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756590516427_40c68719",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice is walking her dog in the park when she sees a sign that says 'No Dogs Allowed.' Despite the sign, she lets her dog run off-leash. A park ranger approaches and issues her a citation for violating the park rules. What is the most likely outcome if Alice contests the citation in court?",
+      "choices": [
+        "Alice will lose because she violated a posted rule prohibiting dogs in the park.",
+        "Alice will win because she didn't see the sign until after she entered the park.",
+        "Alice will win because the park ranger had no authority to issue a citation.",
+        "Alice will lose because she was unaware of the rule prohibiting dogs."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alice will lose because she violated a posted rule prohibiting dogs in the park.",
+      "explanationLong": "The correct answer is that Alice will lose because she violated a posted rule prohibiting dogs in the park. Generally, individuals are expected to adhere to posted regulations in public spaces, and ignorance of the law or rules is typically not a valid defense. In this case, the sign clearly indicated that dogs were not allowed, and Alice's decision to let her dog off-leash constitutes a direct violation of that rule. The first answer is incorrect because Alice's failure to see the sign does not excuse her from compliance with the law. The third answer is wrong because park rangers have the authority to enforce park regulations, including issuing citations. Finally, the fourth answer is incorrect as well; lack of awareness of the rule does not absolve Alice of her responsibility to follow it.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756590576427,
+      "generatedAt": 1756590516427,
+      "questionType": "bar-exam"
     }
   ]
 }

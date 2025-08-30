@@ -59,7 +59,7 @@ interface QuestionResult {
 export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const { toast } = useToast();
   const { incrementStreak, resetStreak } = useStreak();
-  const [gameState, setGameState] = useState<'setup' | 'playing' | 'result' | 'game-over'>('setup');
+  const [gameState, setGameState] = useState<'setup' | 'playing' | 'result'>('setup');
   const [questionType, setQuestionType] = useState<'bar-exam' | 'real-world'>('bar-exam');
   const [subject, setSubject] = useState('Mixed Questions');
   const [challenge, setChallenge] = useState<SoloChallenge | null>(null);
@@ -76,6 +76,32 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   useEffect(() => {
     checkChallengeStatus();
   }, []);
+  
+  // Check Atticus cooldown status
+  const [atticusCooldown, setAtticusCooldown] = useState<{
+    canChallenge: boolean;
+    cooldownHours?: number;
+    cooldownMinutes?: number;
+    message?: string;
+  } | null>(null);
+  
+  useEffect(() => {
+    checkAtticusCooldown();
+  }, []);
+  
+  const checkAtticusCooldown = async () => {
+    try {
+      const response = await fetch('/api/atticus/status', {
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const status = await response.json();
+        setAtticusCooldown(status);
+      }
+    } catch (error) {
+      console.error('Error checking Atticus cooldown:', error);
+    }
+  };
 
   const checkChallengeStatus = async () => {
     try {
@@ -84,9 +110,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       });
       if (response.ok) {
         const status = await response.json();
-        if (status.isDailyComplete) {
-          setGameState('game-over');
-        }
+        // No more daily completion check - lives are handled by Atticus system
       }
     } catch (error) {
       // User hasn't started challenge yet, stay in setup
@@ -95,6 +119,25 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
 
   const startSoloChallenge = async () => {
     try {
+      // Check backend cooldown status before starting challenge
+      const statusResponse = await fetch('/api/atticus/status', {
+        credentials: 'include'
+      });
+      
+      if (statusResponse.ok) {
+        const status = await statusResponse.json();
+        
+        if (status.canChallenge === false) {
+          // User is in cooldown period
+          toast({
+            title: "Cooldown Active",
+            description: status.message || "You must wait before starting a new challenge. Atticus defeated you recently.",
+            variant: "destructive"
+          });
+          return; // Don't allow new challenge
+        }
+      }
+      
       setGeneratingQuestion(true);
       const response = await fetch('/api/solo-challenge/start', {
         method: 'POST',
@@ -195,14 +238,13 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   const handleContinue = async () => {
     if (!challenge) return;
     
-    // Check if game is over
-    if (challenge.livesRemaining === 0) {
-      if (onLivesLost) {
-        onLivesLost(challenge);
+          // Check if game is over
+      if (challenge.livesRemaining === 0) {
+        if (onLivesLost) {
+          onLivesLost(challenge);
+        }
+        // No more game-over state - lives are handled by Atticus system
       } else {
-        setGameState('game-over');
-      }
-    } else {
       // Continue to next question
       setShowResult(null);
       setSelectedAnswer(null);
@@ -329,11 +371,28 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
             </ul>
           </div>
 
+          {/* Atticus Cooldown Warning */}
+          {atticusCooldown && !atticusCooldown.canChallenge && (
+            <div className="p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-center mb-4">
+              <div className="text-red-300 font-semibold mb-2">⏰ Atticus Cooldown Active</div>
+              <div className="text-red-400 text-sm">
+                {atticusCooldown.cooldownHours && atticusCooldown.cooldownMinutes ? (
+                  `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours > 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes % 60} minute${atticusCooldown.cooldownMinutes % 60 > 1 ? 's' : ''}`
+                ) : (
+                  'Lives will be automatically restored in 3 hours'
+                )}
+              </div>
+              <div className="text-red-300 text-xs mt-2">
+                After losing to Atticus, you must wait for automatic life restoration
+              </div>
+            </div>
+          )}
+          
           <Button 
             onClick={startSoloChallenge} 
             className="w-full bg-arcane hover:bg-arcane/80"
             size="lg"
-            disabled={generatingQuestion}
+            disabled={generatingQuestion || (atticusCooldown ? !atticusCooldown.canChallenge : false)}
             data-testid="button-start-challenge"
           >
             {generatingQuestion ? 'Generating Challenge...' : 'Start Solo Challenge'}
@@ -536,63 +595,5 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
     );
   }
 
-  // GAME OVER STATE - Show final score and option to continue
-  if (gameState === 'game-over') {
-    return (
-      <>
-        <Card className="w-full max-w-2xl mx-auto bg-panel border-white/10">
-          <CardHeader className="text-center">
-            <div className="mb-4">
-              <Crown className="w-16 h-16 mx-auto text-mystic-gold" />
-            </div>
-            <CardTitle className="text-3xl text-arcane font-cinzel">
-              Challenge Complete!
-            </CardTitle>
-            <p className="text-muted text-sm mt-2">
-              You made it through {challenge?.round || 0} rounds
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-6 text-center">
-            <div className="bg-mystic-gold/10 border border-mystic-gold/30 p-6 rounded-lg">
-              <div className="text-4xl font-bold text-mystic-gold mb-2">
-                {challenge?.score || 0}
-              </div>
-              <div className="text-sm text-muted">Final Score</div>
-            </div>
-
-            <div className="bg-panel-2 border border-white/10 p-4 rounded-lg">
-              <h3 className="font-semibold text-arcane mb-2">Out of Lives!</h3>
-              <p className="text-sm text-muted mb-2">
-                Round reached: <span className="text-purple-300 font-bold">{challenge?.round || 0}</span>
-              </p>
-              <p className="text-sm text-muted mb-2">
-                Difficulty level: <span className="text-purple-300 font-bold">{challenge?.difficulty || 1}</span>
-              </p>
-              <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-lg mt-3">
-                <p className="text-sm text-red-300 font-semibold">All 3 lives used!</p>
-                <p className="text-xs text-gray-400 mt-1">
-                  Come back in 3 hours for 3 fresh lives. You'll need to wait 3 hours before playing again.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <Button 
-                onClick={onBack} 
-                variant="outline" 
-                className="w-full border-white/20 text-muted hover:bg-white/5"
-                size="lg"
-                data-testid="button-back-menu"
-              >
-                Back to Menu
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </>
-    );
-  }
-
-  // This shouldn't be reached - all states are handled above
-  return null;
+  // No more game-over state - lives are handled by Atticus system
 }

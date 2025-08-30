@@ -45,13 +45,13 @@ class SoloChallengeService {
     // Check if user has exhausted their lives and is in cooldown
     const existingChallenge = this.getTodaysChallenge(userId);
     if (existingChallenge && existingChallenge.livesRemaining === 0) {
-      // Check if 3 hours have passed since they lost all lives
+      // Check if 3 hours have passed since they lost all lives (changed from 24 hours)
       const lostAllLivesAt = new Date(existingChallenge.lostAllLivesAt || existingChallenge.startedAt);
       const hoursSince = (Date.now() - lostAllLivesAt.getTime()) / (1000 * 60 * 60);
       
-      if (hoursSince < 3) {
+      if (hoursSince < 3) { // Changed from 24 to 3 hours
         const hoursRemaining = Math.ceil(3 - hoursSince);
-        throw new Error(`All lives lost! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`);
+        throw new Error(`All lives lost! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} or challenge Atticus to restore them!`);
       }
     }
 
@@ -107,7 +107,7 @@ class SoloChallengeService {
       const explanation = question.explanationLong || question.explanation || 
         `The correct answer is ${String.fromCharCode(65 + question.correctIndex)}. This question tests fundamental ${subject} principles.`;
       
-      return {
+      const generatedQuestion = {
         id: question.qid || question.id || `solo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         stem: question.stem,
         choices: question.choices,
@@ -118,10 +118,31 @@ class SoloChallengeService {
         questionType,
         round: difficulty // Essentially the same for solo challenges
       };
+      
+      // Store the question for later retrieval (CRITICAL FIX)
+      this.storeQuestion(generatedQuestion);
+      
+      return generatedQuestion;
     } catch (error) {
       console.error('Failed to generate solo challenge question:', error);
       // Fallback to basic question if generation fails
       throw new Error('No questions available for solo challenge');
+    }
+  }
+
+  // Store questions for later retrieval (NEW METHOD)
+  storeQuestion(question) {
+    if (!this.storedQuestions) {
+      this.storedQuestions = new Map();
+    }
+    this.storedQuestions.set(question.id, question);
+    
+    // Clean up old questions (keep only last 1000)
+    if (this.storedQuestions.size > 1000) {
+      const keys = Array.from(this.storedQuestions.keys());
+      for (let i = 0; i < keys.length - 1000; i++) {
+        this.storedQuestions.delete(keys[i]);
+      }
     }
   }
 
@@ -153,13 +174,23 @@ class SoloChallengeService {
       throw new Error('Challenge not found');
     }
 
-    // For solo challenges, we don't strictly check questionId matching
-    // since questions are generated dynamically and the client may use different IDs
-    // We'll just track the round/progress instead
+    // CRITICAL FIX: Use the original question that was presented to the user
+    // instead of generating a new random question for validation
+    let question;
     
-    // Generate a question for the current difficulty to check the answer
-    // This ensures consistency even with dynamic question generation
-    const question = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
+    if (questionId) {
+      // Try to get the specific question that was presented to the user
+      try {
+        question = await this.getQuestionById(questionId);
+      } catch (error) {
+        console.error(`Failed to retrieve question ${questionId}:`, error);
+        throw new Error('Question not found - cannot validate answer');
+      }
+    } else {
+      // No questionId provided, this is an error
+      throw new Error('Question ID is required to validate answer');
+    }
+    
     const isCorrect = userAnswer === question.correctAnswer;
     
     let livesLost = 0;
@@ -193,10 +224,38 @@ class SoloChallengeService {
       livesLost = 1;
       challenge.livesRemaining = Math.max(0, challenge.livesRemaining - 1);
       
-      // If no lives left, mark when they lost all lives for 24-hour cooldown
+      // If no lives left, trigger Atticus duel automatically
       if (challenge.livesRemaining === 0) {
-        challenge.isDailyComplete = true;
-        challenge.lostAllLivesAt = new Date().toISOString();
+        // Trigger Atticus duel automatically
+        try {
+          const { atticusDuelService } = await import('./atticusDuelService.js');
+          const atticusDuel = await atticusDuelService.startAtticusDuel(challenge.userId, challengeId);
+          
+          return {
+            isCorrect: false,
+            correctAnswer: question.correctAnswer,
+            explanation: question.explanation,
+            livesLost: 1,
+            newDifficulty: challenge.difficulty,
+            pointsEarned: 0,
+            speedBonus: 0,
+            atticusDuelRequired: true,
+            atticusDuel: atticusDuel
+          };
+        } catch (error) {
+          console.error('Failed to start Atticus duel:', error);
+          // If Atticus duel fails, we need to handle this gracefully
+          return {
+            isCorrect: false,
+            correctAnswer: question.correctAnswer,
+            explanation: question.explanation,
+            livesLost: 1,
+            newDifficulty: challenge.difficulty,
+            pointsEarned: 0,
+            speedBonus: 0,
+            message: 'No lives remaining. Atticus duel failed to start.'
+          };
+        }
       }
     }
 
@@ -260,15 +319,21 @@ class SoloChallengeService {
 
   // Remove payment functionality - lives are now free but limited
 
-  // Helper to get question by ID (simplified for solo challenges)
+  // Helper to get question by ID (FIXED VERSION)
   async getQuestionById(questionId) {
-    // For solo challenges, we'll store question data locally when generated
-    // This is a simplified approach since questions are generated on-demand
+    // First try to get from stored questions
+    if (this.storedQuestions && this.storedQuestions.has(questionId)) {
+      return this.storedQuestions.get(questionId);
+    }
+    
+    // Fallback: try to find in active challenges
     const challenge = Array.from(this.activeChallenges.values())
       .find(c => c.currentQuestionId === questionId);
     
     if (challenge) {
-      // Re-generate the same question details (this is a limitation but workable)
+      // If we can't find the stored question, this is a fallback
+      // but it's not ideal since it might generate a different question
+      console.warn(`Question ${questionId} not found in storage, using fallback generation`);
       const question = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
       return {
         id: questionId,
@@ -302,35 +367,22 @@ class SoloChallengeService {
     const todaysChallenge = this.getTodaysChallenge(userId);
     
     if (!todaysChallenge) {
-      return { isDailyComplete: false, canPlay: true };
+      return { canPlay: true };
     }
     
     // If they have lives remaining, they can play
     if (todaysChallenge.livesRemaining > 0) {
       return { 
-        isDailyComplete: false, 
         canPlay: true,
         livesRemaining: todaysChallenge.livesRemaining,
         currentRound: todaysChallenge.round
       };
     }
     
-    // If no lives left, check if 24 hours have passed
-    const lostAllLivesAt = new Date(todaysChallenge.lostAllLivesAt || todaysChallenge.startedAt);
-    const hoursSince = (Date.now() - lostAllLivesAt.getTime()) / (1000 * 60 * 60);
-    
-    if (hoursSince >= 24) {
-      // 24 hours have passed, they can play again
-      return { isDailyComplete: false, canPlay: true };
-    }
-    
-    // Still in cooldown
-    const hoursRemaining = Math.ceil(24 - hoursSince);
+    // No lives left - they need to play Atticus or wait for auto-restore
     return { 
-      isDailyComplete: true, 
       canPlay: false,
-      hoursRemaining,
-      message: `All 3 lives used! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`
+      message: 'No lives remaining. Play Atticus to restore them or wait for auto-restore.'
     };
   }
 

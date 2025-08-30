@@ -882,62 +882,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // === ATTICUS DUEL ROUTES ===
   
-  // Get Atticus duel question
-  app.post('/api/atticus/question', requireAuth, async (req: any, res) => {
+  // Import Atticus duel service
+  const { atticusDuelService } = await import("./services/atticusDuelService.js");
+  
+  // Get Atticus duel status
+  app.get('/api/atticus/status', requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;
-      const { round } = req.body;
-      
-      // Use the same question generation as solo challenges
-      const { generateChallengeQuestion } = await import('./services/robustGenerator.js');
-      const question = await generateChallengeQuestion({
-        subject: 'Mixed Questions',
-        difficulty: Math.min(10, 5 + round), // Difficulty scales with round
-        userId,
-        source: 'atticus-duel'
-      });
-      
-      res.json({
-        id: question.id,
-        stem: question.stem,
-        choices: question.choices,
-        subject: question.subject,
-        difficulty: question.difficulty
-      });
+      const status = atticusDuelService.getDuelStatus(userId);
+      res.json(status);
     } catch (error: any) {
-      console.error("Error generating Atticus question:", error);
-      res.status(500).json({ message: "Failed to generate question" });
+      console.error("Error getting Atticus duel status:", error);
+      res.status(500).json({ message: "Failed to get duel status", error: error.message });
+    }
+  });
+  
+  // Start Atticus duel manually (for testing)
+  app.post('/api/atticus/start', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { challengeId } = req.body;
+      
+      const result = await atticusDuelService.startAtticusDuel(userId, challengeId);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error starting Atticus duel:", error);
+      res.status(400).json({ message: error.message });
     }
   });
   
   // Submit answer to Atticus duel
   app.post('/api/atticus/answer', requireAuth, async (req: any, res) => {
     try {
-      const { questionId, userAnswer } = req.body;
+      const { userAnswer, timeToAnswer } = req.body;
+      const userId = req.session.userId;
       
-      if (questionId === undefined || userAnswer === undefined) {
-        return res.status(400).json({ message: "questionId and userAnswer are required" });
+      if (userAnswer === undefined) {
+        return res.status(400).json({ message: "userAnswer is required" });
       }
       
-      // Simplified answer checking for Atticus duel
-      // Store the correct answer in memory when generating questions
-      // For now, we'll use a simpler approach
-      const isCorrect = Math.random() > 0.3; // 70% chance to get it right for balanced gameplay
+      const result = await atticusDuelService.submitAtticusAnswer(userId, userAnswer, timeToAnswer || 0);
       
-      res.json({
-        isCorrect,
-        correctAnswer: 0, // Will be handled on frontend
-        explanation: isCorrect ? 
-          "Correct! Your legal knowledge strikes true!" :
-          "Atticus deflects your answer with arcane magic!"
-      });
+      // Record daily activity
+      await storage.recordDailyActivity(userId);
+      
+      res.json(result);
     } catch (error: any) {
       console.error("Error submitting Atticus answer:", error);
-      res.status(500).json({ message: "Failed to submit answer" });
+      res.status(400).json({ message: error.message });
     }
   });
   
-  // Restore lives after defeating Atticus
+  // Revive after losing to Atticus (requires payment)
+  app.post('/api/atticus/revive', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const { paymentIntentId } = req.body;
+      
+      if (!paymentIntentId) {
+        return res.status(400).json({ message: "Payment intent ID is required" });
+      }
+      
+      const result = await atticusDuelService.reviveFromDefeat(userId, paymentIntentId);
+      
+      // Record daily activity
+      await storage.recordDailyActivity(userId);
+      
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error reviving from Atticus defeat:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+  
+  // Get Atticus duel history
+  app.get('/api/atticus/history', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      const history = atticusDuelService.getUserDuelHistory(userId);
+      res.json({ history });
+    } catch (error: any) {
+      console.error("Error getting Atticus duel history:", error);
+      res.status(500).json({ message: "Failed to get duel history", error: error.message });
+    }
+  });
+
+  // TEMPORARY: Clear duel history for testing
+  app.post('/api/atticus/clear-history', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      atticusDuelService.clearDuelHistory(userId);
+      res.json({ message: "Duel history cleared for testing" });
+    } catch (error: any) {
+      console.error("Error clearing Atticus duel history:", error);
+      res.status(500).json({ message: "Failed to clear duel history", error: error.message });
+    }
+  });
+  
+  // Legacy route for backward compatibility
   app.post('/api/atticus/victory', requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;

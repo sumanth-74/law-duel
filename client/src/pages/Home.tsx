@@ -78,7 +78,7 @@ export default function Home() {
   const [duelData, setDuelData] = useState<any>(null);
   const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
   const [showAtticusDuel, setShowAtticusDuel] = useState(false);
-  const [atticusCooldown, setAtticusCooldown] = useState<number | null>(null);
+  const [currentChallengeId, setCurrentChallengeId] = useState<string | null>(null);
 
   // Handle auto-open match from challenge link
   useEffect(() => {
@@ -583,7 +583,7 @@ export default function Home() {
           user={character}
           opponent={opponent}
           isVisible={true}
-          websocket={duelWebSocket}
+          websocket={duelWebSocket || undefined}
           onDuelEnd={handleDuelEnd}
         />
         <div className="fixed bottom-4 right-4 space-x-2">
@@ -618,30 +618,42 @@ export default function Home() {
           
           <div className="pt-36 px-4">
             <AtticusDuel 
-              userId={user!.id}
+              challengeId={currentChallengeId || undefined}
               onVictory={() => {
                 setShowAtticusDuel(false);
+                setCurrentChallengeId(null);
                 // Return to menu after victory
                 setGameMode('menu');
                 toast({
                   title: "Victory!",
-                  description: "You've defeated Atticus and restored your lives! +100 XP bonus!",
+                  description: "You've defeated Atticus and restored your lives!",
                   variant: "default"
                 });
               }}
               onDefeat={() => {
                 setShowAtticusDuel(false);
-                // Set cooldown for 24 hours
-                setAtticusCooldown(Date.now() + 24 * 60 * 60 * 1000);
+                setCurrentChallengeId(null);
                 setGameMode('menu');
                 toast({
                   title: "Defeated",
-                  description: "Atticus has bested you. Come back tomorrow or pay to retry.",
+                  description: "Atticus has bested you. 3-hour cooldown activated or pay $1 to revive.",
                   variant: "destructive"
                 });
               }}
-              onRetreat={() => {
+              onExit={() => {
                 setShowAtticusDuel(false);
+                setCurrentChallengeId(null);
+                setGameMode('menu');
+              }}
+              onRevive={() => {
+                // TODO: Implement Stripe payment for $1 revive
+                toast({
+                  title: "Revive Feature",
+                  description: "Stripe payment integration coming soon! For now, wait 3 hours.",
+                  variant: "default"
+                });
+                setShowAtticusDuel(false);
+                setCurrentChallengeId(null);
                 setGameMode('menu');
               }}
             />
@@ -668,14 +680,46 @@ export default function Home() {
         <div className="pt-36 px-4">
           <BotPractice 
             onBack={() => setGameMode('menu')} 
-            onLivesLost={(challenge) => {
-              // Trigger Atticus duel when lives are lost
-              setShowAtticusDuel(true);
-              toast({
-                title: "All Lives Lost! But Wait...",
-                description: "Beat Atticus the Purple Wizard Cat to restore all 3 lives and continue playing!",
-                variant: "default"
-              });
+            onLivesLost={async (challenge) => {
+              try {
+                // Check backend cooldown status before allowing Atticus duel
+                const response = await fetch('/api/atticus/status', {
+                  credentials: 'include'
+                });
+                
+                if (response.ok) {
+                  const status = await response.json();
+                  
+                  if (status.canChallenge === false) {
+                    // User is in cooldown period
+                    toast({
+                      title: "Cooldown Active",
+                      description: status.message || "You must wait before challenging Atticus again.",
+                      variant: "destructive"
+                    });
+                    return; // Don't allow Atticus duel
+                  }
+                }
+                
+                // No cooldown active, proceed with Atticus duel
+                setCurrentChallengeId(challenge.id);
+                setShowAtticusDuel(true);
+                toast({
+                  title: "All Lives Lost! But Wait...",
+                  description: "Beat Atticus the Purple Wizard Cat to restore all 3 lives and continue playing!",
+                  variant: "default"
+                });
+              } catch (error) {
+                console.error('Error checking Atticus status:', error);
+                // If there's an error checking status, allow the duel to proceed
+                setCurrentChallengeId(challenge.id);
+                setShowAtticusDuel(true);
+                toast({
+                  title: "All Lives Lost! But Wait...",
+                  description: "Beat Atticus the Purple Wizard Cat to restore all 3 lives and continue playing!",
+                  variant: "default"
+                });
+              }
             }}
           />
         </div>
