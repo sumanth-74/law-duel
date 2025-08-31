@@ -28,12 +28,13 @@ interface BotPracticeProps {
 }
 
 interface SoloQuestion {
-  id: string;
+  id?: string;
+  qid?: string;
   stem: string;
   choices: string[];
   subject: string;
   difficulty: number;
-  round: number;
+  round?: number;
 }
 
 export interface SoloChallenge {
@@ -183,7 +184,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
         method: 'POST',
         body: JSON.stringify({
           challengeId: challenge.id,
-          questionId: currentQuestion.id,
+          questionId: currentQuestion.qid || currentQuestion.id,
           userAnswer: selectedAnswer,
           timeToAnswer: answerTime
         }),
@@ -376,8 +377,8 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
             <div className="p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-center mb-4">
               <div className="text-red-300 font-semibold mb-2">⏰ Atticus Cooldown Active</div>
               <div className="text-red-400 text-sm">
-                {atticusCooldown.cooldownHours && atticusCooldown.cooldownMinutes ? (
-                  `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours > 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes % 60} minute${atticusCooldown.cooldownMinutes % 60 > 1 ? 's' : ''}`
+                {atticusCooldown.cooldownHours !== undefined && atticusCooldown.cooldownMinutes !== undefined ? (
+                  `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours > 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes} minute${atticusCooldown.cooldownMinutes > 1 ? 's' : ''}`
                 ) : (
                   'Lives will be automatically restored in 3 hours'
                 )}
@@ -438,7 +439,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
                   Solo Challenge - Round {challenge.round}
                 </CardTitle>
                 <p className="text-muted text-sm">
-                  {currentQuestion.subject} • Difficulty Level {challenge.difficulty}
+                  {typeof currentQuestion.subject === 'string' ? currentQuestion.subject : JSON.stringify(currentQuestion.subject)} • Difficulty Level {challenge.difficulty}
                 </p>
               </div>
             </div>

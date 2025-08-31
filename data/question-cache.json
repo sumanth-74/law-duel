@@ -1516,108 +1516,87 @@
   ],
   "Mixed Questions_bar-exam": [
     {
-      "qid": "fresh_openai_1756589880067_717b0b52",
+      "qid": "fresh_openai_1756635823705_e1e41170",
       "subject": "Mixed Questions",
       "topic": "General",
-      "stem": "Alice, a homeowner, discovers that her neighbor Bob has built a fence that extends two feet onto Alice's property. Alice confronts Bob, who claims that he has owned the land for years and believes the fence is on his property. What legal principle governs Alice's ability to reclaim her property?",
+      "stem": "Alice, a homeowner, invites her friend Bob over for a barbecue. While walking to the backyard, Bob slips on a wet floor in Alice's kitchen and injures his ankle. Bob wants to sue Alice for negligence. Which of the following statements is true regarding Alice's liability?",
       "choices": [
-        "Alice can reclaim her property through the doctrine of easement.",
-        "Alice can reclaim her property because Bob is required to obtain a permit for any construction.",
-        "Alice can reclaim her property based on the doctrine of adverse possession.",
-        "Alice can reclaim her property because she has a right to exclude others from her property."
-      ],
-      "correctIndex": 3,
-      "explanation": "Alice can reclaim her property because she has a right to exclude others from her property.",
-      "explanationLong": "The correct answer is that Alice can reclaim her property because she has a right to exclude others from her property. Under property law, homeowners have the right to assert ownership and exclude others from their land. Bob's claim of adverse possession fails because he has not met the required elements, such as continuous and open use for a statutory period. The first option is incorrect because adverse possession requires specific conditions, which Bob has not satisfied. The third option regarding easements is irrelevant, as this situation concerns ownership rather than a right of way. The fourth option about permits is also incorrect; while permits may be required for construction, they do not affect the ownership rights of Alice in this scenario. Thus, Alice's right to exclude Bob from her property is the controlling legal principle.",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1756589940067,
-      "generatedAt": 1756589880067,
-      "questionType": "bar-exam"
-    },
-    {
-      "qid": "fresh_openai_1756589881234_d2722931",
-      "subject": "Mixed Questions",
-      "topic": "General",
-      "stem": "Alice and Bob are friends who often lend each other money. One day, Alice lends Bob $1,000, and they agree that Bob will repay her in one month. However, Bob forgets to repay Alice on the due date. What legal remedy does Alice have against Bob?",
-      "choices": [
-        "Alice has no legal remedy against Bob.",
-        "Alice can take Bob's property without a court order.",
-        "Alice can sue Bob for breach of contract.",
-        "Alice can demand payment immediately without any legal action."
-      ],
-      "correctIndex": 2,
-      "explanation": "Alice can sue Bob for breach of contract, as there was a clear agreement for repayment.",
-      "explanationLong": "The correct answer is that Alice can sue Bob for breach of contract. In this scenario, there was a valid contract formed when Alice lent Bob $1,000 with a specific repayment term of one month. Bob's failure to repay Alice on the due date constitutes a breach of that contract, thereby giving Alice the right to seek legal remedies. The first answer is correct as it directly addresses the breach and the available legal remedy. The second answer is incorrect because, although Alice can demand payment, she must follow legal procedures to enforce her rights, which may include filing a lawsuit. The third answer is incorrect because self-help remedies, like taking property, are generally not permitted without a court order unless there is an immediate right to possession. The fourth answer is also incorrect; Alice does have a legal remedy, which is to sue Bob for breach of contract.",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1756589941234,
-      "generatedAt": 1756589881235,
-      "questionType": "bar-exam"
-    },
-    {
-      "qid": "fresh_openai_1756590518170_caa1ed64",
-      "subject": "Mixed Questions",
-      "topic": "General",
-      "stem": "Alice is walking her dog in a public park when she accidentally trips over a loose brick and falls, injuring her ankle. She notices that the park management had received complaints about the loose brick weeks before her accident but did not take any action. If Alice decides to sue the park management for her injuries, which of the following is most likely to be true about her claim?",
-      "choices": [
-        "Alice will likely fail because she assumed the risk by walking in the park.",
-        "Alice will likely fail because she was not paying attention when she tripped.",
-        "Alice will likely succeed because she was a licensee on the property.",
-        "Alice will likely succeed because the park management had a duty to maintain the park."
-      ],
-      "correctIndex": 3,
-      "explanation": "Alice will likely succeed because the park management had a duty to maintain the park.",
-      "explanationLong": "The correct answer is that Alice will likely succeed because the park management had a duty to maintain the park in a safe condition. Under premises liability law, landowners have a duty to inspect and repair dangerous conditions that they know of or should know about. The park management received complaints about the loose brick, indicating they were aware of the hazardous condition. The second choice is incorrect because Alice's lack of attention does not negate the park's duty to maintain safety; her negligence does not bar her claim. The third choice is misleading; while she was a licensee, this status does not significantly change the park's duty to keep the premises safe. The fourth choice fails because merely walking in the park does not equate to assuming the risk of a known hazard, especially when the park management had prior notice of the danger and did not act.",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1756590578171,
-      "generatedAt": 1756590518171,
-      "questionType": "bar-exam"
-    },
-    {
-      "qid": "fresh_openai_1756590516631_e5679cce",
-      "subject": "Mixed Questions",
-      "topic": "General",
-      "stem": "Alice and Bob are neighbors. One day, Bob's dog runs into Alice's yard and digs up her flower bed, causing damage. Alice wants to sue Bob for the damage. What is the most likely outcome of Alice's lawsuit against Bob?",
-      "choices": [
-        "Alice will win because Bob is strictly liable for his dog's actions.",
-        "Alice will lose because Bob did not intend for his dog to damage Alice's property.",
-        "Alice will win because Bob was negligent in controlling his dog.",
-        "Alice will lose because Bob's dog was acting in self-defense."
-      ],
-      "correctIndex": 2,
-      "explanation": "Alice is likely to win her lawsuit against Bob due to his negligence in controlling his dog.",
-      "explanationLong": "The correct answer is that Alice will win because Bob was negligent in controlling his dog. Under tort law, a pet owner can be held liable for damages caused by their pet if they fail to exercise reasonable care in controlling it. In this case, Bob's dog running into Alice's yard and causing damage suggests a lack of control, indicating negligence. The first answer is incorrect because strict liability typically applies to abnormally dangerous activities, not to pets unless they have a history of aggression. The third answer is incorrect because intent is not required in negligence claims; rather, it focuses on whether Bob acted reasonably. The fourth answer is incorrect as self-defense is not a relevant concept for a dog causing property damage; it pertains to personal harm or threat situations, not property disputes.",
-      "difficulty": 1,
-      "timeLimit": 60000,
-      "timeLimitSec": 60,
-      "deadlineTs": 1756590576633,
-      "generatedAt": 1756590516634,
-      "questionType": "bar-exam"
-    },
-    {
-      "qid": "fresh_openai_1756590516427_40c68719",
-      "subject": "Mixed Questions",
-      "topic": "General",
-      "stem": "Alice is walking her dog in the park when she sees a sign that says 'No Dogs Allowed.' Despite the sign, she lets her dog run off-leash. A park ranger approaches and issues her a citation for violating the park rules. What is the most likely outcome if Alice contests the citation in court?",
-      "choices": [
-        "Alice will lose because she violated a posted rule prohibiting dogs in the park.",
-        "Alice will win because she didn't see the sign until after she entered the park.",
-        "Alice will win because the park ranger had no authority to issue a citation.",
-        "Alice will lose because she was unaware of the rule prohibiting dogs."
+        "Alice may be liable for Bob's injuries if she was negligent in maintaining her home.",
+        "Alice is not liable because Bob was a social guest.",
+        "Alice is only liable if Bob can prove that she intentionally caused his injury.",
+        "Alice is automatically liable for any injuries that occur on her property."
       ],
       "correctIndex": 0,
-      "explanation": "Alice will lose because she violated a posted rule prohibiting dogs in the park.",
-      "explanationLong": "The correct answer is that Alice will lose because she violated a posted rule prohibiting dogs in the park. Generally, individuals are expected to adhere to posted regulations in public spaces, and ignorance of the law or rules is typically not a valid defense. In this case, the sign clearly indicated that dogs were not allowed, and Alice's decision to let her dog off-leash constitutes a direct violation of that rule. The first answer is incorrect because Alice's failure to see the sign does not excuse her from compliance with the law. The third answer is wrong because park rangers have the authority to enforce park regulations, including issuing citations. Finally, the fourth answer is incorrect as well; lack of awareness of the rule does not absolve Alice of her responsibility to follow it.",
+      "explanation": "Alice may be liable if she was negligent in maintaining her home.",
+      "explanationLong": "The correct answer is that Alice may be liable for Bob's injuries if she was negligent in maintaining her home. Under the general principles of negligence, a property owner has a duty to maintain their premises in a reasonably safe condition for invitees. In this case, Bob, as a social guest (invitee), is owed a duty of care by Alice. If Alice failed to address the wet floor and it contributed to Bob's injury, she could be found negligent. The second option is incorrect because social guests do have rights to a safe environment. The third option is misleading; liability is not automatic but depends on the presence of negligence. Lastly, the fourth option is incorrect because negligence does not require intentional harm, but rather a failure to act with reasonable care to prevent foreseeable harm.",
       "difficulty": 1,
       "timeLimit": 60000,
       "timeLimitSec": 60,
-      "deadlineTs": 1756590576427,
-      "generatedAt": 1756590516427,
+      "deadlineTs": 1756635883706,
+      "generatedAt": 1756635823706,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756636012439_59d694d3",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice and Bob are neighbors. One day, Bob's dog escapes from his yard and runs into Alice's yard, where it digs up her flowers. Alice is upset and decides to sue Bob for the damage caused by his dog. What is the most likely outcome of Alice's lawsuit?",
+      "choices": [
+        "Alice will win because Bob was negligent in not securing his dog.",
+        "Alice will lose because the damage was caused by an act of nature.",
+        "Alice will win because Bob is strictly liable for his dog's actions.",
+        "Alice will lose because she did not take proper care of her flowers."
+      ],
+      "correctIndex": 0,
+      "explanation": "Alice will likely win her lawsuit due to Bob's negligence in securing his dog.",
+      "explanationLong": "The correct answer is that Alice will win because Bob was negligent in not securing his dog. Under tort law, a pet owner is responsible for damages caused by their pet if they fail to exercise reasonable care to prevent the pet from escaping. Here, Bob's failure to secure his dog constitutes negligence, resulting in Alice's flowers being damaged. The first option is incorrect because strict liability for pet owners typically applies only in cases of harm caused by a pet's dangerous behavior, not general negligence. The third option is wrong because the damage was not an act of nature; it was directly caused by Bob's dog. Lastly, the fourth option is incorrect because Alice's care of her flowers does not absolve Bob of his responsibility to prevent his dog from causing damage.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756636072439,
+      "generatedAt": 1756636012439,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756636011591_75e4a78e",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Ava and Ben are neighbors. One day, while trimming his hedges, Ben accidentally cuts into Ava's property line. Ava, upset, demands that Ben pay for the damages caused by cutting her plants. Ben argues that it was an accident and that he should not be held liable. What is the likely outcome regarding Ben's liability for damages?",
+      "choices": [
+        "Ben is liable only if he was negligent in trimming the hedges.",
+        "Ben is liable because he caused damage to Ava's property.",
+        "Ben is not liable because he did not intend to cause harm.",
+        "Ben is not liable because the act was accidental."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ben is liable because he caused damage to Ava's property, regardless of intent.",
+      "explanationLong": "The correct answer is that Ben is liable because he caused damage to Ava's property. Under property law, a landowner is responsible for damages that occur as a result of their actions, even if the act was unintentional. In this case, Ben's trimming of the hedges directly resulted in damage to Ava's plants, making him responsible for the cost of repairs or replacement. The second option is incorrect because an accident does not absolve a party from liability for damages caused to another's property. The third option incorrectly introduces the concept of negligence, which is not required to establish liability for damage to property in this scenario. Lastly, the fourth option is misleading; intent is not a necessary element for liability in property damage cases, as liability arises from the act of causing harm, not the intent behind it.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756636071591,
+      "generatedAt": 1756636011591,
+      "questionType": "bar-exam"
+    },
+    {
+      "qid": "fresh_openai_1756636009543_60dfbbef",
+      "subject": "Mixed Questions",
+      "topic": "General",
+      "stem": "Alice is driving her car when she accidentally hits Bob, who is crossing the street. Bob suffers a broken leg and decides to sue Alice for negligence. Which of the following elements must Bob prove to establish negligence on Alice's part?",
+      "choices": [
+        "Alice must have intended to hit Bob for Bob to win.",
+        "Alice had a duty to act reasonably towards Bob.",
+        "Bob was wearing a reflective vest at the time of the accident.",
+        "Alice was driving above the speed limit when she hit Bob."
+      ],
+      "correctIndex": 1,
+      "explanation": "To establish negligence, a plaintiff must show that the defendant owed a duty of care to the plaintiff.",
+      "explanationLong": "The correct answer is that Alice had a duty to act reasonably towards Bob. In negligence cases, the plaintiff must prove that the defendant owed a duty of care, breached that duty, caused the injury, and that the plaintiff suffered damages. Here, Alice had a duty to drive carefully to avoid harming pedestrians like Bob. The second choice is incorrect because driving above the speed limit is not necessary to establish negligence; Alice's overall conduct must be evaluated. The third choice is incorrect because Bob's attire does not affect Alice's duty of care or negligence; it is irrelevant to the case. The fourth choice is incorrect because negligence does not require intent; rather, it is based on a failure to act as a reasonable person would under similar circumstances.",
+      "difficulty": 1,
+      "timeLimit": 60000,
+      "timeLimitSec": 60,
+      "deadlineTs": 1756636069543,
+      "generatedAt": 1756636009543,
       "questionType": "bar-exam"
     }
   ]

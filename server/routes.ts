@@ -1,13 +1,14 @@
+/// <reference path="./types.d.ts" />
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import session from "express-session";
 import MemoryStore from "memorystore";
 import connectPgSimple from "connect-pg-simple";
-import pg from "pg";
-import crypto from "crypto";
-import path from "path";
-import fs from "fs/promises";
+import * as pg from "pg";
+import * as crypto from "crypto";
+import * as path from "path";
+import * as fs from "fs/promises";
 import { storage } from "./storage";
 import { registerSchema, loginSchema } from "@shared/schema";
 import { statsService } from "./services/statsService";
@@ -61,7 +62,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { healthCheck } = await import("./services/robustGenerator");
       const result = await healthCheck();
       return res.status(result.ok ? 200 : 500).json(result);
-    } catch (e) {
+    } catch (e: any) {
       console.error("OpenAI health check failed:", e);
       return res.status(500).json({ 
         ok: false, 
@@ -91,7 +92,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalQuestions,
         message: totalQuestions > 0 ? "Questions ready for instant serving!" : "Pool still generating..."
       });
-    } catch (e) {
+    } catch (e: any) {
       return res.status(500).json({ error: e.message });
     }
   });
@@ -849,7 +850,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "challengeId, questionId, and userAnswer are required" });
       }
 
-      const result = await soloChallengeService.submitAnswer(challengeId, questionId, userAnswer, timeToAnswer);
+      // Call the service with correct parameter order: (challengeId, answerIndex, timeToAnswer)
+      const result = await soloChallengeService.submitAnswer(challengeId, userAnswer, timeToAnswer || 0);
       
       // Record daily activity for streak tracking (solo mode counts!)
       await storage.recordDailyActivity(userId);
@@ -889,7 +891,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/atticus/status', requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;
-      const status = atticusDuelService.getDuelStatus(userId);
+      const status = await atticusDuelService.getDuelStatus(userId);
       res.json(status);
     } catch (error: any) {
       console.error("Error getting Atticus duel status:", error);
@@ -978,6 +980,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to clear duel history", error: error.message });
     }
   });
+
+  // TEMPORARY: Force clear current broken duel
+  app.post('/api/atticus/force-clear', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.session.userId;
+      
+      // Get and clear active duel
+      const activeDuel = await storage.getUserActiveAtticusDuel(userId);
+      if (activeDuel) {
+        await storage.updateAtticusDuel(activeDuel.id, {
+          status: 'completed',
+          result: 'cancelled',
+          completedAt: new Date()
+        });
+        console.log(`🧹 Force cleared broken duel for user ${userId}`);
+        res.json({ success: true, message: 'Broken duel cleared' });
+      } else {
+        res.json({ success: true, message: 'No active duel to clear' });
+      }
+    } catch (error: any) {
+      console.error("Error force clearing duel:", error);
+      res.status(500).json({ message: "Failed to clear duel", error: error.message });
+    }
+  });
   
   // Legacy route for backward compatibility
   app.post('/api/atticus/victory', requireAuth, async (req: any, res) => {
@@ -1032,8 +1058,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get top 5 subtopics by proficiency
       const allSubtopics = [];
       for (const [subject, data] of Object.entries(progress)) {
-        if (data.subtopics) {
-          for (const subtopic of data.subtopics) {
+        if ((data as any).subtopics) {
+          for (const subtopic of (data as any).subtopics) {
             allSubtopics.push({
               subject,
               subtopic: subtopic.name,
@@ -1361,7 +1387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const result = subjects.map(subject => ({
         subject,
-        subtopics: stats.subtopicMastery
+        subtopics: (stats as any).subtopicMastery
           ?.filter((s: any) => s.subject === subject)
           ?.map((s: any) => ({
             id: s.subtopicId,
@@ -1956,8 +1982,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const path = await import('path');
       const { fileURLToPath } = await import('url');
       
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
+      const __dirname = process.cwd() + '/server';
       
       const cacheFile = path.join(__dirname, '../data/question-cache.json');
       const data = await fs.readFile(cacheFile, 'utf-8');
@@ -1967,7 +1992,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let duplicates = 0;
       
       for (const [subject, questions] of Object.entries(cachedQuestions)) {
-        for (const question of questions) {
+        for (const question of (questions as any[])) {
           try {
             const existing = await storage.getQuestionsBySubject(subject, 1000);
             const isDuplicate = existing.some((q: any) => q.stem === question.stem);
@@ -2008,7 +2033,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/daily-challenges", requireAuth, async (req, res) => {
     try {
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const challenges = dailyChallengeRewards.default.getUserDailyChallenges(req.user.id);
+      const challenges = dailyChallengeRewards.default.getUserDailyChallenges(req.session.userId);
       res.json({ challenges });
     } catch (error) {
       console.error("Error getting daily challenges:", error);
@@ -2020,15 +2045,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { challengeId } = req.params;
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const result = dailyChallengeRewards.default.claimChallengeReward(req.user.id, challengeId);
+      const result = dailyChallengeRewards.default.claimChallengeReward(req.session.userId, challengeId);
       
       if (result.success) {
         // Update user's XP and points
-        const user = await storage.getUser(req.user.id);
+        const user = await storage.getUser(req.session.userId);
         if (user) {
           user.xp += result.rewards.xp;
           user.points += result.rewards.points;
-          await storage.updateUser(req.user.id, user);
+          await storage.updateUser(req.session.userId, user);
         }
       }
       
@@ -2042,7 +2067,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/rewards/summary", requireAuth, async (req, res) => {
     try {
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const summary = dailyChallengeRewards.default.getUserRewardSummary(req.user.id);
+      const summary = dailyChallengeRewards.default.getUserRewardSummary(req.session.userId);
       res.json(summary);
     } catch (error) {
       console.error("Error getting reward summary:", error);
@@ -2053,7 +2078,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/weekly-challenges", requireAuth, async (req, res) => {
     try {
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const challenges = dailyChallengeRewards.default.getWeeklyChallengeProgress(req.user.id);
+      const challenges = dailyChallengeRewards.default.getWeeklyChallengeProgress(req.session.userId);
       res.json({ challenges });
     } catch (error) {
       console.error("Error getting weekly challenges:", error);
@@ -2528,6 +2553,8 @@ const activeDuels = new Map<WebSocket, {
   currentRound: number;
   scores: [number, number]; // [player, bot]
   totalRounds: number;
+  subject?: string;
+  currentQuestion?: any;
 }>();
 
 // Duel Management Functions

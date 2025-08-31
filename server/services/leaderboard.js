@@ -1,31 +1,14 @@
-import fs from 'fs/promises';
-import path from 'path';
-
-const LEADERBOARD_FILE = path.join(process.cwd(), 'data', 'leaderboard.json');
-const BACKUP_FILE = path.join(process.cwd(), 'data', 'leaderboard.bak');
-
-let writeCount = 0;
+import { storage } from '../storage.js';
 
 export async function initializeLeaderboard() {
   try {
-    // Ensure data directory exists
-    await fs.mkdir(path.dirname(LEADERBOARD_FILE), { recursive: true });
+    console.log('Leaderboard service initialized with database storage');
     
-    // Try to load existing leaderboard
-    try {
-      await fs.access(LEADERBOARD_FILE);
-      console.log('Leaderboard file found');
-      
-      // Check if we need to seed with bots for a more active appearance
-      const leaderboard = await readLeaderboard();
-      // Only seed if we have fewer than 12 players (all our bots have points)
-      if (leaderboard.length < 12) {
-        await seedLeaderboardWithBots();
-      }
-    } catch {
-      // Create initial leaderboard with bot players
+    // Check if we need to seed with bots for a more active appearance
+    const leaderboard = await storage.getLeaderboard(50);
+    // Only seed if we have fewer than 12 players (all our bots have points)
+    if (leaderboard.length < 12) {
       await seedLeaderboardWithBots();
-      console.log('Created new leaderboard file with initial bot players');
     }
   } catch (error) {
     console.error('Failed to initialize leaderboard:', error);
@@ -36,478 +19,170 @@ export async function initializeLeaderboard() {
 async function seedLeaderboardWithBots() {
   const botPlayers = [
     {
-      id: 'bot_lawbeast_99',
-      username: 'LawBeast99',
-      displayName: 'LawBeast99',
-      lawSchool: 'Harvard Law',
-      level: 15,
-      points: 2850,
-      totalWins: 47,
-      totalLosses: 8,
-      avatarData: {
-        base: 'humanoid',
-        palette: '#dc143c',
-        props: ['gavel'],
-        archetypeId: 'due-diligence-dragon'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_legal_eagle_420',
-      username: 'LegalEagle420',
-      displayName: 'LegalEagle420',
-      lawSchool: 'Yale Law',
+      id: 'bot_alexandra_lex',
+      username: 'alexandra_lex',
+      displayName: 'Alexandra Richards',
       level: 12,
-      points: 2400,
-      totalWins: 38,
-      totalLosses: 12,
-      avatarData: {
-        base: 'beast',
-        palette: '#4169e1',
-        props: ['scales'],
-        archetypeId: 'miranda-hawk'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      points: 3247,
+      isBot: true,
+      avatarData: { backgroundColor: '#4F46E5', style: 'professional', accessory: 'glasses' }
     },
     {
-      id: 'bot_tort_master_x',
-      username: 'TortMasterX',
-      displayName: 'TortMasterX',
-      lawSchool: 'Golden Gate Law',
-      level: 18,
-      points: 3200,
-      totalWins: 56,
-      totalLosses: 9,
-      avatarData: {
-        base: 'arcane',
-        palette: '#8b008b',
-        props: ['codex'],
-        archetypeId: 'strict-scrutiny-sphinx'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_justice_ninja',
-      username: 'JusticeNinja',
-      displayName: 'JusticeNinja',
-      lawSchool: 'Columbia Law',
-      level: 14,
-      points: 2650,
-      totalWins: 42,
-      totalLosses: 11,
-      avatarData: {
-        base: 'undead',
-        palette: '#2e8b57',
-        props: ['briefcase'],
-        archetypeId: 'suppression-wraith'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_contracts_wizard',
-      username: 'ContractsWizard',
-      displayName: 'ContractsWizard',
-      lawSchool: 'NYU Law',
-      level: 16,
-      points: 2950,
-      totalWins: 49,
-      totalLosses: 7,
-      avatarData: {
-        base: 'celestial',
-        palette: '#ff69b4',
-        props: ['law_diploma'],
-        archetypeId: 'fiduciary-seraph'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_objection_hero',
-      username: 'ObjectionHero',
-      displayName: 'ObjectionHero',
-      lawSchool: 'UChicago Law',
-      level: 11,
-      points: 2100,
-      totalWins: 32,
-      totalLosses: 15,
-      avatarData: {
-        base: 'construct',
-        palette: '#ff8c00',
-        props: ['gavel'],
-        archetypeId: 'covenant-golem'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_gavel_crusher',
-      username: 'GavelCrusher',
-      displayName: 'GavelCrusher',
-      lawSchool: 'UPenn Law',
-      level: 17,
-      points: 3100,
-      totalWins: 52,
-      totalLosses: 6,
-      avatarData: {
-        base: 'elemental',
-        palette: '#dc143c',
-        props: ['scales'],
-        archetypeId: 'subpoena-phoenix'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_verdict_viper',
-      username: 'VerdictViper',
-      displayName: 'VerdictViper',
-      lawSchool: 'Georgetown Law',
-      level: 13,
-      points: 2300,
-      totalWins: 35,
-      totalLosses: 13,
-      avatarData: {
-        base: 'alien',
-        palette: '#32cd32',
-        props: ['legal_pad'],
-        archetypeId: 'viewpoint-viper'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_brief_sniper',
-      username: 'BriefSniper',
-      displayName: 'BriefSniper',
-      lawSchool: 'Duke Law',
-      level: 19,
-      points: 3450,
-      totalWins: 62,
-      totalLosses: 8,
-      avatarData: {
-        base: 'humanoid',
-        palette: '#9370db',
-        props: ['briefcase'],
-        archetypeId: 'whistleblower-wyvern'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_mbe_destroyer',
-      username: 'MBEDestroyer',
-      displayName: 'MBEDestroyer',
-      lawSchool: 'Thomas Jefferson Law',
-      level: 21,
-      points: 3850,
-      totalWins: 71,
-      totalLosses: 5,
-      avatarData: {
-        base: 'construct',
-        palette: '#ff4500',
-        props: ['gavel', 'scales'],
-        archetypeId: 'takeover-titan'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 'bot_statute_slayer',
-      username: 'StatuteSlayer',
-      displayName: 'StatuteSlayer',
-      lawSchool: 'Berkeley Law',
+      id: 'bot_marcus_wright',
+      username: 'marcus_wright', 
+      displayName: 'Marcus Wright',
       level: 10,
-      points: 1850,
-      totalWins: 28,
-      totalLosses: 18,
-      avatarData: {
-        base: 'undead',
-        palette: '#ff1493',
-        props: ['codex'],
-        archetypeId: 'brady-banshee'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      points: 2891,
+      isBot: true,
+      avatarData: { backgroundColor: '#059669', style: 'business', accessory: 'tie' }
     },
     {
-      id: 'bot_precedent_pro',
-      username: 'PrecedentPro',
-      displayName: 'PrecedentPro',
-      lawSchool: 'Cooley Law School',
-      level: 20,
-      points: 3700,
-      totalWins: 67,
-      totalLosses: 6,
-      avatarData: {
-        base: 'arcane',
-        palette: '#1e90ff',
-        props: ['law_diploma', 'briefcase'],
-        archetypeId: 'equal-protection-paladin'
-      },
-      lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
+      id: 'bot_diana_torres',
+      username: 'diana_torres',
+      displayName: 'Diana Torres',
+      level: 11,
+      points: 2743,
+      isBot: true,
+      avatarData: { backgroundColor: '#DC2626', style: 'academic', accessory: 'book' }
+    },
+    {
+      id: 'bot_james_miller',
+      username: 'james_miller',
+      displayName: 'James Miller',
+      level: 9,
+      points: 2456,
+      isBot: true,
+      avatarData: { backgroundColor: '#7C3AED', style: 'casual', accessory: 'cap' }
+    },
+    {
+      id: 'bot_sarah_chen',
+      username: 'sarah_chen',
+      displayName: 'Sarah Chen',
+      level: 8,
+      points: 2187,
+      isBot: true,
+      avatarData: { backgroundColor: '#EA580C', style: 'modern', accessory: 'earbuds' }
+    },
+    {
+      id: 'bot_robert_kim',
+      username: 'robert_kim',
+      displayName: 'Robert Kim',
+      level: 7,
+      points: 1923,
+      isBot: true,
+      avatarData: { backgroundColor: '#0891B2', style: 'trendy', accessory: 'sunglasses' }
+    },
+    {
+      id: 'bot_emily_davis',
+      username: 'emily_davis',
+      displayName: 'Emily Davis',
+      level: 6,
+      points: 1654,
+      isBot: true,
+      avatarData: { backgroundColor: '#BE185D', style: 'elegant', accessory: 'necklace' }
+    },
+    {
+      id: 'bot_michael_brown',
+      username: 'michael_brown',
+      displayName: 'Michael Brown',
+      level: 5,
+      points: 1398,
+      isBot: true,
+      avatarData: { backgroundColor: '#16A34A', style: 'athletic', accessory: 'headband' }
+    },
+    {
+      id: 'bot_jessica_wilson',
+      username: 'jessica_wilson',
+      displayName: 'Jessica Wilson',
+      level: 4,
+      points: 1152,
+      isBot: true,
+      avatarData: { backgroundColor: '#9333EA', style: 'creative', accessory: 'beret' }
+    },
+    {
+      id: 'bot_david_johnson',
+      username: 'david_johnson',
+      displayName: 'David Johnson',
+      level: 3,
+      points: 987,
+      isBot: true,
+      avatarData: { backgroundColor: '#C2410C', style: 'vintage', accessory: 'mustache' }
+    },
+    {
+      id: 'bot_lisa_garcia',
+      username: 'lisa_garcia',
+      displayName: 'Lisa Garcia',
+      level: 4,
+      points: 834,
+      isBot: true,
+      avatarData: { backgroundColor: '#DB2777', style: 'chic', accessory: 'scarf' }
+    },
+    {
+      id: 'bot_kevin_martinez',
+      username: 'kevin_martinez',
+      displayName: 'Kevin Martinez',
+      level: 2,
+      points: 692,
+      isBot: true,
+      avatarData: { backgroundColor: '#2563EB', style: 'sporty', accessory: 'cap' }
     }
   ];
 
-  // Sort by points descending
-  botPlayers.sort((a, b) => b.points - a.points);
-  await writeLeaderboard(botPlayers);
-}
-
-// Force reset bots with correct avatar data
-export async function initializeBots() {
-  try {
-    const leaderboard = await readLeaderboard();
-    // Remove all existing bots
-    const humanPlayers = leaderboard.filter(player => !player.id.startsWith('bot_'));
-    
-    // Add bots with correct avatar data
-    const botPlayers = [
-      {
-        id: 'bot_precedent_pro',
-        username: 'PrecedentPro',
-        displayName: 'PrecedentPro',
-        lawSchool: 'Cooley Law School',
-        level: 20,
-        points: 3700,
-        totalWins: 67,
-        totalLosses: 6,
-        avatarData: {
-          base: 'arcane',
-          palette: '#1e90ff',
-          props: ['law_diploma', 'briefcase'],
-          archetypeId: 'equal-protection-paladin'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_mbe_destroyer',
-        username: 'MBEDestroyer',
-        displayName: 'MBEDestroyer',
-        lawSchool: 'Thomas Jefferson Law',
-        level: 21,
-        points: 3850,
-        totalWins: 71,
-        totalLosses: 5,
-        avatarData: {
-          base: 'construct',
-          palette: '#ff4500',
-          props: ['gavel', 'scales'],
-          archetypeId: 'takeover-titan'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_brief_sniper',
-        username: 'BriefSniper',
-        displayName: 'BriefSniper',
-        lawSchool: 'Duke Law',
-        level: 19,
-        points: 3450,
-        totalWins: 62,
-        totalLosses: 8,
-        avatarData: {
-          base: 'humanoid',
-          palette: '#9370db',
-          props: ['briefcase'],
-          archetypeId: 'whistleblower-wyvern'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_tort_master_x',
-        username: 'TortMasterX',
-        displayName: 'TortMasterX',
-        lawSchool: 'Golden Gate Law',
-        level: 18,
-        points: 3200,
-        totalWins: 56,
-        totalLosses: 9,
-        avatarData: {
-          base: 'arcane',
-          palette: '#8b008b',
-          props: ['codex'],
-          archetypeId: 'strict-scrutiny-sphinx'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_gavel_crusher',
-        username: 'GavelCrusher',
-        displayName: 'GavelCrusher',
-        lawSchool: 'UPenn Law',
-        level: 17,
-        points: 3100,
-        totalWins: 52,
-        totalLosses: 6,
-        avatarData: {
-          base: 'elemental',
-          palette: '#dc143c',
-          props: ['scales'],
-          archetypeId: 'subpoena-phoenix'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_contracts_wizard',
-        username: 'ContractsWizard',
-        displayName: 'ContractsWizard',
-        lawSchool: 'NYU Law',
-        level: 16,
-        points: 2950,
-        totalWins: 49,
-        totalLosses: 7,
-        avatarData: {
-          base: 'celestial',
-          palette: '#ff69b4',
-          props: ['law_diploma'],
-          archetypeId: 'fiduciary-seraph'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_lawbeast_99',
-        username: 'LawBeast99',
-        displayName: 'LawBeast99',
-        lawSchool: 'Harvard Law',
-        level: 15,
-        points: 2850,
-        totalWins: 47,
-        totalLosses: 8,
-        avatarData: {
-          base: 'humanoid',
-          palette: '#dc143c',
-          props: ['gavel'],
-          archetypeId: 'due-diligence-dragon'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_justice_ninja',
-        username: 'JusticeNinja',
-        displayName: 'JusticeNinja',
-        lawSchool: 'Columbia Law',
-        level: 14,
-        points: 2650,
-        totalWins: 42,
-        totalLosses: 11,
-        avatarData: {
-          base: 'undead',
-          palette: '#2e8b57',
-          props: ['briefcase'],
-          archetypeId: 'suppression-wraith'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_legal_eagle_420',
-        username: 'LegalEagle420',
-        displayName: 'LegalEagle420',
-        lawSchool: 'Yale Law',
-        level: 12,
-        points: 2400,
-        totalWins: 38,
-        totalLosses: 12,
-        avatarData: {
-          base: 'beast',
-          palette: '#4169e1',
-          props: ['scales'],
-          archetypeId: 'miranda-hawk'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_verdict_viper',
-        username: 'VerdictViper',
-        displayName: 'VerdictViper',
-        lawSchool: 'Georgetown Law',
-        level: 13,
-        points: 2300,
-        totalWins: 35,
-        totalLosses: 13,
-        avatarData: {
-          base: 'alien',
-          palette: '#32cd32',
-          props: ['legal_pad'],
-          archetypeId: 'viewpoint-viper'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_objection_hero',
-        username: 'ObjectionHero',
-        displayName: 'ObjectionHero',
-        lawSchool: 'UChicago Law',
-        level: 11,
-        points: 2100,
-        totalWins: 32,
-        totalLosses: 15,
-        avatarData: {
-          base: 'construct',
-          palette: '#ff8c00',
-          props: ['gavel'],
-          archetypeId: 'covenant-golem'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: 'bot_statute_slayer',
-        username: 'StatuteSlayer',
-        displayName: 'StatuteSlayer',
-        lawSchool: 'Berkeley Law',
-        level: 10,
-        points: 1850,
-        totalWins: 28,
-        totalLosses: 18,
-        avatarData: {
-          base: 'undead',
-          palette: '#ff1493',
-          props: ['codex'],
-          archetypeId: 'brady-banshee'
-        },
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString()
-      }
-    ];
-    
-    // Combine human players with new bots
-    const updatedLeaderboard = [...humanPlayers, ...botPlayers];
-    
-    // Sort by points descending
-    updatedLeaderboard.sort((a, b) => b.points - a.points);
-    await writeLeaderboard(updatedLeaderboard);
-    
-    console.log('Bots reset with correct avatar data');
-  } catch (error) {
-    console.error('Failed to reset bots:', error);
+  console.log('Seeding leaderboard with bot players...');
+  
+  for (const bot of botPlayers) {
+    try {
+      await storage.upsertLeaderboardEntry({
+        userId: bot.id,
+        username: bot.username,
+        displayName: bot.displayName,
+        points: bot.points,
+        level: bot.level,
+        avatarData: bot.avatarData,
+        isBot: bot.isBot,
+        lastActivity: new Date()
+      });
+    } catch (error) {
+      console.error(`Failed to create bot ${bot.username}:`, error);
+    }
   }
+
+  console.log(`Created ${botPlayers.length} bot players in leaderboard`);
 }
 
-// Periodically update bot activity to make them appear more active
+// Simulate gradual bot activity - called periodically 
 export async function updateBotActivity() {
   try {
-    const leaderboard = await readLeaderboard();
-    let updated = false;
+    const bots = await storage.getLeaderboard(50);
+    const activeBots = bots.filter(entry => entry.isBot);
     
-    for (const player of leaderboard) {
-      if (player.id.startsWith('bot_')) {
-        // Randomly update bot stats occasionally (10% chance)
-        if (Math.random() < 0.1) {
-          // Small random point increases
-          const pointIncrease = Math.floor(Math.random() * 50) + 10;
-          player.points += pointIncrease;
-          
-          // Sometimes add a win
-          if (Math.random() < 0.7) {
-            player.totalWins += 1;
-          } else {
-            player.totalLosses += 1;
-          }
-          
-          // Update level based on new points
-          player.level = Math.floor(player.points / 200) + 1;
-          player.lastActive = new Date().toISOString();
-          updated = true;
-        }
+    if (activeBots.length === 0) return;
+
+    // Randomly select 1-3 bots to update
+    const numBotsToUpdate = Math.floor(Math.random() * 3) + 1;
+    const selectedBots = activeBots
+      .sort(() => 0.5 - Math.random())
+      .slice(0, numBotsToUpdate);
+
+    for (const bot of selectedBots) {
+      // Small random point increase (1-15 points)
+      const pointsGain = Math.floor(Math.random() * 15) + 1;
+      
+      // Occasional level up if points are high enough
+      const newPoints = bot.points + pointsGain;
+      let newLevel = bot.level;
+      if (newPoints > bot.level * 300 && Math.random() < 0.1) { // 10% chance to level up
+        newLevel = Math.min(bot.level + 1, 20); // Cap at level 20
       }
+
+      await storage.updateLeaderboardEntry(bot.userId, {
+        points: newPoints,
+        level: newLevel,
+        lastActivity: new Date()
+      });
     }
-    
-    if (updated) {
-      // Sort by points descending
-      leaderboard.sort((a, b) => b.points - a.points);
-      await writeLeaderboard(leaderboard);
-    }
+
+    console.log(`Updated ${selectedBots.length} bots with gradual point increases`);
   } catch (error) {
     console.error('Failed to update bot activity:', error);
   }
@@ -515,38 +190,35 @@ export async function updateBotActivity() {
 
 export async function updatePlayerStats(playerId, updates) {
   try {
-    const leaderboard = await readLeaderboard();
+    let existingEntry = await storage.getLeaderboardEntry(playerId);
     
-    let player = leaderboard.find(p => p.id === playerId);
-    if (!player) {
+    if (!existingEntry) {
       // Add new player to leaderboard
-      player = {
-        id: playerId,
+      const newEntry = {
+        userId: playerId,
         username: updates.username || 'Anonymous',
         displayName: updates.displayName || 'Anonymous',
         level: updates.level || 1,
         points: updates.points || 0,
-        totalWins: updates.totalWins || 0,
-        totalLosses: updates.totalLosses || 0,
-        lastActive: new Date().toISOString()
+        avatarData: updates.avatarData || { backgroundColor: '#6B7280', style: 'casual' },
+        isBot: false,
+        lastActivity: new Date()
       };
-      leaderboard.push(player);
+      
+      existingEntry = await storage.upsertLeaderboardEntry(newEntry);
     } else {
       // Update existing player
-      Object.assign(player, updates, { 
-        lastActive: new Date().toISOString() 
+      existingEntry = await storage.updateLeaderboardEntry(playerId, {
+        username: updates.username || existingEntry.username,
+        displayName: updates.displayName || existingEntry.displayName,
+        level: updates.level || existingEntry.level,
+        points: updates.points || existingEntry.points,
+        avatarData: updates.avatarData || existingEntry.avatarData,
+        lastActivity: new Date()
       });
     }
-
-    // Sort by points descending
-    leaderboard.sort((a, b) => b.points - a.points);
     
-    // Keep only top 100 to prevent file bloat
-    const trimmed = leaderboard.slice(0, 100);
-    
-    await writeLeaderboard(trimmed);
-    
-    return player;
+    return existingEntry;
   } catch (error) {
     console.error('Failed to update player stats:', error);
     return null;
@@ -555,49 +227,12 @@ export async function updatePlayerStats(playerId, updates) {
 
 export async function getLeaderboard(limit = 20) {
   try {
-    const leaderboard = await readLeaderboard();
+    const leaderboard = await storage.getLeaderboard(Math.min(limit, 50));
     return leaderboard
-      .filter(player => !player.id.startsWith('sb_') && player.points > 0) // Exclude stealth bots and zero-point players
+      .filter(entry => !entry.userId.startsWith('sb_') && entry.points > 0) // Exclude stealth bots and zero-point players
       .slice(0, Math.min(limit, 12)); // Cap at 12 to avoid showing zero-point players
   } catch (error) {
     console.error('Failed to get leaderboard:', error);
     return [];
-  }
-}
-
-async function readLeaderboard() {
-  try {
-    const data = await fs.readFile(LEADERBOARD_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Failed to read leaderboard:', error);
-    return [];
-  }
-}
-
-async function writeLeaderboard(data) {
-  try {
-    const jsonData = JSON.stringify(data, null, 2);
-    
-    // Atomic write: write to temp file first
-    const tempFile = `${LEADERBOARD_FILE}.tmp`;
-    await fs.writeFile(tempFile, jsonData, 'utf8');
-    
-    // Create backup every 20 writes
-    writeCount++;
-    if (writeCount % 20 === 0) {
-      try {
-        await fs.copyFile(LEADERBOARD_FILE, BACKUP_FILE);
-      } catch (backupError) {
-        console.warn('Failed to create backup:', backupError.message);
-      }
-    }
-    
-    // Atomic rename
-    await fs.rename(tempFile, LEADERBOARD_FILE);
-    
-  } catch (error) {
-    console.error('Failed to write leaderboard:', error);
-    throw error;
   }
 }

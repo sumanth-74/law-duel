@@ -1,49 +1,21 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { storage } from '../storage.js';
 import { initializeQuestionCoordinator } from './qcoordinator.js';
 import { progressService } from '../progress.js';
-
-const CHALLENGES_FILE = path.join(process.cwd(), 'data', 'solo-challenges.json');
+import { db } from '../db.js';
+import { questionCache } from '../../shared/schema.js';
+import { eq } from 'drizzle-orm';
 
 class SoloChallengeService {
   constructor() {
-    this.activeChallenges = new Map();
-    this.initializeStorage();
-  }
-
-  async initializeStorage() {
-    try {
-      await fs.mkdir(path.dirname(CHALLENGES_FILE), { recursive: true });
-      
-      try {
-        const data = await fs.readFile(CHALLENGES_FILE, 'utf8');
-        const challenges = JSON.parse(data);
-        challenges.forEach(challenge => {
-          this.activeChallenges.set(challenge.id, challenge);
-        });
-        console.log(`Loaded ${challenges.length} active solo challenges`);
-      } catch {
-        // File doesn't exist, start fresh
-        await this.saveToFile();
-      }
-    } catch (error) {
-      console.error('Failed to initialize solo challenge storage:', error);
-    }
-  }
-
-  async saveToFile() {
-    try {
-      const challenges = Array.from(this.activeChallenges.values());
-      await fs.writeFile(CHALLENGES_FILE, JSON.stringify(challenges, null, 2));
-    } catch (error) {
-      console.error('Failed to save solo challenges:', error);
-    }
+    // No need for activeChallenges Map - using database directly
+    console.log('Solo Challenge Service initialized with database storage');
   }
 
   // Start a new solo challenge
   async startChallenge(userId, subject, questionType = 'bar-exam') {
     // Check if user has exhausted their lives and is in cooldown
-    const existingChallenge = this.getTodaysChallenge(userId);
+    const existingChallenge = await this.getTodaysChallenge(userId);
+    
     if (existingChallenge && existingChallenge.livesRemaining === 0) {
       // Check if 3 hours have passed since they lost all lives (changed from 24 hours)
       const lostAllLivesAt = new Date(existingChallenge.lostAllLivesAt || existingChallenge.startedAt);
@@ -60,7 +32,7 @@ class SoloChallengeService {
     // Get first question (difficulty 1)
     const firstQuestion = await this.generateQuestion(subject, 1, questionType);
     
-    const challenge = {
+    const challengeData = {
       id: challengeId,
       userId,
       subject,
@@ -69,14 +41,15 @@ class SoloChallengeService {
       round: 1,
       score: 0,
       difficulty: 1,
-      startedAt: new Date().toISOString(),
+      startedAt: new Date(),
       isDailyComplete: false,
       lostAllLivesAt: null,
-      currentQuestionId: firstQuestion.id
+      currentQuestionId: firstQuestion.qid || firstQuestion.id
     };
 
-    this.activeChallenges.set(challengeId, challenge);
-    await this.saveToFile();
+    const challenge = await storage.createSoloChallenge(challengeData);
+
+    // Question is already stored by generateQuestion method
 
     return {
       challenge,
@@ -85,207 +58,135 @@ class SoloChallengeService {
   }
 
   // Get challenge status for today
-  getTodaysChallenge(userId) {
+  async getTodaysChallenge(userId) {
+    const userChallenges = await storage.getUserSoloChallenges(userId);
     const today = new Date().toDateString();
-    for (const challenge of this.activeChallenges.values()) {
+    
+    for (const challenge of userChallenges) {
       const challengeDate = new Date(challenge.startedAt).toDateString();
-      if (challenge.userId === userId && challengeDate === today) {
+      if (challengeDate === today) {
         return challenge;
       }
     }
     return null;
   }
 
-  // Generate a question based on difficulty level
-  async generateQuestion(subject, difficulty, questionType = 'bar-exam') {
-    try {
-      // Use the question cache for instant questions
-      const questionCache = (await import('./questionCache.js')).default;
-      const question = await questionCache.getQuestion(subject, false, questionType); // Pass questionType to cache
-      
-      // Ensure we have a proper explanation
-      const explanation = question.explanationLong || question.explanation || 
-        `The correct answer is ${String.fromCharCode(65 + question.correctIndex)}. This question tests fundamental ${subject} principles.`;
-      
-      const generatedQuestion = {
-        id: question.qid || question.id || `solo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        stem: question.stem,
-        choices: question.choices,
-        correctAnswer: question.correctIndex,
-        explanation: explanation,
-        subject,
-        difficulty,
-        questionType,
-        round: difficulty // Essentially the same for solo challenges
-      };
-      
-      // Store the question for later retrieval (CRITICAL FIX)
-      this.storeQuestion(generatedQuestion);
-      
-      return generatedQuestion;
-    } catch (error) {
-      console.error('Failed to generate solo challenge question:', error);
-      // Fallback to basic question if generation fails
-      throw new Error('No questions available for solo challenge');
-    }
-  }
-
-  // Store questions for later retrieval (NEW METHOD)
-  storeQuestion(question) {
-    if (!this.storedQuestions) {
-      this.storedQuestions = new Map();
-    }
-    this.storedQuestions.set(question.id, question);
-    
-    // Clean up old questions (keep only last 1000)
-    if (this.storedQuestions.size > 1000) {
-      const keys = Array.from(this.storedQuestions.keys());
-      for (let i = 0; i < keys.length - 1000; i++) {
-        this.storedQuestions.delete(keys[i]);
-      }
-    }
-  }
-
-  // Build prompts that increase in difficulty
-  buildDifficultyPrompt(subject, difficulty) {
-    const basePrompt = `Generate a challenging ${subject} question`;
-    
-    const difficultyModifiers = {
-      1: "at introductory level with clear fact patterns",
-      2: "at intermediate level with moderate complexity", 
-      3: "at advanced level with detailed analysis required",
-      4: "at expert level with multiple legal principles",
-      5: "at bar exam level with sophisticated reasoning",
-      6: "at appellate level with complex fact patterns",
-      7: "at Supreme Court level with constitutional implications",
-      8: "at law review level with cutting-edge legal theory"
-    };
-
-    const modifier = difficultyModifiers[Math.min(difficulty, 8)] || difficultyModifiers[8];
-    return `${basePrompt} ${modifier}. Include nuanced answer choices that require careful legal reasoning.`;
-  }
-
-  // Submit an answer to a challenge
-  async submitAnswer(challengeId, questionId, userAnswer, timeToAnswer = null) {
-    // Import subtopic tracking
-    const { subtopicProgressService } = await import('./subtopicProgressService.js');
-    const challenge = this.activeChallenges.get(challengeId);
+  // Submit an answer for a challenge
+  async submitAnswer(challengeId, answerIndex, timeToAnswer = 0) {
+    const challenge = await storage.getSoloChallenge(challengeId);
     if (!challenge) {
       throw new Error('Challenge not found');
     }
 
-    // CRITICAL FIX: Use the original question that was presented to the user
-    // instead of generating a new random question for validation
-    let question;
+    // Get the stored question for validation
+    const question = await this.getStoredQuestion(challenge.currentQuestionId);
     
-    if (questionId) {
-      // Try to get the specific question that was presented to the user
-      try {
-        question = await this.getQuestionById(questionId);
-      } catch (error) {
-        console.error(`Failed to retrieve question ${questionId}:`, error);
-        throw new Error('Question not found - cannot validate answer');
-      }
-    } else {
-      // No questionId provided, this is an error
-      throw new Error('Question ID is required to validate answer');
+    if (!question) {
+      throw new Error('Question not found for validation');
     }
-    
-    const isCorrect = userAnswer === question.correctAnswer;
-    
+
+    // Use correctIndex (from OpenAI) instead of correctAnswer
+    const isCorrect = answerIndex === (question.correctIndex || question.correctAnswer);
     let livesLost = 0;
     let pointsEarned = 0;
     let speedBonus = 0;
-    let newDifficulty = challenge.difficulty;
 
     if (isCorrect) {
-      // Calculate base points based on difficulty
-      const basePoints = challenge.difficulty * 10 + 5;
+      // Calculate points based on difficulty and time
+      const basePoints = challenge.difficulty * 5; // 5, 10, 15, 20, 25...
       
-      // Calculate speed bonus (scaled by difficulty - harder questions give more bonus)
-      if (timeToAnswer !== null) {
-        const difficultyMultiplier = 1 + (challenge.difficulty * 0.1); // 1.1x at diff 1, 2.0x at diff 10
-        
-        if (timeToAnswer <= 5) {
-          speedBonus = Math.floor(basePoints * 0.5 * difficultyMultiplier); // 50% bonus for ≤5s
-        } else if (timeToAnswer <= 10) {
-          speedBonus = Math.floor(basePoints * 0.3 * difficultyMultiplier); // 30% bonus for ≤10s
-        } else if (timeToAnswer <= 15) {
-          speedBonus = Math.floor(basePoints * 0.15 * difficultyMultiplier); // 15% bonus for ≤15s
-        } else if (timeToAnswer <= 20) {
-          speedBonus = Math.floor(basePoints * 0.05 * difficultyMultiplier); // 5% bonus for ≤20s
-        }
+      // Speed bonus for answering quickly
+      if (timeToAnswer <= 5) {
+        speedBonus = Math.floor(basePoints * 0.5); // +50% bonus
+      } else if (timeToAnswer <= 10) {
+        speedBonus = Math.floor(basePoints * 0.3); // +30% bonus
+      } else if (timeToAnswer <= 15) {
+        speedBonus = Math.floor(basePoints * 0.15); // +15% bonus
       }
       
       pointsEarned = basePoints + speedBonus;
-      newDifficulty = Math.min(challenge.difficulty + 1, 10); // Cap at difficulty 10
-    } else {
-      // Wrong answer: lose a life
-      livesLost = 1;
-      challenge.livesRemaining = Math.max(0, challenge.livesRemaining - 1);
       
-      // If no lives left, trigger Atticus duel automatically
-      if (challenge.livesRemaining === 0) {
-        // Trigger Atticus duel automatically
-        try {
-          const { atticusDuelService } = await import('./atticusDuelService.js');
-          const atticusDuel = await atticusDuelService.startAtticusDuel(challenge.userId, challengeId);
-          
-          return {
-            isCorrect: false,
-            correctAnswer: question.correctAnswer,
-            explanation: question.explanation,
-            livesLost: 1,
-            newDifficulty: challenge.difficulty,
-            pointsEarned: 0,
-            speedBonus: 0,
-            atticusDuelRequired: true,
-            atticusDuel: atticusDuel
-          };
-        } catch (error) {
-          console.error('Failed to start Atticus duel:', error);
-          // If Atticus duel fails, we need to handle this gracefully
-          return {
-            isCorrect: false,
-            correctAnswer: question.correctAnswer,
-            explanation: question.explanation,
-            livesLost: 1,
-            newDifficulty: challenge.difficulty,
-            pointsEarned: 0,
-            speedBonus: 0,
-            message: 'No lives remaining. Atticus duel failed to start.'
-          };
+      // Update user's total points
+      try {
+        const user = await storage.getUser(challenge.userId);
+        if (user) {
+          await storage.updateUser(challenge.userId, {
+            points: user.points + pointsEarned
+          });
         }
+      } catch (error) {
+        console.error('Failed to update user points:', error);
+      }
+    } else {
+      // Wrong answer - lose a life
+      livesLost = 1;
+    }
+
+    const newLivesRemaining = Math.max(0, challenge.livesRemaining - livesLost);
+    const newScore = challenge.score + pointsEarned;
+    const newRound = challenge.round + 1;
+
+    // Determine new difficulty (increase every 5 correct answers in a row or every 3 rounds)
+    let newDifficulty = challenge.difficulty;
+    if (isCorrect && (newRound % 3 === 0)) {
+      newDifficulty = Math.min(10, challenge.difficulty + 1); // Cap at difficulty 10
+    }
+
+    // Update challenge in database
+    const updates = {
+      livesRemaining: newLivesRemaining,
+      score: newScore,
+      round: newRound,
+      difficulty: newDifficulty
+    };
+
+    // Check if all lives are lost
+    if (newLivesRemaining === 0) {
+      // Trigger Atticus duel automatically
+      try {
+        const { atticusDuelService } = await import('./atticusDuelService.js');
+        const atticusDuel = await atticusDuelService.startAtticusDuel(challenge.userId, challengeId);
+        
+        // Update challenge to mark lives lost
+        await storage.updateSoloChallenge(challengeId, {
+          ...updates,
+          lostAllLivesAt: new Date()
+        });
+        
+        return {
+          isCorrect: false,
+          correctAnswer: question.correctAnswer,
+          explanation: question.explanation,
+          livesLost: 1,
+          newDifficulty: challenge.difficulty,
+          pointsEarned: 0,
+          speedBonus: 0,
+          atticusDuelRequired: true,
+          atticusDuel: atticusDuel
+        };
+      } catch (error) {
+        console.error('Failed to start Atticus duel:', error);
+        // If Atticus duel fails, we need to handle this gracefully
+        await storage.updateSoloChallenge(challengeId, {
+          ...updates,
+          lostAllLivesAt: new Date()
+        });
+        
+        return {
+          isCorrect: false,
+          correctAnswer: question.correctAnswer,
+          explanation: question.explanation,
+          livesLost: 1,
+          newDifficulty: challenge.difficulty,
+          pointsEarned: 0,
+          speedBonus: 0,
+          message: 'No lives remaining. Atticus duel failed to start.'
+        };
       }
     }
 
-    // Update challenge
-    challenge.score += pointsEarned;
-    challenge.round += 1;
-    challenge.difficulty = newDifficulty;
-
-    await this.saveToFile();
-
-    // Track subtopic progress
-    try {
-      const subtopicResult = await progressService.recordAttempt({
-        userId: challenge.userId,
-        duelId: `solo_${challengeId}`,
-        questionId: question.id || `solo_${Date.now()}`,
-        subject: challenge.subject,
-        subtopic: question.subtopic || challenge.subject,
-        difficulty: challenge.difficulty,
-        correct: isCorrect,
-        msToAnswer: 0, // Not tracked for solo mode
-        ts: Date.now()
-      });
-      
-      if (subtopicResult && subtopicResult.subtopic) {
-        console.log(`📊 Subtopic progress updated: ${subtopicResult.subject}/${subtopicResult.subtopic} - Proficiency: ${(subtopicResult.newProficiency || 0).toFixed(1)}%`);
-      }
-    } catch (error) {
-      console.error('Error tracking subtopic progress:', error);
-    }
+    // Update challenge in database
+    await storage.updateSoloChallenge(challengeId, updates);
 
     return {
       isCorrect,
@@ -298,79 +199,51 @@ class SoloChallengeService {
     };
   }
 
-  // Get next question for continuing challenge
+  // Get the next question for a challenge
   async getNextQuestion(challengeId) {
-    const challenge = this.activeChallenges.get(challengeId);
+    const challenge = await storage.getSoloChallenge(challengeId);
     if (!challenge) {
       throw new Error('Challenge not found');
     }
 
-    if (challenge.livesRemaining === 0) {
-      throw new Error('No lives remaining');
-    }
+    const nextQuestion = await this.generateQuestion(
+      challenge.subject, 
+      challenge.difficulty, 
+      challenge.questionType
+    );
 
-    const nextQuestion = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
-    challenge.currentQuestionId = nextQuestion.id;
-    
-    await this.saveToFile();
-    
+    // Question is already stored by generateQuestion method
+
+    // Update challenge with new question ID
+    await storage.updateSoloChallenge(challengeId, {
+      currentQuestionId: nextQuestion.qid || nextQuestion.id
+    });
+
     return nextQuestion;
   }
 
-  // Remove payment functionality - lives are now free but limited
-
-  // Helper to get question by ID (FIXED VERSION)
-  async getQuestionById(questionId) {
-    // First try to get from stored questions
-    if (this.storedQuestions && this.storedQuestions.has(questionId)) {
-      return this.storedQuestions.get(questionId);
-    }
-    
-    // Fallback: try to find in active challenges
-    const challenge = Array.from(this.activeChallenges.values())
-      .find(c => c.currentQuestionId === questionId);
-    
-    if (challenge) {
-      // If we can't find the stored question, this is a fallback
-      // but it's not ideal since it might generate a different question
-      console.warn(`Question ${questionId} not found in storage, using fallback generation`);
-      const question = await this.generateQuestion(challenge.subject, challenge.difficulty, challenge.questionType || 'bar-exam');
-      return {
-        id: questionId,
-        correctAnswer: question.correctAnswer,
-        explanation: question.explanation
-      };
-    }
-    
-    throw new Error('Question not found');
-  }
-
-  // Restore lives after defeating Atticus
+  // Restore lives for a user (called by Atticus duel service on victory)
   async restoreLives(userId) {
-    const todaysChallenge = this.getTodaysChallenge(userId);
-    
-    if (todaysChallenge) {
-      // Restore all 3 lives
-      todaysChallenge.livesRemaining = 3;
-      todaysChallenge.isDailyComplete = false;
-      delete todaysChallenge.lostAllLivesAt;
-      
-      await this.saveToFile();
+    const challenge = await this.getTodaysChallenge(userId);
+    if (challenge) {
+      await storage.updateSoloChallenge(challenge.id, {
+        livesRemaining: 3,
+        lostAllLivesAt: null
+      });
+      console.log(`✅ Restored 3 lives for user ${userId}`);
       return true;
     }
-    
     return false;
   }
 
-  // Get challenge status
-  getChallengeStatus(userId) {
-    const todaysChallenge = this.getTodaysChallenge(userId);
+  // Get challenge status for API response
+  async getChallengeStatus(userId) {
+    const todaysChallenge = await this.getTodaysChallenge(userId);
     
     if (!todaysChallenge) {
       return { canPlay: true };
     }
     
-    // If they have lives remaining, they can play
     if (todaysChallenge.livesRemaining > 0) {
       return { 
         canPlay: true,
@@ -386,11 +259,139 @@ class SoloChallengeService {
     };
   }
 
-  // Helper to get difficulty name
-  getDifficultyName(level) {
-    if (level <= 3) return 'easy';
-    if (level <= 7) return 'medium';
-    return 'hard';
+  // Get all challenges for a user (for progress tracking)
+  async getUserChallenges(userId, limit = 50) {
+    return await storage.getUserSoloChallenges(userId);
+  }
+
+  // Get challenge by ID
+  async getChallenge(challengeId) {
+    return await storage.getSoloChallenge(challengeId);
+  }
+
+  // Generate a question for the given subject and difficulty
+  async generateQuestion(subject, difficulty, questionType = 'bar-exam') {
+    try {
+      // Use fast question pools for instant serving
+      await initializeQuestionCoordinator();
+      const { getPooledQuestion } = await import('./questionPool.js');
+      
+      // Try to get from pool first (instant)
+      let question = await getPooledQuestion(subject, difficulty, []);
+      
+      if (!question) {
+        // Fallback to fresh generation only if pool is empty
+        const { generateFreshQuestion } = await import('./robustGenerator.js');
+        question = await generateFreshQuestion(subject, difficulty, questionType);
+      }
+
+      // Store the question for later validation
+      await this.storeQuestion(question.qid || question.id, question);
+      
+      return question;
+    } catch (error) {
+      console.error('Failed to generate question:', error);
+      // Use simple fallback as last resort
+      const fallback = {
+        qid: `fallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        subject: subject,
+        topic: 'General',
+        stem: 'This is a sample legal question for testing purposes.',
+        choices: ['Option A', 'Option B', 'Option C', 'Option D'],
+        correctIndex: 0,
+        explanation: 'This is a fallback question used when question generation fails.',
+        difficulty: difficulty,
+        timeLimit: 60000,
+        timeLimitSec: 60,
+        deadlineTs: Date.now() + 60000
+      };
+      await this.storeQuestion(fallback.qid, fallback);
+      return fallback;
+    }
+  }
+
+  // Store a question for later retrieval/validation
+  async storeQuestion(questionId, questionData) {
+    try {
+      console.log(`🔄 Storing question ${questionId}`);
+      
+      // Ensure subject is a string
+      const subjectStr = typeof questionData.subject === 'string' 
+        ? questionData.subject 
+        : questionData.subject?.subject || 'Mixed Questions';
+      
+      // Check if question already exists to avoid duplicate key error
+      const existing = await this.getStoredQuestionDirect(questionId);
+      if (existing) {
+        console.log(`✅ Question ${questionId} already cached, skipping storage`);
+        return;
+      }
+      
+      // Store in database as question cache
+      await storage.cacheQuestion({
+        id: questionId,
+        subject: subjectStr,
+        difficulty: questionData.difficulty || 1,
+        questionData: questionData,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // Expire in 24 hours
+      });
+      
+      console.log(`✅ Question ${questionId} stored successfully in cache`);
+    } catch (error) {
+      if (error.code === '23505') {
+        // Duplicate key error - question already exists, ignore
+        console.log(`✅ Question ${questionId} already exists in cache`);
+      } else {
+        console.error('❌ Failed to store question:', error);
+      }
+    }
+  }
+
+  // Fast direct lookup by ID (for checking existence)
+  async getStoredQuestionDirect(questionId) {
+    try {
+      // Try a direct database query if storage supports it
+      const result = await db.select()
+        .from(questionCache)
+        .where(eq(questionCache.id, questionId))
+        .limit(1);
+      
+      return result.length > 0 ? result[0] : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  // Get stored question by ID for validation (optimized)
+  async getStoredQuestion(questionId) {
+    try {
+      console.log(`🔍 Looking for question: ${questionId}`);
+      
+      // First try direct lookup
+      const direct = await this.getStoredQuestionDirect(questionId);
+      if (direct) {
+        console.log(`✅ Found cached question ${questionId} directly`);
+        return direct.questionData;
+      }
+      
+      console.error(`❌ Question ${questionId} not found in cache`);
+      return null;
+    } catch (error) {
+      console.error('Failed to get stored question:', error);
+      return null;
+    }
+  }
+
+  // Clean up old challenges (optional - for maintenance)
+  async cleanupOldChallenges() {
+    try {
+      // Delete challenges older than 7 days
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      console.log('Cleanup functionality would go here');
+      // TODO: Implement cleanup query when needed
+    } catch (error) {
+      console.error('Failed to cleanup old challenges:', error);
+    }
   }
 }
 

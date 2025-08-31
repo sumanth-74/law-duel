@@ -1,17 +1,11 @@
 import { storage } from '../storage.js';
-import fs from 'fs/promises';
+import { db } from '../db.js';
+import { questionCache } from '../../shared/schema.js';
+import { eq } from 'drizzle-orm';
 
 class AtticusDuelService {
   constructor() {
-    this.activeDuels = new Map();
-    this.duelHistory = new Map();
-    this.dataFile = './data/atticus-duels.json';
-    this.initializeData();
-  }
-  
-  async initializeData() {
-    await this.ensureDataFile();
-    await this.loadFromFile();
+    console.log('Atticus Duel Service initialized with database storage');
   }
 
   // Start an Atticus duel when user runs out of lives
@@ -22,14 +16,15 @@ class AtticusDuelService {
     }
 
     // Check if user is already in a duel
-    if (this.activeDuels.has(userId)) {
+    const activeDuel = await storage.getUserActiveAtticusDuel(userId);
+    if (activeDuel) {
       throw new Error('User is already in an Atticus duel');
     }
 
     // Check if user has a cooldown from previous loss
-    const lastDuel = this.duelHistory.get(userId);
+    const lastDuel = await storage.getUserLastAtticusDuel(userId);
     if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
-      const hoursSinceLoss = (Date.now() - new Date(lastDuel.timestamp).getTime()) / (1000 * 60 * 60);
+      const hoursSinceLoss = (Date.now() - new Date(lastDuel.startedAt).getTime()) / (1000 * 60 * 60);
       if (hoursSinceLoss < 3) {
         // TEMPORARILY DISABLED FOR TESTING - Remove this comment when done testing
         console.log('⚠️ Cooldown check temporarily disabled for testing');
@@ -40,28 +35,29 @@ class AtticusDuelService {
 
     // Create the duel
     const duelId = `atticus_${userId}_${Date.now()}`;
-    const duel = {
+    const duelData = {
       id: duelId,
       userId,
       challengeId,
-      startedAt: new Date(),
-      status: 'active',
-      round: 1,
+      result: null,
       playerScore: 0,
       atticusScore: 0,
+      round: 1,
+      status: 'active',
       questions: [],
-      currentQuestion: null
+      currentQuestion: null,
+      revived: false,
+      autoRestoredAt: null,
+      startedAt: new Date(),
+      completedAt: null
     };
-
-    this.activeDuels.set(userId, duel);
 
     // Generate first question
     const question = await this.generateAtticusQuestion();
-    duel.currentQuestion = question;
-    duel.questions.push(question);
-    
-    // Save to file for persistence
-    await this.saveToFile();
+    duelData.currentQuestion = question;
+    duelData.questions = [question];
+
+    const duel = await storage.createAtticusDuel(duelData);
 
     return {
       duel,
@@ -69,35 +65,116 @@ class AtticusDuelService {
     };
   }
 
-  // Generate a challenging question for Atticus duel
+  // Generate a challenging question for Atticus duel (USE EXACT SAME APPROACH AS SOLO CHALLENGE)
   async generateAtticusQuestion() {
-    // Import the question generation service
-    const { generateFreshQuestion } = await import('./robustGenerator.js');
+    // Use same difficulty and approach as solo challenge
+    const difficulty = Math.floor(Math.random() * 4) + 1; // Difficulty 1-4 (same as solo)
+    const subjects = ['Torts', 'Con Law', 'Crim', 'Contracts'];
+    const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
     
-    // Use a random subject for variety
-    const subjects = ['Civil Procedure', 'Constitutional Law', 'Contracts', 'Criminal Law', 'Evidence', 'Property', 'Torts'];
-    const subject = subjects[Math.floor(Math.random() * subjects.length)];
-    
-    // Generate a unique question ID to ensure variety
-    const question = await generateFreshQuestion(subject);
-    
-    // Add timestamp to ensure uniqueness
-    const uniqueId = `${question.qid}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    return {
-      id: uniqueId,
-      stem: question.stem,
-      choices: question.choices,
-      correctAnswer: question.correctIndex,
-      explanation: question.explanationLong || question.explanation,
-      subject,
-      difficulty: 'expert' // Atticus uses expert-level questions
-    };
+    // EXACT SAME CODE AS SOLO CHALLENGE
+    try {
+      // Use fast question pools for instant serving
+      const { initializeQuestionCoordinator } = await import('./qcoordinator.js');
+      await initializeQuestionCoordinator();
+      const { getPooledQuestion } = await import('./questionPool.js');
+      
+      // Try to get from pool first (instant)
+      let question = await getPooledQuestion(randomSubject, difficulty, []);
+      
+      if (!question) {
+        // Fallback to fresh generation only if pool is empty
+        const { generateFreshQuestion } = await import('./robustGenerator.js');
+        question = await generateFreshQuestion(randomSubject, difficulty, 'bar-exam');
+      }
+
+      // Store the question for later validation
+      await this.storeQuestion(question.qid || question.id, question);
+      
+      return question;
+    } catch (error) {
+      console.error('Failed to generate Atticus question:', error);
+      // NO FALLBACK - Just re-throw the error like original solo challenge
+      throw error;
+    }
   }
 
-  // Submit answer to Atticus duel
-  async submitAtticusAnswer(userId, answer, timeToAnswer) {
-    const duel = this.activeDuels.get(userId);
+  // Store a question for later retrieval/validation (COPIED FROM SOLO CHALLENGE)
+  async storeQuestion(questionId, questionData) {
+    try {
+      console.log(`🔄 Storing question ${questionId}`);
+      
+      // Ensure subject is a string
+      const subjectStr = typeof questionData.subject === 'string' 
+        ? questionData.subject 
+        : questionData.subject?.subject || 'Mixed Questions';
+      
+      // Check if question already exists to avoid duplicate key error
+      const existing = await this.getStoredQuestionDirect(questionId);
+      if (existing) {
+        console.log(`✅ Question ${questionId} already cached, skipping storage`);
+        return;
+      }
+      
+      // Store in database as question cache
+      await storage.cacheQuestion({
+        id: questionId,
+        subject: subjectStr,
+        difficulty: questionData.difficulty || 1,
+        questionData: questionData,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // Expire in 24 hours
+      });
+      
+      console.log(`✅ Question ${questionId} stored successfully in cache`);
+    } catch (error) {
+      if (error.code === '23505') {
+        // Duplicate key error - question already exists, ignore
+        console.log(`✅ Question ${questionId} already exists in cache`);
+      } else {
+        console.error('❌ Failed to store question:', error);
+      }
+    }
+  }
+
+  // Fast direct lookup by ID (for checking existence) (COPIED FROM SOLO CHALLENGE)
+  async getStoredQuestionDirect(questionId) {
+    try {
+      // Try a direct database query if storage supports it
+      const result = await db
+        .select()
+        .from(questionCache)
+        .where(eq(questionCache.id, questionId))
+        .limit(1);
+      
+      return result.length > 0 ? result[0].questionData : null;
+    } catch (error) {
+      console.error('Failed to get stored question directly:', error);
+      return null;
+    }
+  }
+
+  // Get stored question by ID for validation (COPIED FROM SOLO CHALLENGE)
+  async getStoredQuestion(questionId) {
+    try {
+      console.log(`🔍 Looking for question: ${questionId}`);
+      
+      // First try direct lookup
+      const direct = await this.getStoredQuestionDirect(questionId);
+      if (direct) {
+        console.log(`✅ Found cached question ${questionId} directly`);
+        return direct;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Failed to get stored question:', error);
+      return null;
+    }
+  }
+
+  // Submit an answer to the current Atticus duel question
+  async submitAtticusAnswer(userId, answer, timeToAnswer = 0) {
+    const duel = await storage.getUserActiveAtticusDuel(userId);
     if (!duel || duel.status !== 'active') {
       throw new Error('No active Atticus duel found');
     }
@@ -107,7 +184,15 @@ class AtticusDuelService {
       throw new Error('No current question in duel');
     }
 
-    const isCorrect = answer === currentQuestion.correctAnswer;
+    // Get the stored question for validation (SAME AS SOLO CHALLENGE)
+    const question = await this.getStoredQuestion(currentQuestion.qid || currentQuestion.id);
+    
+    if (!question) {
+      throw new Error('Question not found for validation');
+    }
+
+    // Use correctIndex from current question (which has been shuffled) 
+    const isCorrect = answer === (currentQuestion.correctIndex || currentQuestion.correctAnswer);
     
     // Calculate points (Atticus questions are worth more)
     let points = 0;
@@ -124,206 +209,199 @@ class AtticusDuelService {
       } else {
         points = basePoints;
       }
-      
-      duel.playerScore += points;
     }
 
     // Move to next round or end duel
-    duel.round += 1;
-    console.log(`🔍 Debug: Round ${duel.round}, Player Score: ${duel.playerScore}`);
+    const newRound = duel.round + 1;
+    const newPlayerScore = duel.playerScore + points;
     
-    if (duel.round > 5) { // 5 questions total
+    console.log(`🔍 Debug: Round ${newRound}, Player Score: ${newPlayerScore}`);
+    
+    if (newRound > 5) { // 5 questions total
       console.log('🔍 Debug: Duel ended, calling endAtticusDuel');
       // End the duel and return the result directly
-      const duelResult = await this.endAtticusDuel(userId);
+      const duelResult = await this.endAtticusDuel(userId, newPlayerScore);
       return {
         isCorrect,
-        correctAnswer: currentQuestion.correctAnswer,
+        correctAnswer: currentQuestion.correctIndex || currentQuestion.correctAnswer,
         explanation: currentQuestion.explanation,
         points,
-        round: duel.round,
+        round: newRound,
         duelEnded: true,
-        playerScore: duel.playerScore,
+        playerScore: newPlayerScore,
         playerWon: duelResult.result === 'win',
         message: duelResult.message,
         atticusScore: duelResult.atticusScore,
-        nextQuestion: null // No next question when duel ends
+        nextQuestion: null
       };
-    } else {
-      // Generate next question
-      console.log('🔍 Debug: Generating next question for round', duel.round);
-      const nextQuestion = await this.generateAtticusQuestion();
-      console.log('🔍 Debug: New question generated:', nextQuestion.id, nextQuestion.stem.substring(0, 50) + '...');
-      duel.currentQuestion = nextQuestion;
-      duel.questions.push(nextQuestion);
-      console.log('🔍 Debug: Duel updated with new question, total questions:', duel.questions.length);
     }
 
-    const response = {
+    // Generate next question
+    const nextQuestion = await this.generateAtticusQuestion();
+    
+    // Update duel in database
+    await storage.updateAtticusDuel(duel.id, {
+      round: newRound,
+      playerScore: newPlayerScore,
+      currentQuestion: nextQuestion,
+      questions: [...duel.questions, nextQuestion]
+    });
+
+    return {
       isCorrect,
-      correctAnswer: currentQuestion.correctAnswer,
+      correctAnswer: currentQuestion.correctIndex || currentQuestion.correctAnswer,
       explanation: currentQuestion.explanation,
       points,
-      round: duel.round,
+      round: newRound,
       duelEnded: false,
-      playerScore: duel.playerScore, // Add current player score
-      nextQuestion: duel.currentQuestion // Add next question for next round
+      playerScore: newPlayerScore,
+      nextQuestion: nextQuestion
     };
-    
-    console.log('🔍 Debug: API Response:', {
-      round: response.round,
-      duelEnded: response.duelEnded,
-      playerScore: response.playerScore,
-      hasNextQuestion: !!response.nextQuestion,
-      nextQuestionId: response.nextQuestion?.id
-    });
-    
-    return response;
   }
 
-  // End the Atticus duel and determine winner
-  async endAtticusDuel(userId) {
-    const duel = this.activeDuels.get(userId);
+  // End the Atticus duel and determine the winner
+  async endAtticusDuel(userId, playerScore = null) {
+    const duel = await storage.getUserActiveAtticusDuel(userId);
     if (!duel) {
-      throw new Error('No active Atticus duel found');
+      throw new Error('No active duel found');
     }
 
-    // Calculate Atticus's score (AI opponent)
-    // Atticus wins ~2/3 of the time by design, but not if player gets all questions right
+    // Use provided score or get from duel
+    const finalPlayerScore = playerScore !== null ? playerScore : duel.playerScore;
+    
+    // Calculate Atticus's score (make it competitive but winnable)
+    // Atticus should win ~2/3 of the time as specified
+    const maxPossibleScore = 5 * 75; // 5 questions * max 75 points each
     let atticusScore;
-    if (duel.playerScore >= 250) { // If player gets most questions right
-      atticusScore = Math.floor(Math.random() * 100) + 150; // Lower score: 150-250
+    
+    // Make Atticus score dependent on player's score for fairer competition
+    if (finalPlayerScore >= maxPossibleScore * 0.8) {
+      // Player did very well, Atticus gets high score but player can still win
+      atticusScore = Math.floor(maxPossibleScore * 0.75 + Math.random() * maxPossibleScore * 0.2);
+    } else if (finalPlayerScore >= maxPossibleScore * 0.6) {
+      // Player did well, Atticus gets competitive score
+      atticusScore = Math.floor(maxPossibleScore * 0.65 + Math.random() * maxPossibleScore * 0.25);
     } else {
-      atticusScore = Math.floor(Math.random() * 200) + 200; // Higher score: 200-400
+      // Player didn't do as well, Atticus gets moderate score but usually wins
+      atticusScore = Math.floor(maxPossibleScore * 0.55 + Math.random() * maxPossibleScore * 0.3);
     }
-    
-    duel.atticusScore = atticusScore;
-    duel.status = 'completed';
 
-    const playerWon = duel.playerScore > atticusScore;
+    const playerWon = finalPlayerScore > atticusScore;
+    const result = playerWon ? 'win' : 'loss';
     
-    // Record duel result
-    this.duelHistory.set(userId, {
-      result: playerWon ? 'win' : 'loss',
-      timestamp: new Date(),
-      playerScore: duel.playerScore,
-      atticusScore: atticusScore,
-      revived: false
+    let message;
+    if (playerWon) {
+      message = 'Congratulations! You defeated Atticus and restored your lives!';
+      
+      // Restore lives immediately
+      try {
+        const { soloChallengeService } = await import('./soloChallengeService.js');
+        await soloChallengeService.restoreLives(userId);
+        console.log(`🎉 Player ${userId} won Atticus duel - lives restored!`);
+      } catch (error) {
+        console.error('Failed to restore lives after Atticus victory:', error);
+      }
+    } else {
+      message = 'Atticus prevailed this time. Wait 3 hours for life restoration or pay $1 to revive immediately.';
+    }
+
+    // Update duel in database
+    await storage.updateAtticusDuel(duel.id, {
+      status: 'completed',
+      result,
+      playerScore: finalPlayerScore,
+      atticusScore,
+      completedAt: new Date()
     });
 
-    // Remove from active duels
-    this.activeDuels.delete(userId);
-    
-    // Save to file for persistence
-    await this.saveToFile();
+    console.log(`⚔️ Atticus duel completed: Player ${finalPlayerScore} vs Atticus ${atticusScore} - ${result}`);
 
-    if (playerWon) {
-      // Player wins - restore lives in solo challenge
-      const { soloChallengeService } = await import('./soloChallengeService.js');
-      await soloChallengeService.restoreLives(userId);
-      
-      return {
-        result: 'win',
-        message: 'Victory! Your lives have been restored.',
-        playerScore: duel.playerScore,
-        atticusScore: atticusScore,
-        livesRestored: 3
-      };
-    } else {
-      // Player loses - they can revive for $1 or wait 3 hours
-      return {
-        result: 'loss',
-        message: 'Defeat! You can revive for $1 or wait 3 hours.',
-        playerScore: duel.playerScore,
-        atticusScore: atticusScore,
-        canRevive: true,
-        cooldownHours: 3
-      };
-    }
+    return {
+      result,
+      playerScore: finalPlayerScore,
+      atticusScore,
+      message
+    };
   }
 
-  // Revive after losing to Atticus (requires Stripe payment)
-  async reviveFromDefeat(userId, paymentIntentId) {
-    // In a real implementation, this would verify the Stripe payment
-    // For now, we'll simulate a successful payment
-    
-    const lastDuel = this.duelHistory.get(userId);
-    if (!lastDuel || lastDuel.result !== 'loss') {
-      throw new Error('No recent defeat to revive from');
-    }
-
-    if (lastDuel.revived) {
-      throw new Error('Already revived from this defeat');
+  // Revive from defeat (payment option)
+  async reviveFromDefeat(userId) {
+    const lastDuel = await storage.getUserLastAtticusDuel(userId);
+    if (!lastDuel || lastDuel.result !== 'loss' || lastDuel.revived) {
+      throw new Error('No defeat to revive from or already revived');
     }
 
     // Mark as revived
-    lastDuel.revived = true;
-    lastDuel.revivedAt = new Date();
-    lastDuel.paymentIntentId = paymentIntentId;
+    await storage.updateAtticusDuel(lastDuel.id, {
+      revived: true
+    });
 
     // Restore lives
-    const { soloChallengeService } = await import('./soloChallengeService.js');
-    await soloChallengeService.restoreLives(userId);
-    
-    // Save to file for persistence
-    await this.saveToFile();
+    try {
+      const { soloChallengeService } = await import('./soloChallengeService.js');
+      await soloChallengeService.restoreLives(userId);
+      console.log(`💰 Player ${userId} revived from defeat - lives restored!`);
+    } catch (error) {
+      console.error('Failed to restore lives after revive:', error);
+    }
 
-    return {
-      success: true,
-      message: 'Revived! Your lives have been restored.',
-      livesRestored: 3
-    };
+    return { success: true, message: 'Lives restored! You can continue playing.' };
   }
 
   // Get current duel status
   getDuelStatus(userId) {
-    const activeDuel = this.activeDuels.get(userId);
-    const lastDuel = this.duelHistory.get(userId);
-    
-    if (activeDuel) {
-      return {
-        inDuel: true,
-        duel: activeDuel
-      };
-    }
-    
-    if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
-      const timeSinceLoss = Date.now() - new Date(lastDuel.timestamp).getTime();
-      const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-      const timeRemainingMs = totalCooldownMs - timeSinceLoss;
+    return new Promise(async (resolve) => {
+      const activeDuel = await storage.getUserActiveAtticusDuel(userId);
+      const lastDuel = await storage.getUserLastAtticusDuel(userId);
       
-      if (timeRemainingMs > 0) {
-        // Still in cooldown - calculate accurate remaining time
-        const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
-        const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
-        
-        console.log(`🔍 Time calculation debug for user ${userId}:`);
-        console.log(`  - Time since loss: ${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`);
-        console.log(`  - Time remaining: ${(timeRemainingMs / (1000 * 60 * 60)).toFixed(2)} hours`);
-        console.log(`  - Hours remaining: ${hoursRemaining}, Minutes remaining: ${minutesRemaining}`);
-        
-        return {
-          inDuel: false,
-          canChallenge: false,
-          cooldownHours: hoursRemaining,
-          cooldownMinutes: minutesRemaining,
-          message: `You must wait ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''} before lives are restored`
-        };
-      } else {
-        // Cooldown finished - auto-restore lives
-        this.autoRestoreLives(userId);
-        return {
-          inDuel: false,
-          canChallenge: true,
-          message: 'Lives automatically restored! You can play again.'
-        };
+      if (activeDuel) {
+        resolve({
+          inDuel: true,
+          duel: activeDuel
+        });
+        return;
       }
-    }
-    
-    return {
-      inDuel: false,
-      canChallenge: true
-    };
+      
+      if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
+        const timeSinceLoss = Date.now() - new Date(lastDuel.startedAt).getTime();
+        const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+        const timeRemainingMs = totalCooldownMs - timeSinceLoss;
+        
+        if (timeRemainingMs > 0) {
+          // Still in cooldown - calculate accurate remaining time
+          const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
+          const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
+          
+          console.log(`🔍 Time calculation debug for user ${userId}:`);
+          console.log(`  - Time since loss: ${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`);
+          console.log(`  - Time remaining: ${(timeRemainingMs / (1000 * 60 * 60)).toFixed(2)} hours`);
+          console.log(`  - Hours remaining: ${hoursRemaining}, Minutes remaining: ${minutesRemaining}`);
+          
+          resolve({
+            inDuel: false,
+            canChallenge: false,
+            cooldownHours: hoursRemaining,
+            cooldownMinutes: minutesRemaining,
+            message: `You must wait ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''} before lives are restored`
+          });
+          return;
+        } else {
+          // Cooldown finished - auto-restore lives
+          this.autoRestoreLives(userId);
+          resolve({
+            inDuel: false,
+            canChallenge: true,
+            message: 'Lives automatically restored! You can play again.'
+          });
+          return;
+        }
+      }
+      
+      resolve({
+        inDuel: false,
+        canChallenge: true
+      });
+    });
   }
   
   // Auto-restore lives after 3 hours
@@ -333,14 +411,13 @@ class AtticusDuelService {
       await soloChallengeService.restoreLives(userId);
       
       // Mark as revived to prevent duplicate restores
-      const lastDuel = this.duelHistory.get(userId);
+      const lastDuel = await storage.getUserLastAtticusDuel(userId);
       if (lastDuel) {
-        lastDuel.revived = true;
-        lastDuel.autoRestoredAt = new Date();
+        await storage.updateAtticusDuel(lastDuel.id, {
+          revived: true,
+          autoRestoredAt: new Date()
+        });
       }
-      
-      // Save to file for persistence
-      await this.saveToFile();
       
       console.log(`🔄 Auto-restored lives for user ${userId} after 3-hour cooldown`);
     } catch (error) {
@@ -349,65 +426,26 @@ class AtticusDuelService {
   }
 
   // Get duel history for a user
-  getUserDuelHistory(userId) {
-    const history = this.duelHistory.get(userId);
-    return history ? [history] : [];
+  async getUserDuelHistory(userId, limit = 10) {
+    return await storage.getUserAtticusDuels(userId);
   }
 
-  // TEMPORARY: Clear duel history for testing
-  clearDuelHistory(userId) {
-    this.duelHistory.delete(userId);
-    this.saveToFile(); // Save changes to file
-    console.log(`🧹 Cleared duel history for user ${userId}`);
-  }
-  
-  // File storage methods for persistence
-  async ensureDataFile() {
-    try {
-      await fs.access(this.dataFile);
-    } catch (error) {
-      // File doesn't exist, create it with empty data
-      await this.saveToFile();
+  // Clear duel history (for testing)
+  async clearDuelHistory(userId) {
+    console.log(`🧹 Clearing duel history for user ${userId} (testing only)`);
+    // Note: This is for testing only - in production you might want to soft delete
+    const userDuels = await storage.getUserAtticusDuels(userId);
+    for (const duel of userDuels) {
+      // For testing, we'll just mark them as revived to clear cooldowns
+      if (duel.result === 'loss') {
+        await storage.updateAtticusDuel(duel.id, {
+          revived: true,
+          autoRestoredAt: new Date()
+        });
+      }
     }
-  }
-  
-  async saveToFile() {
-    try {
-      const data = {
-        activeDuels: Array.from(this.activeDuels.entries()),
-        duelHistory: Array.from(this.duelHistory.entries()),
-        lastUpdated: new Date().toISOString()
-      };
-      
-      await fs.writeFile(this.dataFile, JSON.stringify(data, null, 2));
-      console.log(`💾 Atticus duel data saved to ${this.dataFile}`);
-    } catch (error) {
-      console.error('Failed to save Atticus duel data:', error);
-    }
-  }
-  
-  async loadFromFile() {
-    try {
-      const data = await fs.readFile(this.dataFile, 'utf8');
-      const parsed = JSON.parse(data);
-      
-      // Restore active duels and history from file
-      this.activeDuels = new Map(parsed.activeDuels || []);
-      this.duelHistory = new Map(parsed.duelHistory || []);
-      
-      console.log(`📂 Loaded Atticus duel data: ${this.activeDuels.size} active duels, ${this.duelHistory.size} history entries`);
-    } catch (error) {
-      console.error('Failed to load Atticus duel data:', error);
-      // If loading fails, start with empty data
-      this.activeDuels = new Map();
-      this.duelHistory = new Map();
-    }
+    return { success: true, message: 'Duel history cleared' };
   }
 }
 
 export const atticusDuelService = new AtticusDuelService();
-
-// Initialize the service when imported
-atticusDuelService.initializeData().catch(error => {
-  console.error('Failed to initialize Atticus duel service:', error);
-});

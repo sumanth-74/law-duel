@@ -1,4 +1,10 @@
-import { users, matches, questions, playerSubjectStats, type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion } from "@shared/schema";
+import { 
+  users, matches, questions, playerSubjectStats, soloChallenges, atticusDuels, gameProgress, leaderboardEntries, questionCache,
+  type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion,
+  type SoloChallenge, type InsertSoloChallenge, type AtticusDuel, type InsertAtticusDuel,
+  type GameProgress, type InsertGameProgress, type LeaderboardEntry, type InsertLeaderboardEntry,
+  type QuestionCacheEntry, type InsertQuestionCacheEntry
+} from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, notInArray } from "drizzle-orm";
 import bcrypt from "bcrypt";
@@ -30,6 +36,37 @@ export interface IStorage {
   getQuestionsBySubject(subject: string, limit: number): Promise<Question[]>;
   getRandomQuestion(subject: string, excludeIds?: string[]): Promise<Question | undefined>;
   incrementQuestionUsage(id: string): Promise<void>;
+
+  // Solo Challenge methods
+  createSoloChallenge(challenge: InsertSoloChallenge): Promise<SoloChallenge>;
+  getSoloChallenge(id: string): Promise<SoloChallenge | undefined>;
+  updateSoloChallenge(id: string, updates: Partial<SoloChallenge>): Promise<SoloChallenge | undefined>;
+  getUserSoloChallenges(userId: string): Promise<SoloChallenge[]>;
+  deleteSoloChallenge(id: string): Promise<void>;
+
+  // Atticus Duel methods
+  createAtticusDuel(duel: InsertAtticusDuel): Promise<AtticusDuel>;
+  getAtticusDuel(id: string): Promise<AtticusDuel | undefined>;
+  updateAtticusDuel(id: string, updates: Partial<AtticusDuel>): Promise<AtticusDuel | undefined>;
+  getUserAtticusDuels(userId: string): Promise<AtticusDuel[]>;
+  getUserActiveAtticusDuel(userId: string): Promise<AtticusDuel | undefined>;
+  getUserLastAtticusDuel(userId: string): Promise<AtticusDuel | undefined>;
+
+  // Leaderboard methods
+  upsertLeaderboardEntry(entry: InsertLeaderboardEntry): Promise<LeaderboardEntry>;
+  getLeaderboard(limit: number): Promise<LeaderboardEntry[]>;
+  getLeaderboardEntry(userId: string): Promise<LeaderboardEntry | undefined>;
+  updateLeaderboardEntry(userId: string, updates: Partial<LeaderboardEntry>): Promise<LeaderboardEntry | undefined>;
+
+  // Question Cache methods
+  cacheQuestion(cache: InsertQuestionCacheEntry): Promise<QuestionCacheEntry>;
+  getCachedQuestions(subject: string, difficulty: number): Promise<QuestionCacheEntry[]>;
+  clearExpiredCache(): Promise<void>;
+
+  // Game Progress methods
+  saveGameProgress(progress: InsertGameProgress): Promise<GameProgress>;
+  getGameProgress(userId: string, subject: string): Promise<GameProgress | undefined>;
+  updateGameProgress(id: string, updates: Partial<GameProgress>): Promise<GameProgress | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -69,7 +106,8 @@ export class DatabaseStorage implements IStorage {
       .values({
         ...userData,
         password: hashedPassword,
-      })
+        dailyData: userData.dailyData ? userData.dailyData as any : null,
+      } as any)
       .returning();
     
     return user;
@@ -291,6 +329,173 @@ export class DatabaseStorage implements IStorage {
       .update(questions)
       .set({ usageCount: sql`${questions.usageCount} + 1` })
       .where(eq(questions.id, id));
+  }
+
+  // Solo Challenge methods
+  async createSoloChallenge(challenge: InsertSoloChallenge): Promise<SoloChallenge> {
+    const [created] = await db.insert(soloChallenges).values(challenge).returning();
+    return created;
+  }
+
+  async getSoloChallenge(id: string): Promise<SoloChallenge | undefined> {
+    const [challenge] = await db.select().from(soloChallenges).where(eq(soloChallenges.id, id));
+    return challenge;
+  }
+
+  async updateSoloChallenge(id: string, updates: Partial<SoloChallenge>): Promise<SoloChallenge | undefined> {
+    const [updated] = await db
+      .update(soloChallenges)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(soloChallenges.id, id))
+      .returning();
+    return updated;
+  }
+
+  async getUserSoloChallenges(userId: string): Promise<SoloChallenge[]> {
+    return await db
+      .select()
+      .from(soloChallenges)
+      .where(eq(soloChallenges.userId, userId))
+      .orderBy(desc(soloChallenges.startedAt));
+  }
+
+  async deleteSoloChallenge(id: string): Promise<void> {
+    await db.delete(soloChallenges).where(eq(soloChallenges.id, id));
+  }
+
+  // Atticus Duel methods
+  async createAtticusDuel(duel: InsertAtticusDuel): Promise<AtticusDuel> {
+    const [created] = await db.insert(atticusDuels).values(duel).returning();
+    return created;
+  }
+
+  async getAtticusDuel(id: string): Promise<AtticusDuel | undefined> {
+    const [duel] = await db.select().from(atticusDuels).where(eq(atticusDuels.id, id));
+    return duel;
+  }
+
+  async updateAtticusDuel(id: string, updates: Partial<AtticusDuel>): Promise<AtticusDuel | undefined> {
+    const [updated] = await db
+      .update(atticusDuels)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(atticusDuels.id, id))
+      .returning();
+    return updated;
+  }
+
+  async getUserAtticusDuels(userId: string): Promise<AtticusDuel[]> {
+    return await db
+      .select()
+      .from(atticusDuels)
+      .where(eq(atticusDuels.userId, userId))
+      .orderBy(desc(atticusDuels.startedAt));
+  }
+
+  async getUserActiveAtticusDuel(userId: string): Promise<AtticusDuel | undefined> {
+    const [activeDuel] = await db
+      .select()
+      .from(atticusDuels)
+      .where(and(eq(atticusDuels.userId, userId), eq(atticusDuels.status, 'active')));
+    return activeDuel;
+  }
+
+  async getUserLastAtticusDuel(userId: string): Promise<AtticusDuel | undefined> {
+    const [lastDuel] = await db
+      .select()
+      .from(atticusDuels)
+      .where(eq(atticusDuels.userId, userId))
+      .orderBy(desc(atticusDuels.startedAt))
+      .limit(1);
+    return lastDuel;
+  }
+
+  // Leaderboard methods
+  async upsertLeaderboardEntry(entry: InsertLeaderboardEntry): Promise<LeaderboardEntry> {
+    const [upserted] = await db
+      .insert(leaderboardEntries)
+      .values(entry)
+      .onConflictDoUpdate({
+        target: leaderboardEntries.userId,
+        set: {
+          username: entry.username,
+          displayName: entry.displayName,
+          points: entry.points,
+          level: entry.level,
+          avatarData: entry.avatarData,
+          lastActivity: entry.lastActivity || new Date(),
+          updatedAt: new Date()
+        }
+      })
+      .returning();
+    return upserted;
+  }
+
+  async getLeaderboard(limit: number): Promise<LeaderboardEntry[]> {
+    return await db
+      .select()
+      .from(leaderboardEntries)
+      .orderBy(desc(leaderboardEntries.points))
+      .limit(limit);
+  }
+
+  async getLeaderboardEntry(userId: string): Promise<LeaderboardEntry | undefined> {
+    const [entry] = await db.select().from(leaderboardEntries).where(eq(leaderboardEntries.userId, userId));
+    return entry;
+  }
+
+  async updateLeaderboardEntry(userId: string, updates: Partial<LeaderboardEntry>): Promise<LeaderboardEntry | undefined> {
+    const [updated] = await db
+      .update(leaderboardEntries)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(leaderboardEntries.userId, userId))
+      .returning();
+    return updated;
+  }
+
+  // Question Cache methods
+  async cacheQuestion(cache: InsertQuestionCacheEntry): Promise<QuestionCacheEntry> {
+    const [created] = await db.insert(questionCache).values(cache).returning();
+    return created;
+  }
+
+  async getCachedQuestions(subject: string, difficulty: number): Promise<QuestionCacheEntry[]> {
+    return await db
+      .select()
+      .from(questionCache)
+      .where(
+        and(
+          eq(questionCache.subject, subject),
+          eq(questionCache.difficulty, difficulty),
+          sql`${questionCache.expiresAt} > NOW()`
+        )
+      );
+  }
+
+  async clearExpiredCache(): Promise<void> {
+    await db.delete(questionCache).where(sql`${questionCache.expiresAt} <= NOW()`);
+  }
+
+  // Game Progress methods
+  async saveGameProgress(progress: InsertGameProgress): Promise<GameProgress> {
+    const [created] = await db.insert(gameProgress).values(progress).returning();
+    return created;
+  }
+
+  async getGameProgress(userId: string, subject: string): Promise<GameProgress | undefined> {
+    const [progress] = await db
+      .select()
+      .from(gameProgress)
+      .where(and(eq(gameProgress.userId, userId), eq(gameProgress.subject, subject)));
+    return progress;
+  }
+
+  async updateGameProgress(id: string, updates: Partial<GameProgress>): Promise<GameProgress | undefined> {
+    const [updated] = await db
+      .update(gameProgress)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(gameProgress.id, id))
+      .returning();
+    return updated;
   }
 }
 

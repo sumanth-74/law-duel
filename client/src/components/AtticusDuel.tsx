@@ -44,6 +44,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
   const [playerPoints, setPlayerPoints] = useState(0);
   const [atticusPoints, setAtticusPoints] = useState(0);
   const [nextQuestion, setNextQuestion] = useState<AtticusQuestion | null>(null); // Store next question from API
+  const [lastAnswerResult, setLastAnswerResult] = useState<{isCorrect: boolean, correctAnswer: number} | null>(null); // Store result from API
 
   // Check for existing active duel when component mounts
   useEffect(() => {
@@ -179,6 +180,13 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
       console.log('🔍 Debug: Full API response:', result);
       console.log('🔍 Debug: Points in response:', result.points);
       console.log('🔍 Debug: Player score in response:', result.playerScore);
+      console.log('🔍 Debug: isCorrect in response:', result.isCorrect);
+      
+      // Store the answer result from API (this is the authoritative source!)
+      setLastAnswerResult({
+        isCorrect: result.isCorrect,
+        correctAnswer: result.correctAnswer
+      });
       
       // Update duel data with the new round and points
       if (duelData) {
@@ -251,6 +259,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
     setDuelPhase('question');
     setSelectedAnswer(null);
     setAnswered(false);
+    setLastAnswerResult(null); // Clear previous result
   };
 
   return (
@@ -342,7 +351,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
                        Round {Math.min(duelData?.round || 1, 5)} of 5
                      </div>
                     <div className="text-purple-200 text-lg font-semibold">
-                      {currentQuestion.subject} - {currentQuestion.difficulty}
+                      {typeof currentQuestion.subject === 'string' ? currentQuestion.subject : JSON.stringify(currentQuestion.subject)} - {typeof currentQuestion.difficulty === 'string' ? currentQuestion.difficulty : currentQuestion.difficulty}
                 </div>
               </div>
 
@@ -398,10 +407,10 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
               )}
 
               {/* Result Phase */}
-              {duelPhase === 'result' && (
+              {duelPhase === 'result' && lastAnswerResult && (
                 <div className="text-center space-y-4">
                   <div className="text-2xl font-bold text-purple-300">
-                    {selectedAnswer === currentQuestion?.correctAnswer ? '✅ Correct!' : '❌ Incorrect!'}
+                    {lastAnswerResult.isCorrect ? '✅ Correct!' : '❌ Incorrect!'}
                   </div>
                   
                   {currentQuestion && (

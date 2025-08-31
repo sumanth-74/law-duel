@@ -141,6 +141,79 @@ export const questionAttempts = pgTable("question_attempts", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Solo Challenges Table
+export const soloChallenges = pgTable("solo_challenges", {
+  id: varchar("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  subject: text("subject"),
+  questionType: text("question_type"),
+  livesRemaining: integer("lives_remaining").notNull().default(3),
+  round: integer("round").notNull().default(1),
+  score: integer("score").notNull().default(0),
+  difficulty: integer("difficulty").notNull().default(1),
+  startedAt: timestamp("started_at").notNull().defaultNow(),
+  lostAllLivesAt: timestamp("lost_all_lives_at"),
+  currentQuestionId: varchar("current_question_id"),
+  isDailyComplete: boolean("is_daily_complete").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Atticus Duels Table
+export const atticusDuels = pgTable("atticus_duels", {
+  id: varchar("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  challengeId: varchar("challenge_id"),
+  result: varchar("result"), // 'win', 'loss', 'active'
+  playerScore: integer("player_score").notNull().default(0),
+  atticusScore: integer("atticus_score").notNull().default(0),
+  round: integer("round").notNull().default(1),
+  status: varchar("status").notNull().default('active'), // 'active', 'completed'
+  questions: jsonb("questions").notNull().default([]),
+  currentQuestion: jsonb("current_question"),
+  revived: boolean("revived").notNull().default(false),
+  autoRestoredAt: timestamp("auto_restored_at"),
+  startedAt: timestamp("started_at").notNull().defaultNow(),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Game Progress Table (replaces progress.json)
+export const gameProgress = pgTable("game_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  subject: text("subject").notNull(),
+  progressData: jsonb("progress_data").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Leaderboard entries (replaces leaderboard.json)
+export const leaderboardEntries = pgTable("leaderboard_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  username: text("username").notNull(),
+  displayName: text("display_name").notNull(),
+  points: integer("points").notNull().default(0),
+  level: integer("level").notNull().default(1),
+  avatarData: jsonb("avatar_data").notNull(),
+  lastActivity: timestamp("last_activity").notNull().defaultNow(),
+  isBot: boolean("is_bot").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Question Cache Table (replaces question-cache.json)
+export const questionCache = pgTable("question_cache", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  subject: text("subject").notNull(),
+  difficulty: integer("difficulty").notNull(),
+  questionData: jsonb("question_data").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -188,6 +261,16 @@ export type InsertQuestion = z.infer<typeof insertQuestionSchema>;
 export type Question = typeof questions.$inferSelect;
 export type PlayerSubjectStats = typeof playerSubjectStats.$inferSelect;
 export type QuestionAttempt = typeof questionAttempts.$inferSelect;
+export type SoloChallenge = typeof soloChallenges.$inferSelect;
+export type InsertSoloChallenge = typeof soloChallenges.$inferInsert;
+export type AtticusDuel = typeof atticusDuels.$inferSelect;
+export type InsertAtticusDuel = typeof atticusDuels.$inferInsert;
+export type GameProgress = typeof gameProgress.$inferSelect;
+export type InsertGameProgress = typeof gameProgress.$inferInsert;
+export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;
+export type InsertLeaderboardEntry = typeof leaderboardEntries.$inferInsert;
+export type QuestionCacheEntry = typeof questionCache.$inferSelect;
+export type InsertQuestionCacheEntry = typeof questionCache.$inferInsert;
 
 // MBE Subjects
 export const MBE_SUBJECTS = [

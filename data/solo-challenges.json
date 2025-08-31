@@ -675,5 +675,33 @@
     "isDailyComplete": false,
     "lostAllLivesAt": null,
     "currentQuestionId": "fresh_openai_1756589877968_b542c690"
+  },
+  {
+    "id": "solo_70bba3f9-86c0-4572-b987-a6ea6844a557_1756635796881",
+    "userId": "70bba3f9-86c0-4572-b987-a6ea6844a557",
+    "subject": "Mixed Questions",
+    "questionType": "bar-exam",
+    "livesRemaining": 0,
+    "round": 4,
+    "score": 23,
+    "difficulty": 2,
+    "startedAt": "2025-08-31T10:23:16.888Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1756590516631_e5679cce"
+  },
+  {
+    "id": "solo_70bba3f9-86c0-4572-b987-a6ea6844a557_1756635988017",
+    "userId": "70bba3f9-86c0-4572-b987-a6ea6844a557",
+    "subject": "Mixed Questions",
+    "questionType": "bar-exam",
+    "livesRemaining": 1,
+    "round": 3,
+    "score": 0,
+    "difficulty": 1,
+    "startedAt": "2025-08-31T10:26:28.042Z",
+    "isDailyComplete": false,
+    "lostAllLivesAt": null,
+    "currentQuestionId": "fresh_openai_1756635822672_375e1f65"
   }
 ]
