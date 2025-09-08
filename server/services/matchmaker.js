@@ -669,11 +669,18 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
 }
 
 export function handleDuelAnswer(ws, payload) {
+  console.log('🎯 handleDuelAnswer called with payload:', payload);
   const { roomCode, choice, timeMs } = payload;
+  console.log('🎯 Extracted values - roomCode:', roomCode, 'choice:', choice, 'timeMs:', timeMs);
+  
   const answers = playerAnswers.get(roomCode);
+  console.log('🎯 Found answers map for roomCode:', roomCode, 'answers:', answers);
   
   if (answers) {
     answers.set(ws, { choice, timeMs });
+    console.log('🎯 Answer recorded for WebSocket:', ws, 'choice:', choice, 'timeMs:', timeMs);
+  } else {
+    console.log('❌ No answers map found for roomCode:', roomCode);
   }
 }
 

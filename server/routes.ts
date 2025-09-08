@@ -2449,7 +2449,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   wss.on('connection', (ws: WebSocket, req) => {
-    console.log('Client connected to WebSocket');
+    const connectionId = Math.random().toString(36).substr(2, 9);
+    console.log(`Client connected to WebSocket [${connectionId}]`);
     
     // Extract user ID from session if available (simplified for now)
     const cookies = req.headers.cookie;
@@ -2473,6 +2474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const message = JSON.parse(data.toString());
         const { type, payload } = message;
+        console.log(`🔍 WebSocket message received [${connectionId}]:`, type, 'from user:', userId);
 
         switch (type) {
           case 'presence:hello':
@@ -2503,6 +2505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
           case 'duel:answer':
             // Handled by matchmaker now, not the old system
+            console.log('🎯 Received duel:answer message:', payload);
             try {
               const matchmakerModule = await import('./services/matchmaker.js');
               matchmakerModule.handleDuelAnswer(ws, payload);
@@ -2535,7 +2538,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
 
     ws.on('close', () => {
-      console.log('Client disconnected from WebSocket');
+      console.log(`Client disconnected from WebSocket [${connectionId}]`);
       // Clean up active duel state
       activeDuels.delete(ws);
     });

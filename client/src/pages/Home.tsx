@@ -77,6 +77,7 @@ export default function Home() {
   const [opponent, setOpponent] = useState<User | null>(null);
   const [duelData, setDuelData] = useState<any>(null);
   const [duelWebSocket, setDuelWebSocket] = useState<WebSocket | null>(null);
+  const [duelStartMessage, setDuelStartMessage] = useState<any>(null);
   const [showAtticusDuel, setShowAtticusDuel] = useState(false);
   const [currentChallengeId, setCurrentChallengeId] = useState<string | null>(null);
 
@@ -423,6 +424,7 @@ export default function Home() {
 
         if (message.type === 'duel:start') {
           console.log('Bot match starting with persistent connection');
+          console.log('🎯 duel:start payload:', message.payload);
           
           // Create opponent from match data
           const matchData = message.payload;
@@ -430,6 +432,9 @@ export default function Home() {
           setDuelData(matchData);
           setDuelWebSocket(matchWebSocket); // Pass the SAME WebSocket to duel
           setGameMode('duel');
+          
+          // Forward the duel:start message to DuelArena by storing it
+          setDuelStartMessage(message);
         }
       } catch (error) {
         console.error('Error parsing bot match WebSocket message:', error);
@@ -584,6 +589,7 @@ export default function Home() {
           opponent={opponent}
           isVisible={true}
           websocket={duelWebSocket || undefined}
+          duelStartMessage={duelStartMessage}
           onDuelEnd={handleDuelEnd}
         />
         <div className="fixed bottom-4 right-4 space-x-2">
