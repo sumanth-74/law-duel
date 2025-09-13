@@ -570,20 +570,19 @@ export default function Home() {
 
   if (gameMode === 'duel' && opponent && duelData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         {/* Daily Streak at top */}
-        <div className="fixed top-4 left-4 right-4 z-10">
+        <div className="fixed top-2 left-2 right-2 z-10">
           <StreakIndicator />
         </div>
         
         {/* Persistent Logo and Gamer Tag - Below Streak */}
-        <div className="fixed top-20 left-4 right-4 z-10 flex items-center justify-between">
+        <div className="fixed top-16 left-2 right-2 z-10 flex items-center justify-between">
           <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
           <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
             @{character.username}
           </Badge>
         </div>
-        
         <DuelArena
           user={character}
           opponent={opponent}
@@ -592,11 +591,12 @@ export default function Home() {
           duelStartMessage={duelStartMessage}
           onDuelEnd={handleDuelEnd}
         />
-        <div className="fixed bottom-4 right-4 space-x-2">
-          <Button onClick={handleRematch} variant="outline" size="sm" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20">
+        {/* Rematch and Main Menu buttons - positioned to not overlap content */}
+        <div className="fixed bottom-4 right-4 space-x-2 z-50">
+          <Button onClick={handleRematch} variant="outline" size="sm" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20 bg-panel/90 backdrop-blur-sm">
             Rematch
           </Button>
-          <Button onClick={handleDuelEnd} variant="outline" size="sm" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20">
+          <Button onClick={handleDuelEnd} variant="outline" size="sm" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20 bg-panel/90 backdrop-blur-sm">
             Main Menu
           </Button>
         </div>

@@ -448,7 +448,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   if (!isVisible) return null;
 
   return (
-    <Card className="panel relative overflow-hidden" data-testid="duel-arena">
+    <Card className="panel relative overflow-hidden min-h-screen max-w-4xl mx-auto" data-testid="duel-arena">
       {/* Pokemon-style Avatar Displays in Corners */}
       {/* Opponent Avatar - Top Left */}
       <div className={`absolute top-4 left-4 z-20 transition-transform ${duelState.showAnswerAnimation && duelState.selectedAnswer === duelState.lastResult?.correctIndex ? 'animate-pulse' : ''}`}>
@@ -519,7 +519,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         masteryChange={duelState.feedbackData?.masteryChange}
       />
       
-      <CardContent className="p-4 sm:p-6 pt-24">
+      <CardContent className="p-4 sm:p-6 pt-32 pb-20">
         {/* Opponent Info */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
@@ -530,7 +530,6 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
             />
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold">{opponent.displayName}</h3>
                 {opponent.lawSchool && (
                   <Badge variant="outline" className="text-xs border-purple-400/50 text-purple-300 bg-purple-900/20">
                     {opponent.lawSchool.includes('Law School') ? 
@@ -564,7 +563,6 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold">{user.displayName}</h3>
                 {user.lawSchool && (
                   <Badge variant="outline" className="text-xs border-purple-400/50 text-purple-300 bg-purple-900/20">
                     {user.lawSchool.includes('Law School') ? 
@@ -657,9 +655,9 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
                   <span className="text-xs text-muted whitespace-nowrap">Hints: {duelState.hintsUsed}/3</span>
                 </div>
               </div>
-              <p className="text-sm sm:text-base text-ink leading-relaxed mb-6 break-words overflow-hidden" data-testid="question-stem">
-                {duelState.currentQuestion.stem}
-              </p>
+               <p className="text-sm sm:text-base text-ink leading-relaxed mb-6 break-words" data-testid="question-stem">
+                 {duelState.currentQuestion.stem}
+               </p>
             </div>
           </div>
         )}
@@ -680,9 +678,9 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
                 <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold flex items-center justify-center text-sm flex-shrink-0">
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span className="ml-4 text-sm leading-relaxed flex-1 break-all overflow-hidden">
-                  {choice}
-                </span>
+                 <span className="ml-4 text-sm leading-relaxed flex-1 break-words">
+                   {choice}
+                 </span>
               </button>
             ))}
           </div>
