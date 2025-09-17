@@ -77,6 +77,11 @@ export const matches = pgTable("matches", {
   player2Score: integer("player2_score").notNull().default(0),
   status: text("status").notNull().default("waiting"), // waiting, active, finished
   currentRound: integer("current_round").notNull().default(0),
+  mode: text("mode").notNull().default("realtime"), // realtime, async
+  bestOf: integer("best_of").notNull().default(5),
+  isBotMatch: boolean("is_bot_match").notNull().default(false),
+  turns: jsonb("turns").notNull().default([]),
+  difficulty: integer("difficulty").notNull().default(1),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   finishedAt: timestamp("finished_at"),
 });

@@ -29,6 +29,10 @@ export interface IStorage {
   getMatchByRoomCode(roomCode: string): Promise<Match | undefined>;
   updateMatch(id: string, updates: Partial<Match>): Promise<Match | undefined>;
   getUserMatches(userId: string, limit: number): Promise<Match[]>;
+  
+  // Async match methods
+  getAsyncMatches(userId?: string): Promise<Match[]>;
+  getActiveAsyncMatch(userId: string, opponentId: string): Promise<Match | undefined>;
 
   // Question methods
   createQuestion(question: InsertQuestion): Promise<Question>;
@@ -251,11 +255,15 @@ export class DatabaseStorage implements IStorage {
       updateData.finishedAt = new Date();
     }
     
+    console.log(`🔄 updateMatch: id=${id}, updates=`, updateData);
+    
     const [match] = await db
       .update(matches)
       .set(updateData)
       .where(eq(matches.id, id))
       .returning();
+    
+    console.log(`✅ updateMatch result: id=${match?.id}, status=${match?.status}, winnerId=${match?.winnerId}`);
     
     return match;
   }
@@ -267,6 +275,91 @@ export class DatabaseStorage implements IStorage {
       .where(sql`${matches.player1Id} = ${userId} OR ${matches.player2Id} = ${userId}`)
       .orderBy(desc(matches.createdAt))
       .limit(limit);
+  }
+
+  // Async match methods
+  async getAsyncMatches(userId?: string): Promise<Match[]> {
+    if (userId) {
+      const asyncMatches = await db
+        .select()
+        .from(matches)
+        .where(
+          and(
+            eq(matches.mode, 'async'),
+            sql`${matches.player1Id} = ${userId} OR ${matches.player2Id} = ${userId}`
+          )
+        )
+        .orderBy(desc(matches.createdAt));
+      
+      return asyncMatches;
+    } else {
+      const asyncMatches = await db
+        .select()
+        .from(matches)
+        .where(eq(matches.mode, 'async'))
+        .orderBy(desc(matches.createdAt));
+      
+      return asyncMatches;
+    }
+  }
+
+  async getActiveAsyncMatch(userId: string, opponentId: string): Promise<Match | undefined> {
+    // First, let's check what matches exist between these players
+    const allMatches = await db
+      .select()
+      .from(matches)
+      .where(
+        and(
+          eq(matches.mode, 'async'),
+          sql`(${matches.player1Id} = ${userId} AND ${matches.player2Id} = ${opponentId}) OR (${matches.player1Id} = ${opponentId} AND ${matches.player2Id} = ${userId})`
+        )
+      );
+    
+    console.log(`🔍 All matches between ${userId} and ${opponentId}:`, allMatches.map(m => ({ id: m.id, status: m.status, mode: m.mode, statusType: typeof m.status })));
+    
+    // Check if any of these matches have status 'active' but are actually finished
+    const activeMatches = allMatches.filter(m => m.status === 'active');
+    console.log(`🔍 Matches with status='active':`, activeMatches.map(m => ({ id: m.id, status: m.status, finishedAt: m.finishedAt })));
+    
+    // Let's also check what the database actually returns for the specific match ID that's causing issues
+    if (allMatches.length > 0) {
+      const problemMatchId = '57efadc5-67c3-4a7f-be03-1484b7445634';
+      const problemMatch = allMatches.find(m => m.id === problemMatchId);
+      if (problemMatch) {
+        console.log(`🔍 Problem match details:`, {
+          id: problemMatch.id,
+          status: problemMatch.status,
+          statusType: typeof problemMatch.status,
+          finishedAt: problemMatch.finishedAt,
+          winnerId: problemMatch.winnerId
+        });
+      }
+    }
+    
+    // Now get only active matches
+    console.log(`🔍 Querying for active matches with status='active'`);
+    const [match] = await db
+      .select()
+      .from(matches)
+      .where(
+        and(
+          eq(matches.mode, 'async'),
+          eq(matches.status, 'active'),
+          sql`(${matches.player1Id} = ${userId} AND ${matches.player2Id} = ${opponentId}) OR (${matches.player1Id} = ${opponentId} AND ${matches.player2Id} = ${userId})`
+        )
+      );
+    
+    console.log(`🔍 Active match query result: found=${!!match}, status=${match?.status}, id=${match?.id}`);
+    
+    console.log(`🔍 getActiveAsyncMatch: userId=${userId}, opponentId=${opponentId}, found=${!!match}, status=${match?.status}, id=${match?.id}`);
+    
+    // Double-check: if we found a match but it's not active, return undefined
+    if (match && match.status !== 'active') {
+      console.log(`⚠️ Found match but status is not 'active' (${match.status}), returning undefined`);
+      return undefined;
+    }
+    
+    return match;
   }
 
   // Get subject stats for mastery tracking

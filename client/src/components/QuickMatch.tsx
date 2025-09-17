@@ -39,7 +39,11 @@ export function QuickMatch({ onStartMatch }: QuickMatchProps) {
 
     // Connect to WebSocket and join queue
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    // Determine the correct WebSocket URL based on the current port
+    const isViteDev = window.location.port === '5173';
+    const wsUrl = isViteDev 
+      ? `${protocol}//${window.location.hostname}:5000/ws`
+      : `${protocol}//${window.location.host}/ws`;
     const websocket = new WebSocket(wsUrl);
     setWs(websocket);
 

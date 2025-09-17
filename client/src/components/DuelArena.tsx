@@ -103,7 +103,11 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
       // Fallback: create new connection if none provided
       console.log('No WebSocket provided - creating new connection');
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${protocol}//${window.location.host}/ws`;
+      // Determine the correct WebSocket URL based on the current port
+      const isViteDev = window.location.port === '5173';
+      const wsUrl = isViteDev 
+        ? `${protocol}//${window.location.hostname}:5000/ws`
+        : `${protocol}//${window.location.host}/ws`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 

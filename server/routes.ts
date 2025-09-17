@@ -132,7 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`📤 Serving fresh question: ${item.id} for ${subject} (answer: ${correctIndex})`);
       return res.json({ item });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("Question generation failed:", error);
       return res.status(500).json({ 
         error: "Failed to generate fresh question",
@@ -224,7 +224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           outfit: 'outfit1',
           accessory: 'none',
           background: 'courtroom1'
-        };
+        } as any;
       }
       
       // Check if username is taken
@@ -241,7 +241,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      const user = await storage.createUser(userInsert);
+      const user = await storage.createUser(userInsert as any);
       
       // Initialize user stats
       await statsService.initializeUserStats(user.id);
@@ -445,9 +445,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         level: user.level || 1,
         xp: user.xp || 0,
         elo: user.points || 1200,
-        wins: user.wins || 0,
-        losses: user.losses || 0,
-        winRate: user.wins && user.losses ? Math.round((user.wins / (user.wins + user.losses)) * 100) : 0,
+        wins: user.totalWins || 0,
+        losses: user.totalLosses || 0,
+        winRate: user.totalWins && user.totalLosses ? Math.round((user.totalWins / (user.totalWins + user.totalLosses)) * 100) : 0,
         ...profileData
       });
     } catch (error: any) {
@@ -562,7 +562,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(leaderboard);
       } else {
         // Transform weekly data to match expected format
-        const leaderboard = weeklyLadder.slice(0, 12).map(player => ({
+        const leaderboard = weeklyLadder.slice(0, 12).map((player: any) => ({
           id: player.userId,
           username: player.username,
           displayName: player.username,
@@ -574,7 +574,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }));
         res.json(leaderboard);
       }
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch leaderboard", error: error.message });
     }
   });
@@ -1157,7 +1157,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/async/inbox', requireAuth, async (req: any, res) => {
     try {
       const userId = req.session.userId;
-      const inbox = asyncDuels.getUserInbox(userId);
+      const inbox = await asyncDuels.getUserInbox(userId);
       const unreadCount = asyncDuels.getUnreadCount(userId);
       
       res.json({ matches: inbox, unreadCount });
@@ -1173,7 +1173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.session.userId;
       const matchId = req.params.id;
       
-      const match = asyncDuels.getMatchForUser(matchId, userId);
+      const match = await asyncDuels.getMatchForUser(matchId, userId);
       if (!match) {
         return res.status(404).json({ message: 'Match not found' });
       }
@@ -1191,14 +1191,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { matchId, answerIndex, responseTime } = req.body;
       const userId = req.session.userId;
       
+      console.log(`🔍 Answer submission: matchId=${matchId}, userId=${userId}, answerIndex=${answerIndex}, responseTime=${responseTime}`);
+      
       const match = await asyncDuels.submitAnswer(matchId, userId, answerIndex, responseTime);
       
       // Record daily activity for streak tracking (friend matches count!)
       await storage.recordDailyActivity(userId);
       
+      console.log(`✅ Answer submitted successfully for match ${matchId}`);
       res.json({ success: true, match });
     } catch (error: any) {
-      console.error('Error submitting answer:', error);
+      console.error('❌ Error submitting answer:', error.message);
       res.status(400).json({ message: error.message });
     }
   });
@@ -1304,7 +1307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Try async match
-      const match = asyncDuels.getMatchForUser(actualDuelId, userId);
+      const match = await asyncDuels.getMatchForUser(actualDuelId, userId);
       if (match) {
         const result = await asyncDuels.submitAnswer(
           actualDuelId,
@@ -1358,7 +1361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { duelId } = req.params;
       
       // Get match details for the joining player
-      const match = asyncDuels.getMatchForUser(duelId, userId);
+      const match = await asyncDuels.getMatchForUser(duelId, userId);
       if (!match) {
         return res.status(404).json({ message: 'Match not found' });
       }
@@ -1449,7 +1452,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.session.userId;
       const duelId = req.params.duelId;
       
-      const match = asyncDuels.getMatchForUser(duelId, userId);
+      const match = await asyncDuels.getMatchForUser(duelId, userId);
       if (!match) {
         return res.status(404).json({ message: 'Match not found' });
       }
@@ -1480,7 +1483,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Try to get from different sources
       // Check async matches
-      const asyncMatch = asyncDuels.getMatchForUser(duelId, userId);
+      const asyncMatch = await asyncDuels.getMatchForUser(duelId, userId);
       if (asyncMatch && asyncMatch.status === 'completed') {
         const userScore = asyncMatch.scores?.[userId] || 0;
         const oppScore = asyncMatch.scores?.[asyncMatch.opponentId] || 0;
@@ -1644,7 +1647,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limit = parseInt(req.query.limit as string) || 10;
       const matches = await storage.getUserMatches(req.params.id, limit);
       res.json(matches);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch matches", error: error.message });
     }
   });
@@ -2005,15 +2008,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 correctIndex: question.correctIndex,
                 explanation: question.explanation,
                 difficulty: question.difficulty || 'medium',
-                topic: question.topic || null,
-                subtopic: question.subtopic || null,
-                source: 'cached'
               });
               totalLoaded++;
             } else {
               duplicates++;
             }
-          } catch (err) {
+          } catch (err: any) {
             console.error(`Failed to load question: ${err.message}`);
           }
         }
@@ -2033,7 +2033,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/daily-challenges", requireAuth, async (req, res) => {
     try {
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const challenges = dailyChallengeRewards.default.getUserDailyChallenges(req.session.userId);
+      const challenges = dailyChallengeRewards.default.getUserDailyChallenges((req.session as any).userId);
       res.json({ challenges });
     } catch (error) {
       console.error("Error getting daily challenges:", error);
@@ -2045,15 +2045,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { challengeId } = req.params;
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const result = dailyChallengeRewards.default.claimChallengeReward(req.session.userId, challengeId);
+      const result = dailyChallengeRewards.default.claimChallengeReward((req.session as any).userId, challengeId);
       
       if (result.success) {
         // Update user's XP and points
-        const user = await storage.getUser(req.session.userId);
+        const user = await storage.getUser((req.session as any).userId);
         if (user) {
           user.xp += result.rewards.xp;
           user.points += result.rewards.points;
-          await storage.updateUser(req.session.userId, user);
+          await storage.updateUser((req.session as any).userId, user);
         }
       }
       
@@ -2067,7 +2067,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/rewards/summary", requireAuth, async (req, res) => {
     try {
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const summary = dailyChallengeRewards.default.getUserRewardSummary(req.session.userId);
+      const summary = dailyChallengeRewards.default.getUserRewardSummary((req.session as any).userId);
       res.json(summary);
     } catch (error) {
       console.error("Error getting reward summary:", error);
@@ -2078,7 +2078,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/weekly-challenges", requireAuth, async (req, res) => {
     try {
       const dailyChallengeRewards = await import('./services/dailyChallengeRewards.js');
-      const challenges = dailyChallengeRewards.default.getWeeklyChallengeProgress(req.session.userId);
+      const challenges = dailyChallengeRewards.default.getWeeklyChallengeProgress((req.session as any).userId);
       res.json({ challenges });
     } catch (error) {
       console.error("Error getting weekly challenges:", error);
@@ -2094,7 +2094,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const CANONICAL_SUBJECTS = ['Civil Procedure', 'Constitutional Law', 'Contracts', 'Criminal Law', 'Evidence', 'Property', 'Torts'];
 
   // Helper functions for duel management
-  function normalizeChoices(raw) {
+  function normalizeChoices(raw: any) {
     if (!Array.isArray(raw) || raw.length !== 4) throw new Error("Need exactly 4 choices");
     const cleaned = raw.map(s => String(s || "").replace(/^\s*[A-D][\)\].:\-]\s*/i, "").trim());
     if (cleaned.some(c => c.length < 6)) throw new Error("Choices too short");
@@ -2102,7 +2102,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return cleaned;
   }
 
-  function fingerprintStem(stem) {
+  function fingerprintStem(stem: any) {
     return crypto.createHash("sha1")
       .update(String(stem).toLowerCase().replace(/\s+/g, " "))
       .digest("hex");
@@ -2112,7 +2112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const testDuels = new Map();
   
   // Helper to check if round is finished
-  function isRoundFinished(duel, r) {
+  function isRoundFinished(duel: any, r: any) {
     const q = duel.q[r];
     if (!q) return true;
     const timeout = Date.now() > q.endsAt;
@@ -2202,7 +2202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Fallback to local question if OpenAI fails
         if (!created) {
-          console.warn(`[GEN_FAIL] OpenAI generation failed for ${subject}:`, lastErr?.message || lastErr);
+          console.warn(`[GEN_FAIL] OpenAI generation failed for ${subject}:`, (lastErr as any)?.message || lastErr);
           
           try {
             const { pickLocalFallback } = await import('./services/fallbacks.js');
@@ -2221,7 +2221,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!created || !item) {
           return res.status(502).json({ 
             error: 'generate_failed', 
-            reason: String(lastErr?.message || 'Failed to generate or find fallback question')
+            reason: String((lastErr as any)?.message || 'Failed to generate or find fallback question')
           });
         }
 
@@ -2435,7 +2435,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (e) {
       console.error("Duel/answer error:", e);
-      res.status(500).json({ error: e.message });
+      res.status(500).json({ error: (e as any).message });
     }
   });
 
@@ -2592,7 +2592,7 @@ function startBotDuel(ws: WebSocket) {
   // }, 2000);
 }
 
-function sendNextQuestion(ws: WebSocket) {
+function sendNextQuestion(ws: WebSocket): void {
   // DISABLED: Old fallback system - all duels now use matchmaker with OpenAI
   console.log('⚠️ WARNING: Old sendNextQuestion called - this should not happen!');
   return;

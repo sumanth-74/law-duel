@@ -18,6 +18,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useStreak } from '@/contexts/StreakContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AsyncMatchProps {
   matchId: string;
@@ -43,33 +44,60 @@ interface AsyncMatchData {
   scores: Record<string, number>;
   round: number;
   turns: Turn[];
-  status: 'active' | 'over';
+  status: 'active' | 'over' | 'finished';
   winnerId: string | null;
+  bestOf: number;
 }
 
 export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { incrementStreak, resetStreak } = useStreak();
+  const { user } = useAuth();
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answering, setAnswering] = useState(false);
   const [showResignDialog, setShowResignDialog] = useState(false);
+  const [showPreviousResults, setShowPreviousResults] = useState(false);
 
   const { data: match, isLoading, refetch } = useQuery<AsyncMatchData>({
     queryKey: ['/api/async/match', matchId],
     enabled: isOpen && !!matchId,
-    refetchInterval: 10000 // Refresh every 10s
+    refetchInterval: 5000 // Poll every 5 seconds for better responsiveness
   });
+
+  // Define variables that will be used in useEffects
+  const currentTurn = match?.turns?.[match.turns.length - 1];
+  const previousTurn = match?.turns && match.turns.length > 1 ? match.turns[match.turns.length - 2] : null;
   
+  // Clear selected answer when turn changes
+  useEffect(() => {
+    if (match) {
+      console.log(`🔄 Frontend: Round=${match.round}, Turns=${match.turns.length}, Status=${match.status}`);
+      setSelectedAnswer(null);
+    }
+  }, [match?.turns.length, match?.round]);
+
+  // Show previous results when a new turn starts
+  useEffect(() => {
+    if (previousTurn && previousTurn.revealed && match?.turns && match.turns.length > 1) {
+      setShowPreviousResults(true);
+      // Hide previous results after 3 seconds
+      const timer = setTimeout(() => {
+        setShowPreviousResults(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [previousTurn, match?.turns?.length]);
+
   // Track streak when turn is revealed
   useEffect(() => {
     if (!match) return;
     
-    const currentTurn = match.turns[match.turns.length - 1];
     if (!currentTurn || !currentTurn.revealed) return;
     
     // Check if user has answered this turn
-    const userId = match.players[0].id; // Assuming first player is current user
+    const userId = user?.id;
+    if (!userId) return;
     const userAnswer = currentTurn.answers[userId];
     if (!userAnswer) return;
     
@@ -77,7 +105,7 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
     const isCorrect = userAnswer.idx === currentTurn.correctIndex;
     
     // Track streak (only once per turn)
-    const turnKey = `streak_tracked_${match.id}_${match.round}`;
+    const turnKey = `streak_tracked_${match.id}_${match.turns.length}`;
     if (!localStorage.getItem(turnKey)) {
       if (isCorrect) {
         incrementStreak();
@@ -86,17 +114,14 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
       }
       localStorage.setItem(turnKey, 'true');
     }
-  }, [match, incrementStreak, resetStreak]);
+  }, [match, incrementStreak, resetStreak, user?.id]);
 
   const answerMutation = useMutation({
     mutationFn: async ({ answerIndex, responseTime }: { answerIndex: number; responseTime: number }) => {
-      return apiRequest(`/api/async/answer`, {
-        method: 'POST',
-        body: {
-          matchId,
-          answerIndex,
-          responseTime
-        }
+      return apiRequest('POST', `/api/async/answer`, {
+        matchId,
+        answerIndex,
+        responseTime
       });
     },
     onSuccess: () => {
@@ -104,10 +129,12 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
         title: "Answer Submitted",
         description: "Waiting for opponent to answer...",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/async/match', matchId] });
-      queryClient.invalidateQueries({ queryKey: ['/api/async/inbox'] });
+      // Clear selected answer immediately
       setSelectedAnswer(null);
       setAnswering(false);
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/async/match', matchId] });
+      queryClient.invalidateQueries({ queryKey: ['/api/async/inbox'] });
     },
     onError: (error: any) => {
       toast({
@@ -121,17 +148,17 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
 
   const resignMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest(`/api/async/resign`, {
-        method: 'POST',
-        body: { matchId }
-      });
+      return apiRequest('POST', `/api/async/resign`, { matchId });
     },
     onSuccess: () => {
       toast({
         title: "Match Resigned",
         description: "You have forfeited this match.",
       });
+      // Invalidate all async match related queries
       queryClient.invalidateQueries({ queryKey: ['/api/async/inbox'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/async/match', matchId] });
+      queryClient.removeQueries({ queryKey: ['/api/async/match', matchId] });
       setShowResignDialog(false);
       onClose();
     },
@@ -173,9 +200,35 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
     );
   }
 
-  const currentTurn = match.turns[match.turns.length - 1];
-  const opponent = match.players.find(p => p.id !== match.players[0].id); // Simplified - assumes first player is current user
-  const isYourTurn = currentTurn && !currentTurn.answers[match.players[0].id] && !currentTurn.revealed;
+  const currentUserId = user?.id;
+  const opponent = match.players.find(p => p.id !== currentUserId);
+  
+  // Check if it's the current user's turn
+  const hasCurrentUserAnswered = currentUserId && currentTurn?.answers[currentUserId];
+  const hasOpponentAnswered = opponent && currentTurn?.answers[opponent.id];
+  const bothPlayersAnswered = hasCurrentUserAnswered && hasOpponentAnswered;
+  
+  // Count total answers to ensure both players see reveal when both have answered
+  const totalAnswers = currentTurn ? Object.keys(currentTurn.answers || {}).length : 0;
+  const allPlayersAnswered = totalAnswers >= 2;
+  
+  // Debug logging
+  console.log(`🔍 Frontend Debug:`, {
+    matchStatus: match.status,
+    turnsLength: match.turns.length,
+    currentTurnRevealed: currentTurn?.revealed,
+    currentTurnAnswers: currentTurn ? Object.keys(currentTurn.answers || {}) : [],
+    currentUserId,
+    opponentId: opponent?.id,
+    hasCurrentUserAnswered,
+    hasOpponentAnswered,
+    bothPlayersAnswered,
+    totalAnswers,
+    allPlayersAnswered,
+    willShowReveal: currentTurn?.revealed || allPlayersAnswered
+  });
+  
+  const isYourTurn = currentTurn && currentUserId && !hasCurrentUserAnswered && !currentTurn.revealed;
   const timeLeft = currentTurn ? Math.max(0, currentTurn.deadlineTs - Date.now()) : 0;
 
   const formatTimeLeft = (ms: number) => {
@@ -207,8 +260,8 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
 
   const getMatchStatusBadge = () => {
     if (!match) return null;
-    if (match.status === 'over') {
-      const won = match.winnerId === match.players[0].id;
+    if (match.status === 'finished' || match.status === 'over') {
+      const won = match.winnerId === currentUserId;
       return (
         <Badge className={`border-0 text-white ${won ? 'bg-green-600' : 'bg-red-600'}`}>
           <Trophy className="w-3 h-3 mr-1" />
@@ -226,10 +279,37 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
       );
     }
     
+    if (allPlayersAnswered && currentTurn?.revealed) {
+      return (
+        <Badge className="bg-yellow-600/70 text-white border-0">
+          <Clock className="w-3 h-3 mr-1" />
+          Results Revealed
+        </Badge>
+      );
+    }
+    
+    if (allPlayersAnswered && !currentTurn?.revealed) {
+      return (
+        <Badge className="bg-orange-600/70 text-white border-0 animate-pulse">
+          <Clock className="w-3 h-3 mr-1" />
+          Processing Results...
+        </Badge>
+      );
+    }
+    
+    if (hasCurrentUserAnswered && !hasOpponentAnswered) {
+      return (
+        <Badge className="bg-blue-600/70 text-white border-0">
+          <Clock className="w-3 h-3 mr-1" />
+          Waiting for {opponent?.username}
+        </Badge>
+      );
+    }
+    
     return (
       <Badge className="bg-blue-600/70 text-white border-0">
         <Clock className="w-3 h-3 mr-1" />
-        Waiting for @{opponent?.username}
+        Waiting for {opponent?.username}
       </Badge>
     );
   };
@@ -252,7 +332,28 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
               </Button>
               
               <div className="flex items-center space-x-2">
+                <Button
+                  onClick={() => refetch()}
+                  variant="outline"
+                  size="sm"
+                  className="text-xs"
+                >
+                  🔄 Refresh
+                </Button>
                 {getMatchStatusBadge()}
+              </div>
+            </div>
+
+            {/* Debug Panel */}
+            <div className="bg-slate-800/50 border border-slate-600/30 rounded-lg p-3 text-xs">
+              <div className="font-semibold text-slate-300 mb-2">Debug Info:</div>
+              <div className="grid grid-cols-2 gap-2 text-slate-400">
+                <div>Round: {match?.round}</div>
+                <div>Turns: {match?.turns?.length}</div>
+                <div>Status: {match?.status}</div>
+                <div>BestOf: {match?.bestOf}</div>
+                <div>Current Turn: {match?.turns?.[match?.turns?.length - 1]?.revealed ? 'Revealed' : 'Not Revealed'}</div>
+                <div>Answers: {Object.keys(match?.turns?.[match?.turns?.length - 1]?.answers || {}).length}</div>
               </div>
             </div>
 
@@ -292,8 +393,136 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Current Question */}
-            {currentTurn && (
+            {/* Previous Turn Results - Show briefly when a new turn starts */}
+            {showPreviousResults && previousTurn && previousTurn.revealed && match.status !== 'finished' && (
+              <Card className="bg-slate-800/50 border-slate-600/30 mb-6">
+                <CardContent className="p-6">
+                  <div className="mb-4">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center mr-3">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="text-lg font-semibold text-slate-200">
+                        Question {match.turns.length - 1} Results
+                        <span className="ml-2 text-sm text-yellow-400 animate-pulse">(Showing for 3 seconds...)</span>
+                      </div>
+                    </div>
+                    <div className="text-slate-300 leading-relaxed">
+                      {previousTurn.stem}
+                    </div>
+                  </div>
+
+                  {/* Show Previous Turn Results */}
+                  <div className="space-y-4">
+                    {/* Player Answers Summary */}
+                    <div className="bg-slate-800/50 border border-slate-600/30 rounded-lg p-4">
+                      <div className="text-sm font-semibold text-slate-300 mb-3">Player Answers:</div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {match.players.map((player) => {
+                          const playerAnswer = previousTurn.answers[player.id];
+                          const answerText = playerAnswer ? previousTurn.choices[playerAnswer.idx] : 'No answer';
+                          const isCurrentUser = player.id === user?.id;
+                          
+                          return (
+                            <div
+                              key={player.id}
+                              className={`p-3 rounded border ${
+                                isCurrentUser
+                                  ? 'bg-blue-900/20 border-blue-500/30'
+                                  : 'bg-purple-900/20 border-purple-500/30'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className={`text-sm font-medium ${
+                                  isCurrentUser ? 'text-blue-300' : 'text-purple-300'
+                                }`}>
+                                  {player.username}
+                                </span>
+                                <span className="text-xs text-slate-400">
+                                  {playerAnswer ? `Option ${String.fromCharCode(65 + playerAnswer.idx)}` : 'No answer'}
+                                </span>
+                              </div>
+                              {playerAnswer && (
+                                <div className="text-xs text-slate-400 mt-1 truncate">
+                                  {answerText}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Answer Choices with Results */}
+                    {previousTurn.choices.map((choice: string, index: number) => {
+                      const isCorrect = index === previousTurn.correctIndex;
+                      const wasSelected = Object.values(previousTurn.answers).some((answer: any) => answer.idx === index);
+                      
+                      // Find which players selected this answer
+                      const playersWhoSelected = Object.entries(previousTurn.answers)
+                        .filter(([_, answer]: [string, any]) => answer.idx === index)
+                        .map(([playerId, _]) => {
+                          const player = match.players.find(p => p.id === playerId);
+                          return player?.username || 'Unknown';
+                        });
+                      
+                      return (
+                        <div
+                          key={index}
+                          className={`p-4 rounded-lg border ${
+                            isCorrect
+                              ? 'bg-green-900/30 border-green-500/50'
+                              : wasSelected
+                              ? 'bg-red-900/30 border-red-500/50'
+                              : 'bg-slate-800/30 border-slate-600/30'
+                          }`}
+                        >
+                          <div className="flex items-center">
+                            <span className="w-6 h-6 rounded border flex items-center justify-center mr-3 text-sm font-semibold">
+                              {String.fromCharCode(65 + index)}
+                            </span>
+                            <span className="flex-1">{choice}</span>
+                            <div className="flex items-center space-x-2">
+                              {wasSelected && playersWhoSelected.length > 0 && (
+                                <div className="flex items-center space-x-1">
+                                  <span className="text-xs text-slate-400">Selected by:</span>
+                                  {playersWhoSelected.map((username, idx) => (
+                                    <span
+                                      key={idx}
+                                      className={`text-xs px-2 py-1 rounded ${
+                                        username === user?.username
+                                          ? 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
+                                          : 'bg-purple-600/20 text-purple-300 border border-purple-500/30'
+                                      }`}
+                                    >
+                                      {username}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              {isCorrect && (
+                                <CheckCircle className="w-5 h-5 text-green-400" />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* Explanation */}
+                    {previousTurn.explanation && (
+                      <div className="mt-4 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+                        <div className="font-semibold text-blue-300 mb-2">Explanation:</div>
+                        <div className="text-slate-300 text-sm">{previousTurn.explanation}</div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Current Question - Only show if match is not finished and not showing previous results */}
+            {currentTurn && match.status !== 'finished' && !showPreviousResults && (
               <Card className="bg-slate-800/50 border-slate-600/30">
                 <CardContent className="p-6">
                   {/* Question Stem */}
@@ -303,7 +532,7 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                         <Target className="w-4 h-4 text-white" />
                       </div>
                       <div className="text-lg font-semibold text-slate-200">
-                        Question {match.round}
+                        Question {match.turns.length}
                       </div>
                     </div>
                     <div className="text-slate-300 leading-relaxed">
@@ -312,7 +541,7 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                   </div>
 
                   {/* Answer Choices */}
-                  {!currentTurn.revealed ? (
+                  {!currentTurn.revealed && !allPlayersAnswered ? (
                     <div className="space-y-3">
                       {currentTurn.choices.map((choice: string, index: number) => (
                         <Button
@@ -360,9 +589,55 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                   ) : (
                     /* Show Results */
                     <div className="space-y-4">
+                      {/* Player Answers Summary */}
+                      <div className="bg-slate-800/50 border border-slate-600/30 rounded-lg p-4">
+                        <div className="text-sm font-semibold text-slate-300 mb-3">Player Answers:</div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {match.players.map((player) => {
+                            const playerAnswer = currentTurn.answers[player.id];
+                            const answerText = playerAnswer ? currentTurn.choices[playerAnswer.idx] : 'No answer';
+                            const isCurrentUser = player.id === user?.id;
+                            
+                            return (
+                              <div
+                                key={player.id}
+                                className={`p-3 rounded border ${
+                                  isCurrentUser
+                                    ? 'bg-blue-900/20 border-blue-500/30'
+                                    : 'bg-purple-900/20 border-purple-500/30'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className={`text-sm font-medium ${
+                                    isCurrentUser ? 'text-blue-300' : 'text-purple-300'
+                                  }`}>
+                                    {player.username}
+                                  </span>
+                                  <span className="text-xs text-slate-400">
+                                    {playerAnswer ? `Option ${String.fromCharCode(65 + playerAnswer.idx)}` : 'No answer'}
+                                  </span>
+                                </div>
+                                {playerAnswer && (
+                                  <div className="text-xs text-slate-400 mt-1 truncate">
+                                    {answerText}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                       {currentTurn.choices.map((choice: string, index: number) => {
                         const isCorrect = index === currentTurn.correctIndex;
                         const wasSelected = Object.values(currentTurn.answers).some((answer: any) => answer.idx === index);
+                        
+                        // Find which players selected this answer
+                        const playersWhoSelected = Object.entries(currentTurn.answers)
+                          .filter(([_, answer]: [string, any]) => answer.idx === index)
+                          .map(([playerId, _]) => {
+                            const player = match.players.find(p => p.id === playerId);
+                            return player?.username || 'Unknown';
+                          });
                         
                         return (
                           <div
@@ -380,9 +655,28 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                                 {String.fromCharCode(65 + index)}
                               </span>
                               <span className="flex-1">{choice}</span>
-                              {isCorrect && (
-                                <CheckCircle className="w-5 h-5 text-green-400" />
-                              )}
+                              <div className="flex items-center space-x-2">
+                                {wasSelected && playersWhoSelected.length > 0 && (
+                                  <div className="flex items-center space-x-1">
+                                    <span className="text-xs text-slate-400">Selected by:</span>
+                                    {playersWhoSelected.map((username, idx) => (
+                                      <span
+                                        key={idx}
+                                        className={`text-xs px-2 py-1 rounded ${
+                                          username === user?.username
+                                            ? 'bg-blue-600/20 text-blue-300 border border-blue-500/30'
+                                            : 'bg-purple-600/20 text-purple-300 border border-purple-500/30'
+                                        }`}
+                                      >
+                                        {username}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                                {isCorrect && (
+                                  <CheckCircle className="w-5 h-5 text-green-400" />
+                                )}
+                              </div>
                             </div>
                           </div>
                         );
@@ -397,6 +691,42 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                       )}
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Match Results */}
+            {(match.status === 'finished' || match.status === 'over') && (
+              <Card className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30">
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <Trophy className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
+                    <h3 className="text-2xl font-bold text-slate-200 mb-2">
+                      {match.winnerId === null ? '🤝 Tie!' : 
+                       match.winnerId === currentUserId ? '🎉 Victory!' : '😔 Defeat'}
+                    </h3>
+                    <p className="text-slate-400 mb-4">
+                      {match.winnerId 
+                        ? `Winner: ${match.players.find(p => p.id === match.winnerId)?.username || 'Unknown'}`
+                        : 'Match ended in a tie'
+                      }
+                    </p>
+                    <div className="text-3xl font-bold text-purple-300 mb-2">
+                      Final Score: {getScoreDisplay()}
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      Completed {match.turns.length} rounds
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3 justify-center">
+                    <Button
+                      onClick={onClose}
+                      className="bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                      Back to Inbox
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             )}

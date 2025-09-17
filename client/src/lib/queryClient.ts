@@ -24,7 +24,10 @@ export async function apiRequest(
     headers["Authorization"] = `Bearer ${token}`;
   }
   
-  const res = await fetch(url, {
+  // Ensure URL starts with /api for proper proxy handling
+  const fullUrl = url.startsWith('/api') ? url : `/api${url}`;
+  
+  const res = await fetch(fullUrl, {
     method,
     headers,
     body: data ? JSON.stringify(data) : undefined,
@@ -42,7 +45,7 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     // Handle both array and string query keys
-    const url = Array.isArray(queryKey) ? queryKey[0] : queryKey;
+    const url = Array.isArray(queryKey) ? queryKey.join('/') : queryKey;
     const token = getToken();
     const headers: Record<string, string> = {};
     
@@ -67,7 +70,14 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: async ({ queryKey }) => {
-        const url = Array.isArray(queryKey) ? queryKey[0] : queryKey;
+        // Handle both array and string query keys
+        let url = Array.isArray(queryKey) ? queryKey.join('/') : queryKey;
+        
+        // Ensure URL starts with /api for proper proxy handling
+        if (typeof url === 'string' && !url.startsWith('/api')) {
+          url = `/api${url}`;
+        }
+        
         const token = getToken();
         const headers: Record<string, string> = {};
         

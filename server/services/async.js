@@ -1,16 +1,10 @@
-import { readFileSync, writeFileSync } from 'fs';
-import path from 'path';
 import { questionBank } from '../questionBank.js';
 import { storage } from '../storage.js';
 import { progressService } from '../progress.js';
 
-const ASYNC_MATCHES_FILE = path.join(process.cwd(), 'data/async_matches.json');
-const ASYNC_QUEUE_FILE = path.join(process.cwd(), 'data/async_queue.json');
-
 class AsyncDuels {
   constructor() {
-    this.matches = this.loadMatches();
-    this.queues = this.loadQueues();
+    this.queues = new Map(); // subject -> [userId] - keep in memory for quick matching
     this.notifications = new Map(); // userId -> count
     
     // Start background tasks
@@ -18,56 +12,55 @@ class AsyncDuels {
     this.startBotAnswerProcessor();
   }
 
-  loadMatches() {
-    try {
-      return JSON.parse(readFileSync(ASYNC_MATCHES_FILE, 'utf8'));
-    } catch (error) {
-      return {};
-    }
-  }
-
-  saveMatches() {
-    try {
-      // Atomic write with backup
-      const tempFile = ASYNC_MATCHES_FILE + '.tmp';
-      writeFileSync(tempFile, JSON.stringify(this.matches, null, 2));
-      writeFileSync(ASYNC_MATCHES_FILE, JSON.stringify(this.matches, null, 2));
-      
-      // Keep backup every 20 writes
-      if (Object.keys(this.matches).length % 20 === 0) {
-        writeFileSync(ASYNC_MATCHES_FILE + '.bak', JSON.stringify(this.matches, null, 2));
-      }
-    } catch (error) {
-      console.error('Failed to save async matches:', error);
-    }
-  }
-
-  loadQueues() {
-    try {
-      return JSON.parse(readFileSync(ASYNC_QUEUE_FILE, 'utf8'));
-    } catch (error) {
-      return {}; // subject -> [userId]
-    }
-  }
-
-  saveQueues() {
-    try {
-      writeFileSync(ASYNC_QUEUE_FILE, JSON.stringify(this.queues, null, 2));
-    } catch (error) {
-      console.error('Failed to save async queues:', error);
-    }
-  }
-
   generateMatchId() {
     return `m_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  // Clean up matches that should be finished but aren't marked as such
+  async cleanupFinishedMatches(userId, opponentId) {
+    try {
+      // Get all matches between these players using the existing method
+      const allMatches = await storage.getAsyncMatches();
+      const relevantMatches = allMatches.filter(match => 
+        (match.player1Id === userId && match.player2Id === opponentId) || 
+        (match.player1Id === opponentId && match.player2Id === userId)
+      );
+      
+      console.log(`🧹 Cleaning up matches between ${userId} and ${opponentId}:`, relevantMatches.map(m => ({ id: m.id, status: m.status })));
+      
+      // Find matches that should be finished (have winnerId or finishedAt but status is not 'finished')
+      const matchesToFix = relevantMatches.filter(match => 
+        match.status !== 'finished' && (match.winnerId || match.finishedAt)
+      );
+      
+      for (const match of matchesToFix) {
+        console.log(`🔧 Fixing match ${match.id}: status=${match.status}, winnerId=${match.winnerId}, finishedAt=${match.finishedAt}`);
+        await storage.updateMatch(match.id, {
+          status: 'finished',
+          updatedAt: new Date()
+        });
+      }
+      
+      if (matchesToFix.length > 0) {
+        console.log(`✅ Fixed ${matchesToFix.length} matches that should have been finished`);
+      }
+    } catch (error) {
+      console.error('Error cleaning up finished matches:', error);
+    }
   }
 
   // Create new async match
   async createMatch(userId, subject, opponentUsername = null) {
     const user = await storage.getUser(userId);
     if (!user) throw new Error('User not found');
-
-    const matchId = this.generateMatchId();
+    
+    // Clean up any matches that should be finished but aren't marked as such
+    if (opponentUsername) {
+      const opponent = await storage.getUserByUsername(opponentUsername.replace('@', ''));
+      if (opponent) {
+        await this.cleanupFinishedMatches(userId, opponent.id);
+      }
+    }
     
     let opponent = null;
     let isBotMatch = false;
@@ -78,51 +71,52 @@ class AsyncDuels {
       if (!opponent) throw new Error('Opponent not found');
       
       // Check if an active match already exists between these two players
-      const existingMatch = Object.values(this.matches).find(match => {
-        if (match.status !== 'active') return false;
-        if (match.isBotMatch) return false; // Allow multiple bot matches
-        
-        const playerIds = match.players.map(p => p.id);
-        return playerIds.includes(userId) && playerIds.includes(opponent.id);
-      });
+      console.log(`🔍 Checking for existing match between ${user.username} (${userId}) and ${opponent.username} (${opponent.id})`);
+      const existingMatch = await storage.getActiveAsyncMatch(userId, opponent.id);
       
       if (existingMatch) {
-        // Return the existing match instead of creating a new one
-        console.log(`Found existing active match between ${user.username} and ${opponent.username}: ${existingMatch.id}`);
-        return { 
-          matchId: existingMatch.id, 
-          match: existingMatch,
-          existing: true 
-        };
+        // Double-check: if the match is not actually active, don't return it
+        if (existingMatch.status !== 'active') {
+          console.log(`⚠️ Found match but status is '${existingMatch.status}', not 'active'. Ignoring and creating new match.`);
+        } else {
+          // Return the existing match instead of creating a new one
+          console.log(`⚠️ Found existing active match between ${user.username} and ${opponent.username}: ${existingMatch.id}, status: ${existingMatch.status}`);
+          return { 
+            matchId: existingMatch.id, 
+            match: existingMatch,
+            existing: true 
+          };
+        }
+      } else {
+        console.log(`✅ No existing match found, proceeding to create new match`);
       }
     } else {
       // Quick Match - check queue first
       const queueKey = `${subject}_Bar`; // Assume Bar for now
-      if (!this.queues[queueKey]) this.queues[queueKey] = [];
+      if (!this.queues.has(queueKey)) this.queues.set(queueKey, []);
 
-      if (this.queues[queueKey].length > 0) {
+      const queue = this.queues.get(queueKey);
+      if (queue.length > 0) {
         // Match with queued player
-        const opponentId = this.queues[queueKey].shift();
+        const opponentId = queue.shift();
         opponent = await storage.getUser(opponentId);
-        this.saveQueues();
       } else {
         // Add to queue, wait 8s for match
-        this.queues[queueKey].push(userId);
-        this.saveQueues();
+        queue.push(userId);
 
         // Wait 8s for another player
         await new Promise(resolve => setTimeout(resolve, 8000));
         
-        if (this.queues[queueKey].length > 1) {
+        if (queue.length > 1) {
           // Found a match
-          this.queues[queueKey] = this.queues[queueKey].filter(id => id !== userId);
-          const opponentId = this.queues[queueKey].shift();
+          const filteredQueue = queue.filter(id => id !== userId);
+          const opponentId = filteredQueue.shift();
           opponent = await storage.getUser(opponentId);
-          this.saveQueues();
+          this.queues.set(queueKey, filteredQueue);
         } else {
           // No match - create stealth bot
-          this.queues[queueKey] = this.queues[queueKey].filter(id => id !== userId);
-          this.saveQueues();
+          const filteredQueue = queue.filter(id => id !== userId);
+          this.queues.set(queueKey, filteredQueue);
           
           opponent = this.createStealthBot();
           isBotMatch = true;
@@ -135,33 +129,22 @@ class AsyncDuels {
       isBotMatch = true;
     }
 
-    const match = {
-      id: matchId,
-      mode: 'async',
+    // Create match in database
+    const match = await storage.createMatch({
+      roomCode: `async_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       subject,
-      audience: 'Bar',
-      bestOf: 7,
-      players: [
-        { id: userId, username: user.username },
-        { id: opponent.id, username: opponent.username }
-      ],
-      scores: { [userId]: 0, [opponent.id]: 0 },
-      round: 1,
-      difficulty: 1, // Start at difficulty 1 like VS mode
-      turns: [],
+      player1Id: userId,
+      player2Id: opponent.id,
       status: 'active',
-      winnerId: null,
+      mode: 'async',
+      bestOf: 7,
       isBotMatch,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
-
-    this.matches[matchId] = match;
+      turns: [],
+      difficulty: 1
+    });
     
     // Start first turn
-    await this.startTurn(matchId);
-    
-    this.saveMatches();
+    await this.startTurn(match.id);
     
     // Notify both players
     this.enqueueNotification(userId, `New async match vs @${opponent.username}`);
@@ -169,7 +152,7 @@ class AsyncDuels {
       this.enqueueNotification(opponent.id, `New async match vs @${user.username}`);
     }
 
-    return { matchId, match };
+    return { matchId: match.id, match };
   }
 
   createStealthBot() {
@@ -190,17 +173,23 @@ class AsyncDuels {
   }
 
   async startTurn(matchId) {
-    const match = this.matches[matchId];
-    if (!match || match.status !== 'active') return;
+    const match = await storage.getMatch(matchId);
+    if (!match || match.status !== 'active') {
+      console.log(`❌ StartTurn failed: match=${!!match}, status=${match?.status}`);
+      return;
+    }
+    
+    console.log(`🚀 StartTurn: currentRound=${match.currentRound}, bestOf=${match.bestOf}, turns=${match.turns?.length}`);
 
     try {
       // Progressive difficulty: increases every 2 rounds like VS mode
-      match.difficulty = Math.min(Math.floor((match.round + 1) / 2), 10);
-      console.log(`📈 Async Duel Round ${match.round}: Difficulty level ${match.difficulty}`);
+      const newRound = match.currentRound + 1;
+      const difficulty = Math.min(Math.floor(newRound / 2), 10);
+      console.log(`📈 Async Duel Round ${newRound}: Difficulty level ${difficulty}`);
       
       // Use the same question generation as VS mode with OpenAI and difficulty
       const { getQuestion } = await import('./qcoordinator.js');
-      const question = await getQuestion(match.subject, [], true, match.difficulty);
+      const question = await getQuestion(match.subject, [], true, difficulty);
       
       if (!question) {
         console.error('Failed to generate OpenAI question for async match:', matchId);
@@ -212,7 +201,7 @@ class AsyncDuels {
         stem: question.stem,
         choices: question.choices,
         subject: question.subject || match.subject, // Store subject for progress tracking
-        difficulty: match.difficulty,
+        difficulty: difficulty,
         deadlineTs: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
         answers: {},
         revealed: false,
@@ -220,20 +209,26 @@ class AsyncDuels {
         explanation: question.explanationLong || question.explanation
       };
 
-      match.turns.push(turn);
-      match.updatedAt = Date.now();
+      const updatedTurns = [...(match.turns || []), turn];
+      
+      // Update match in database
+      await storage.updateMatch(matchId, {
+        turns: updatedTurns,
+        difficulty: difficulty,
+        currentRound: newRound
+      });
 
       // Schedule bot answer if this is a bot match
       if (match.isBotMatch) {
-        this.scheduleBotAnswer(matchId, match.round);
+        this.scheduleBotAnswer(matchId, match.currentRound);
       }
 
-      this.saveMatches();
-
       // Notify players it's their turn
-      match.players.forEach(player => {
-        if (!player.id.startsWith('bot_')) {
-          this.enqueueNotification(player.id, `Your turn vs @${this.getOpponent(match, player.id).username} · Round ${match.round}`);
+      const players = [match.player1Id, match.player2Id].filter(id => id);
+      players.forEach(playerId => {
+        if (!playerId.startsWith('bot_')) {
+          const opponentId = players.find(id => id !== playerId);
+          this.enqueueNotification(playerId, `Your turn vs @${opponentId ? 'Opponent' : 'Bot'} · Round ${match.currentRound}`);
         }
       });
 
@@ -247,14 +242,14 @@ class AsyncDuels {
     const delayMs = (8 + Math.random() * 37) * 60 * 1000 + Math.random() * 5000;
     
     setTimeout(async () => {
-      const match = this.matches[matchId];
-      if (!match || match.round !== round || match.status !== 'active') return;
+      const match = await storage.getMatch(matchId);
+      if (!match || match.currentRound !== round || match.status !== 'active') return;
 
-      const currentTurn = match.turns[match.turns.length - 1];
+      const currentTurn = match.turns && match.turns.length > 0 ? match.turns[match.turns.length - 1] : null;
       if (!currentTurn || currentTurn.revealed) return;
 
-      const botPlayer = match.players.find(p => p.id.startsWith('bot_'));
-      if (!botPlayer) return;
+      const botPlayerId = match.player1Id.startsWith('bot_') ? match.player1Id : match.player2Id;
+      if (!botPlayerId) return;
 
       // Bot accuracy based on match difficulty (70% base with variance)
       const accuracy = 0.65 + Math.random() * 0.2; // 65-85%
@@ -262,29 +257,35 @@ class AsyncDuels {
       const answerIndex = isCorrect ? currentTurn.correctIndex : Math.floor(Math.random() * 4);
       const responseTime = Math.random() * 15000 + 5000; // 5-20 seconds
 
-      await this.submitAnswer(matchId, botPlayer.id, answerIndex, responseTime);
+      await this.submitAnswer(matchId, botPlayerId, answerIndex, responseTime);
     }, delayMs);
   }
 
   async submitAnswer(matchId, userId, answerIndex, responseTimeMs) {
-    const match = this.matches[matchId];
+    console.log(`🔄 submitAnswer called: matchId=${matchId}, userId=${userId}, answerIndex=${answerIndex}, responseTimeMs=${responseTimeMs}`);
+    
+    const match = await storage.getMatch(matchId);
     if (!match || match.status !== 'active') {
+      console.log(`❌ Match not found or not active: match=${!!match}, status=${match?.status}`);
       throw new Error('Match not found or not active');
     }
 
     // Verify user is in this match
-    const isPlayerInMatch = match.players.some(p => p.id === userId);
+    const isPlayerInMatch = match.player1Id === userId || match.player2Id === userId;
     if (!isPlayerInMatch) {
+      console.log(`❌ User not in match: player1Id=${match.player1Id}, player2Id=${match.player2Id}, userId=${userId}`);
       throw new Error('User not in this match');
     }
 
-    const currentTurn = match.turns[match.turns.length - 1];
+    const currentTurn = match.turns && match.turns.length > 0 ? match.turns[match.turns.length - 1] : null;
     if (!currentTurn) {
+      console.log(`❌ No active turn: turns.length=${match.turns?.length}`);
       throw new Error('No active turn');
     }
 
     // Check if already answered
     if (currentTurn.answers[userId]) {
+      console.log(`❌ Already answered: userId=${userId}, existingAnswer=${JSON.stringify(currentTurn.answers[userId])}`);
       throw new Error('Already answered this turn');
     }
 
@@ -300,39 +301,106 @@ class AsyncDuels {
       timestamp: Date.now()
     };
 
-    match.updatedAt = Date.now();
+    console.log(`📝 SubmitAnswer: Recorded answer for ${userId}:`, {
+      answerIndex,
+      responseTimeMs,
+      currentAnswers: currentTurn.answers,
+      answersCount: Object.keys(currentTurn.answers).length
+    });
+
+    // Update match in database
+    await storage.updateMatch(matchId, {
+      turns: match.turns,
+      updatedAt: new Date()
+    });
+
+    console.log(`💾 SubmitAnswer: Updated match in database`);
 
     // Check if both players have answered
-    const allAnswered = match.players.every(p => currentTurn.answers[p.id]);
+    const players = [match.player1Id, match.player2Id].filter(id => id);
+    const allAnswered = players.every(p => currentTurn.answers[p]);
+    
+    console.log(`📝 SubmitAnswer: player=${userId}, allAnswered=${allAnswered}, answers=${JSON.stringify(currentTurn.answers)}`);
+    console.log(`📝 SubmitAnswer: Players check:`, {
+      player1Id: match.player1Id,
+      player2Id: match.player2Id,
+      player1Answered: !!currentTurn.answers[match.player1Id],
+      player2Answered: !!currentTurn.answers[match.player2Id],
+      allAnswered
+    });
 
     if (allAnswered) {
+      console.log(`✅ Both players answered, revealing turn...`);
+      console.log(`📊 Answer details:`, {
+        player1Answer: currentTurn.answers[match.player1Id],
+        player2Answer: currentTurn.answers[match.player2Id],
+        correctIndex: currentTurn.correctIndex
+      });
       await this.revealTurn(matchId);
+    } else {
+      console.log(`⏳ Waiting for more answers. Current answers:`, Object.keys(currentTurn.answers));
     }
 
-    this.saveMatches();
     return match;
   }
 
   async revealTurn(matchId) {
-    const match = this.matches[matchId];
-    const currentTurn = match.turns[match.turns.length - 1];
+    console.log(`🔍 RevealTurn called for match ${matchId}`);
+    const match = await storage.getMatch(matchId);
+    console.log(`🔍 Match data:`, {
+      id: match?.id,
+      currentRound: match?.currentRound,
+      bestOf: match?.bestOf,
+      status: match?.status,
+      turnsLength: match?.turns?.length
+    });
+    
+    const currentTurn = match.turns && match.turns.length > 0 ? match.turns[match.turns.length - 1] : null;
+    
+    if (!currentTurn) {
+      console.log(`❌ RevealTurn: No current turn found`);
+      return;
+    }
+    
+    if (currentTurn.revealed) {
+      console.log(`⚠️ RevealTurn: Turn already revealed`);
+      return;
+    }
+    
+    console.log(`🔄 RevealTurn: Revealing turn for match ${matchId}, round ${match.currentRound}`);
+    console.log(`🔍 Current turn details before reveal:`, {
+      qid: currentTurn.qid,
+      revealed: currentTurn.revealed,
+      answers: currentTurn.answers,
+      answersCount: Object.keys(currentTurn.answers || {}).length,
+      player1Id: match.player1Id,
+      player2Id: match.player2Id,
+      player1Answer: currentTurn.answers[match.player1Id],
+      player2Answer: currentTurn.answers[match.player2Id]
+    });
     
     // Mark turn as revealed
     currentTurn.revealed = true;
+    console.log(`🔍 Turn marked as revealed:`, {
+      turnId: currentTurn.qid,
+      revealed: currentTurn.revealed,
+      answers: Object.keys(currentTurn.answers || {})
+    });
 
     // Score the turn and track subtopic progress
     const correctAnswers = [];
     const incorrectAnswers = [];
+    const players = [match.player1Id, match.player2Id].filter(id => id);
 
-    for (const player of match.players) {
-      const answer = currentTurn.answers[player.id];
+    for (const playerId of players) {
+      const answer = currentTurn.answers[playerId];
       const isCorrect = answer && answer.idx === currentTurn.correctIndex;
       
       // Track subtopic progress for human players
-      if (!player.id.startsWith('bot_')) {
+      if (!playerId.startsWith('bot_')) {
         try {
           await progressService.recordAttempt({
-            userId: player.id,
+            userId: playerId,
             duelId: matchId,
             questionId: currentTurn.qid,
             subject: currentTurn.subject || match.subject,
@@ -348,9 +416,9 @@ class AsyncDuels {
       }
       
       if (isCorrect) {
-        correctAnswers.push({ ...player, ...answer });
+        correctAnswers.push({ id: playerId, ...answer });
       } else {
-        incorrectAnswers.push({ ...player, ...answer });
+        incorrectAnswers.push({ id: playerId, ...answer });
       }
     }
 
@@ -364,51 +432,154 @@ class AsyncDuels {
     }
 
     // Update scores
-    if (roundWinnerId) {
-      match.scores[roundWinnerId]++;
+    let newPlayer1Score = match.player1Score;
+    let newPlayer2Score = match.player2Score;
+    
+    console.log(`📊 Score update:`, {
+      roundWinnerId,
+      player1Id: match.player1Id,
+      player2Id: match.player2Id,
+      currentPlayer1Score: newPlayer1Score,
+      currentPlayer2Score: newPlayer2Score
+    });
+    
+    if (roundWinnerId === match.player1Id) {
+      newPlayer1Score++;
+      console.log(`✅ Player 1 wins round, new score: ${newPlayer1Score}`);
+    } else if (roundWinnerId === match.player2Id) {
+      newPlayer2Score++;
+      console.log(`✅ Player 2 wins round, new score: ${newPlayer2Score}`);
+    } else {
+      console.log(`🤝 No winner this round (tie or no correct answers)`);
     }
 
-    match.round++;
-    match.updatedAt = Date.now();
+    // Don't increment round here - startTurn already handles it
+    const updatedTurns = [...(match.turns || [])];
+    updatedTurns[updatedTurns.length - 1] = currentTurn;
+    
+    console.log(`🔍 Updated turns before database update:`, {
+      turnIndex: updatedTurns.length - 1,
+      turnRevealed: updatedTurns[updatedTurns.length - 1]?.revealed,
+      turnAnswers: Object.keys(updatedTurns[updatedTurns.length - 1]?.answers || {}),
+      correctIndex: updatedTurns[updatedTurns.length - 1]?.correctIndex
+    });
 
-    // Check if match is over
+    // Check if match is over (only after all questions are answered)
+    let newStatus = match.status;
+    let newWinnerId = match.winnerId;
+    
+    console.log(`🔍 About to check match completion:`, {
+      currentRound: match.currentRound,
+      bestOf: match.bestOf,
+      player1Score: newPlayer1Score,
+      player2Score: newPlayer2Score,
+      currentStatus: match.status
+    });
+    
+    // Check if match is over - either by reaching bestOf rounds or by someone winning enough rounds
     const winningScore = Math.ceil(match.bestOf / 2);
-    const winnerId = Object.keys(match.scores).find(id => match.scores[id] >= winningScore);
+    const hasWinner = newPlayer1Score >= winningScore || newPlayer2Score >= winningScore;
+    const allRoundsCompleted = match.currentRound >= match.bestOf;
+    
+    console.log(`🔍 Detailed completion check:`, {
+      currentRound: match.currentRound,
+      bestOf: match.bestOf,
+      currentRoundType: typeof match.currentRound,
+      bestOfType: typeof match.bestOf,
+      comparison: `${match.currentRound} >= ${match.bestOf} = ${match.currentRound >= match.bestOf}`,
+      player1Score: newPlayer1Score,
+      player2Score: newPlayer2Score,
+      winningScore,
+      hasWinner,
+      allRoundsCompleted
+    });
+    
+    console.log(`🏁 Match completion check:`, {
+      currentRound: match.currentRound,
+      bestOf: match.bestOf,
+      player1Score: newPlayer1Score,
+      player2Score: newPlayer2Score,
+      winningScore,
+      hasWinner,
+      allRoundsCompleted,
+      currentStatus: match.status
+    });
+    
+    if (hasWinner || allRoundsCompleted) {
+      const winnerId = newPlayer1Score > newPlayer2Score ? match.player1Id : 
+                      newPlayer2Score > newPlayer1Score ? match.player2Id : null;
+      
+      newStatus = 'finished';
+      newWinnerId = winnerId;
+      
+      console.log(`🏁 Match finished:`, {
+        winnerId,
+        finalScore: `${newPlayer1Score}-${newPlayer2Score}`,
+        reason: hasWinner ? 'Winner found' : 'All rounds completed'
+      });
+    } else {
+      console.log(`⚠️ Match not finished: hasWinner=${hasWinner}, allRoundsCompleted=${allRoundsCompleted}`);
+    }
 
-    if (winnerId) {
-      match.status = 'over';
-      match.winnerId = winnerId;
+    // Update match in database
+    console.log(`💾 Updating match in database:`, {
+      matchId,
+      currentRound: match.currentRound,
+      newPlayer1Score,
+      newPlayer2Score,
+      newStatus,
+      newWinnerId,
+      turnRevealed: currentTurn.revealed,
+      willFinish: newStatus === 'finished'
+    });
+    
+    await storage.updateMatch(matchId, {
+      turns: updatedTurns,
+      player1Score: newPlayer1Score,
+      player2Score: newPlayer2Score,
+      status: newStatus,
+      winnerId: newWinnerId,
+      updatedAt: new Date()
+    });
+    
+    console.log(`✅ Match updated successfully in database`);
+
+    console.log(`🔄 RevealTurn: currentRound=${match.currentRound}, bestOf=${match.bestOf}, newStatus=${newStatus}`);
+    
+    if (newStatus === 'finished') {
+      console.log(`🏁 Match finished, finalizing...`);
       await this.finalizeMatch(matchId);
-    } else if (match.round <= match.bestOf) {
-      // Start next turn
-      setTimeout(() => this.startTurn(matchId), 2000);
+    } else if (match.currentRound < match.bestOf) {
+      console.log(`⏭️ Starting next turn in 5 seconds...`);
+      // Start next turn - give more time for frontend to see the reveal
+      setTimeout(() => this.startTurn(matchId), 5000);
+    } else {
+      console.log(`❌ No next turn: currentRound=${match.currentRound}, bestOf=${match.bestOf}`);
     }
 
     // Notify players of results
-    const opponent = this.getOpponent(match, match.players[0].id);
-    match.players.forEach(player => {
-      if (!player.id.startsWith('bot_')) {
-        if (match.status === 'over') {
-          const won = match.winnerId === player.id;
-          this.enqueueNotification(player.id, `Match ${won ? 'won' : 'lost'} vs @${this.getOpponent(match, player.id).username}`);
+    players.forEach(playerId => {
+      if (!playerId.startsWith('bot_')) {
+        const opponentId = players.find(id => id !== playerId);
+        if (newStatus === 'finished') {
+          const won = newWinnerId === playerId;
+          this.enqueueNotification(playerId, `Match ${won ? 'won' : 'lost'} vs @${opponentId ? 'Opponent' : 'Bot'}`);
         } else {
-          this.enqueueNotification(player.id, `Round ${match.round - 1} results vs @${this.getOpponent(match, player.id).username}`);
+          this.enqueueNotification(playerId, `Round ${match.currentRound} results vs @${opponentId ? 'Opponent' : 'Bot'}`);
         }
       }
     });
-
-    this.saveMatches();
   }
 
   async finalizeMatch(matchId) {
-    const match = this.matches[matchId];
+    const match = await storage.getMatch(matchId);
     const winnerId = match.winnerId;
-    const loserId = match.players.find(p => p.id !== winnerId).id;
+    const loserId = winnerId === match.player1Id ? match.player2Id : match.player1Id;
 
     // Calculate Elo rating changes - Per North Star (K=24)
     const K = 24;
-    const winner = await storage.getUserById(winnerId.startsWith('bot_') ? null : winnerId);
-    const loser = await storage.getUserById(loserId.startsWith('bot_') ? null : loserId);
+    const winner = await storage.getUser(winnerId && winnerId.startsWith && winnerId.startsWith('bot_') ? null : winnerId);
+    const loser = await storage.getUser(loserId && loserId.startsWith && loserId.startsWith('bot_') ? null : loserId);
     
     if (winner && loser) {
       const winnerRating = winner.points || 1200;
@@ -421,11 +592,11 @@ class AsyncDuels {
       const loserChange = Math.round(K * (0 - expectedLoser));
       
       // Apply Elo changes
-      await storage.updateUserStats(winnerId, { 
+      await storage.updateUser(winnerId, { 
         points: winnerRating + winnerChange 
       });
       
-      await storage.updateUserStats(loserId, { 
+      await storage.updateUser(loserId, { 
         points: loserRating + loserChange 
       });
       
@@ -438,7 +609,7 @@ class AsyncDuels {
       const expected = 1 / (1 + Math.pow(10, (botRating - humanRating) / 400));
       const ratingChange = Math.round(K * (1 - expected));
       
-      await storage.updateUserStats(winnerId, { 
+      await storage.updateUser(winnerId, { 
         points: humanRating + ratingChange 
       });
     } else if (loser && !winner) {
@@ -449,7 +620,7 @@ class AsyncDuels {
       const expected = 1 / (1 + Math.pow(10, (botRating - humanRating) / 400));
       const ratingChange = Math.round(K * (0 - expected));
       
-      await storage.updateUserStats(loserId, { 
+      await storage.updateUser(loserId, { 
         points: humanRating + ratingChange 
       });
     }
@@ -460,46 +631,76 @@ class AsyncDuels {
   }
 
   // Get user's inbox - only friend challenges, no bot matches
-  getUserInbox(userId) {
-    const userMatches = Object.values(this.matches).filter(match => 
-      match.players.some(p => p.id === userId) && !match.isBotMatch
-    );
-
+  async getUserInbox(userId) {
+    const userMatches = await storage.getAsyncMatches(userId);
+    
     return userMatches.map(match => {
-      const opponent = this.getOpponent(match, userId);
-      const currentTurn = match.turns[match.turns.length - 1];
+      const opponent = {
+        id: match.player1Id === userId ? match.player2Id : match.player1Id,
+        username: match.player1Id === userId ? 
+          (match.player2Id ? 'Opponent' : 'Bot') : 
+          (match.player1Id ? 'Opponent' : 'Bot')
+      };
+      
+      const currentTurn = match.turns && match.turns.length > 0 ? match.turns[match.turns.length - 1] : null;
       const yourTurn = currentTurn && !currentTurn.answers[userId] && !currentTurn.revealed;
       const timeLeft = currentTurn ? Math.max(0, currentTurn.deadlineTs - Date.now()) : 0;
 
       return {
         id: match.id,
         subject: match.subject,
-        opponent: opponent ? opponent.username : 'Unknown',
-        round: match.round,
+        opponent: opponent.username,
+        round: match.currentRound,
         status: match.status,
         yourTurn,
         timeLeft,
-        scores: match.scores,
-        updatedAt: match.updatedAt
+        scores: {
+          [userId]: match.player1Id === userId ? match.player1Score : match.player2Score,
+          [opponent.id]: match.player1Id === userId ? match.player2Score : match.player1Score
+        },
+        updatedAt: match.updatedAt ? new Date(match.updatedAt).getTime() : new Date(match.createdAt).getTime()
       };
     }).sort((a, b) => b.updatedAt - a.updatedAt);
   }
 
   // Get full match state (filtered for user)
-  getMatchForUser(matchId, userId) {
-    const match = this.matches[matchId];
+  async getMatchForUser(matchId, userId) {
+    const match = await storage.getMatch(matchId);
     if (!match) return null;
+    
+    console.log(`🔍 getMatchForUser for user ${userId}:`, {
+      matchId,
+      turnsLength: match.turns?.length,
+      lastTurnRevealed: match.turns?.[match.turns.length - 1]?.revealed,
+      lastTurnAnswers: match.turns?.[match.turns.length - 1] ? Object.keys(match.turns[match.turns.length - 1].answers || {}) : []
+    });
 
     // Verify user is in this match
-    const isPlayerInMatch = match.players.some(p => p.id === userId);
+    const isPlayerInMatch = match.player1Id === userId || match.player2Id === userId;
     if (!isPlayerInMatch) return null;
 
     // Filter sensitive data
-    const filteredTurns = match.turns.map(turn => {
+    const filteredTurns = (match.turns || []).map((turn, index) => {
+      console.log(`🔍 Filtering turn ${index} for user ${userId}:`, {
+        qid: turn.qid,
+        revealed: turn.revealed,
+        answersCount: Object.keys(turn.answers || {}).length,
+        allAnswers: Object.keys(turn.answers || {}),
+        userId,
+        turnAnswers: turn.answers
+      });
+      
       if (turn.revealed) {
-        return turn; // Show everything if revealed
+        // Show everything if revealed - both players should see all answers
+        console.log(`✅ Turn ${index} is revealed, showing all data for user ${userId}`);
+        return {
+          ...turn,
+          correctIndex: turn.correctIndex,
+          explanation: turn.explanation
+        };
       } else {
         // Hide correct answer and opponent's answer if not revealed
+        console.log(`🔒 Turn ${index} not revealed, filtering answers for user ${userId}`);
         return {
           qid: turn.qid,
           stem: turn.stem,
@@ -511,32 +712,71 @@ class AsyncDuels {
       }
     });
 
-    return {
-      ...match,
-      turns: filteredTurns
+    // Transform to match frontend expectations
+    const players = [
+      { id: match.player1Id, username: match.player1Id && match.player1Id.startsWith('bot_') ? 'Bot' : 'Player 1' },
+      { id: match.player2Id, username: match.player2Id ? (match.player2Id.startsWith('bot_') ? 'Bot' : 'Player 2') : 'Bot' }
+    ];
+
+    const result = {
+      id: match.id,
+      subject: match.subject,
+      players: players,
+      scores: {
+        [match.player1Id]: match.player1Score || 0,
+        [match.player2Id]: match.player2Score || 0
+      },
+      round: match.currentRound,
+      turns: filteredTurns,
+      status: match.status,
+      winnerId: match.winnerId,
+      bestOf: match.bestOf || 7
     };
+
+    console.log(`🔍 getMatchForUser returning data for user ${userId}:`, {
+      matchId: result.id,
+      status: result.status,
+      turnsLength: result.turns.length,
+      lastTurnRevealed: result.turns[result.turns.length - 1]?.revealed,
+      lastTurnAnswers: result.turns[result.turns.length - 1] ? Object.keys(result.turns[result.turns.length - 1].answers || {}) : []
+    });
+
+    return result;
   }
 
   async resignMatch(matchId, userId) {
-    const match = this.matches[matchId];
+    const match = await storage.getMatch(matchId);
     if (!match || match.status !== 'active') {
       throw new Error('Match not found or not active');
     }
 
     // Verify user is in this match
-    const isPlayerInMatch = match.players.some(p => p.id === userId);
+    const isPlayerInMatch = match.player1Id === userId || match.player2Id === userId;
     if (!isPlayerInMatch) {
       throw new Error('User not in this match');
     }
 
     // Set opponent as winner
-    const opponent = this.getOpponent(match, userId);
-    match.status = 'over';
-    match.winnerId = opponent.id;
-    match.updatedAt = Date.now();
+    const opponentId = match.player1Id === userId ? match.player2Id : match.player1Id;
+    
+    // Update match in database
+    console.log(`🔄 Resigning match ${matchId}: setting status to 'finished', winnerId=${opponentId}`);
+    await storage.updateMatch(matchId, {
+      status: 'finished',
+      winnerId: opponentId,
+      updatedAt: new Date()
+    });
+    
+    // Add a small delay to ensure database update is committed
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Verify the update worked
+    const updatedMatch = await storage.getMatch(matchId);
+    console.log(`🔍 After resign - match ${matchId} status: ${updatedMatch?.status}, winnerId: ${updatedMatch?.winnerId}`);
+    
+    console.log(`✅ Match ${matchId} resigned successfully`);
 
     await this.finalizeMatch(matchId);
-    this.saveMatches();
 
     return match;
   }
@@ -565,38 +805,44 @@ class AsyncDuels {
     }, 60000); // Check every minute
   }
 
-  checkDeadlines() {
+  async checkDeadlines() {
     const now = Date.now();
     let matchesUpdated = false;
 
-    Object.values(this.matches).forEach(match => {
-      if (match.status !== 'active') return;
+    // Get all active async matches from database
+    const activeMatches = await storage.getAsyncMatches();
+    
+    for (const match of activeMatches) {
+      if (match.status !== 'active') continue;
 
-      const currentTurn = match.turns[match.turns.length - 1];
-      if (!currentTurn || currentTurn.revealed) return;
+      const currentTurn = match.turns && match.turns.length > 0 ? match.turns[match.turns.length - 1] : null;
+      if (!currentTurn || currentTurn.revealed) continue;
 
       if (now > currentTurn.deadlineTs) {
         // Deadline passed - forfeit round to players who answered
         const answeredPlayers = Object.keys(currentTurn.answers);
-        const unansweredPlayers = match.players.filter(p => !currentTurn.answers[p.id]);
+        const players = [match.player1Id, match.player2Id].filter(id => id);
+        const unansweredPlayers = players.filter(p => !currentTurn.answers[p]);
 
         if (answeredPlayers.length === 1) {
           // One player answered, they win the round
           const winnerId = answeredPlayers[0];
-          match.scores[winnerId]++;
+          const newPlayer1Score = winnerId === match.player1Id ? match.player1Score + 1 : match.player1Score;
+          const newPlayer2Score = winnerId === match.player2Id ? match.player2Score + 1 : match.player2Score;
+          
+          await storage.updateMatch(match.id, {
+            player1Score: newPlayer1Score,
+            player2Score: newPlayer2Score
+          });
         }
         // If neither answered, no one gets the point
 
         // Check for forfeit (2 missed rounds or 48h total)
         // This is simplified - you'd track missed rounds per player
         
-        this.revealTurn(match.id);
+        await this.revealTurn(match.id);
         matchesUpdated = true;
       }
-    });
-
-    if (matchesUpdated) {
-      this.saveMatches();
     }
   }
 

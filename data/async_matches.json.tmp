@@ -887,5 +887,52 @@
     "isBotMatch": false,
     "createdAt": 1755308156504,
     "updatedAt": 1756471214216
+  },
+  "m_1757875396464_6q256ah01": {
+    "id": "m_1757875396464_6q256ah01",
+    "mode": "async",
+    "subject": "Mixed Questions",
+    "audience": "Bar",
+    "bestOf": 7,
+    "players": [
+      {
+        "id": "93febce1-ed68-42cb-a1fd-501d9fdc3fe0",
+        "username": "sum-yam"
+      },
+      {
+        "id": "70bba3f9-86c0-4572-b987-a6ea6844a557",
+        "username": "yam-sum"
+      }
+    ],
+    "scores": {
+      "93febce1-ed68-42cb-a1fd-501d9fdc3fe0": 0,
+      "70bba3f9-86c0-4572-b987-a6ea6844a557": 0
+    },
+    "round": 1,
+    "difficulty": 1,
+    "turns": [
+      {
+        "qid": "pool_1757875199504_j7cr6tpl",
+        "stem": "In 2015, Alice conveyed a parcel of land in State Y to Bob for life, with the remainder to Corp X. The deed contained a provision stating that the property would revert to Alice if Bob ever used the land for commercial purposes. In 2020, Bob entered into a lease agreement with a local business, permitting them to operate a café on the property. Alice learned of this in 2021 and filed a lawsuit against Bob, seeking to reclaim the land based on the reversion clause. Bob argued that the lease was merely temporary and did not constitute a commercial use. Meanwhile, Corp X intervened in the lawsuit, claiming that they should be entitled to the property as the vested remainder holders, regardless of Alice's reversionary interest. The trial court ruled in favor of Alice, but Bob has appealed. The appellate court must determine if Alice's reversion clause is valid under the Rule Against Perpetuities (RAP) and whether Bob's lease constitutes a commercial use triggering the reversion. ",
+        "choices": [
+          "The appellate court will likely uphold Alice's reversion, finding that the clause is valid under the RAP and Bob's lease constitutes commercial use.",
+          "It is probable that the appellate court will find that Bob's lease does not trigger the reversion, as it does not constitute a permanent commercial use.",
+          "The appellate court may rule in favor of Corp X, stating that their vested remainder status supersedes Alice's reversionary interest regardless of Bob's actions.",
+          "The court is likely to reverse the trial court's ruling, concluding that the reversion clause violates the RAP due to uncertainty in the future interest."
+        ],
+        "subject": "Property",
+        "difficulty": 1,
+        "deadlineTs": 1757961796764,
+        "answers": {},
+        "revealed": false,
+        "correctIndex": 0,
+        "explanation": "The Rule Against Perpetuities (RAP) states that a future interest must vest, if at all, within 21 years of a life in being at the creation of the interest. In this case, Alice's reversion clause is contingent on whether Bob engages in commercial use. The clause is valid because it is tied to a specific event happening during Bob's lifetime. Bob's lease constitutes commercial use, as it allows a business to operate on the property, thus triggering Alice's reversion. The reversion is valid under the RAP since it is not contingent on an event that is too remote or indefinite. Option B fails because it misapplies the RAP by suggesting the reversion clause is too uncertain, when in fact, it is clear and enforceable. Option C incorrectly assumes that Corp X's vested remainder status can override Alice's specific interest, which is not the case here. Lastly, Option D misinterprets the lease's impact on triggering the reversion; the lease indeed indicates commercial use. A common trap in these types of questions is confusing reversionary interests with vested remainders, so remember that reversionary interests can be enforced if clearly stated and tied to specific conditions."
+      }
+    ],
+    "status": "active",
+    "winnerId": null,
+    "isBotMatch": false,
+    "createdAt": 1757875396752,
+    "updatedAt": 1757875396764
   }
 }
