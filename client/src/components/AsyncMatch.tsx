@@ -88,7 +88,7 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
       return () => clearTimeout(timer);
     }
   }, [previousTurn, match?.turns?.length]);
-
+  
   // Track streak when turn is revealed
   useEffect(() => {
     if (!match) return;
@@ -119,9 +119,9 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
   const answerMutation = useMutation({
     mutationFn: async ({ answerIndex, responseTime }: { answerIndex: number; responseTime: number }) => {
       return apiRequest('POST', `/api/async/answer`, {
-        matchId,
-        answerIndex,
-        responseTime
+          matchId,
+          answerIndex,
+          responseTime
       });
     },
     onSuccess: () => {
@@ -316,9 +316,9 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <Card className="w-full max-w-3xl bg-gradient-to-br from-slate-900 to-slate-800 border-purple-500/30 shadow-2xl max-h-[90vh] overflow-auto">
-          <CardHeader>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-1 z-50">
+        <Card className="w-full max-w-7xl h-[98vh] bg-gradient-to-br from-slate-900/95 to-slate-800/95 border-purple-500/30 shadow-2xl backdrop-blur-sm overflow-y-auto">
+          <CardHeader className="p-4">
             <div className="flex items-center justify-between mb-4">
               <Button
                 onClick={onClose}
@@ -345,54 +345,50 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
             </div>
 
             {/* Debug Panel */}
-            <div className="bg-slate-800/50 border border-slate-600/30 rounded-lg p-3 text-xs">
-              <div className="font-semibold text-slate-300 mb-2">Debug Info:</div>
-              <div className="grid grid-cols-2 gap-2 text-slate-400">
-                <div>Round: {match?.round}</div>
-                <div>Turns: {match?.turns?.length}</div>
-                <div>Status: {match?.status}</div>
-                <div>BestOf: {match?.bestOf}</div>
-                <div>Current Turn: {match?.turns?.[match?.turns?.length - 1]?.revealed ? 'Revealed' : 'Not Revealed'}</div>
-                <div>Answers: {Object.keys(match?.turns?.[match?.turns?.length - 1]?.answers || {}).length}</div>
-              </div>
-            </div>
 
-            <div className="space-y-4">
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Match Header */}
-              <div className="text-center">
-                <CardTitle className="text-2xl font-cinzel text-purple-300 mb-2">
+              <div className="lg:col-span-2 text-center bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl p-4 border border-purple-500/20">
+                <CardTitle className="text-2xl font-cinzel text-purple-200 mb-2">
                   {match.subject}
                 </CardTitle>
-                <div className="text-slate-400">
-                  vs @{opponent?.username} • Round {match.round} of {match.turns.length > 0 ? 7 : '?'}
+                <div className="text-slate-300 text-base">
+                  vs <span className="font-semibold text-purple-300">@{opponent?.username}</span> • Round {match.round} of {match.turns.length > 0 ? 7 : '?'}
                 </div>
               </div>
 
+              {/* Score and Time */}
+              <div className="space-y-3">
               {/* Score Progress */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-300">Match Progress</span>
-                  <span className="text-purple-300">{getScoreDisplay()}</span>
+                <div className="bg-slate-800/40 rounded-xl p-3 border border-slate-700/50">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-slate-200 font-medium">Score</span>
+                    <span className="text-xl font-bold text-purple-300">{getScoreDisplay()}</span>
                 </div>
                 <Progress 
                   value={(Math.max(...Object.values(match.scores)) / 4) * 100} 
-                  className="h-3"
+                    className="h-2 bg-slate-700/50"
                 />
+                  <div className="text-xs text-slate-400 mt-1 text-center">
+                    First to 4 wins
+                  </div>
               </div>
 
               {/* Time Left */}
               {match.status === 'active' && timeLeft > 0 && (
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-yellow-400">
-                    <Clock className="w-5 h-5 inline mr-2" />
+                  <div className="text-center bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-3">
+                    <div className="text-sm font-bold text-yellow-300 flex items-center justify-center">
+                      <Clock className="w-4 h-4 mr-2 animate-pulse" />
                     {formatTimeLeft(timeLeft)}
                   </div>
                 </div>
               )}
+              </div>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="p-4 space-y-6">
             {/* Previous Turn Results - Show briefly when a new turn starts */}
             {showPreviousResults && previousTurn && previousTurn.revealed && match.status !== 'finished' && (
               <Card className="bg-slate-800/50 border-slate-600/30 mb-6">
@@ -407,7 +403,7 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                         <span className="ml-2 text-sm text-yellow-400 animate-pulse">(Showing for 3 seconds...)</span>
                       </div>
                     </div>
-                    <div className="text-slate-300 leading-relaxed">
+                    <div className="text-slate-300 leading-relaxed break-words overflow-wrap-anywhere">
                       {previousTurn.stem}
                     </div>
                   </div>
@@ -477,11 +473,15 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                               : 'bg-slate-800/30 border-slate-600/30'
                           }`}
                         >
-                          <div className="flex items-center">
-                            <span className="w-6 h-6 rounded border flex items-center justify-center mr-3 text-sm font-semibold">
-                              {String.fromCharCode(65 + index)}
-                            </span>
-                            <span className="flex-1">{choice}</span>
+                          <div className="flex items-start gap-3 w-full">
+                            <div className="flex-shrink-0">
+                              <span className="w-6 h-6 rounded border flex items-center justify-center text-sm font-semibold">
+                                {String.fromCharCode(65 + index)}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0 text-left">
+                              <div className="break-words overflow-wrap-anywhere text-sm leading-relaxed whitespace-normal">{choice}</div>
+                            </div>
                             <div className="flex items-center space-x-2">
                               {wasSelected && playersWhoSelected.length > 0 && (
                                 <div className="flex items-center space-x-1">
@@ -523,20 +523,27 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
 
             {/* Current Question - Only show if match is not finished and not showing previous results */}
             {currentTurn && match.status !== 'finished' && !showPreviousResults && (
-              <Card className="bg-slate-800/50 border-slate-600/30">
+              <Card className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 border-purple-500/20 shadow-xl">
                 <CardContent className="p-6">
                   {/* Question Stem */}
                   <div className="mb-6">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center mr-3">
-                        <Target className="w-4 h-4 text-white" />
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center mr-3 shadow-lg">
+                        <Target className="w-5 h-5 text-white" />
                       </div>
-                      <div className="text-lg font-semibold text-slate-200">
-                        Question {match.turns.length}
+                      <div className="flex-1">
+                        <div className="text-lg font-bold text-slate-100 mb-1">
+                          Question {match.turns.length}
+                        </div>
+                        <div className="text-sm text-purple-300">
+                          Choose the best answer
+                      </div>
                       </div>
                     </div>
-                    <div className="text-slate-300 leading-relaxed">
+                    <div className="bg-slate-900/40 border border-slate-700/50 rounded-xl p-4 shadow-inner">
+                      <div className="text-slate-200 leading-relaxed text-base font-medium break-words overflow-wrap-anywhere">
                       {currentTurn.stem}
+                      </div>
                     </div>
                   </div>
 
@@ -548,34 +555,43 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                           key={index}
                           onClick={() => !isYourTurn ? null : setSelectedAnswer(index)}
                           disabled={!isYourTurn || answering}
-                          className={`w-full text-left p-4 h-auto border transition-all ${
+                          className={`w-full p-4 h-auto border-2 transition-all duration-200 transform hover:scale-[1.01] ${
                             selectedAnswer === index
-                              ? 'bg-purple-600 border-purple-500 text-white'
-                              : 'bg-slate-700/50 border-slate-600/50 text-slate-300 hover:border-purple-400/50'
-                          } ${!isYourTurn ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              ? 'bg-gradient-to-r from-purple-600 to-purple-700 border-purple-400 text-white shadow-lg shadow-purple-500/25'
+                              : 'bg-slate-800/60 border-slate-600/60 text-slate-200 hover:border-purple-500/60 hover:bg-slate-700/60'
+                          } ${!isYourTurn ? 'opacity-50 cursor-not-allowed hover:scale-100' : ''}`}
                           data-testid={`answer-choice-${index}`}
                         >
-                          <div className="flex items-center">
-                            <span className="w-6 h-6 rounded border border-current flex items-center justify-center mr-3 text-sm font-semibold">
-                              {String.fromCharCode(65 + index)}
-                            </span>
-                            <span>{choice}</span>
+                          <div className="flex items-start gap-3 w-full">
+                            <div className="flex-shrink-0">
+                              <span className={`w-6 h-6 rounded border flex items-center justify-center text-sm font-semibold ${
+                                selectedAnswer === index
+                                  ? 'bg-white/20 border-white/30 text-white'
+                                  : 'bg-slate-700/50 border-slate-500/50 text-slate-300'
+                              }`}>
+                                {String.fromCharCode(65 + index)}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0 text-left">
+                              <div className="break-words overflow-wrap-anywhere text-sm leading-relaxed whitespace-normal">{choice}</div>
+                            </div>
                           </div>
                         </Button>
                       ))}
 
                       {/* Submit Button */}
                       {isYourTurn && (
+                        <div className="mt-6 pt-4 border-t border-slate-700/50">
                         <Button
                           onClick={handleSubmitAnswer}
                           disabled={selectedAnswer === null || answering}
-                          className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white"
+                            className="w-full py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold text-base shadow-lg shadow-green-500/25 transition-all duration-200 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                           data-testid="button-submit-answer"
                         >
                           {answering ? (
                             <>
                               <Clock className="w-4 h-4 mr-2 animate-spin" />
-                              Submitting...
+                                Submitting Answer...
                             </>
                           ) : (
                             <>
@@ -584,6 +600,7 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                             </>
                           )}
                         </Button>
+                        </div>
                       )}
                     </div>
                   ) : (
@@ -650,11 +667,15 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                                 : 'bg-slate-800/30 border-slate-600/30'
                             }`}
                           >
-                            <div className="flex items-center">
-                              <span className="w-6 h-6 rounded border flex items-center justify-center mr-3 text-sm font-semibold">
-                                {String.fromCharCode(65 + index)}
-                              </span>
-                              <span className="flex-1">{choice}</span>
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0">
+                                <span className="w-6 h-6 rounded border flex items-center justify-center text-sm font-semibold">
+                                  {String.fromCharCode(65 + index)}
+                                </span>
+                              </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="break-words overflow-wrap-anywhere text-sm leading-relaxed block">{choice}</span>
+                            </div>
                               <div className="flex items-center space-x-2">
                                 {wasSelected && playersWhoSelected.length > 0 && (
                                   <div className="flex items-center space-x-1">
@@ -673,9 +694,9 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
                                     ))}
                                   </div>
                                 )}
-                                {isCorrect && (
-                                  <CheckCircle className="w-5 h-5 text-green-400" />
-                                )}
+                              {isCorrect && (
+                                <CheckCircle className="w-5 h-5 text-green-400" />
+                              )}
                               </div>
                             </div>
                           </div>
@@ -733,18 +754,19 @@ export default function AsyncMatch({ matchId, isOpen, onClose }: AsyncMatchProps
 
             {/* Actions */}
             {match.status === 'active' && (
-              <div className="flex justify-between items-center pt-4 border-t border-slate-700">
+              <div className="flex justify-between items-center pt-6 border-t border-slate-700/50">
                 <Button
                   onClick={() => setShowResignDialog(true)}
                   variant="outline"
-                  className="border-red-500/50 text-red-300 hover:bg-red-500/10"
+                  className="border-red-500/60 text-red-300 hover:bg-red-500/10 hover:border-red-400/60 px-6 py-2 transition-all duration-200"
                   data-testid="button-resign-match"
                 >
                   <Flag className="w-4 h-4 mr-2" />
                   Resign Match
                 </Button>
 
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-slate-400 bg-slate-800/40 px-4 py-2 rounded-lg border border-slate-700/50">
+                  <Clock className="w-4 h-4 inline mr-2" />
                   Turn deadline: 24 hours
                 </div>
               </div>

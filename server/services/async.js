@@ -654,6 +654,7 @@ class AsyncDuels {
         status: match.status,
         yourTurn,
         timeLeft,
+        bestOf: match.bestOf || 7,
         scores: {
           [userId]: match.player1Id === userId ? match.player1Score : match.player2Score,
           [opponent.id]: match.player1Id === userId ? match.player2Score : match.player1Score
@@ -787,7 +788,7 @@ class AsyncDuels {
     this.notifications.set(userId, current + 1);
     
     // TODO: Wire to email/push later
-    console.log(`Notification for ${userId}: ${text}`);
+    console.log(`📬 Notification for ${userId}: ${text}`);
   }
 
   getUnreadCount(userId) {
@@ -795,7 +796,9 @@ class AsyncDuels {
   }
 
   clearNotifications(userId) {
+    const count = this.notifications.get(userId) || 0;
     this.notifications.set(userId, 0);
+    console.log(`📭 Cleared ${count} notifications for user ${userId}`);
   }
 
   // Background tasks

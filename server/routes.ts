@@ -1160,6 +1160,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const inbox = await asyncDuels.getUserInbox(userId);
       const unreadCount = asyncDuels.getUnreadCount(userId);
       
+      // Clear notifications when user opens inbox
+      asyncDuels.clearNotifications(userId);
+      
       res.json({ matches: inbox, unreadCount });
     } catch (error) {
       console.error('Error getting inbox:', error);

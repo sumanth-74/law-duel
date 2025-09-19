@@ -26,6 +26,7 @@ interface AsyncMatch {
   timeLeft: number;
   scores: Record<string, number>;
   updatedAt: number;
+  bestOf: number;
 }
 
 interface AsyncInboxProps {
@@ -34,8 +35,13 @@ interface AsyncInboxProps {
   onPlayMatch: (matchId: string) => void;
 }
 
+interface InboxResponse {
+  matches: AsyncMatch[];
+  unreadCount: number;
+}
+
 export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxProps) {
-  const { data, refetch } = useQuery({
+  const { data, refetch } = useQuery<InboxResponse>({
     queryKey: ['/api/async/inbox'],
     enabled: isOpen,
     refetchInterval: 30000 // Refresh every 30s when open
@@ -84,8 +90,8 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
     );
   };
 
-  const activeMatches = inbox.filter(match => match.status === 'active');
-  const completedMatches = inbox.filter(match => match.status === 'over');
+  const activeMatches = inbox.filter((match: AsyncMatch) => match.status === 'active');
+  const completedMatches = inbox.filter((match: AsyncMatch) => match.status === 'over');
 
   if (!isOpen) return null;
 
@@ -98,8 +104,8 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
               <Mail className="w-5 h-5 mr-2" />
               Friend Games
               {unreadCount > 0 && (
-                <Badge className="ml-2 bg-red-500 text-white border-0 animate-pulse">
-                  {unreadCount} waiting
+                <Badge className="ml-2 bg-orange-600 text-white border-0 animate-pulse">
+                  {unreadCount} new
                 </Badge>
               )}
             </CardTitle>
@@ -144,7 +150,7 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
                     Active Matches
                   </h3>
                   
-                  {activeMatches.map((match) => (
+                  {activeMatches.map((match: AsyncMatch) => (
                     <Card 
                       key={match.id} 
                       className={`border transition-all duration-200 hover:border-purple-400/50 ${
@@ -161,7 +167,7 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
                                 vs @{match.opponent}
                               </div>
                               <div className="text-sm text-slate-400">
-                                {match.subject} · Round {match.round}/10
+                                {match.subject} · Round {match.round}/{match.bestOf || 7}
                               </div>
                               <div className="text-xs text-amber-400">
                                 {formatTimeLeft(match.timeLeft)}
@@ -178,14 +184,14 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
                         <div className="flex items-center justify-between mb-3">
                           <div className="text-sm text-slate-400">Score Progress</div>
                           <div className="text-sm text-slate-300">
-                            Best of 7
+                            Best of {match.bestOf || 7}
                           </div>
                         </div>
                         
                         <div className="flex items-center space-x-2 mb-3">
                           <div className="flex-1">
                             <Progress 
-                              value={(Object.values(match.scores).reduce((a, b) => Math.max(a, b), 0) / 4) * 100} 
+                              value={(Object.values(match.scores).reduce((a: number, b: number) => Math.max(a, b), 0) / ((match.bestOf || 7) / 2 + 1)) * 100} 
                               className="h-2"
                             />
                           </div>
@@ -230,7 +236,7 @@ export default function AsyncInbox({ isOpen, onClose, onPlayMatch }: AsyncInboxP
                     Recent Completed
                   </h3>
                   
-                  {completedMatches.slice(0, 5).map((match) => (
+                  {completedMatches.slice(0, 5).map((match: AsyncMatch) => (
                     <Card 
                       key={match.id} 
                       className="border bg-slate-800/20 border-slate-700/30"
