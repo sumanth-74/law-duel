@@ -11,7 +11,7 @@ interface LeaderboardProps {
   realTimeData?: any[];
 }
 
-export function Leaderboard({ limit = 20, realTimeData }: LeaderboardProps) {
+export function Leaderboard({ limit = 15, realTimeData }: LeaderboardProps) {
   const { data: players = [], isLoading, error } = useQuery<User[]>({
     queryKey: [`/api/leaderboard?limit=${limit}`], // Proper query string
     refetchInterval: realTimeData ? 60000 : 30000, // Slower refresh when real-time is available

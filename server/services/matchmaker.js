@@ -297,6 +297,21 @@ async function runDuel(wss, roomCode, players, subject) {
         // Track subtopic progress for human players (not bots)
         if (ws.profile?.id && !ws.isBot) {
           try {
+            // Record comprehensive stats using statsService
+            const { statsService } = await import('./statsService.js');
+            const statsResult = await statsService.recordQuestionAttempt(
+              ws.profile.id,
+              question.qid,
+              question.subject,
+              answer.choice,
+              question.correctIndex,
+              correct,
+              answer.timeMs,
+              `difficulty_${match.difficulty}`,
+              roomCode
+            );
+            
+            // Also record subtopic progress
             const progressResult = await progressService.recordAttempt({
               userId: ws.profile.id,
               duelId: roomCode,
@@ -313,8 +328,17 @@ async function runDuel(wss, roomCode, players, subject) {
             if (progressResult) {
               ws.progressResult = progressResult;
             }
+            
+            console.log(`📊 VS Duel Stats Updated:`, {
+              userId: ws.profile.id,
+              subject: question.subject,
+              correct,
+              xpGained: statsResult.xpGained,
+              levelUp: statsResult.levelUp,
+              masteryUp: statsResult.masteryUp
+            });
           } catch (error) {
-            console.error('Error recording subtopic progress:', error);
+            console.error('Error recording stats and progress:', error);
           }
         }
         
@@ -387,21 +411,31 @@ async function runDuel(wss, roomCode, players, subject) {
     xpChange2 = 15;
   }
   
-  // Update player XP
+  // Update player XP and win/loss records
   if (player1) {
     const newXP1 = Math.max(0, currentXP1 + xpChange1); // Never go below 0
-    await storage.updateUserStats(player1.id, { 
-      points: newXP1 
+    const isWinner1 = winner === 0;
+    const isLoser1 = winner === 1;
+    
+    await storage.updateUser(player1.id, { 
+      points: newXP1,
+      totalWins: isWinner1 ? (player1.totalWins || 0) + 1 : (player1.totalWins || 0),
+      totalLosses: isLoser1 ? (player1.totalLosses || 0) + 1 : (player1.totalLosses || 0)
     });
-    await updateWeeklyLadder(player1.id, xpChange1, winner === 0);
+    await updateWeeklyLadder(player1.id, xpChange1, isWinner1);
   }
   
   if (player2) {
     const newXP2 = Math.max(0, currentXP2 + xpChange2); // Never go below 0
-    await storage.updateUserStats(player2.id, { 
-      points: newXP2 
+    const isWinner2 = winner === 1;
+    const isLoser2 = winner === 0;
+    
+    await storage.updateUser(player2.id, { 
+      points: newXP2,
+      totalWins: isWinner2 ? (player2.totalWins || 0) + 1 : (player2.totalWins || 0),
+      totalLosses: isLoser2 ? (player2.totalLosses || 0) + 1 : (player2.totalLosses || 0)
     });
-    await updateWeeklyLadder(player2.id, xpChange2, winner === 1);
+    await updateWeeklyLadder(player2.id, xpChange2, isWinner2);
   }
   
   const finalData = {

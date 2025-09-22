@@ -106,7 +106,7 @@ class SoloChallengeService {
       
       pointsEarned = basePoints + speedBonus;
       
-      // Update user's total points
+      // Update user's total points (additional to stats system)
       try {
         const user = await storage.getUser(challenge.userId);
         if (user) {
@@ -120,6 +120,32 @@ class SoloChallengeService {
     } else {
       // Wrong answer - lose a life
       livesLost = 1;
+    }
+
+    // Record comprehensive stats using statsService
+    try {
+      const { statsService } = await import('./statsService.js');
+      const statsResult = await statsService.recordQuestionAttempt(
+        challenge.userId,
+        question.qid || question.id,
+        challenge.subject,
+        answerIndex,
+        question.correctIndex || question.correctAnswer,
+        isCorrect,
+        timeToAnswer * 1000, // Convert to milliseconds
+        `difficulty_${challenge.difficulty}`,
+        challengeId // Use challengeId as matchId for solo challenges
+      );
+      console.log(`📊 Solo Challenge Stats Updated:`, {
+        userId: challenge.userId,
+        subject: challenge.subject,
+        isCorrect,
+        xpGained: statsResult.xpGained,
+        levelUp: statsResult.levelUp,
+        masteryUp: statsResult.masteryUp
+      });
+    } catch (error) {
+      console.error('Failed to record question attempt in stats system:', error);
     }
 
     const newLivesRemaining = Math.max(0, challenge.livesRemaining - livesLost);
@@ -187,6 +213,14 @@ class SoloChallengeService {
 
     // Update challenge in database
     await storage.updateSoloChallenge(challengeId, updates);
+
+    // Update weekly ladder for leaderboard (solo challenges should count!)
+    try {
+      const { updateWeeklyLadder } = await import('./weeklyLadder.js');
+      await updateWeeklyLadder(challenge.userId, pointsEarned, isCorrect);
+    } catch (error) {
+      console.error('Failed to update weekly ladder:', error);
+    }
 
     return {
       isCorrect,

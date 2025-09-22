@@ -591,14 +591,25 @@ class AsyncDuels {
       const winnerChange = Math.round(K * (1 - expectedWinner));
       const loserChange = Math.round(K * (0 - expectedLoser));
       
-      // Apply Elo changes
+      // Apply Elo changes and win/loss records
       await storage.updateUser(winnerId, { 
-        points: winnerRating + winnerChange 
+        points: winnerRating + winnerChange,
+        totalWins: (winner.totalWins || 0) + 1
       });
       
       await storage.updateUser(loserId, { 
-        points: loserRating + loserChange 
+        points: loserRating + loserChange,
+        totalLosses: (loser.totalLosses || 0) + 1
       });
+      
+      // Update weekly ladder for leaderboard
+      try {
+        const { updateWeeklyLadder } = await import('./weeklyLadder.js');
+        await updateWeeklyLadder(winnerId, winnerChange, true);
+        await updateWeeklyLadder(loserId, loserChange, false);
+      } catch (error) {
+        console.error('Failed to update weekly ladder:', error);
+      }
       
       console.log(`🏆 Async Duel ${matchId} complete: Winner +${winnerChange} Elo, Loser ${loserChange} Elo`);
     } else if (winner && !loser) {
@@ -610,8 +621,19 @@ class AsyncDuels {
       const ratingChange = Math.round(K * (1 - expected));
       
       await storage.updateUser(winnerId, { 
-        points: humanRating + ratingChange 
+        points: humanRating + ratingChange,
+        totalWins: (winner.totalWins || 0) + 1
       });
+      
+      // Update weekly ladder for leaderboard
+      try {
+        const { updateWeeklyLadder } = await import('./weeklyLadder.js');
+        await updateWeeklyLadder(winnerId, ratingChange, true);
+      } catch (error) {
+        console.error('Failed to update weekly ladder:', error);
+      }
+      
+      console.log(`🤖 Async Bot Duel ${matchId} complete: Human +${ratingChange} Elo`);
     } else if (loser && !winner) {
       // Human lost to bot
       const humanRating = loser.points || 1200;
@@ -621,8 +643,19 @@ class AsyncDuels {
       const ratingChange = Math.round(K * (0 - expected));
       
       await storage.updateUser(loserId, { 
-        points: humanRating + ratingChange 
+        points: humanRating + ratingChange,
+        totalLosses: (loser.totalLosses || 0) + 1
       });
+      
+      // Update weekly ladder for leaderboard
+      try {
+        const { updateWeeklyLadder } = await import('./weeklyLadder.js');
+        await updateWeeklyLadder(loserId, ratingChange, false);
+      } catch (error) {
+        console.error('Failed to update weekly ladder:', error);
+      }
+      
+      console.log(`🤖 Async Bot Duel ${matchId} complete: Human ${ratingChange} Elo`);
     }
   }
 

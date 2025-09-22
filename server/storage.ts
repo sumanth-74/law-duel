@@ -504,12 +504,14 @@ export class DatabaseStorage implements IStorage {
 
   // Leaderboard methods
   async upsertLeaderboardEntry(entry: InsertLeaderboardEntry): Promise<LeaderboardEntry> {
-    const [upserted] = await db
-      .insert(leaderboardEntries)
-      .values(entry)
-      .onConflictDoUpdate({
-        target: leaderboardEntries.userId,
-        set: {
+    // First try to find existing entry
+    const existing = await this.getLeaderboardEntry(entry.userId);
+    
+    if (existing) {
+      // Update existing entry
+      const [updated] = await db
+        .update(leaderboardEntries)
+        .set({
           username: entry.username,
           displayName: entry.displayName,
           points: entry.points,
@@ -517,10 +519,18 @@ export class DatabaseStorage implements IStorage {
           avatarData: entry.avatarData,
           lastActivity: entry.lastActivity || new Date(),
           updatedAt: new Date()
-        }
-      })
-      .returning();
-    return upserted;
+        })
+        .where(eq(leaderboardEntries.userId, entry.userId))
+        .returning();
+      return updated;
+    } else {
+      // Insert new entry
+      const [inserted] = await db
+        .insert(leaderboardEntries)
+        .values(entry)
+        .returning();
+      return inserted;
+    }
   }
 
   async getLeaderboard(limit: number): Promise<LeaderboardEntry[]> {

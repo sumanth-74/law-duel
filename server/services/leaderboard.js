@@ -230,7 +230,7 @@ export async function getLeaderboard(limit = 20) {
     const leaderboard = await storage.getLeaderboard(Math.min(limit, 50));
     return leaderboard
       .filter(entry => !entry.userId.startsWith('sb_') && entry.points > 0) // Exclude stealth bots and zero-point players
-      .slice(0, Math.min(limit, 12)); // Cap at 12 to avoid showing zero-point players
+      .slice(0, Math.min(limit, 50)); // Allow up to 50 users to be shown
   } catch (error) {
     console.error('Failed to get leaderboard:', error);
     return [];

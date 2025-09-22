@@ -558,11 +558,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If weekly ladder is empty, fall back to regular leaderboard with bots
       if (weeklyLadder.length === 0) {
         const { getLeaderboard } = await import("./services/leaderboard.js");
-        const leaderboard = await getLeaderboard(12);
+        const leaderboard = await getLeaderboard(50);
         res.json(leaderboard);
       } else {
         // Transform weekly data to match expected format
-        const leaderboard = weeklyLadder.slice(0, 12).map((player: any) => ({
+        const leaderboard = weeklyLadder.slice(0, 50).map((player: any) => ({
           id: player.userId,
           username: player.username,
           displayName: player.username,
