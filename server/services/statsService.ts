@@ -72,10 +72,25 @@ export class StatsService {
     // Update overall user stats
     await this.updateOverallStats(userId, subject, isCorrect);
     
-    // Calculate and apply XP gain
+    // Calculate and apply XP gain with speed bonus
     const [user] = await db.select().from(users).where(eq(users.id, userId));
     const streakBonus = user?.currentOverallStreak || 0;
-    const xpGained = progressionService.calculateQuestionXp(isCorrect, difficulty, streakBonus);
+    const baseXp = progressionService.calculateQuestionXp(isCorrect, difficulty, streakBonus);
+    
+    // Apply speed bonus for correct answers
+    let speedBonus = 0;
+    if (isCorrect && timeSpent > 0) {
+      const timeInSeconds = timeSpent / 1000; // Convert milliseconds to seconds
+      if (timeInSeconds <= 5) {
+        speedBonus = Math.floor(baseXp * 0.5); // +50% bonus
+      } else if (timeInSeconds <= 10) {
+        speedBonus = Math.floor(baseXp * 0.3); // +30% bonus
+      } else if (timeInSeconds <= 15) {
+        speedBonus = Math.floor(baseXp * 0.15); // +15% bonus
+      }
+    }
+    
+    const xpGained = baseXp + speedBonus;
     
     let levelResult = { levelUp: false, newLevel: 0, newTitle: "" };
     if (xpGained > 0) {

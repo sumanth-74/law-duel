@@ -91,7 +91,7 @@ export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
       type: 'regular',
       subject: normalizedSubject,
       subtopic: selectedSubtopic,
-      difficulty: Math.min(10, difficulty),
+      difficulty: Math.min(4, difficulty), // Cap at 4 for question pool compatibility
       reason: `Regular practice: ${normalizedSubject}/${selectedSubtopic}`
     });
   }
@@ -106,7 +106,7 @@ export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
 
 // Calculate adaptive difficulty based on mastery level
 function calculateAdaptiveDifficulty(mastery) {
-  // Map mastery (0-100) to difficulty (1-10)
+  // Map mastery (0-100) to difficulty (1-4) - capped at 4 for question pool compatibility
   // Lower mastery = lower difficulty to help learning
   // Higher mastery = higher difficulty for challenge
   
@@ -114,12 +114,12 @@ function calculateAdaptiveDifficulty(mastery) {
   if (mastery < 30) return 2;
   if (mastery < 40) return 3;
   if (mastery < 50) return 4;
-  if (mastery < 60) return 5;
-  if (mastery < 70) return 6;
-  if (mastery < 80) return 7;
-  if (mastery < 90) return 8;
-  if (mastery < 95) return 9;
-  return 10;
+  if (mastery < 60) return 4; // Cap at 4
+  if (mastery < 70) return 4; // Cap at 4
+  if (mastery < 80) return 4; // Cap at 4
+  if (mastery < 90) return 4; // Cap at 4
+  if (mastery < 95) return 4; // Cap at 4
+  return 4; // Cap at 4
 }
 
 // Log targeting decision for monitoring
