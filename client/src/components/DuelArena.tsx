@@ -153,8 +153,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
 
     switch (type) {
       case 'duel:start':
-        // console.log('Duel started with payload:', payload);
-        // console.log('🎯 Setting roomCode to:', payload.roomCode);
+        console.log('🎯 Duel started with payload:', payload);
+        console.log('🎯 Setting playerIndex to:', payload.playerIndex || 0);
         setDuelState(prev => ({
           ...prev,
           roomCode: payload.roomCode,
@@ -172,10 +172,15 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         break;
 
       case 'duel:result':
+        console.log('🎯 Received duel:result message with payload:', payload);
+        console.log('🎯 Payload scores field:', payload.scores);
+        console.log('🎯 Payload scores type:', typeof payload.scores);
+        console.log('🎯 Payload scores is array:', Array.isArray(payload.scores));
         handleQuestionResult(payload);
         break;
 
       case 'duel:end':
+        console.log('🎯 Received duel:end message with payload:', payload);
         handleDuelFinished(payload);
         break;
 
@@ -226,6 +231,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   };
 
   const handleQuestionResult = (resultData: any) => {
+    console.log('🎯 handleQuestionResult called with:', resultData);
     const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
     const opponentCorrect = resultData.opponentAnswer === resultData.correctIndex;
     
@@ -249,23 +255,28 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
     const userHPChange = isCorrect ? 0 : -20;
     const opponentHPChange = opponentCorrect ? 0 : -20;
     
-    setDuelState(prev => ({
-      ...prev,
-      showResult: true,
-      lastResult: resultData,
-      scores: resultData.scores || [0, 0],
-      waitingForOpponent: false,
-      showFeedbackChip: true,
-      userHP: Math.max(0, prev.userHP + userHPChange),
-      opponentHP: Math.max(0, prev.opponentHP + opponentHPChange),
-      feedbackData: {
-        correct: isCorrect,
-        xpGained,
-        subject,
-        subtopic,
-        masteryChange
-      }
-    }));
+    setDuelState(prev => {
+      const newScores = resultData.scores || [0, 0];
+      console.log('🎯 Updating scores from', prev.scores, 'to', newScores);
+      console.log('🎯 PlayerIndex:', prev.playerIndex, 'Human score:', newScores[prev.playerIndex || 0]);
+      return {
+        ...prev,
+        showResult: true,
+        lastResult: resultData,
+        scores: newScores,
+        waitingForOpponent: false,
+        showFeedbackChip: true,
+        userHP: Math.max(0, prev.userHP + userHPChange),
+        opponentHP: Math.max(0, prev.opponentHP + opponentHPChange),
+        feedbackData: {
+          correct: isCorrect,
+          xpGained,
+          subject,
+          subtopic,
+          masteryChange
+        }
+      };
+    });
 
     announceForScreenReader(
       isCorrect 
@@ -296,22 +307,23 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   };
 
   const handleDuelFinished = async (finishedData: any) => {
-    // console.log('Duel finished with data:', finishedData);
+    console.log('Duel finished with data:', finishedData);
     
     setDuelState(prev => ({
       ...prev,
       isFinished: true,
-      finalResult: finishedData
+      finalResult: finishedData,
+      scores: finishedData.scores || prev.scores // Update final scores
     }));
 
     // Determine if player won (0 = player1 won, 1 = player2 won, -1 = tie)
     const playerIndex = 0; // Player is always index 0 in arena view
-    const won = finishedData.winnerId === user.id;
-    const tied = !finishedData.winnerId;
+    const won = finishedData.winner === 0; // Player is always index 0
+    const tied = finishedData.winner === -1;
     
-    // Get XP changes from the new system
-    const xpChange = finishedData.xpGained?.player1 || 0;
-    const newXP = user.xp + xpChange;
+    // Get XP changes from the backend data structure
+    const xpChange = finishedData.yourXPChange || 0;
+    const newXP = finishedData.yourNewXP || user.points;
     
     // Update local user data to reflect new XP
     if (user) {
@@ -550,14 +562,15 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
           {/* Score Display */}
           <div className="flex items-center space-x-6">
             <div className="text-center">
-              <div className="w-8 h-8 bg-arcane rounded-full flex items-center justify-center font-bold" data-testid="score-user">
+              <div className="w-8 h-8 bg-arcane rounded-full flex items-center justify-center font-bold" data-testid="score-user" key={`user-score-${duelState.scores[0]}-${duelState.scores[1]}`}>
                 {duelState.playerIndex === 1 ? duelState.scores[1] : duelState.scores[0]}
+                {/* Debug: playerIndex={duelState.playerIndex}, scores={JSON.stringify(duelState.scores)} */}
               </div>
               <p className="text-xs text-muted mt-1">You</p>
             </div>
             <div className="text-2xl font-cinzel font-bold text-muted">VS</div>
             <div className="text-center">
-              <div className="w-8 h-8 bg-danger rounded-full flex items-center justify-center font-bold" data-testid="score-opponent">
+              <div className="w-8 h-8 bg-danger rounded-full flex items-center justify-center font-bold" data-testid="score-opponent" key={`opp-score-${duelState.scores[0]}-${duelState.scores[1]}`}>
                 {duelState.playerIndex === 1 ? duelState.scores[0] : duelState.scores[1]}
               </div>
               <p className="text-xs text-muted mt-1">Opponent</p>
@@ -587,6 +600,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         </div>
         
         {/* Timer */}
+        {!duelState.isFinished && (
         <div className="flex justify-center mb-6">
           <div className="relative">
             <svg className="w-20 h-20 transform -rotate-90">
@@ -606,6 +620,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
             </div>
           </div>
         </div>
+        )}
         
         {/* Training Banner */}
         {duelState.showTrainingBanner && (
@@ -627,7 +642,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
             </div>
             <div className="text-center space-y-2">
               <h3 className="text-xl font-semibold text-arcane">
-                {duelState.showTransition ? `Moving to Round ${duelState.round + 1}` : 'Generating Question'}
+                {duelState.showTransition ? `Moving to Round ${Math.min(duelState.round + 1, MATCH_QUESTIONS)}` : 'Generating Question'}
               </h3>
               <p className="text-muted text-sm">
                 {duelState.showTransition 
@@ -644,7 +659,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
             <div className="bg-panel-2 border border-white/10 rounded-xl p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-2">
                 <h4 className="font-semibold text-base sm:text-lg" data-testid="question-header">
-                  {(duelState.currentQuestion as any)?.subject || duelState.subject} • Round {duelState.round}/10
+                  {(duelState.currentQuestion as any)?.subject || duelState.subject} • Round {duelState.round}/{MATCH_QUESTIONS}
                 </h4>
                 <div className="flex items-center space-x-2 flex-shrink-0">
                   <button 
@@ -740,36 +755,36 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         {duelState.isFinished && duelState.finalResult && (
           <div className="text-center space-y-6">
             <div className="text-4xl font-cinzel font-bold text-arcane">
-              {duelState.finalResult.winnerId === user.id ? "VICTORY!" : 
-               duelState.finalResult.winnerId ? "DEFEAT" : "DRAW"}
+              {(duelState.finalResult as any)?.winner === 0 ? "VICTORY!" : 
+               (duelState.finalResult as any)?.winner === 1 ? "DEFEAT" : "DRAW"}
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-arcane/10 rounded-lg">
                 <h4 className="font-bold text-arcane">Final Score</h4>
-                <p className="text-2xl font-cinzel">
-                  {duelState.finalResult.finalScores ? 
-                    `${duelState.finalResult.finalScores.player1} - ${duelState.finalResult.finalScores.player2}` : 
+                <p className="text-2xl font-cinzel" key={`final-score-${duelState.scores[0]}-${duelState.scores[1]}`}>
+                  {duelState.scores ? 
+                    `${duelState.scores[0]} - ${duelState.scores[1]}` : 
                     "0 - 0"}
                 </p>
               </div>
               
               <div className={`p-4 rounded-lg ${
-                (duelState.finalResult.xpGained?.player1 || 0) >= 0 
+                ((duelState.finalResult as any)?.yourXPChange || 0) >= 0 
                   ? "bg-success/10" : "bg-danger/10"
-              }`}>
+              }`} key={`xp-display-${(duelState.finalResult as any)?.yourXPChange}`}>
                 <h4 className={`font-bold ${
-                  (duelState.finalResult.xpGained?.player1 || 0) >= 0 
+                  ((duelState.finalResult as any)?.yourXPChange || 0) >= 0 
                     ? "text-success" : "text-danger"
                 }`}>
-                  XP {(duelState.finalResult.xpGained?.player1 || 0) >= 0 ? "Gained" : "Lost"}
+                  XP {((duelState.finalResult as any)?.yourXPChange || 0) >= 0 ? "Gained" : "Lost"}
                 </h4>
                 <p className={`text-xl ${
-                  (duelState.finalResult.xpGained?.player1 || 0) >= 0 
+                  ((duelState.finalResult as any)?.yourXPChange || 0) >= 0 
                     ? "text-success" : "text-danger"
                 }`}>
-                  {(duelState.finalResult.xpGained?.player1 || 0) >= 0 ? "+" : ""}
-                  {duelState.finalResult.xpGained?.player1 || 0}
+                  {((duelState.finalResult as any)?.yourXPChange || 0) >= 0 ? "+" : ""}
+                  {(duelState.finalResult as any)?.yourXPChange || 0}
                 </p>
               </div>
             </div>
@@ -781,32 +796,32 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
               <div className="flex justify-between">
                 <span>Correct Answers:</span>
                 <span className="text-arcane">
-                  {duelState.finalResult.finalScores ? duelState.finalResult.finalScores.player1 : 0}/{MATCH_QUESTIONS}
+                  {duelState.scores ? duelState.scores[0] : 0}/{MATCH_QUESTIONS}
                 </span>
               </div>
               
               <div className="border-t pt-2 flex justify-between font-bold">
                 <span>Total XP Change:</span>
                 <span className={
-                  (duelState.finalResult.xpGained?.player1 || 0) >= 0 
+                  ((duelState.finalResult as any)?.yourXPChange || 0) >= 0 
                     ? "text-success" : "text-danger"
                 }>
-                  {(duelState.finalResult.xpGained?.player1 || 0) >= 0 ? "+" : ""}
-                  {duelState.finalResult.xpGained?.player1 || 0} XP
+                  {((duelState.finalResult as any)?.yourXPChange || 0) >= 0 ? "+" : ""}
+                  {(duelState.finalResult as any)?.yourXPChange || 0} XP
                 </span>
               </div>
               
               <div className="flex justify-between text-xs">
                 <span>New Total XP:</span>
                 <span className="text-arcane font-bold">
-                  {user.xp + (duelState.finalResult.xpGained?.player1 || 0)}
+                  {(duelState.finalResult as any)?.yourNewXP || user.xp}
                 </span>
               </div>
               
               <p className="text-xs text-muted mt-2">
-                {duelState.finalResult.winnerId === user.id 
+                {(duelState.finalResult as any)?.winner === 0 
                   ? "Great job! Keep winning to earn more XP!" 
-                  : duelState.finalResult.winnerId
+                  : (duelState.finalResult as any)?.winner === 1
                   ? "Don't give up! Practice makes perfect."
                   : "A tie! Both players fought well."}
               </p>

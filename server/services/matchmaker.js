@@ -223,7 +223,7 @@ async function runDuel(wss, roomCode, players, subject) {
     
     match.round = round;
     // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
-    match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
+    match.difficulty = Math.min(Math.floor((round + 1) / 2), 4);
     
     try {
       // Use pre-reserved question from pool (no OpenAI call during duel)
@@ -350,15 +350,21 @@ async function runDuel(wss, roomCode, players, subject) {
         });
       }
 
+      console.log('🎯 Regular duel result - match.scores:', match.scores);
+      console.log('🎯 Regular duel result - match.scores type:', typeof match.scores);
+      console.log('🎯 Regular duel result - match.scores is array:', Array.isArray(match.scores));
+      const scoresSlice = match.scores ? match.scores.slice() : [0, 0];
+      console.log('🎯 Regular duel result - scoresSlice:', scoresSlice);
       const resultData = {
         qid: question.qid,
         round,
         correctIndex: question.correctIndex,
         explanation: question.explanation,
         results,
-        scores: match.scores.slice(),
+        scores: scoresSlice,
         subject: question.subject
       };
+      console.log('🎯 Regular duel resultData being sent:', resultData);
 
       players.forEach(ws => {
         if (ws.readyState === 1) {
@@ -368,11 +374,15 @@ async function runDuel(wss, roomCode, players, subject) {
             payload.progressResult = ws.progressResult;
             delete ws.progressResult; // Clear for next round
           }
+          console.log('🎯 Regular duel final payload being sent:', payload);
           ws.send(JSON.stringify({ type: 'duel:result', payload }));
         }
       });
 
       await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Clean up answers for this round after processing results
+      playerAnswers.delete(roomCode);
 
     } catch (error) {
       console.error('Error in duel round:', error);
@@ -472,8 +482,9 @@ async function runDuel(wss, roomCode, players, subject) {
     }
   });
 
+  // Clean up immediately after duel ends
   activeMatches.delete(roomCode);
-  playerAnswers.delete(roomCode);
+  // playerAnswers already cleaned up after each round
 }
 
 async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
@@ -502,7 +513,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     
     match.round = round;
     // Progressive difficulty: increases every 2 rounds (1-2=D1, 3-4=D2, 5-6=D3, 7=D4)
-    match.difficulty = Math.min(Math.floor((round + 1) / 2), 10);
+    match.difficulty = Math.min(Math.floor((round + 1) / 2), 4);
     
     try {
       // Use weakness targeting for this round
@@ -564,10 +575,14 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       const botDecision = bot.decide(round, question.correctIndex);
       
       await new Promise(resolve => {
-        const timeout = setTimeout(resolve, 61000);
+        const timeout = setTimeout(() => {
+          console.log('⏰ Bot duel timeout - using default answer');
+          resolve();
+        }, 61000);
         
         const checkInterval = setInterval(() => {
           if (answers.size >= 1) {
+            console.log('✅ Human answer received, processing...');
             clearTimeout(timeout);
             clearInterval(checkInterval);
             resolve();
@@ -575,8 +590,14 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         }, 100);
       });
 
-      // Process results
-      const humanAnswer = answers.get(humanWs) || { choice: -1, timeMs: 60000 };
+      // Process results - use actual human answer if available
+      let humanAnswer = answers.get(humanWs);
+      if (!humanAnswer) {
+        console.log('❌ No human answer found, using timeout default');
+        humanAnswer = { choice: -1, timeMs: 60000 };
+      } else {
+        console.log('✅ Using human answer:', humanAnswer);
+      }
       const humanCorrect = humanAnswer.choice === question.correctIndex;
       const botCorrect = botDecision.idx === question.correctIndex;
       
@@ -622,15 +643,21 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         }
       ];
 
+      console.log('🎯 Bot duel result - match.scores:', match.scores);
+      console.log('🎯 Bot duel result - match.scores type:', typeof match.scores);
+      console.log('🎯 Bot duel result - match.scores is array:', Array.isArray(match.scores));
+      const scoresSlice = match.scores ? match.scores.slice() : [0, 0];
+      console.log('🎯 Bot duel result - scoresSlice:', scoresSlice);
       const resultData = {
         qid: question.qid,
         round,
         correctIndex: question.correctIndex,
         explanation: question.explanation,
         results,
-        scores: match.scores.slice(),
+        scores: scoresSlice,
         subject: question.subject
       };
+      console.log('🎯 Bot duel resultData being sent:', resultData);
 
       if (humanWs.readyState === 1) {
         const payload = { ...resultData };
@@ -638,10 +665,14 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
           payload.progressResult = humanWs.progressResult;
           delete humanWs.progressResult; // Clear for next round
         }
+        console.log('🎯 Bot duel final payload being sent:', payload);
         humanWs.send(JSON.stringify({ type: 'duel:result', payload }));
       }
 
       await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Clean up answers for this round after processing results
+      playerAnswers.delete(roomCode);
 
     } catch (error) {
       console.error('Error in bot duel round:', error);
@@ -698,23 +729,24 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     humanWs.send(JSON.stringify({ type: 'duel:end', payload: finalData }));
   }
 
+  // Clean up immediately after duel ends
   activeMatches.delete(roomCode);
-  playerAnswers.delete(roomCode);
+  // playerAnswers already cleaned up after each round
 }
 
 export function handleDuelAnswer(ws, payload) {
-  console.log('🎯 handleDuelAnswer called with payload:', payload);
   const { roomCode, choice, timeMs } = payload;
-  console.log('🎯 Extracted values - roomCode:', roomCode, 'choice:', choice, 'timeMs:', timeMs);
+  console.log('🎯 handleDuelAnswer called - roomCode:', roomCode, 'choice:', choice, 'timeMs:', timeMs);
+  console.log('🎯 PlayerAnswers keys at answer time:', Array.from(playerAnswers.keys()));
   
   const answers = playerAnswers.get(roomCode);
-  console.log('🎯 Found answers map for roomCode:', roomCode, 'answers:', answers);
-  
   if (answers) {
     answers.set(ws, { choice, timeMs });
-    console.log('🎯 Answer recorded for WebSocket:', ws, 'choice:', choice, 'timeMs:', timeMs);
+    console.log('🎯 Answer stored successfully for roomCode:', roomCode);
   } else {
-    console.log('❌ No answers map found for roomCode:', roomCode);
+    console.log('❌ No answers map found for roomCode:', roomCode, '- ignoring late answer');
+    // Don't process late answers - duel has already ended
+    return;
   }
 }
 
