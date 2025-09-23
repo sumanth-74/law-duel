@@ -20,6 +20,7 @@ import { AtticusDuel } from '@/components/AtticusDuel';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, User as UserIcon, Bell, CalendarDays, Heart, Users, Zap, ChevronRight, UserPlus, ArrowLeft, Trophy, GraduationCap, Globe, Share2, Copy, BarChart3, Edit, Shield, Sword, Swords, Gamepad2, Scale, Clock } from 'lucide-react';
 import { Link } from 'wouter';
 import type { User } from '@shared/schema';
@@ -54,6 +55,7 @@ interface ChallengeNotification {
 export default function Home() {
   const { user, logout } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [realTimeLeaderboard, setRealTimeLeaderboard] = useState<any[]>([]);
   const [challengeNotification, setChallengeNotification] = useState<ChallengeNotification | null>(null);
@@ -561,6 +563,12 @@ export default function Home() {
       duelWebSocket.close();
       setDuelWebSocket(null);
     }
+    
+    // Refresh user data to get updated XP and stats
+    queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/leaderboard'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/daily-streak'] });
+    
     setGameMode('menu');
     setOpponent(null);
     setDuelData(null);
@@ -598,6 +606,11 @@ export default function Home() {
           websocket={duelWebSocket || undefined}
           duelStartMessage={duelStartMessage}
           onDuelEnd={handleDuelEnd}
+          onDuelFinished={() => {
+            queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/leaderboard'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/daily-streak'] });
+          }}
         />
         {/* Rematch and Main Menu buttons - positioned to not overlap content */}
         <div className="fixed bottom-4 right-4 space-x-2 z-50">
@@ -744,24 +757,11 @@ export default function Home() {
   if (gameMode === 'searching') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        {/* Daily Streak at top */}
-        <div className="top-4 left-4 right-4">
-          <StreakIndicator />
-        </div>
-        
-        {/* Persistent Logo and Gamer Tag - Below Streak */}
-        <div className="top-20 left-4 right-4 flex items-center justify-between">
-          <LawDuelLogo size="sm" showText={true} className="bg-purple-900/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-500/30" />
-          <Badge variant="outline" className="border-purple-400/50 text-purple-300 bg-purple-900/30 backdrop-blur-sm">
-            @{character.username}
-          </Badge>
-        </div>
-        
-        <Card className="bg-black/40 border-purple-500/20 max-w-md">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="font-cinzel text-xl font-bold mb-2 text-purple-200">Searching for {gameSettings.friendUsername}</h3>
-            <p className="text-purple-400 mb-4">Sending duel invitation...</p>
+        <Card className="bg-black/40 border-purple-500/20 max-w-md mx-4">
+          <CardContent className="p-6 text-center">
+            <div className="w-12 h-12 border-3 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 className="font-cinzel text-lg font-bold mb-2 text-purple-200">SEARCHING FOR</h3>
+            <p className="text-purple-400 mb-4 text-sm">Sending duel invitation...</p>
             <Button onClick={() => setGameMode('menu')} variant="outline" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20">
               Cancel
             </Button>
@@ -836,7 +836,7 @@ export default function Home() {
                       <div className="flex items-center gap-1">
                         <div className="text-green-400 text-xs">XP</div>
                         <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 px-2 py-0.5 rounded border border-green-500/30">
-                          <span className="font-bold text-green-200 text-sm">{character.xp}</span>
+                          <span className="font-bold text-green-200 text-sm">{character.totalXp || character.xp || 0}</span>
                         </div>
                       </div>
                     </div>

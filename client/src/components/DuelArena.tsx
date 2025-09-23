@@ -18,6 +18,7 @@ interface DuelArenaProps {
   websocket?: WebSocket; // Accept the persistent WebSocket from QuickMatch
   duelStartMessage?: any; // Accept the duel:start message from Home
   onDuelEnd: () => void;
+  onDuelFinished?: () => void; // Callback when duel finishes automatically
 }
 
 interface DuelState {
@@ -53,7 +54,7 @@ interface DuelState {
   showAnswerAnimation: boolean; // Battle animation when selecting
 }
 
-export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessage, onDuelEnd }: DuelArenaProps) {
+export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessage, onDuelEnd, onDuelFinished }: DuelArenaProps) {
   const { incrementStreak, resetStreak } = useStreak();
   const [duelState, setDuelState] = useState<DuelState>({
     round: 0,
@@ -348,6 +349,11 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         `Duel complete! You lost ${Math.abs(xpChange)} XP. Your total XP is now ${newXP}. Keep fighting to earn it back!`
       );
     }
+    
+    // Notify parent to refresh user data
+    if (onDuelFinished) {
+      onDuelFinished();
+    }
   };
 
   const startTimer = (deadlineTs: number) => {
@@ -633,15 +639,15 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         
         {/* Loading State - Generating Question or Transitioning */}
         {(duelState.generatingQuestion || duelState.showTransition) && !duelState.currentQuestion && (
-          <div className="flex flex-col items-center justify-center py-16 mb-8">
-            <div className="relative mb-6">
-              <div className="w-16 h-16 border-4 border-arcane/20 border-t-arcane rounded-full animate-spin"></div>
+          <div className="flex flex-col items-center justify-center py-12 mb-6">
+            <div className="relative mb-4">
+              <div className="w-12 h-12 border-3 border-arcane/20 border-t-arcane rounded-full animate-spin"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <i className="fas fa-magic text-arcane text-xl"></i>
+                <i className="fas fa-magic text-arcane text-lg"></i>
               </div>
             </div>
-            <div className="text-center space-y-2">
-              <h3 className="text-xl font-semibold text-arcane">
+            <div className="text-center space-y-1">
+              <h3 className="text-lg font-semibold text-arcane">
                 {duelState.showTransition ? `Moving to Round ${Math.min(duelState.round + 1, MATCH_QUESTIONS)}` : 'Generating Question'}
               </h3>
               <p className="text-muted text-sm">
