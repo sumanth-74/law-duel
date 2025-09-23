@@ -35,8 +35,8 @@ export function PlayerCard({ player, rank, showStats = true, className = "" }: P
       )}
       
       <AvatarRenderer
-        avatarData={player.avatarData}
-        level={player.level}
+        avatarData={player.avatarData as any}
+        level={1}
         size={40}
         className="flex-shrink-0"
       />
