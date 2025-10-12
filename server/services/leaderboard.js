@@ -1,4 +1,4 @@
-import { storage } from '../storage.ts';
+import { storage } from '../storage.js';
 
 export async function initializeLeaderboard() {
   try {
@@ -22,73 +22,73 @@ async function seedLeaderboardWithBots() {
       id: 'bot_alexandra_lex',
       username: 'alexandra_lex',
       displayName: 'Alexandra Richards',
-      level: 14,
-      points: 4279,
-      isBot: true,
-      avatarData: { base: 'humanoid', palette: '#4F46E5', props: ['gavel', 'codex', 'briefcase'] }
-    },
-    {
-      id: 'bot_diana_torres',
-      username: 'diana_torres', 
-      displayName: 'Diana Torres',
       level: 12,
-      points: 3431,
+      points: 3247,
       isBot: true,
-      avatarData: { base: 'beast', palette: '#DC2626', props: ['scales', 'legal_pad', 'codex'] }
+      avatarData: { backgroundColor: '#4F46E5', style: 'professional', accessory: 'glasses' }
     },
     {
       id: 'bot_marcus_wright',
-      username: 'marcus_wright',
+      username: 'marcus_wright', 
       displayName: 'Marcus Wright',
-      level: 12,
-      points: 3411,
+      level: 10,
+      points: 2891,
       isBot: true,
-      avatarData: { base: 'arcane', palette: '#8b5cf6', props: ['codex', 'law_diploma', 'scales'] }
+      avatarData: { backgroundColor: '#059669', style: 'business', accessory: 'tie' }
+    },
+    {
+      id: 'bot_diana_torres',
+      username: 'diana_torres',
+      displayName: 'Diana Torres',
+      level: 11,
+      points: 2743,
+      isBot: true,
+      avatarData: { backgroundColor: '#DC2626', style: 'academic', accessory: 'book' }
     },
     {
       id: 'bot_james_miller',
       username: 'james_miller',
       displayName: 'James Miller',
-      level: 11,
-      points: 3256,
+      level: 9,
+      points: 2456,
       isBot: true,
-      avatarData: { base: 'celestial', palette: '#d4b057', props: ['scales', 'gavel', 'law_diploma'] }
+      avatarData: { backgroundColor: '#7C3AED', style: 'casual', accessory: 'cap' }
     },
     {
       id: 'bot_sarah_chen',
       username: 'sarah_chen',
       displayName: 'Sarah Chen',
-      level: 9,
-      points: 2632,
+      level: 8,
+      points: 2187,
       isBot: true,
-      avatarData: { base: 'construct', palette: '#64748b', props: ['briefcase', 'scales', 'codex'] }
+      avatarData: { backgroundColor: '#EA580C', style: 'modern', accessory: 'earbuds' }
     },
     {
       id: 'bot_robert_kim',
       username: 'robert_kim',
       displayName: 'Robert Kim',
-      level: 8,
-      points: 2187,
+      level: 7,
+      points: 1923,
       isBot: true,
-      avatarData: { base: 'undead', palette: '#111827', props: ['codex', 'gavel', 'legal_pad'] }
+      avatarData: { backgroundColor: '#0891B2', style: 'trendy', accessory: 'sunglasses' }
     },
     {
       id: 'bot_emily_davis',
       username: 'emily_davis',
       displayName: 'Emily Davis',
-      level: 7,
-      points: 1923,
+      level: 6,
+      points: 1654,
       isBot: true,
-      avatarData: { base: 'elemental', palette: '#10b981', props: ['scales', 'briefcase', 'law_diploma'] }
+      avatarData: { backgroundColor: '#BE185D', style: 'elegant', accessory: 'necklace' }
     },
     {
       id: 'bot_michael_brown',
       username: 'michael_brown',
       displayName: 'Michael Brown',
-      level: 6,
-      points: 1654,
+      level: 5,
+      points: 1398,
       isBot: true,
-      avatarData: { base: 'alien', palette: '#14b8a6', props: ['codex', 'legal_pad', 'gavel'] }
+      avatarData: { backgroundColor: '#16A34A', style: 'athletic', accessory: 'headband' }
     },
     {
       id: 'bot_jessica_wilson',
@@ -97,7 +97,7 @@ async function seedLeaderboardWithBots() {
       level: 4,
       points: 1152,
       isBot: true,
-      avatarData: { base: 'humanoid', palette: '#9333EA', props: ['gavel', 'codex', 'briefcase'] }
+      avatarData: { backgroundColor: '#9333EA', style: 'creative', accessory: 'beret' }
     },
     {
       id: 'bot_david_johnson',
@@ -106,25 +106,25 @@ async function seedLeaderboardWithBots() {
       level: 3,
       points: 987,
       isBot: true,
-      avatarData: { base: 'beast', palette: '#C2410C', props: ['scales', 'legal_pad', 'codex'] }
+      avatarData: { backgroundColor: '#C2410C', style: 'vintage', accessory: 'mustache' }
     },
     {
       id: 'bot_lisa_garcia',
       username: 'lisa_garcia',
       displayName: 'Lisa Garcia',
-      level: 2,
+      level: 4,
       points: 834,
       isBot: true,
-      avatarData: { base: 'arcane', palette: '#DB2777', props: ['codex', 'law_diploma', 'scales'] }
+      avatarData: { backgroundColor: '#DB2777', style: 'chic', accessory: 'scarf' }
     },
     {
       id: 'bot_kevin_martinez',
       username: 'kevin_martinez',
       displayName: 'Kevin Martinez',
-      level: 1,
+      level: 2,
       points: 692,
       isBot: true,
-      avatarData: { base: 'celestial', palette: '#2563EB', props: ['scales', 'gavel', 'law_diploma'] }
+      avatarData: { backgroundColor: '#2563EB', style: 'sporty', accessory: 'cap' }
     }
   ];
 

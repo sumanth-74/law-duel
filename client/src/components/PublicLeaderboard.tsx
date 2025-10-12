@@ -195,7 +195,7 @@ export function PublicLeaderboard() {
                   
                   <AvatarRenderer
                     avatarData={entry.user.avatarData as any}
-                    level={1}
+                    level={entry.user.level}
                     size={40}
                   />
                   
@@ -251,7 +251,7 @@ export function PublicLeaderboard() {
                   
                   <AvatarRenderer
                     avatarData={entry.user.avatarData as any}
-                    level={1}
+                    level={entry.user.level}
                     size={40}
                   />
                   
