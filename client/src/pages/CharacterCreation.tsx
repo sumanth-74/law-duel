@@ -83,7 +83,7 @@ export default function CharacterCreation() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-8 pt-8">
           <h1 className="font-cinzel text-4xl md:text-5xl font-bold mb-4">
