@@ -149,28 +149,46 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserStats(id: string, won: boolean, xpGained: number, pointsChange: number, streakData?: any): Promise<User | undefined> {
-    const updateData: any = {
-      xp: sql`${users.xp} + ${xpGained}`,
-      points: sql`GREATEST(0, ${users.points} + ${pointsChange})`,
-      totalWins: won ? sql`${users.totalWins} + 1` : users.totalWins,
-      totalLosses: won ? users.totalLosses : sql`${users.totalLosses} + 1`,
-      level: sql`GREATEST(1, FLOOR(1 + (${users.points} + ${pointsChange}) / 100))`,
-    };
+    try {
+      // First get current user to calculate new values safely
+      const [currentUser] = await db.select().from(users).where(eq(users.id, id)).limit(1);
+      if (!currentUser) {
+        console.error(`User not found: ${id}`);
+        return undefined;
+      }
 
-    // Update streak data if provided
-    if (streakData) {
-      updateData.streakWins = streakData.streakWins || 0;
-      updateData.bestStreak = streakData.bestStreak || 0;
-      updateData.lossShieldActive = streakData.lossShieldActive || false;
+      const newXP = (currentUser.xp || 0) + xpGained;
+      const newPoints = Math.max(0, (currentUser.points || 0) + pointsChange);
+      const newLevel = Math.max(1, Math.floor(1 + newPoints / 100));
+      const newTotalWins = won ? (currentUser.totalWins || 0) + 1 : (currentUser.totalWins || 0);
+      const newTotalLosses = won ? (currentUser.totalLosses || 0) : (currentUser.totalLosses || 0) + 1;
+
+      const updateData: any = {
+        xp: newXP,
+        points: newPoints,
+        totalWins: newTotalWins,
+        totalLosses: newTotalLosses,
+        level: newLevel,
+      };
+
+      // Update streak data if provided
+      if (streakData) {
+        updateData.streakWins = streakData.streakWins || 0;
+        updateData.bestStreak = streakData.bestStreak || 0;
+        updateData.lossShieldActive = streakData.lossShieldActive || false;
+      }
+
+      const [user] = await db
+        .update(users)
+        .set(updateData)
+        .where(eq(users.id, id))
+        .returning();
+      
+      return user;
+    } catch (error) {
+      console.error(`Error updating user stats for ${id}:`, error);
+      throw error;
     }
-
-    const [user] = await db
-      .update(users)
-      .set(updateData)
-      .where(eq(users.id, id))
-      .returning();
-    
-    return user;
   }
 
   async getTopPlayers(limit: number): Promise<User[]> {

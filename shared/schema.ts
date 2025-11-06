@@ -219,6 +219,31 @@ export const questionCache = pgTable("question_cache", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Subtopic Progress Table (replaces subtopic-progress.json)
+export const subtopicProgress = pgTable("subtopic_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  subject: text("subject").notNull(), // e.g., "Civ Pro", "Con Law"
+  subtopicKey: text("subtopic_key").notNull(), // e.g., "jurisdiction", "venue"
+  subtopicName: text("subtopic_name").notNull(), // Display name
+  questionsAttempted: integer("questions_attempted").notNull().default(0),
+  questionsCorrect: integer("questions_correct").notNull().default(0),
+  proficiencyScore: real("proficiency_score").notNull().default(0), // 0-100 scale
+  lastPracticed: timestamp("last_practiced"),
+  streakCorrect: integer("streak_correct").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Subtopic Attempt Audit Table (prevents duplicate recording)
+export const subtopicAttemptAudit = pgTable("subtopic_attempt_audit", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  duelId: varchar("duel_id"),
+  questionId: varchar("question_id").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -276,6 +301,10 @@ export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;
 export type InsertLeaderboardEntry = typeof leaderboardEntries.$inferInsert;
 export type QuestionCacheEntry = typeof questionCache.$inferSelect;
 export type InsertQuestionCacheEntry = typeof questionCache.$inferInsert;
+export type SubtopicProgressEntry = typeof subtopicProgress.$inferSelect;
+export type InsertSubtopicProgressEntry = typeof subtopicProgress.$inferInsert;
+export type SubtopicAttemptAuditEntry = typeof subtopicAttemptAudit.$inferSelect;
+export type InsertSubtopicAttemptAuditEntry = typeof subtopicAttemptAudit.$inferInsert;
 
 // MBE Subjects
 export const MBE_SUBJECTS = [

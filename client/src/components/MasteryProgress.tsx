@@ -31,6 +31,8 @@ interface MasteryData {
 export function MasteryProgress() {
   const { data: masteryData, isLoading } = useQuery<MasteryData>({
     queryKey: ['/api/mastery/progress'],
+    refetchInterval: 30000, // Refresh every 30 seconds to show updated stats
+    refetchOnWindowFocus: false, // Prevent refetch on window focus to avoid page refresh feel
   });
 
   if (isLoading) {

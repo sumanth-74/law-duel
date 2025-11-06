@@ -58,6 +58,9 @@ app.use(session({
   }
 }));
 
+// Store session store reference on app for WebSocket access
+app.set('sessionStore', sessionStore);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

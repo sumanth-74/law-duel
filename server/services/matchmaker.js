@@ -295,14 +295,66 @@ async function runDuel(wss, roomCode, players, subject) {
         if (correct) match.scores[i]++;
         
         // Track subtopic progress for human players (not bots)
-        if (ws.profile?.id && !ws.isBot) {
+        // Get user ID from profile or fetch from database if not available
+        let userId = ws.profile?.id;
+        if (!userId && ws.username && !ws.isBot) {
+          // Try to fetch user from database if profile not set
           try {
+            const user = await storage.getUserByUsername(ws.username);
+            if (user) {
+              userId = user.id;
+              // Set profile on WebSocket for future use
+              if (!ws.profile) {
+                ws.profile = {
+                  id: user.id,
+                  username: user.username,
+                  displayName: user.displayName,
+                  level: user.level,
+                  points: user.points,
+                  avatarData: user.avatarData
+                };
+              }
+            }
+          } catch (error) {
+            console.error('Error fetching user for stats:', error);
+          }
+        }
+        
+        console.log(`🔍 VS Duel - Checking stats recording:`, {
+          hasProfile: !!ws.profile,
+          profileId: userId,
+          username: ws.username,
+          isBot: ws.isBot,
+          subject: question.subject,
+          questionId: question.qid
+        });
+        
+        if (userId && !ws.isBot) {
+          try {
+            // Normalize subject name for statsService (expects full names like "Civil Procedure")
+            const { normalizeSubject } = await import('./subjects.js');
+            const normalizedSubjectForStats = normalizeSubject(question.subject);
+            console.log(`🔍 VS Duel - Subject normalization:`, {
+              original: question.subject,
+              normalized: normalizedSubjectForStats
+            });
+            
+            // Map short names to full names for statsService
+            const subjectMap = {
+              'Civ Pro': 'Civil Procedure',
+              'Con Law': 'Constitutional Law',
+              'Crim': 'Criminal Law/Procedure',
+              'Property': 'Real Property',
+            };
+            const fullSubjectName = subjectMap[normalizedSubjectForStats] || normalizedSubjectForStats || question.subject;
+            console.log(`🔍 VS Duel - Final subject name for stats:`, fullSubjectName);
+            
             // Record comprehensive stats using statsService
             const { statsService } = await import('./statsService.js');
             const statsResult = await statsService.recordQuestionAttempt(
-              ws.profile.id,
+              userId,
               question.qid,
-              question.subject,
+              fullSubjectName,
               answer.choice,
               question.correctIndex,
               correct,
@@ -311,13 +363,27 @@ async function runDuel(wss, roomCode, players, subject) {
               roomCode
             );
             
-            // Also record subtopic progress
+            // Also record subtopic progress using subtopicProgressService
+            const { subtopicProgressService } = await import('./subtopicProgressService.ts');
+            const subtopicResult = await subtopicProgressService.recordAttempt(
+              userId,
+              question.subject,
+              question.stem || '',
+              question.explanation || '',
+              correct,
+              `difficulty_${match.difficulty}`,
+              answer.timeMs,
+              roomCode,
+              question.qid
+            );
+            
+            // Also record in old progressService for compatibility
             const progressResult = await progressService.recordAttempt({
-              userId: ws.profile.id,
+              userId: userId,
               duelId: roomCode,
               questionId: question.qid,
               subject: question.subject,
-              subtopic: question.subtopic || question.subject, // Use subtopic if available
+              subtopic: question.subtopic || question.subject,
               difficulty: match.difficulty,
               correct,
               msToAnswer: answer.timeMs,
@@ -325,20 +391,28 @@ async function runDuel(wss, roomCode, players, subject) {
             });
             
             // Store progress result for inclusion in response
-            if (progressResult) {
-              ws.progressResult = progressResult;
+            if (progressResult || subtopicResult) {
+              ws.progressResult = progressResult || subtopicResult;
             }
             
             console.log(`📊 VS Duel Stats Updated:`, {
-              userId: ws.profile.id,
-              subject: question.subject,
+              userId: userId,
+              originalSubject: question.subject,
+              normalizedForStats: fullSubjectName,
               correct,
               xpGained: statsResult.xpGained,
               levelUp: statsResult.levelUp,
-              masteryUp: statsResult.masteryUp
+              masteryUp: statsResult.masteryUp,
+              subtopicResult: subtopicResult ? {
+                subject: subtopicResult.subject,
+                subtopic: subtopicResult.subtopic,
+                proficiencyBefore: subtopicResult.before,
+                proficiencyAfter: subtopicResult.after
+              } : null
             });
           } catch (error) {
-            console.error('Error recording stats and progress:', error);
+            console.error('❌ Error recording stats and progress:', error);
+            console.error('Error stack:', error.stack);
           }
         }
         
@@ -397,8 +471,8 @@ async function runDuel(wss, roomCode, players, subject) {
   
   // Calculate XP changes - winner gains XP, loser loses XP
   const baseXP = 50; // Base XP for winning
-  const player1 = await storage.getUserById(players[0].profile?.id);
-  const player2 = await storage.getUserById(players[1].profile?.id);
+  const player1 = await storage.getUser(players[0].profile?.id);
+  const player2 = await storage.getUser(players[1].profile?.id);
   
   const currentXP1 = player1?.points || 1200;
   const currentXP2 = player2?.points || 1200;
@@ -604,11 +678,122 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       if (humanCorrect) match.scores[0]++;
       if (botCorrect) match.scores[1]++;
       
+      console.log(`🎯 Bot Duel Round ${round} Results:`, {
+        humanCorrect,
+        botCorrect,
+        humanAnswer: humanAnswer.choice,
+        correctIndex: question.correctIndex,
+        subject: question.subject,
+        questionId: question.qid,
+        hasStem: !!question.stem,
+        hasExplanation: !!question.explanation,
+        stemLength: question.stem?.length || 0,
+        explanationLength: question.explanation?.length || 0
+      });
+      
       // Track subtopic progress for human player
-      if (humanWs.profile?.id) {
+      // Get user ID from profile or fetch from database if not available
+      let userId = humanWs.profile?.id;
+      if (!userId && humanWs.username) {
+        // Try to fetch user from database if profile not set
         try {
+          const user = await storage.getUserByUsername(humanWs.username);
+          if (user) {
+            userId = user.id;
+            // Set profile on WebSocket for future use
+            if (!humanWs.profile) {
+              humanWs.profile = {
+                id: user.id,
+                username: user.username,
+                displayName: user.displayName,
+                level: user.level,
+                points: user.points,
+                avatarData: user.avatarData
+              };
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user for stats:', error);
+        }
+      }
+      
+      console.log(`🔍 Bot Duel - Checking stats recording:`, {
+        hasProfile: !!humanWs.profile,
+        profileId: userId,
+        username: humanWs.username,
+        subject: question.subject,
+        questionId: question.qid
+      });
+      
+      if (userId) {
+        try {
+          // Normalize subject name for statsService (expects full names like "Civil Procedure")
+          const { normalizeSubject } = await import('./subjects.js');
+          const normalizedSubjectForStats = normalizeSubject(question.subject);
+          console.log(`🔍 Bot Duel - Subject normalization:`, {
+            original: question.subject,
+            normalized: normalizedSubjectForStats
+          });
+          
+          // Map short names to full names for statsService
+          const subjectMap = {
+            'Civ Pro': 'Civil Procedure',
+            'Con Law': 'Constitutional Law',
+            'Crim': 'Criminal Law/Procedure',
+            'Property': 'Real Property',
+          };
+          const fullSubjectName = subjectMap[normalizedSubjectForStats] || normalizedSubjectForStats || question.subject;
+          console.log(`🔍 Bot Duel - Final subject name for stats:`, fullSubjectName);
+          
+          // Record comprehensive stats using statsService
+          const { statsService } = await import('./statsService.js');
+          const statsResult = await statsService.recordQuestionAttempt(
+            userId,
+            question.qid,
+            fullSubjectName,
+            humanAnswer.choice,
+            question.correctIndex,
+            humanCorrect,
+            humanAnswer.timeMs,
+            `difficulty_${match.difficulty}`,
+            roomCode
+          );
+          
+          // Record subtopic progress using subtopicProgressService
+          console.log(`📝 Calling subtopicProgressService.recordAttempt with:`, {
+            userId,
+            subject: question.subject,
+            stemLength: question.stem?.length || 0,
+            explanationLength: question.explanation?.length || 0,
+            humanCorrect,
+            difficulty: `difficulty_${match.difficulty}`,
+            duelId: roomCode,
+            questionId: question.qid
+          });
+          
+          const { subtopicProgressService } = await import('./subtopicProgressService.ts');
+          const subtopicResult = await subtopicProgressService.recordAttempt(
+            userId,
+            question.subject,
+            question.stem || '',
+            question.explanation || '',
+            humanCorrect,
+            `difficulty_${match.difficulty}`,
+            humanAnswer.timeMs,
+            roomCode,
+            question.qid
+          );
+          
+          console.log(`📝 subtopicProgressService.recordAttempt returned:`, subtopicResult ? {
+            subject: subtopicResult.subject,
+            subtopic: subtopicResult.subtopic,
+            proficiencyBefore: subtopicResult.before,
+            proficiencyAfter: subtopicResult.after
+          } : null);
+          
+          // Also record in old progressService for compatibility
           const progressResult = await progressService.recordAttempt({
-            userId: humanWs.profile.id,
+            userId: userId,
             duelId: roomCode,
             questionId: question.qid,
             subject: question.subject,
@@ -620,11 +805,31 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
           });
           
           // Store progress result for inclusion in response
-          if (progressResult) {
+          // Prioritize subtopicResult (new service) over progressResult (old service)
+          if (subtopicResult) {
+            humanWs.progressResult = subtopicResult;
+          } else if (progressResult) {
             humanWs.progressResult = progressResult;
           }
+          
+          console.log(`📊 Bot Duel Stats Updated:`, {
+            userId: userId,
+            originalSubject: question.subject,
+            normalizedForStats: fullSubjectName,
+            correct: humanCorrect,
+            xpGained: statsResult?.xpGained,
+            levelUp: statsResult?.levelUp,
+            masteryUp: statsResult?.masteryUp,
+            subtopicResult: subtopicResult ? {
+              subject: subtopicResult.subject,
+              subtopic: subtopicResult.subtopic,
+              proficiencyBefore: subtopicResult.before,
+              proficiencyAfter: subtopicResult.after
+            } : null
+          });
         } catch (error) {
-          console.error('Error recording subtopic progress:', error);
+          console.error('❌ Error recording subtopic progress:', error);
+          console.error('Error stack:', error.stack);
         }
       }
 
@@ -687,8 +892,18 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   
   // Calculate XP changes for human vs bot
   const baseXP = 50; // Base XP for winning
-  const humanPlayer = await storage.getUser(humanWs.profile?.id);
+  // Get user ID - try profile first, then username lookup
+  let userId = humanWs.profile?.id;
+  if (!userId && humanWs.username) {
+    try {
+      const user = await storage.getUserByUsername(humanWs.username);
+      if (user) userId = user.id;
+    } catch (error) {
+      console.error('Error fetching user by username:', error);
+    }
+  }
   
+  const humanPlayer = userId ? await storage.getUser(userId) : null;
   const currentXP = humanPlayer?.points || 1200;
   
   // Calculate XP changes based on winner/loser
@@ -708,10 +923,19 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   // Update human player XP and weekly ladder
   const newXP = Math.max(0, currentXP + xpChange); // Never go below 0
   if (humanPlayer) {
-    await storage.updateUserStats(humanPlayer.id, { 
-      points: newXP 
-    });
-    await updateWeeklyLadder(humanPlayer.id, xpChange, winner === 0);
+    try {
+      await storage.updateUserStats(
+        humanPlayer.id,
+        winner === 0, // won
+        xpChange, // xpGained
+        xpChange, // pointsChange
+        undefined // streakData (optional)
+      );
+      await updateWeeklyLadder(humanPlayer.id, xpChange, winner === 0);
+    } catch (error) {
+      console.error('❌ Error updating user stats after duel:', error);
+      // Don't crash - just log the error
+    }
   }
   
   const finalData = {

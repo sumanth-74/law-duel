@@ -19,36 +19,85 @@ export function DetailedSubtopics() {
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set());
   const [expandedSubtopics, setExpandedSubtopics] = useState<Set<string>>(new Set());
 
-  const { data: subtopicStats = [], isLoading } = useQuery<SubtopicData[]>({
+  const { data: progressData, isLoading } = useQuery<Record<string, any>>({
     queryKey: ['/api/stats/subtopics'],
+    refetchInterval: 30000, // Refresh every 30 seconds to show updated stats
+    refetchOnWindowFocus: false, // Prevent refetch on window focus to avoid page refresh feel
   });
 
   // Organize data into hierarchy
   const hierarchy = React.useMemo(() => {
     const result: Record<string, Record<string, SubtopicData[]>> = {};
     
-    subtopicStats.forEach(stat => {
-      if (!result[stat.subject]) {
-        result[stat.subject] = {};
+    if (!progressData) return result;
+    
+    // Map subject keys to full names
+    const subjectNameMap: Record<string, string> = {
+      'Civ Pro': 'Civil Procedure',
+      'Con Law': 'Constitutional Law',
+      'Contracts': 'Contracts',
+      'Crim': 'Criminal Law/Procedure',
+      'Evidence': 'Evidence',
+      'Property': 'Real Property',
+      'Torts': 'Torts'
+    };
+    
+    // Transform hierarchical structure to flat array format
+    for (const [subjectKey, subjectData] of Object.entries(progressData)) {
+      const subjectName = subjectNameMap[subjectKey] || subjectKey;
+      
+      if (!result[subjectName]) {
+        result[subjectName] = {};
       }
       
-      // Parse subtopic to see if it contains an area (e.g., "Jurisdiction/Federal Question")
-      const parts = stat.subtopic.split('/');
-      const mainSubtopic = parts[0];
-      const area = parts[1];
-      
-      if (!result[stat.subject][mainSubtopic]) {
-        result[stat.subject][mainSubtopic] = [];
+      if (subjectData && subjectData.subtopics) {
+        for (const subtopic of subjectData.subtopics) {
+          // Check if subtopic has areas (from the new format)
+          if (subtopic.areas && subtopic.areas.length > 0) {
+            // This subtopic has areas - create entries for each area
+            const mainSubtopic = subtopic.name;
+            
+            if (!result[subjectName][mainSubtopic]) {
+              result[subjectName][mainSubtopic] = [];
+            }
+            
+            // Add each area as a separate entry
+            for (const area of subtopic.areas) {
+              const areaName = area.name || area.key?.split('/')[1] || 'General';
+              result[subjectName][mainSubtopic].push({
+                subject: subjectName,
+                subtopic: `${mainSubtopic}/${areaName}`,
+                mastery: area.proficiencyScore || 0,
+                attempts: area.questionsAttempted || 0,
+                correct: area.questionsCorrect || 0,
+                accuracy: area.percentCorrect || 0,
+                lastSeenAt: area.lastPracticed || null
+              });
+            }
+          } else {
+            // This subtopic doesn't have areas - use it directly
+            const mainSubtopic = subtopic.name;
+            
+            if (!result[subjectName][mainSubtopic]) {
+              result[subjectName][mainSubtopic] = [];
+            }
+            
+            result[subjectName][mainSubtopic].push({
+              subject: subjectName,
+              subtopic: mainSubtopic,
+              mastery: subtopic.proficiencyScore || 0,
+              attempts: subtopic.questionsAttempted || 0,
+              correct: subtopic.questionsCorrect || 0,
+              accuracy: subtopic.percentCorrect || 0,
+              lastSeenAt: subtopic.lastPracticed || null
+            });
+          }
+        }
       }
-      
-      result[stat.subject][mainSubtopic].push({
-        ...stat,
-        area: area || null
-      });
-    });
+    }
     
     return result;
-  }, [subtopicStats]);
+  }, [progressData]);
 
   const toggleSubject = (subject: string) => {
     const newExpanded = new Set(expandedSubjects);
@@ -247,18 +296,25 @@ export function DetailedSubtopics() {
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
               <p className="text-muted-foreground">Total Subtopics</p>
-              <p className="text-xl font-bold text-purple-300">{subtopicStats.length}</p>
+              <p className="text-xl font-bold text-purple-300">
+                {Object.values(hierarchy).reduce((sum, subject) => 
+                  sum + Object.values(subject).reduce((subSum, subtopic) => subSum + subtopic.length, 0), 0)}
+              </p>
             </div>
             <div>
               <p className="text-muted-foreground">Mastered (80%+)</p>
               <p className="text-xl font-bold text-green-400">
-                {subtopicStats.filter(s => s.mastery >= 80).length}
+                {Object.values(hierarchy).reduce((sum, subject) => 
+                  sum + Object.values(subject).reduce((subSum, subtopic) => 
+                    subSum + subtopic.filter((s: SubtopicData) => s.mastery >= 80).length, 0), 0)}
               </p>
             </div>
             <div>
               <p className="text-muted-foreground">Need Work (&lt;40%)</p>
               <p className="text-xl font-bold text-orange-400">
-                {subtopicStats.filter(s => s.mastery < 40).length}
+                {Object.values(hierarchy).reduce((sum, subject) => 
+                  sum + Object.values(subject).reduce((subSum, subtopic) => 
+                    subSum + subtopic.filter((s: SubtopicData) => s.mastery < 40).length, 0), 0)}
               </p>
             </div>
           </div>

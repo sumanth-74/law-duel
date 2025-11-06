@@ -406,14 +406,36 @@ export default function Home() {
     matchWebSocket.onopen = () => {
       console.log('Connected to matchmaking server for bot game');
       
-      // Register presence first
-      const savedCharacter = localStorage.getItem('bar-duel-character');
-      if (savedCharacter) {
-        const profile = JSON.parse(savedCharacter);
+      // Register presence first - use logged-in user data
+      if (user) {
+        console.log('📤 Sending presence:hello with user:', user.username);
         matchWebSocket.send(JSON.stringify({
           type: 'presence:hello',
-          payload: { username: profile.username, profile }
+          payload: { 
+            username: user.username,
+            profile: {
+              id: user.id,
+              username: user.username,
+              displayName: user.displayName || user.username,
+              level: user.level || 1,
+              points: user.points || 0,
+              avatarData: user.avatarData || { base: 'humanoid', palette: '#5865f2', props: [] }
+            }
+          }
         }));
+      } else {
+        // Fallback to localStorage if user not available yet
+        const savedCharacter = localStorage.getItem('bar-duel-character');
+        if (savedCharacter) {
+          const profile = JSON.parse(savedCharacter);
+          console.log('📤 Sending presence:hello with saved character:', profile.username);
+          matchWebSocket.send(JSON.stringify({
+            type: 'presence:hello',
+            payload: { username: profile.username, profile }
+          }));
+        } else {
+          console.warn('⚠️ No user data available for presence:hello');
+        }
       }
       
       // Join queue for bot match
@@ -568,6 +590,11 @@ export default function Home() {
     queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
     queryClient.invalidateQueries({ queryKey: ['/api/leaderboard'] });
     queryClient.invalidateQueries({ queryKey: ['/api/daily-streak'] });
+    // Invalidate stats queries to show updated stats
+    queryClient.invalidateQueries({ queryKey: ['/api/stats/subtopics'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/stats/recommendations'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/mastery/progress'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/stats/me'] });
     
     setGameMode('menu');
     setOpponent(null);

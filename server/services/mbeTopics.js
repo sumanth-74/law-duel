@@ -721,37 +721,69 @@ export function identifySubtopic(subject, questionText, explanation) {
   const subtopics = getSubtopicsForSubject(subject);
   const content = `${questionText} ${explanation}`.toLowerCase();
   
-  // Score each subtopic based on keyword matches
+  // Score each subtopic and area based on keyword matches
   let bestMatch = null;
+  let bestArea = null;
   let highestScore = 0;
   
   for (const [key, subtopic] of Object.entries(subtopics)) {
-    let score = 0;
+    let subtopicScore = 0;
+    let bestAreaScore = 0;
+    let bestAreaMatch = null;
     
     // Check subtopic name
     if (content.includes(subtopic.name.toLowerCase())) {
-      score += 3;
+      subtopicScore += 3;
     }
     
-    // Check areas
+    // Check each area within the subtopic
     for (const area of subtopic.areas) {
-      const keywords = area.toLowerCase().split(/[,()]/);
+      let areaScore = 0;
+      const areaLower = area.toLowerCase();
+      
+      // Check if area name appears in content
+      if (content.includes(areaLower)) {
+        areaScore += 5; // Strong match for exact area name
+      }
+      
+      // Check keywords within the area name
+      const keywords = areaLower.split(/[,()]/).map(k => k.trim()).filter(k => k.length > 2);
       for (const keyword of keywords) {
-        if (keyword.trim() && content.includes(keyword.trim())) {
-          score += 2;
+        if (content.includes(keyword)) {
+          areaScore += 2;
         }
+      }
+      
+      if (areaScore > bestAreaScore) {
+        bestAreaScore = areaScore;
+        bestAreaMatch = area;
       }
     }
     
-    if (score > highestScore) {
-      highestScore = score;
+    const totalScore = subtopicScore + bestAreaScore;
+    if (totalScore > highestScore) {
+      highestScore = totalScore;
       bestMatch = key;
+      bestArea = bestAreaMatch;
     }
   }
   
   // If no strong match, return a default based on common patterns
   if (!bestMatch || highestScore < 3) {
-    return getDefaultSubtopic(subject, content);
+    const defaultSubtopic = getDefaultSubtopic(subject, content);
+    // For default, return just the subtopic without area
+    return defaultSubtopic;
+  }
+  
+  // Return in format "subtopic/area" if area was identified, otherwise just subtopic
+  if (bestArea) {
+    // Normalize area name to a key (e.g., "Offer and acceptance" -> "offer")
+    const areaKey = bestArea.toLowerCase()
+      .replace(/\s+and\s+/g, '/')
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z0-9_/]/g, '')
+      .split('/')[0]; // Take first part if multiple
+    return `${bestMatch}/${areaKey}`;
   }
   
   return bestMatch;

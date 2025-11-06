@@ -45,7 +45,9 @@ export default function SubtopicProgress() {
     queryFn: async () => {
       const response = await apiRequest('GET', '/api/stats/subtopics') as unknown;
       return response as Record<string, SubjectProgress>;
-    }
+    },
+    refetchInterval: 30000, // Refresh every 30 seconds to show updated stats
+    refetchOnWindowFocus: false, // Prevent refetch on window focus to avoid page refresh feel
   });
 
   // Fetch study recommendations
@@ -54,7 +56,9 @@ export default function SubtopicProgress() {
     queryFn: async () => {
       const response = await apiRequest('GET', '/api/stats/recommendations') as unknown;
       return response as StudyRecommendation[];
-    }
+    },
+    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchOnWindowFocus: false, // Prevent refetch on window focus to avoid page refresh feel
   });
 
   const subjects = ['Civ Pro', 'Con Law', 'Contracts', 'Crim', 'Evidence', 'Property', 'Torts'];

@@ -399,6 +399,21 @@ class AsyncDuels {
       // Track subtopic progress for human players
       if (!playerId.startsWith('bot_')) {
         try {
+          // Record subtopic progress using subtopicProgressService
+          const { subtopicProgressService } = await import('./subtopicProgressService.ts');
+          await subtopicProgressService.recordAttempt(
+            playerId,
+            currentTurn.subject || match.subject,
+            currentTurn.stem || '',
+            currentTurn.explanation || '',
+            isCorrect,
+            `difficulty_${currentTurn.difficulty || 1}`,
+            answer ? answer.ms : 60000,
+            matchId,
+            currentTurn.qid
+          );
+          
+          // Also record in old progressService for compatibility
           await progressService.recordAttempt({
             userId: playerId,
             duelId: matchId,

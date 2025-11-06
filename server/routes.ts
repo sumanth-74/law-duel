@@ -44,6 +44,8 @@ function addRankToUser(user: any) {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Sessions are now configured in index.ts BEFORE this function is called
+  // Get session store reference from app for WebSocket access
+  const sessionStore = app.get('sessionStore');
 
 
   // Health check endpoint
@@ -412,18 +414,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all subtopic stats for the current user - Per North Star requirement
-  app.get("/api/stats/subtopics", requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.session.userId;
-      const { progressService } = await import("./progress.js");
-      const stats = progressService.getSubtopicStats(userId);
-      
-      // Include zero stats for all subjects/subtopics per requirement
-      res.json(stats);
-    } catch (error: any) {
-      res.status(500).json({ message: "Failed to fetch subtopic stats", error: error.message });
-    }
-  });
+  // REMOVED: Old endpoint using progressService - now using subtopicProgressService at line 1102
+  // app.get("/api/stats/subtopics", requireAuth, async (req: any, res) => {
+  //   try {
+  //     const userId = req.session.userId;
+  //     const { progressService } = await import("./progress.js");
+  //     const stats = progressService.getSubtopicStats(userId);
+  //     
+  //     // Include zero stats for all subjects/subtopics per requirement
+  //     res.json(stats);
+  //   } catch (error: any) {
+  //     res.status(500).json({ message: "Failed to fetch subtopic stats", error: error.message });
+  //   }
+  // });
 
   // Get public profile by username - Per North Star requirement
   app.get("/api/profile/:username", async (req, res) => {
@@ -1052,8 +1055,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subjectStats = await storage.getSubjectStats(user.id);
       
       // Get subtopic progress
-      const { subtopicProgressService } = await import('./services/subtopicProgressService.js');
-      const progress = subtopicProgressService.getDetailedProgress(user.id);
+      const { subtopicProgressService } = await import('./services/subtopicProgressService.ts');
+      const progress = await subtopicProgressService.getDetailedProgress(user.id);
       
       // Get top 5 subtopics by proficiency
       const allSubtopics = [];
@@ -1104,10 +1107,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ error: "Not authenticated" });
       }
 
-      const { subtopicProgressService } = await import('./services/subtopicProgressService.js');
-      const progress = subtopicProgressService.getDetailedProgress(userId);
+      const { subtopicProgressService } = await import('./services/subtopicProgressService.ts');
+      const { MBE_TOPICS } = await import('./services/mbeTopics.js');
+      const progress = await subtopicProgressService.getDetailedProgress(userId);
       
-      res.json(progress);
+      // Map subject keys to display names for SubtopicProgress component
+      const subjectNameMap: Record<string, string> = {
+        'Civ Pro': 'Civil Procedure',
+        'Con Law': 'Constitutional Law',
+        'Contracts': 'Contracts',
+        'Crim': 'Criminal Law/Procedure',
+        'Evidence': 'Evidence',
+        'Property': 'Real Property',
+        'Torts': 'Torts'
+      };
+      
+      // Transform to format expected by SubtopicProgress component
+      // It expects Record<string, SubjectProgress> where keys are like "Civ Pro", "Con Law", etc.
+      const transformed: Record<string, any> = {};
+      
+      // Ensure all subjects are included, even if they have no data
+      for (const [subjectKey, subjectData] of Object.entries(MBE_TOPICS)) {
+        const progressData = progress[subjectKey] || null;
+        if (progressData && (progressData as any).subtopics && (progressData as any).subtopics.length > 0) {
+          const subtopics = (progressData as any).subtopics || [];
+          
+          // Group subtopics by main subtopic (before the "/") to aggregate areas
+          const subtopicGroups = new Map<string, any[]>();
+          
+          for (const subtopic of subtopics) {
+            // Parse subtopic key (e.g., "formation/offer" -> main: "formation", area: "offer")
+            const [mainSubtopic, area] = subtopic.key.split('/');
+            const mainKey = mainSubtopic || subtopic.key;
+            
+            if (!subtopicGroups.has(mainKey)) {
+              subtopicGroups.set(mainKey, []);
+            }
+            subtopicGroups.get(mainKey)!.push(subtopic);
+          }
+          
+          // Aggregate subtopics and their areas
+          const aggregatedSubtopics = Array.from(subtopicGroups.entries()).map(([mainKey, areas]) => {
+            // Sum up all attempts and correct answers across areas
+            const totalAttempts = areas.reduce((sum: number, a: any) => sum + a.questionsAttempted, 0);
+            const totalCorrect = areas.reduce((sum: number, a: any) => sum + a.questionsCorrect, 0);
+            
+            // Calculate weighted average proficiency score
+            const totalWeightedScore = areas.reduce((sum: number, a: any) => {
+              return sum + (a.proficiencyScore * a.questionsAttempted);
+            }, 0);
+            const avgProficiency = totalAttempts > 0 ? totalWeightedScore / totalAttempts : 0;
+            
+            // Get the main subtopic name from MBE_TOPICS or from the first area
+            const mainSubtopicName = MBE_TOPICS[subjectKey]?.subtopics[mainKey]?.name || 
+                                     areas[0]?.name?.split(' - ')[0] || 
+                                     areas[0]?.name || 
+                                     mainKey;
+            
+            // Extract area names from the areas array for DetailedSubtopics
+            const areaEntries = areas.map((a: any) => {
+              // If key has "/", extract area name from the name field (e.g., "Formation - Offer" -> "Offer")
+              // Otherwise, use the name as-is
+              const areaName = a.key?.includes('/') 
+                ? (a.name?.split(' - ')[1] || a.name?.split('/')[1] || a.name)
+                : a.name;
+              
+              return {
+                key: a.key,
+                name: areaName,
+                questionsAttempted: a.questionsAttempted,
+                questionsCorrect: a.questionsCorrect,
+                proficiencyScore: a.proficiencyScore,
+                percentCorrect: a.percentCorrect,
+                lastPracticed: a.lastPracticed
+              };
+            });
+            
+            return {
+              key: mainKey,
+              name: mainSubtopicName,
+              questionsAttempted: totalAttempts,
+              questionsCorrect: totalCorrect,
+              proficiencyScore: avgProficiency,
+              masteryLevel: (() => {
+                if (avgProficiency < 10) return 'Beginner';
+                if (avgProficiency < 25) return 'Novice';
+                if (avgProficiency < 40) return 'Apprentice';
+                if (avgProficiency < 55) return 'Competent';
+                if (avgProficiency < 70) return 'Proficient';
+                if (avgProficiency < 85) return 'Advanced';
+                if (avgProficiency < 95) return 'Expert';
+                return 'Master';
+              })(),
+              percentCorrect: totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0,
+              lastPracticed: areas
+                .filter((a: any) => a.lastPracticed)
+                .sort((a: any, b: any) => new Date(b.lastPracticed).getTime() - new Date(a.lastPracticed).getTime())[0]?.lastPracticed || null,
+              areas: areaEntries // Keep areas for DetailedSubtopics component
+            };
+          });
+          
+          transformed[subjectKey] = {
+            name: subjectNameMap[subjectKey] || (subjectData as any).name,
+            overall: (progressData as any).overall || {
+              questionsAttempted: 0,
+              questionsCorrect: 0,
+              proficiencyScore: 0,
+              lastPracticed: null
+            },
+            subtopics: aggregatedSubtopics
+          };
+        } else {
+          // No data yet for this subject - return empty structure
+          transformed[subjectKey] = {
+            name: subjectNameMap[subjectKey] || (subjectData as any).name,
+            overall: {
+              questionsAttempted: 0,
+              questionsCorrect: 0,
+              proficiencyScore: 0,
+              lastPracticed: null
+            },
+            subtopics: []
+          };
+        }
+      }
+      
+      res.json(transformed);
     } catch (error: any) {
       console.error("Error fetching subtopic progress:", error);
       res.status(500).json({ error: error.message });
@@ -1122,8 +1247,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ error: "Not authenticated" });
       }
 
-      const { subtopicProgressService } = await import('./services/subtopicProgressService.js');
-      const recommendations = subtopicProgressService.getStudyRecommendations(userId);
+      const { subtopicProgressService } = await import('./services/subtopicProgressService.ts');
+      const recommendations = await subtopicProgressService.getStudyRecommendations(userId);
       
       res.json(recommendations);
     } catch (error: any) {
@@ -1380,36 +1505,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stats subtopics endpoint
-  app.get('/api/stats/subtopics', requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.session.userId;
-      const stats = await statsService.getUserStats(userId);
-      
-      // Format as subjects with nested subtopics
-      const subjects = [
-        'Contracts', 'Torts', 'Criminal Law', 'Evidence', 
-        'Constitutional Law', 'Real Property', 'Civil Procedure'
-      ];
-      
-      const result = subjects.map(subject => ({
-        subject,
-        subtopics: (stats as any).subtopicMastery
-          ?.filter((s: any) => s.subject === subject)
-          ?.map((s: any) => ({
-            id: s.subtopicId,
-            name: s.subtopic,
-            attempts: s.attempts || 0,
-            correct: s.correct || 0,
-            mastery: s.mastery || 0
-          })) || []
-      }));
-      
-      res.json(result);
-    } catch (error: any) {
-      console.error('Error getting subtopic stats:', error);
-      res.status(500).json({ message: error.message });
-    }
-  });
+  // REMOVED: Duplicate endpoint using statsService - now using subtopicProgressService at line 1102
+  // app.get('/api/stats/subtopics', requireAuth, async (req: any, res) => {
+  //   try {
+  //     const userId = req.session.userId;
+  //     const stats = await statsService.getUserStats(userId);
+  //     
+  //     // Format as subjects with nested subtopics
+  //     const subjects = [
+  //       'Contracts', 'Torts', 'Criminal Law', 'Evidence', 
+  //       'Constitutional Law', 'Real Property', 'Civil Procedure'
+  //     ];
+  //     
+  //     const result = subjects.map(subject => ({
+  //       subject,
+  //       subtopics: (stats as any).subtopicMastery
+  //         ?.filter((s: any) => s.subject === subject)
+  //         ?.map((s: any) => ({
+  //           id: s.subtopicId,
+  //           name: s.subtopic,
+  //           attempts: s.attempts || 0,
+  //           correct: s.correct || 0,
+  //           mastery: s.mastery || 0
+  //         })) || []
+  //     }));
+  //     
+  //     res.json(result);
+  //   } catch (error: any) {
+  //     console.error('Error getting subtopic stats:', error);
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // });
 
   // Async duel wrappers
   app.post('/api/duel/async/start', requireAuth, async (req: any, res) => {
@@ -2451,14 +2577,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     clientTracking: true
   });
 
-  wss.on('connection', (ws: WebSocket, req) => {
+  wss.on('connection', async (ws: WebSocket, req) => {
     const connectionId = Math.random().toString(36).substr(2, 9);
     console.log(`Client connected to WebSocket [${connectionId}]`);
     
-    // Extract user ID from session if available (simplified for now)
-    const cookies = req.headers.cookie;
+    // Extract user ID from session by parsing the session cookie
     let userId: string | undefined;
-    // In a real implementation, you would parse the session cookie here
+    let username: string | undefined;
+    
+    try {
+      // Parse session cookie to get session ID
+      const cookies = req.headers.cookie || '';
+      const sessionCookie = cookies.split(';').find(c => c.trim().startsWith('sid='));
+      
+      if (sessionCookie) {
+        // URL decode the session ID (sessions are URL encoded)
+        const sessionIdRaw = sessionCookie.split('=')[1]?.trim();
+        if (sessionIdRaw) {
+          // Decode URL encoding (sessions use %3A for colon, etc.)
+          let sessionId = decodeURIComponent(sessionIdRaw);
+          // Express-session cookies are signed: "s:sessionId.signature"
+          // We need to extract just the sessionId part
+          if (sessionId.startsWith('s:')) {
+            const parts = sessionId.substring(2).split('.');
+            sessionId = parts[0]; // Get the actual session ID before the signature
+          }
+          // Store sessionId on WebSocket for later use
+          (ws as any).sessionId = sessionId;
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing session cookie:', error);
+    }
+    
+    // Store session getter on WebSocket for later use
+    (ws as any).getSession = async () => {
+      try {
+        // Access the session store from the app
+        const sessionStore = app.get('sessionStore');
+        if (!sessionStore) {
+          console.log('⚠️ Session store not found on app');
+          return null;
+        }
+        
+        if (!(ws as any).sessionId) {
+          console.log('⚠️ No sessionId on WebSocket');
+          return null;
+        }
+        
+        console.log(`🔍 Attempting to get session: ${(ws as any).sessionId}`);
+        
+        return new Promise((resolve) => {
+          sessionStore.get((ws as any).sessionId, (err: any, session: any) => {
+            if (err) {
+              console.error('❌ Error getting session from store:', err);
+              resolve(null);
+              return;
+            }
+            if (!session) {
+              console.log('⚠️ Session not found in store');
+              resolve(null);
+              return;
+            }
+            console.log(`✅ Session retrieved: userId=${session.userId}, username=${session.user?.username}`);
+            resolve(session);
+          });
+        });
+      } catch (error) {
+        console.error('❌ Error in getSession:', error);
+        console.error('Error stack:', error.stack);
+        return null;
+      }
+    };
     
     // Add client to real-time leaderboard
     realTimeLeaderboard.addClient(ws, userId);
@@ -2482,6 +2672,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
         switch (type) {
           case 'presence:hello':
             console.log('👋 Presence registration:', payload?.username);
+            // Try to get session and extract userId
+            try {
+              const session = await (ws as any).getSession?.();
+              if (session?.userId) {
+                userId = session.userId;
+                username = session.user?.username || payload?.username;
+                console.log(`📋 Session found: userId=${userId}, username=${username}`);
+              } else {
+                console.log('⚠️ No session found, trying to fetch user by username from payload');
+                // Fallback: try to get user by username from payload
+                if (payload?.username) {
+                  try {
+                    const user = await storage.getUserByUsername(payload.username);
+                    if (user) {
+                      userId = user.id;
+                      username = user.username;
+                      console.log(`📋 User found by username: userId=${userId}, username=${username}`);
+                    }
+                  } catch (error) {
+                    console.error('Error fetching user by username:', error);
+                  }
+                }
+              }
+              
+              // Set username and profile on WebSocket for stats recording
+              if (userId && username) {
+                (ws as any).username = username;
+                // Fetch user to set profile
+                const user = await storage.getUser(userId);
+                if (user) {
+                  (ws as any).profile = {
+                    id: user.id,
+                    username: user.username,
+                    displayName: user.displayName,
+                    level: user.level,
+                    points: user.points,
+                    avatarData: user.avatarData
+                  };
+                  console.log(`✅ WebSocket authenticated: userId=${userId}, username=${username}`);
+                } else {
+                  console.error(`❌ User not found in database: userId=${userId}`);
+                }
+              } else {
+                console.warn(`⚠️ Could not authenticate WebSocket: userId=${userId}, username=${username || payload?.username}`);
+              }
+            } catch (error) {
+              console.error('❌ Error getting session for presence:', error);
+              console.error('Error stack:', error.stack);
+            }
             // Register user presence
             try {
               const matchmakerModule = await import('./services/matchmaker.js');

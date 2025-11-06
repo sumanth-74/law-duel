@@ -41,7 +41,7 @@ export async function updateWeeklyLadder(userId, ratingChange, won) {
   const ladder = await getWeeklyLadder(week);
   
   if (!ladder[userId]) {
-    const user = await storage.getUserById(userId);
+    const user = await storage.getUser(userId);
     ladder[userId] = {
       userId,
       username: user?.displayName || user?.username || 'Unknown',
