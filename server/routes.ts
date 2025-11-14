@@ -1007,6 +1007,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to clear duel", error: error.message });
     }
   });
+
+  // Debug endpoint to check specific user's Atticus duel data
+  app.get('/api/atticus/debug/:userId', requireAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Get user's last duel
+      const lastDuel = await storage.getUserLastAtticusDuel(userId);
+      const activeDuel = await storage.getUserActiveAtticusDuel(userId);
+      
+      if (!lastDuel) {
+        return res.json({ 
+          message: 'No duels found for this user',
+          userId,
+          activeDuel: null,
+          lastDuel: null
+        });
+      }
+      
+      // Calculate time since loss
+      const timeSinceLoss = Date.now() - new Date(lastDuel.startedAt).getTime();
+      const hoursSinceLoss = timeSinceLoss / (1000 * 60 * 60);
+      const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+      const timeRemainingMs = totalCooldownMs - timeSinceLoss;
+      
+      res.json({
+        userId,
+        activeDuel,
+        lastDuel: {
+          ...lastDuel,
+          startedAt: lastDuel.startedAt,
+          timeSinceLossHours: hoursSinceLoss,
+          timeRemainingMs,
+          shouldBeExpired: timeRemainingMs <= 0,
+          revived: lastDuel.revived,
+          autoRestoredAt: lastDuel.autoRestoredAt
+        },
+        currentTime: new Date().toISOString(),
+        cooldownStatus: timeRemainingMs > 0 ? 'active' : 'expired'
+      });
+    } catch (error: any) {
+      console.error("Error getting debug info:", error);
+      res.status(500).json({ message: "Failed to get debug info", error: error.message });
+    }
+  });
+
+  // Clear cooldown for testing (mark as revived)
+  app.post('/api/atticus/clear-cooldown/:userId', requireAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Get user's last duel
+      const lastDuel = await storage.getUserLastAtticusDuel(userId);
+      
+      if (!lastDuel) {
+        return res.json({ 
+          message: 'No duels found for this user',
+          userId
+        });
+      }
+      
+      if (lastDuel.result === 'loss' && !lastDuel.revived) {
+        // Mark as revived to clear cooldown
+        await storage.updateAtticusDuel(lastDuel.id, {
+          revived: true,
+          autoRestoredAt: new Date()
+        });
+        
+        // Also restore lives
+        const { soloChallengeService } = await import("./services/soloChallengeService.js");
+        await soloChallengeService.restoreLives(userId);
+        
+        console.log(`🧹 Manually cleared cooldown for user ${userId}`);
+        res.json({ 
+          success: true, 
+          message: 'Cooldown cleared and lives restored',
+          userId,
+          duelId: lastDuel.id
+        });
+      } else {
+        res.json({ 
+          success: false, 
+          message: 'No active cooldown to clear',
+          userId,
+          lastDuelResult: lastDuel.result,
+          alreadyRevived: lastDuel.revived
+        });
+      }
+    } catch (error: any) {
+      console.error("Error clearing cooldown:", error);
+      res.status(500).json({ message: "Failed to clear cooldown", error: error.message });
+    }
+  });
   
   // Legacy route for backward compatibility
   app.post('/api/atticus/victory', requireAuth, async (req: any, res) => {

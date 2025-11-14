@@ -349,59 +349,54 @@ class AtticusDuelService {
   }
 
   // Get current duel status
-  getDuelStatus(userId) {
-    return new Promise(async (resolve) => {
-      const activeDuel = await storage.getUserActiveAtticusDuel(userId);
-      const lastDuel = await storage.getUserLastAtticusDuel(userId);
+  async getDuelStatus(userId) {
+    const activeDuel = await storage.getUserActiveAtticusDuel(userId);
+    const lastDuel = await storage.getUserLastAtticusDuel(userId);
+    
+    if (activeDuel) {
+      return {
+        inDuel: true,
+        duel: activeDuel
+      };
+    }
+    
+    if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
+      const timeSinceLoss = Date.now() - new Date(lastDuel.startedAt).getTime();
+      const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+      const timeRemainingMs = totalCooldownMs - timeSinceLoss;
       
-      if (activeDuel) {
-        resolve({
-          inDuel: true,
-          duel: activeDuel
-        });
-        return;
-      }
-      
-      if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
-        const timeSinceLoss = Date.now() - new Date(lastDuel.startedAt).getTime();
-        const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-        const timeRemainingMs = totalCooldownMs - timeSinceLoss;
+      if (timeRemainingMs > 0) {
+        // Still in cooldown - calculate accurate remaining time
+        const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
+        const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
         
-        if (timeRemainingMs > 0) {
-          // Still in cooldown - calculate accurate remaining time
-          const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
-          const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
-          
-          console.log(`🔍 Time calculation debug for user ${userId}:`);
-          console.log(`  - Time since loss: ${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`);
-          console.log(`  - Time remaining: ${(timeRemainingMs / (1000 * 60 * 60)).toFixed(2)} hours`);
-          console.log(`  - Hours remaining: ${hoursRemaining}, Minutes remaining: ${minutesRemaining}`);
-          
-          resolve({
-            inDuel: false,
-            canChallenge: false,
-            cooldownHours: hoursRemaining,
-            cooldownMinutes: minutesRemaining,
-            message: `You must wait ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''} before lives are restored`
-          });
-          return;
-        } else {
-          // Cooldown finished - auto-restore lives
-          this.autoRestoreLives(userId);
-          resolve({
-            inDuel: false,
-            canChallenge: true,
-            message: 'Lives automatically restored! You can play again.'
-          });
-          return;
-        }
+        console.log(`🔍 Time calculation debug for user ${userId}:`);
+        console.log(`  - Time since loss: ${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`);
+        console.log(`  - Time remaining: ${(timeRemainingMs / (1000 * 60 * 60)).toFixed(2)} hours`);
+        console.log(`  - Hours remaining: ${hoursRemaining}, Minutes remaining: ${minutesRemaining}`);
+        
+        return {
+          inDuel: false,
+          canChallenge: false,
+          cooldownHours: hoursRemaining,
+          cooldownMinutes: minutesRemaining,
+          message: `You must wait ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''} before lives are restored`
+        };
+      } else {
+        // Cooldown finished - auto-restore lives
+        await this.autoRestoreLives(userId);
+        return {
+          inDuel: false,
+          canChallenge: true,
+          message: 'Lives automatically restored! You can play again.'
+        };
       }
-      
-      resolve({
-        inDuel: false,
-        canChallenge: true
-      });
-    });
+    }
+    
+    return {
+      inDuel: false,
+      canChallenge: true
+    };
   }
   
   // Auto-restore lives after 3 hours
