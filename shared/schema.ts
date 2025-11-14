@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, jsonb, real } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, jsonb, real, unique, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -219,6 +219,28 @@ export const questionCache = pgTable("question_cache", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Weekly Ladder Table (replaces weekly_ladder_*.json files)
+export const weeklyLadderEntries = pgTable("weekly_ladder_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  username: text("username").notNull(),
+  weekId: text("week_id").notNull(), // e.g., "2025-W46"
+  weeklyRating: integer("weekly_rating").notNull().default(1000),
+  gamesPlayed: integer("games_played").notNull().default(0),
+  wins: integer("wins").notNull().default(0),
+  losses: integer("losses").notNull().default(0),
+  lawSchool: text("law_school"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  // Unique constraint: one entry per user per week
+  userWeekUnique: unique().on(table.userId, table.weekId),
+  // Index for efficient weekly queries
+  weekIdIndex: index("weekly_ladder_week_idx").on(table.weekId),
+  // Index for leaderboard queries
+  weekRatingIndex: index("weekly_ladder_rating_idx").on(table.weekId, table.weeklyRating),
+}));
+
 // Subtopic Progress Table (replaces subtopic-progress.json)
 export const subtopicProgress = pgTable("subtopic_progress", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -301,6 +323,8 @@ export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;
 export type InsertLeaderboardEntry = typeof leaderboardEntries.$inferInsert;
 export type QuestionCacheEntry = typeof questionCache.$inferSelect;
 export type InsertQuestionCacheEntry = typeof questionCache.$inferInsert;
+export type WeeklyLadderEntry = typeof weeklyLadderEntries.$inferSelect;
+export type InsertWeeklyLadderEntry = typeof weeklyLadderEntries.$inferInsert;
 export type SubtopicProgressEntry = typeof subtopicProgress.$inferSelect;
 export type InsertSubtopicProgressEntry = typeof subtopicProgress.$inferInsert;
 export type SubtopicAttemptAuditEntry = typeof subtopicAttemptAudit.$inferSelect;

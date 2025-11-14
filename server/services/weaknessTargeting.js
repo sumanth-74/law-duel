@@ -1,13 +1,14 @@
 // Weakness targeting service - ensures 3/5 questions target weak areas
-import { progressService } from '../progress.js';
+// Old progress service removed - using database-based subtopicProgressService
 import { normalizeLabel, getSubtopicsForSubject, SUBJECTS } from '../taxonomy.js';
 
 // Get questions targeting player's weaknesses
 export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
   console.log(`🎯 Generating weakness-targeted questions for user ${userId}, subject: ${subject}`);
   
-  // Get player's weakest subtopics
-  const weakestSubtopics = progressService.getWeakestSubtopics(userId, 10);
+  // For now, use random subtopic selection since we're transitioning away from the old progress system
+  // TODO: Implement weakness targeting with the new database-based system
+  const weakestSubtopics = [];
   
   // Filter to requested subject if specified (not Mixed)
   let targetSubtopics = weakestSubtopics;
@@ -83,9 +84,8 @@ export async function getWeaknessTargetedQuestions(userId, subject, count = 5) {
     }
     
     // Regular questions get slightly higher difficulty
-    const userProgress = progressService.getUserProgress(userId);
-    const subjectMastery = userProgress[normalizedSubject]?.overall?.mastery || 50;
-    const difficulty = calculateAdaptiveDifficulty(subjectMastery) + 1;
+    // Use default difficulty since we're moving away from mastery-based difficulty
+    const difficulty = 2; // Medium difficulty as default
     
     questions.push({
       type: 'regular',

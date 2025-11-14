@@ -91,76 +91,86 @@ export async function getWeeklyTop50() {
 }
 
 /**
- * Get weekly ladder data from storage
+ * Get weekly ladder data from database
  */
 async function getWeeklyLadder(week) {
-  // In development, use file storage
-  if (process.env.NODE_ENV === 'development') {
-    const fs = await import('fs').then(m => m.promises);
-    const path = await import('path');
-    const dataDir = path.join(process.cwd(), 'data');
-    const ladderFile = path.join(dataDir, `weekly_ladder_${week}.json`);
-    
-    try {
-      const data = await fs.readFile(ladderFile, 'utf-8');
-      return JSON.parse(data);
-    } catch (err) {
-      return {}; // Return empty ladder if file doesn't exist
-    }
-  }
+  const { storage } = await import('../storage.js');
   
-  // In production, would use database
-  return {};
+  try {
+    const entries = await storage.getWeeklyLadder(week, 50);
+    
+    // Convert database entries back to the expected format for compatibility
+    const ladder = {};
+    entries.forEach(entry => {
+      ladder[entry.userId] = {
+        userId: entry.userId,
+        username: entry.username,
+        weeklyRating: entry.weeklyRating,
+        gamesPlayed: entry.gamesPlayed,
+        wins: entry.wins,
+        losses: entry.losses,
+        lawSchool: entry.lawSchool
+      };
+    });
+    
+    return ladder;
+  } catch (error) {
+    console.error('Error fetching weekly ladder from database:', error);
+    return {}; // Return empty ladder on error
+  }
 }
 
 /**
  * Save weekly ladder data to storage
  */
 async function saveWeeklyLadder(week, ladder) {
-  // In development, use file storage
-  if (process.env.NODE_ENV === 'development') {
-    const fs = await import('fs').then(m => m.promises);
-    const path = await import('path');
-    const dataDir = path.join(process.cwd(), 'data');
-    const ladderFile = path.join(dataDir, `weekly_ladder_${week}.json`);
-    
-    // Ensure data directory exists
-    await fs.mkdir(dataDir, { recursive: true });
-    
-    // Save ladder data
-    await fs.writeFile(ladderFile, JSON.stringify(ladder, null, 2));
-  }
+  const { storage } = await import('../storage.js');
   
-  // In production, would use database
+  try {
+    // Convert ladder object to database entries and upsert them
+    const entries = Object.values(ladder).map(entry => ({
+      userId: entry.userId,
+      username: entry.username,
+      weekId: week,
+      weeklyRating: entry.weeklyRating || 1000,
+      gamesPlayed: entry.gamesPlayed || 0,
+      wins: entry.wins || 0,
+      losses: entry.losses || 0,
+      lawSchool: entry.lawSchool || null
+    }));
+    
+    // Upsert each entry
+    for (const entry of entries) {
+      await storage.upsertWeeklyLadderEntry(entry);
+    }
+    
+    console.log(`📊 Saved ${entries.length} weekly ladder entries for week ${week} to database`);
+  } catch (error) {
+    console.error('Error saving weekly ladder to database:', error);
+    throw error;
+  }
 }
 
 /**
- * Clean up old weekly ladder files (older than 4 weeks)
+ * Clean up old weekly ladder entries (older than 4 weeks)
  */
 export async function cleanupOldWeeklyLadders() {
-  if (process.env.NODE_ENV === 'development') {
-    const fs = await import('fs').then(m => m.promises);
-    const path = await import('path');
-    const dataDir = path.join(process.cwd(), 'data');
+  const { storage } = await import('../storage.js');
+  
+  try {
+    // Calculate cutoff week (4 weeks ago)
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - 28);
+    const cutoffWeek = getCurrentISOWeek.call({ date: cutoffDate });
     
-    try {
-      const files = await fs.readdir(dataDir);
-      const ladderFiles = files.filter(f => f.startsWith('weekly_ladder_'));
-      
-      // Calculate cutoff week (4 weeks ago)
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - 28);
-      const cutoffWeek = getCurrentISOWeek.call({ date: cutoffDate });
-      
-      for (const file of ladderFiles) {
-        const week = file.replace('weekly_ladder_', '').replace('.json', '');
-        if (week < cutoffWeek) {
-          await fs.unlink(path.join(dataDir, file));
-          console.log(`🧹 Cleaned up old weekly ladder: ${week}`);
-        }
-      }
-    } catch (err) {
-      console.error('Error cleaning up weekly ladders:', err);
-    }
+    // Note: For now, we'll keep all historical data in the database
+    // In the future, we could add a cleanup query here if needed
+    console.log(`🧹 Weekly ladder cleanup: keeping all entries (cutoff would be ${cutoffWeek})`);
+    
+    // TODO: Add database cleanup query if needed:
+    // await db.delete(weeklyLadderEntries).where(lt(weeklyLadderEntries.weekId, cutoffWeek));
+    
+  } catch (err) {
+    console.error('Error cleaning up weekly ladders:', err);
   }
 }

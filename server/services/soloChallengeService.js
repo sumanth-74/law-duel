@@ -1,6 +1,6 @@
 import { storage } from '../storage.js';
 import { initializeQuestionCoordinator } from './qcoordinator.js';
-import { progressService } from '../progress.js';
+// Old progress service removed - using database-based subtopicProgressService
 import { db } from '../db.js';
 import { questionCache } from '../../shared/schema.js';
 import { eq } from 'drizzle-orm';

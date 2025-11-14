@@ -1,9 +1,9 @@
 import { 
-  users, matches, questions, playerSubjectStats, soloChallenges, atticusDuels, gameProgress, leaderboardEntries, questionCache,
+  users, matches, questions, playerSubjectStats, soloChallenges, atticusDuels, gameProgress, leaderboardEntries, questionCache, weeklyLadderEntries,
   type User, type InsertUser, type Match, type InsertMatch, type Question, type InsertQuestion,
   type SoloChallenge, type InsertSoloChallenge, type AtticusDuel, type InsertAtticusDuel,
   type GameProgress, type InsertGameProgress, type LeaderboardEntry, type InsertLeaderboardEntry,
-  type QuestionCacheEntry, type InsertQuestionCacheEntry
+  type QuestionCacheEntry, type InsertQuestionCacheEntry, type WeeklyLadderEntry, type InsertWeeklyLadderEntry
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, notInArray } from "drizzle-orm";
@@ -66,6 +66,12 @@ export interface IStorage {
   cacheQuestion(cache: InsertQuestionCacheEntry): Promise<QuestionCacheEntry>;
   getCachedQuestions(subject: string, difficulty: number): Promise<QuestionCacheEntry[]>;
   clearExpiredCache(): Promise<void>;
+
+  // Weekly Ladder methods
+  upsertWeeklyLadderEntry(entry: InsertWeeklyLadderEntry): Promise<WeeklyLadderEntry>;
+  getWeeklyLadder(weekId: string, limit?: number): Promise<WeeklyLadderEntry[]>;
+  getWeeklyLadderEntry(userId: string, weekId: string): Promise<WeeklyLadderEntry | undefined>;
+  updateWeeklyLadderEntry(userId: string, weekId: string, updates: Partial<WeeklyLadderEntry>): Promise<WeeklyLadderEntry | undefined>;
 
   // Game Progress methods
   saveGameProgress(progress: InsertGameProgress): Promise<GameProgress>;
@@ -615,6 +621,63 @@ export class DatabaseStorage implements IStorage {
       .update(gameProgress)
       .set({ ...updates, updatedAt: new Date() })
       .where(eq(gameProgress.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Weekly Ladder methods
+  async upsertWeeklyLadderEntry(entry: InsertWeeklyLadderEntry): Promise<WeeklyLadderEntry> {
+    // First try to find existing entry
+    const existing = await this.getWeeklyLadderEntry(entry.userId, entry.weekId);
+    
+    if (existing) {
+      // Update existing entry
+      const [updated] = await db
+        .update(weeklyLadderEntries)
+        .set({
+          username: entry.username,
+          weeklyRating: entry.weeklyRating,
+          gamesPlayed: entry.gamesPlayed,
+          wins: entry.wins,
+          losses: entry.losses,
+          lawSchool: entry.lawSchool,
+          updatedAt: new Date()
+        })
+        .where(and(eq(weeklyLadderEntries.userId, entry.userId), eq(weeklyLadderEntries.weekId, entry.weekId)))
+        .returning();
+      return updated;
+    } else {
+      // Insert new entry
+      const [inserted] = await db
+        .insert(weeklyLadderEntries)
+        .values(entry)
+        .returning();
+      return inserted;
+    }
+  }
+
+  async getWeeklyLadder(weekId: string, limit: number = 50): Promise<WeeklyLadderEntry[]> {
+    return await db
+      .select()
+      .from(weeklyLadderEntries)
+      .where(eq(weeklyLadderEntries.weekId, weekId))
+      .orderBy(desc(weeklyLadderEntries.weeklyRating))
+      .limit(limit);
+  }
+
+  async getWeeklyLadderEntry(userId: string, weekId: string): Promise<WeeklyLadderEntry | undefined> {
+    const [entry] = await db
+      .select()
+      .from(weeklyLadderEntries)
+      .where(and(eq(weeklyLadderEntries.userId, userId), eq(weeklyLadderEntries.weekId, weekId)));
+    return entry;
+  }
+
+  async updateWeeklyLadderEntry(userId: string, weekId: string, updates: Partial<WeeklyLadderEntry>): Promise<WeeklyLadderEntry | undefined> {
+    const [updated] = await db
+      .update(weeklyLadderEntries)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(and(eq(weeklyLadderEntries.userId, userId), eq(weeklyLadderEntries.weekId, weekId)))
       .returning();
     return updated;
   }

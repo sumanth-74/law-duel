@@ -438,9 +438,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
-      // Get progress data
-      const { progressService } = await import("./progress.js");
-      const profileData = progressService.getPublicProfile(user.id);
+      // Progress data simplified - using basic user data for now
+      // TODO: Implement public profile with new database-based progress system
+      const profileData = {
+        subjects: {},
+        overallStats: { attempts: 0, correct: 0, accuracy: 0 }
+      };
       
       // Return public profile data
       res.json({

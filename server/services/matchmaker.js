@@ -4,7 +4,7 @@ import { getQuestion } from "./qcoordinator.js";
 import { storage } from "../storage.js";
 import { getWeaknessTargetedQuestions, logTargeting } from "./weaknessTargeting.js";
 import { updateWeeklyLadder } from "./weeklyLadder.js";
-import { progressService } from "../progress.js";
+// Old progress service removed - using database-based subtopicProgressService
 import { getPoolManager } from "./questionPoolManager.js";
 
 // North Star configuration: All modes use 5 questions
@@ -377,18 +377,7 @@ async function runDuel(wss, roomCode, players, subject) {
               question.qid
             );
             
-            // Also record in old progressService for compatibility
-            const progressResult = await progressService.recordAttempt({
-              userId: userId,
-              duelId: roomCode,
-              questionId: question.qid,
-              subject: question.subject,
-              subtopic: question.subtopic || question.subject,
-              difficulty: match.difficulty,
-              correct,
-              msToAnswer: answer.timeMs,
-              ts: Date.now()
-            });
+            // Old progress service removed - now using database-based subtopicProgressService only
             
             // Store progress result for inclusion in response
             if (progressResult || subtopicResult) {
@@ -791,18 +780,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
             proficiencyAfter: subtopicResult.after
           } : null);
           
-          // Also record in old progressService for compatibility
-          const progressResult = await progressService.recordAttempt({
-            userId: userId,
-            duelId: roomCode,
-            questionId: question.qid,
-            subject: question.subject,
-            subtopic: question.subtopic || question.subject,
-            difficulty: match.difficulty,
-            correct: humanCorrect,
-            msToAnswer: humanAnswer.timeMs,
-            ts: Date.now()
-          });
+          // Old progress service removed - now using database-based subtopicProgressService only
           
           // Store progress result for inclusion in response
           // Prioritize subtopicResult (new service) over progressResult (old service)

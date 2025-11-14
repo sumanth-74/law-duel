@@ -1,6 +1,6 @@
 import { questionBank } from '../questionBank.js';
 import { storage } from '../storage.js';
-import { progressService } from '../progress.js';
+// Old progress service removed - using database-based subtopicProgressService
 
 class AsyncDuels {
   constructor() {
@@ -413,18 +413,7 @@ class AsyncDuels {
             currentTurn.qid
           );
           
-          // Also record in old progressService for compatibility
-          await progressService.recordAttempt({
-            userId: playerId,
-            duelId: matchId,
-            questionId: currentTurn.qid,
-            subject: currentTurn.subject || match.subject,
-            subtopic: currentTurn.subtopic || currentTurn.subject || match.subject,
-            difficulty: currentTurn.difficulty || 1,
-            correct: isCorrect,
-            msToAnswer: answer ? answer.ms : 60000,
-            ts: Date.now()
-          });
+          // Old progress service removed - now using database-based subtopicProgressService only
         } catch (error) {
           console.error('Error recording subtopic progress in async duel:', error);
         }
