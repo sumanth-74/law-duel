@@ -1023,14 +1023,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!lastDuel) {
         return res.json({ 
           message: 'No duels found for this user',
-          userId,
+        userId,
           activeDuel: null,
           lastDuel: null
         });
       }
       
       // Calculate time since loss
-      const timeSinceLoss = Date.now() - new Date(lastDuel.startedAt).getTime();
+      const timeSinceLoss = Date.now() - new Date(lastDuel.completedAt || lastDuel.startedAt).getTime();
       const hoursSinceLoss = timeSinceLoss / (1000 * 60 * 60);
       const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
       const timeRemainingMs = totalCooldownMs - timeSinceLoss;
@@ -1083,7 +1083,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await soloChallengeService.restoreLives(userId);
         
         console.log(`🧹 Manually cleared cooldown for user ${userId}`);
-        res.json({ 
+      res.json({
           success: true, 
           message: 'Cooldown cleared and lives restored',
           userId,

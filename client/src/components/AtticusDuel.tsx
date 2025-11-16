@@ -314,7 +314,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
                     <div className="text-green-400 font-bold mb-2">🎯 THE STAKES 🎯</div>
                     <div className="text-purple-200 text-sm space-y-1">
                       <div>✅ <span className="text-green-300 font-semibold">WIN:</span> Restore all 3 lives + continue playing immediately!</div>
-                      <div>❌ <span className="text-red-300 font-semibold">LOSE:</span> 3-hour cooldown OR revive for $1</div>
+                      <div>❌ <span className="text-red-300 font-semibold">LOSE:</span> 3-hour cooldown activated</div>
                           </div>
                       </div>
                   
@@ -463,23 +463,9 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
                     Atticus has bested you this time.
                   </div>
                   
-                  {onRevive && (
-                    <div className="space-y-3">
-                      <div className="text-purple-300 text-sm">
-                        3-hour cooldown activated. Come back in 3 hours, or...
-                      </div>
-                      <Button
-                        onClick={onRevive}
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold px-6 py-3"
-                      >
-                        <Heart className="w-4 h-4 mr-2" />
-                        Revive Now for $1
-                      </Button>
-                      <div className="text-purple-400 text-xs">
-                        Skip the cooldown and restore your lives instantly!
-                      </div>
-                    </div>
-                  )}
+                  <div className="text-purple-300 text-sm">
+                    3-hour cooldown activated. Come back in 3 hours.
+                  </div>
                   
                   <div className="mt-6">
                     <Button

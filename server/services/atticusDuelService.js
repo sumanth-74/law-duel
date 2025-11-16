@@ -302,7 +302,7 @@ class AtticusDuelService {
         console.error('Failed to restore lives after Atticus victory:', error);
       }
     } else {
-      message = 'Atticus prevailed this time. Wait 3 hours for life restoration or pay $1 to revive immediately.';
+      message = 'Atticus prevailed this time. Wait 3 hours for life restoration.';
     }
 
     // Update duel in database
@@ -361,7 +361,7 @@ class AtticusDuelService {
     }
     
     if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
-      const timeSinceLoss = Date.now() - new Date(lastDuel.startedAt).getTime();
+      const timeSinceLoss = Date.now() - new Date(lastDuel.completedAt || lastDuel.startedAt).getTime();
       const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
       const timeRemainingMs = totalCooldownMs - timeSinceLoss;
       
@@ -380,7 +380,7 @@ class AtticusDuelService {
           canChallenge: false,
           cooldownHours: hoursRemaining,
           cooldownMinutes: minutesRemaining,
-          message: `You must wait ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''} before lives are restored`
+          message: `You must wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''} before lives are restored`
         };
       } else {
         // Cooldown finished - auto-restore lives

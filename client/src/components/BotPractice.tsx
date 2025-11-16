@@ -378,7 +378,7 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
               <div className="text-red-300 font-semibold mb-2">⏰ Atticus Cooldown Active</div>
               <div className="text-red-400 text-sm">
                 {atticusCooldown.cooldownHours !== undefined && atticusCooldown.cooldownMinutes !== undefined ? (
-                  `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours > 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes} minute${atticusCooldown.cooldownMinutes > 1 ? 's' : ''}`
+                  `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours !== 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes} minute${atticusCooldown.cooldownMinutes !== 1 ? 's' : ''}`
                 ) : (
                   'Lives will be automatically restored in 3 hours'
                 )}

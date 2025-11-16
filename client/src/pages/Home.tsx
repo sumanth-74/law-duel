@@ -690,22 +690,11 @@ export default function Home() {
                 setGameMode('menu');
                 toast({
                   title: "Defeated",
-                  description: "Atticus has bested you. 3-hour cooldown activated or pay $1 to revive.",
+                  description: "Atticus has bested you. 3-hour cooldown activated.",
                   variant: "destructive"
                 });
               }}
               onExit={() => {
-                setShowAtticusDuel(false);
-                setCurrentChallengeId(null);
-                setGameMode('menu');
-              }}
-              onRevive={() => {
-                // TODO: Implement Stripe payment for $1 revive
-                toast({
-                  title: "Revive Feature",
-                  description: "Stripe payment integration coming soon! For now, wait 3 hours.",
-                  variant: "default"
-                });
                 setShowAtticusDuel(false);
                 setCurrentChallengeId(null);
                 setGameMode('menu');
