@@ -12,7 +12,7 @@ export const SUBJECTS = {
 const ALIASES = new Map([
   ["civil procedure","Civ Pro"],["civpro","Civ Pro"],["civil-pro","Civ Pro"],
   ["constitutional law","Con Law"],["conlaw","Con Law"],
-  ["criminal law","Crim"],["criminal procedure","Crim"],["crim law","Crim"],["crim pro","Crim"],
+  ["criminal law","Crim"],["criminal procedure","Crim"],["criminal law/procedure","Crim"],["crim law","Crim"],["crim pro","Crim"],
   ["real property","Property"],["prop","Property"]
 ]);
 

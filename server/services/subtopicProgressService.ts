@@ -19,9 +19,22 @@ function normalizeSubjectForSubtopics(subject: string): string {
     'Criminal Procedure': 'Crim',
     'Real Property': 'Property',
     'Property': 'Property',
+    'Torts': 'Torts',
+    'Contracts': 'Contracts',
+    'Evidence': 'Evidence'
   };
   
-  return subjectMap[normalized] || normalized;
+  // First try direct mapping
+  if (subjectMap[normalized]) {
+    return subjectMap[normalized];
+  }
+  
+  // Also try mapping the original subject directly
+  if (subjectMap[subject]) {
+    return subjectMap[subject];
+  }
+  
+  return normalized;
 }
 
 class SubtopicProgressService {
