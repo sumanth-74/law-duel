@@ -396,9 +396,44 @@ class AsyncDuels {
       const answer = currentTurn.answers[playerId];
       const isCorrect = answer && answer.idx === currentTurn.correctIndex;
       
-      // Track subtopic progress for human players
+      // Track stats and subtopic progress for human players
       if (!playerId.startsWith('bot_')) {
         try {
+          // Map short subject names to full names for statsService
+          const subjectMap = {
+            'Civ Pro': 'Civil Procedure',
+            'Con Law': 'Constitutional Law',
+            'Crim': 'Criminal Law/Procedure',
+            'Property': 'Real Property',
+            'Torts': 'Torts',
+            'Contracts': 'Contracts',
+            'Evidence': 'Evidence'
+          };
+          const fullSubjectName = subjectMap[currentTurn.subject || match.subject] || currentTurn.subject || match.subject;
+          
+          // Record comprehensive stats using statsService
+          const { statsService } = await import('./statsService.js');
+          const statsResult = await statsService.recordQuestionAttempt(
+            playerId,
+            currentTurn.qid,
+            fullSubjectName,
+            answer ? answer.idx : -1,
+            currentTurn.correctIndex,
+            isCorrect,
+            answer ? answer.ms : 60000,
+            `difficulty_${currentTurn.difficulty || 1}`,
+            matchId
+          );
+          
+          console.log(`📊 Async Duel Stats Updated:`, {
+            playerId,
+            subject: fullSubjectName,
+            isCorrect,
+            xpGained: statsResult.xpGained,
+            levelUp: statsResult.levelUp,
+            masteryUp: statsResult.masteryUp
+          });
+          
           // Record subtopic progress using subtopicProgressService
           const { subtopicProgressService } = await import('./subtopicProgressService.ts');
           await subtopicProgressService.recordAttempt(
@@ -413,9 +448,8 @@ class AsyncDuels {
             currentTurn.qid
           );
           
-          // Old progress service removed - now using database-based subtopicProgressService only
         } catch (error) {
-          console.error('Error recording subtopic progress in async duel:', error);
+          console.error('Error recording stats and subtopic progress in async duel:', error);
         }
       }
       
@@ -783,6 +817,7 @@ class AsyncDuels {
   }
 
   async resignMatch(matchId, userId) {
+    console.log(`🚨 RESIGNATION DEBUG: Starting resignMatch for ${matchId} by user ${userId}`);
     const match = await storage.getMatch(matchId);
     if (!match || match.status !== 'active') {
       throw new Error('Match not found or not active');
@@ -813,6 +848,83 @@ class AsyncDuels {
     console.log(`🔍 After resign - match ${matchId} status: ${updatedMatch?.status}, winnerId: ${updatedMatch?.winnerId}`);
     
     console.log(`✅ Match ${matchId} resigned successfully`);
+
+    // Process stats for all answered questions before finalizing
+    console.log(`🔍 Processing stats for answered questions before resignation...`);
+    if (match.turns && match.turns.length > 0) {
+      for (const turn of match.turns) {
+        if (turn.answers && Object.keys(turn.answers).length > 0) {
+          console.log(`📊 Processing stats for turn: ${turn.qid} (revealed: ${turn.revealed}) with ${Object.keys(turn.answers).length} answers`);
+          
+          // Manually process stats for this turn without revealing it to other players
+          const correctAnswers = [];
+          const incorrectAnswers = [];
+          const players = [match.player1Id, match.player2Id].filter(id => id);
+
+          for (const playerId of players) {
+            const answer = turn.answers[playerId];
+            const isCorrect = answer && answer.idx === turn.correctIndex;
+            
+            // Track stats and subtopic progress for human players
+            if (!playerId.startsWith('bot_') && answer) {
+              try {
+                // Map short subject names to full names for statsService
+                const subjectMap = {
+                  'Civ Pro': 'Civil Procedure',
+                  'Con Law': 'Constitutional Law',
+                  'Crim': 'Criminal Law/Procedure',
+                  'Property': 'Real Property',
+                  'Torts': 'Torts',
+                  'Contracts': 'Contracts',
+                  'Evidence': 'Evidence'
+                };
+                const fullSubjectName = subjectMap[turn.subject || match.subject] || turn.subject || match.subject;
+                
+                // Record comprehensive stats using statsService
+                const { statsService } = await import('./statsService.js');
+                const statsResult = await statsService.recordQuestionAttempt(
+                  playerId,
+                  turn.qid,
+                  fullSubjectName,
+                  answer.idx,
+                  turn.correctIndex,
+                  isCorrect,
+                  answer.ms || 60000,
+                  `difficulty_${turn.difficulty || 1}`,
+                  matchId
+                );
+                
+                console.log(`📊 Async Duel Stats Updated (Resignation):`, {
+                  playerId,
+                  subject: fullSubjectName,
+                  isCorrect,
+                  xpGained: statsResult.xpGained,
+                  levelUp: statsResult.levelUp,
+                  masteryUp: statsResult.masteryUp
+                });
+                
+                // Record subtopic progress using subtopicProgressService
+                const { subtopicProgressService } = await import('./subtopicProgressService.ts');
+                await subtopicProgressService.recordAttempt(
+                  playerId,
+                  turn.subject || match.subject,
+                  turn.stem || '',
+                  turn.explanation || '',
+                  isCorrect,
+                  `difficulty_${turn.difficulty || 1}`,
+                  answer.ms || 60000,
+                  matchId,
+                  turn.qid
+                );
+                
+              } catch (error) {
+                console.error('Error recording stats for resigned match:', error);
+              }
+            }
+          }
+        }
+      }
+    }
 
     await this.finalizeMatch(matchId);
 

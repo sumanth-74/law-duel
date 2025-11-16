@@ -8,7 +8,7 @@ import SubtopicProgress from '@/components/SubtopicProgress';
 import { DetailedSubtopics } from '@/components/DetailedSubtopics';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Trophy, TrendingUp, BarChart3, Clock, BookOpen, Eye, Share2, Shield, Users } from 'lucide-react';
+import { ArrowLeft, Trophy, TrendingUp, BarChart3, BookOpen, Eye, Share2, Shield, Users } from 'lucide-react';
 import { Link, useParams } from 'wouter';
 import LawDuelLogo from '@/components/LawDuelLogo';
 import { AvatarRenderer } from '@/components/AvatarRenderer';
@@ -175,7 +175,7 @@ export default function Stats() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full max-w-5xl mx-auto bg-black/40 p-1">
+          <TabsList className="grid grid-cols-4 w-full max-w-5xl mx-auto bg-black/40 p-1">
             <TabsTrigger value="mastery" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
               <Trophy className="w-4 h-4 flex-shrink-0" />
               <span>Mastery</span>
@@ -187,10 +187,6 @@ export default function Stats() {
             <TabsTrigger value="performance" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
               <TrendingUp className="w-4 h-4 flex-shrink-0" />
               <span>Performance</span>
-            </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30" disabled={isViewingOtherUser}>
-              <Clock className="w-4 h-4 flex-shrink-0" />
-              <span>History</span>
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30" disabled={isViewingOtherUser}>
               <BarChart3 className="w-4 h-4 flex-shrink-0" />
@@ -298,16 +294,6 @@ export default function Stats() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="history" className="space-y-6">
-            <Card className="bg-black/40 border-purple-500/20">
-              <CardHeader>
-                <CardTitle>Game History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Match history coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
             <Card className="bg-black/40 border-purple-500/20">
