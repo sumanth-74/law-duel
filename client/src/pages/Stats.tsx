@@ -175,7 +175,7 @@ export default function Stats() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-5xl mx-auto bg-black/40 p-1">
+          <TabsList className="grid grid-cols-4 w-full max-w-5xl h-15 mx-auto bg-black/40 p-1">
             <TabsTrigger value="mastery" className="flex items-center justify-center gap-2 text-xs sm:text-sm px-2 py-3 data-[state=active]:bg-purple-600/30">
               <Trophy className="w-4 h-4 flex-shrink-0" />
               <span>Mastery</span>
