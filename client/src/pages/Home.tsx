@@ -670,7 +670,7 @@ export default function Home() {
             </Badge>
           </div>
           
-          <div className="pt-36 px-4">
+          <div className="px-4">
             <AtticusDuel 
               challengeId={currentChallengeId || undefined}
               onVictory={() => {
@@ -720,7 +720,7 @@ export default function Home() {
           </Badge>
         </div>
         
-        <div className="pt-36 px-4">
+        <div className="px-4">
           <BotPractice 
             onBack={() => setGameMode('menu')} 
             onLivesLost={async (challenge) => {

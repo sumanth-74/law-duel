@@ -253,7 +253,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
       console.log('🔍 Debug: Moving to next question:', nextQuestion);
       setCurrentQuestion(nextQuestion);
       setNextQuestion(null); // Clear it after using
-    } else {
+      } else {
       console.log('🔍 Debug: No next question available');
     }
     setDuelPhase('question');
@@ -263,18 +263,18 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div className="flex items-center justify-center min-h-screen">
       <AnimatePresence>
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="relative max-w-4xl w-full mx-4"
+          className="relative max-w-4xl w-full mx-auto"
         >
           <Card className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 border-purple-500 shadow-2xl">
-            <CardContent className="p-8">
+            <CardContent className="p-6">
               {/* Atticus Visual - Purple Wizard Cat */}
-              <div className="text-center mb-6">
+              <div className="text-center mb-2">
                 <motion.div
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -296,7 +296,7 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
                       <Sparkles className="w-6 h-6 text-purple-400" />
                     </div>
                   </div>
-                  <div className="text-purple-300 font-bold text-xl mt-2">ATTICUS THE PURPLE WIZARD CAT</div>
+                  <div className="text-purple-300 font-bold text-lg mt-2">ATTICUS THE PURPLE WIZARD CAT</div>
                 </motion.div>
                 
                 {/* Atticus Stats */}
@@ -355,8 +355,8 @@ export function AtticusDuel({ onVictory, onDefeat, onExit, onRevive, challengeId
                 </div>
               </div>
 
-                  <div className="bg-purple-950/30 rounded-lg p-6 border border-purple-400/20">
-                    <div className="text-purple-100 mb-4 text-lg leading-relaxed">
+                  <div className="bg-purple-950/30 rounded-lg border border-purple-400/20">
+                    <div className="text-purple-100 mb-4 leading-relaxed">
                       {currentQuestion.stem}
                     </div>
                     
