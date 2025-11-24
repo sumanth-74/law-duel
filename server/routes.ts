@@ -12,7 +12,7 @@ import * as fs from "fs/promises";
 import { storage } from "./storage";
 import { registerSchema, loginSchema } from "@shared/schema";
 import { statsService } from "./services/statsService";
-import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest } from "./services/matchmaker";
+import { registerPresence, startMatchmaking, handleDuelAnswer, handleHintRequest, handleRequestResult } from "./services/matchmaker";
 import { initializeQuestionCoordinator } from "./services/qcoordinator";
 import { initializeLeaderboard, updateBotActivity, updatePlayerStats } from "./services/leaderboard";
 import { generateMBEItem } from "./services/mbeGenerator";
@@ -2675,6 +2675,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   wss.on('connection', async (ws: WebSocket, req) => {
     const connectionId = Math.random().toString(36).substr(2, 9);
+    (ws as any).connectionId = connectionId; // Store connection ID on WebSocket
     console.log(`Client connected to WebSocket [${connectionId}]`);
     
     // Extract user ID from session by parsing the session cookie
@@ -2831,7 +2832,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Import matchmaker and start matchmaking
             try {
               const matchmakerModule = await import('./services/matchmaker.js');
-              matchmakerModule.startMatchmaking(wss, ws, payload);
+              await matchmakerModule.startMatchmaking(wss, ws, payload);
             } catch (error) {
               console.error('Failed to start matchmaking:', error);
               ws.send(JSON.stringify({ 
@@ -2859,6 +2860,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
               matchmakerModule.handleHintRequest(ws, payload);
             } catch (error) {
               console.error('Failed to handle hint request:', error);
+            }
+            break;
+          
+          case 'duel:requestResult':
+            // Handle request for missing result
+            console.log('📥 Received request for missing result:', payload);
+            try {
+              const matchmakerModule = await import('./services/matchmaker.js');
+              matchmakerModule.handleRequestResult(ws, payload);
+            } catch (error) {
+              console.error('Failed to handle result request:', error);
             }
             break;
           

@@ -35,23 +35,49 @@ export function registerPresence(ws, payload) {
   console.log(`User ${username} joined presence`);
 }
 
-export function startMatchmaking(wss, ws, payload) {
+export async function startMatchmaking(wss, ws, payload) {
   console.log('Matchmaking started for:', payload);
   const { subject } = payload;
   
-  // Handle "Mixed Questions" directly - pick random subject
-  let normalizedSubject = subject;
-  if (subject === "Mixed Questions" || subject?.toLowerCase() === "mixed questions") {
+  // Normalize subject first using the subjects.js normalization
+  const { normalizeSubject } = await import('./subjects.js');
+  let normalizedSubject = normalizeSubject(subject);
+  
+  // Handle "Mixed Questions" or if normalization failed
+  if (!normalizedSubject || subject === "Mixed Questions" || subject?.toLowerCase() === "mixed questions") {
     const subjects = Object.keys(queues);
     normalizedSubject = subjects[Math.floor(Math.random() * subjects.length)];
     console.log(`Subject "${subject}" normalized to "${normalizedSubject}"`);
   }
   
-  const queue = queues[normalizedSubject];
+  // Map normalized short names to full queue names
+  const subjectMap = {
+    'Civ Pro': 'Civil Procedure',
+    'Con Law': 'Constitutional Law',
+    'Crim': 'Criminal Law',
+    'Property': 'Property',
+    'Contracts': 'Contracts',
+    'Evidence': 'Evidence',
+    'Torts': 'Torts'
+  };
+  
+  const queueName = subjectMap[normalizedSubject] || normalizedSubject;
+  const queue = queues[queueName];
   if (!queue) {
-    console.log('Invalid normalized subject:', normalizedSubject);
+    console.log('Invalid normalized subject:', normalizedSubject, '-> queue name:', queueName);
+    console.log('Available queues:', Object.keys(queues));
+    // Send error message to client
+    if (ws.readyState === 1) {
+      ws.send(JSON.stringify({ 
+        type: 'queue:error', 
+        payload: { error: 'Invalid subject', subject: subject } 
+      }));
+    }
     return;
   }
+  
+  // Use the queue name (full name) for the rest of the function
+  normalizedSubject = queueName;
 
   console.log(`Queue for ${normalizedSubject} has ${queue.length} players`);
 
@@ -560,7 +586,8 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     difficulty: 1, // Start at difficulty 1
     scores: [0, 0],
     usedQuestions: [],
-    seen: new Set() // fingerprints of stems served in THIS duel
+    seen: new Set(), // fingerprints of stems served in THIS duel
+    lastResults: new Map() // Store last result for each round for resending
   };
 
   // Get weakness targeting for the human player
@@ -579,6 +606,7 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
     match.difficulty = Math.min(Math.floor((round + 1) / 2), 4);
     
     try {
+      console.log(`🔍 Round ${round}: Entering try block, fetching question...`);
       // Use weakness targeting for this round
       const targetInfo = match.questionTargets ? match.questionTargets[round - 1] : null;
       const targetSubject = targetInfo?.subject || subject;
@@ -628,15 +656,18 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       };
 
       if (humanWs.readyState === 1) {
-        console.log(`📤 Sending question for Round ${round} to client:`, {
+        const sendTime = Date.now();
+        console.log(`📤 [${sendTime}] Sending question for Round ${round} to client:`, {
           qid: questionData.qid,
           round: questionData.round,
           subject: questionData.subject,
           stemLength: questionData.stem?.length || 0,
           choicesCount: questionData.choices?.length || 0
         });
+        const connectionId = humanWs.connectionId || 'unknown';
+        console.log(`🔗 Sending question on connection [${connectionId}] for Round ${round}`);
         humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
-        console.log(`✅ Question sent successfully for Round ${round}`);
+        console.log(`✅ [${sendTime}] Question sent successfully for Round ${round} on connection [${connectionId}]`);
       } else {
         console.log(`❌ Cannot send question for Round ${round} - WebSocket not ready (state: ${humanWs.readyState})`);
       }
@@ -647,23 +678,26 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       
       const botDecision = bot.decide(round, question.correctIndex);
       
+      console.log(`⏳ Round ${round}: Waiting for human answer (timeout: 61s)...`);
       await new Promise(resolve => {
         const timeout = setTimeout(() => {
-          console.log('⏰ Bot duel timeout - using default answer');
+          console.log(`⏰ Round ${round}: Bot duel timeout - using default answer`);
           resolve();
         }, 61000);
         
         const checkInterval = setInterval(() => {
           if (answers.size >= 1) {
-            console.log('✅ Human answer received, processing...');
+            console.log(`✅ Round ${round}: Human answer received, processing...`);
             clearTimeout(timeout);
             clearInterval(checkInterval);
             resolve();
           }
         }, 100);
       });
+      console.log(`✅ Round ${round}: Answer wait completed, proceeding to result processing...`);
 
       // Process results - use actual human answer if available
+      console.log(`🔄 Processing Round ${round} results...`);
       let humanAnswer = answers.get(humanWs);
       if (!humanAnswer) {
         console.log('❌ No human answer found, using timeout default');
@@ -724,8 +758,17 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         questionId: question.qid
       });
       
-      if (userId) {
+      // CRITICAL: Process stats asynchronously so it doesn't block result sending
+      // Start stats processing but don't wait for it - result must be sent immediately
+      console.log(`📊 Starting async stats processing for Round ${round} (non-blocking)...`);
+      const statsProcessingPromise = (async () => {
+        if (!userId) {
+          console.log(`📊 Skipping stats processing for Round ${round} - no userId`);
+          return;
+        }
+        
         try {
+          console.log(`📊 Starting stats processing for Round ${round}...`);
           // Normalize subject name for statsService (expects full names like "Civil Procedure")
           const { normalizeSubject } = await import('./subjects.js');
           const normalizedSubjectForStats = normalizeSubject(question.subject);
@@ -790,14 +833,9 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
             proficiencyAfter: subtopicResult.after
           } : null);
           
-          // Old progress service removed - now using database-based subtopicProgressService only
-          
           // Store progress result for inclusion in response
-          // Prioritize subtopicResult (new service) over progressResult (old service)
           if (subtopicResult) {
             humanWs.progressResult = subtopicResult;
-          } else if (progressResult) {
-            humanWs.progressResult = progressResult;
           }
           
           console.log(`📊 Bot Duel Stats Updated:`, {
@@ -816,11 +854,31 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
             } : null
           });
         } catch (error) {
-          console.error('❌ Error recording subtopic progress:', error);
+          console.error(`❌ Error recording stats for Round ${round}:`, error);
           console.error('Error stack:', error.stack);
         }
-      }
+      })();
+      
+      // Set a timeout to prevent stats processing from hanging forever
+      const statsTimeout = setTimeout(() => {
+        console.warn(`⚠️ Stats processing for Round ${round} is taking too long, continuing anyway...`);
+      }, 10000); // 10 second timeout
+      
+      // Don't await stats - let it run in background, but wait a bit for progressResult
+      // This ensures result is sent immediately, not blocked by stats
+      Promise.race([
+        statsProcessingPromise,
+        new Promise(resolve => setTimeout(resolve, 2000)) // Max 2s wait for progressResult
+      ]).then(() => {
+        console.log(`📊 Stats processing for Round ${round} completed or timed out`);
+      }).catch(err => {
+        console.error(`❌ Stats processing promise error for Round ${round}:`, err);
+      }).finally(() => {
+        clearTimeout(statsTimeout);
+      });
 
+      // CRITICAL: Build and send result IMMEDIATELY, don't wait for stats
+      console.log(`🔨 Building result data for Round ${round}...`);
       const results = [
         {
           playerId: 0,
@@ -851,15 +909,93 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
         subject: question.subject
       };
       console.log('🎯 Bot duel resultData being sent:', resultData);
+      console.log(`🔍 Pre-send check - Round ${round}:`, {
+        wsReadyState: humanWs.readyState,
+        wsUrl: humanWs.url,
+        hasPayload: !!resultData,
+        payloadRound: resultData.round,
+        payloadQid: resultData.qid
+      });
 
       if (humanWs.readyState === 1) {
+        const sendTime = Date.now();
         const payload = { ...resultData };
         if (humanWs.progressResult) {
           payload.progressResult = humanWs.progressResult;
           delete humanWs.progressResult; // Clear for next round
         }
-        console.log('🎯 Bot duel final payload being sent:', payload);
-        humanWs.send(JSON.stringify({ type: 'duel:result', payload }));
+        const messageStr = JSON.stringify({ type: 'duel:result', payload });
+        console.log(`🎯 [${sendTime}] Bot duel final payload being sent for round ${round}:`, {
+          qid: payload.qid,
+          round: payload.round,
+          scores: payload.scores,
+          messageLength: messageStr.length,
+          wsReadyState: humanWs.readyState
+        });
+        
+        try {
+          // Verify connection is still valid before sending
+          if (humanWs.readyState !== 1) {
+            console.error(`❌ WebSocket state changed before send - state: ${humanWs.readyState}`);
+            return;
+          }
+          
+          // Add connection tracking
+          const connectionId = humanWs.connectionId || 'unknown';
+          console.log(`🔗 Sending result on connection [${connectionId}] for Round ${round}`);
+          console.log(`📊 Connection details:`, {
+            connectionId,
+            readyState: humanWs.readyState,
+            url: humanWs.url,
+            protocol: humanWs.protocol,
+            extensions: humanWs.extensions,
+            bufferedAmount: humanWs.bufferedAmount || 0
+          });
+          
+          // Check if there's buffered data (indicates connection issues)
+          const bufferedAmount = humanWs.bufferedAmount || 0;
+          if (bufferedAmount > 0) {
+            console.warn(`⚠️ WebSocket has ${bufferedAmount} bytes buffered - connection may be slow`);
+          }
+          
+          humanWs.send(messageStr);
+          console.log(`✅ [${sendTime}] Result sent successfully for Round ${round} (${messageStr.length} bytes) on connection [${connectionId}]`);
+          
+          // Store the result for potential resending if message is lost
+          if (!match.lastResults) {
+            match.lastResults = new Map();
+          }
+          match.lastResults.set(round, { payload, messageStr, sendTime });
+          console.log(`💾 Stored result for Round ${round} for potential resend`);
+          
+          // Verify connection is still open after send
+          if (humanWs.readyState !== 1) {
+            console.error(`⚠️ WebSocket closed immediately after send - state: ${humanWs.readyState}`);
+          } else {
+            // Check buffered amount after send
+            const newBufferedAmount = humanWs.bufferedAmount || 0;
+            if (newBufferedAmount > messageStr.length) {
+              console.warn(`⚠️ WebSocket buffered amount increased to ${newBufferedAmount} - message may not be delivered`);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Error sending result for Round ${round}:`, error);
+          console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            wsState: humanWs.readyState,
+            connectionId: humanWs.connectionId
+          });
+        }
+      } else {
+        console.log(`❌ Cannot send result for Round ${round} - WebSocket not ready (state: ${humanWs.readyState})`);
+        // Log WebSocket state for debugging
+        console.log(`🔍 WebSocket state details:`, {
+          readyState: humanWs.readyState,
+          url: humanWs.url,
+          protocol: humanWs.protocol,
+          extensions: humanWs.extensions
+        });
       }
 
       await new Promise(resolve => setTimeout(resolve, 3000));
@@ -868,7 +1004,25 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       playerAnswers.delete(roomCode);
 
     } catch (error) {
-      console.error('Error in bot duel round:', error);
+      console.error(`❌ CRITICAL ERROR in bot duel round ${round}:`, error);
+      console.error('Error stack:', error.stack);
+      console.error('Current match state:', {
+        roomCode: match.roomCode,
+        round: match.round,
+        scores: match.scores,
+        usedQuestions: match.usedQuestions?.length || 0
+      });
+      // Try to send error message to client
+      try {
+        if (humanWs.readyState === 1) {
+          humanWs.send(JSON.stringify({
+            type: 'duel:error',
+            payload: { error: 'Round processing failed', round }
+          }));
+        }
+      } catch (sendError) {
+        console.error('Failed to send error message to client:', sendError);
+      }
       break;
     }
   }
@@ -944,6 +1098,47 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
   // Clean up immediately after duel ends
   activeMatches.delete(roomCode);
   // playerAnswers already cleaned up after each round
+}
+
+export function handleRequestResult(ws, payload) {
+  const { roomCode, round, qid } = payload;
+  console.log(`📥 Request for missing result: roomCode=${roomCode}, round=${round}, qid=${qid}`);
+  
+  const match = activeMatches.get(roomCode);
+  if (!match) {
+    console.log(`❌ No active match found for roomCode: ${roomCode}`);
+    if (ws.readyState === 1) {
+      ws.send(JSON.stringify({
+        type: 'duel:error',
+        payload: { error: 'Match not found', roomCode }
+      }));
+    }
+    return;
+  }
+  
+  // Check if we have a stored result for this round
+  const storedResult = match.lastResults?.get(round);
+  if (storedResult) {
+    console.log(`✅ Found stored result for Round ${round}, resending...`);
+    if (ws.readyState === 1) {
+      try {
+        ws.send(storedResult.messageStr);
+        console.log(`✅ Resent result for Round ${round} (${storedResult.messageStr.length} bytes)`);
+      } catch (error) {
+        console.error(`❌ Error resending result for Round ${round}:`, error);
+      }
+    } else {
+      console.log(`❌ WebSocket not ready for resend - state: ${ws.readyState}`);
+    }
+  } else {
+    console.log(`⚠️ No stored result found for Round ${round}`);
+    if (ws.readyState === 1) {
+      ws.send(JSON.stringify({
+        type: 'duel:error',
+        payload: { error: 'Result not available', round }
+      }));
+    }
+  }
 }
 
 export function handleDuelAnswer(ws, payload) {

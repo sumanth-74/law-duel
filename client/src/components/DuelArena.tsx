@@ -77,6 +77,12 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   const timerRef = useRef<NodeJS.Timeout>();
   const wsRef = useRef<WebSocket>();
   const questionReceivedTimeRef = useRef<number>(0); // Track when question was received
+  const lastQuestionRoundRef = useRef<number>(0); // Track the round of the last question received
+  const currentRoundRef = useRef<number>(0); // Track current round (always up-to-date)
+  const pendingResultsRef = useRef<Map<number, any>>(new Map()); // Queue for results that arrive before questions
+  const submittedAnswersRef = useRef<Map<number, number>>(new Map()); // Store submitted answers by round
+  const resultTransitionTimeoutRef = useRef<NodeJS.Timeout>(); // Store timeout for result transition
+  const transitionClearTimeoutRef = useRef<NodeJS.Timeout>(); // Store timeout for clearing transition
 
   useEffect(() => {
     if (!isVisible) return;
@@ -93,14 +99,34 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
       websocket.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          console.log('DuelArena received message:', message.type);
+          const receiveTime = Date.now();
+          const messageSize = event.data?.length || 0;
+          console.log(`📨 [${receiveTime}] DuelArena received message:`, message.type, message.payload?.round ? `round ${message.payload.round}` : '', `(${messageSize} bytes)`);
+          console.log('🔌 WebSocket readyState when message received:', websocket.readyState);
+          console.log('🔗 WebSocket URL:', websocket.url);
+          
+          // Log message details for result messages
+          if (message.type === 'duel:result') {
+            console.log(`📬 Result message details:`, {
+              round: message.payload?.round,
+              qid: message.payload?.qid,
+              scores: message.payload?.scores,
+              messageSize,
+              timestamp: receiveTime
+            });
+          }
           
           // Handle all messages, including duel:start
           handleWebSocketMessage(message);
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+          console.error('Failed to parse WebSocket message:', error, event.data);
         }
       };
+      
+
+
+
+
     } else {
       // Fallback: create new connection if none provided
       console.log('No WebSocket provided - creating new connection');
@@ -141,6 +167,84 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
       }
     };
   }, [isVisible, websocket]);
+  
+  // Monitor for missing results - if we receive a question but no result after timeout
+  useEffect(() => {
+    if (!duelState.currentQuestion || duelState.isFinished) return;
+    
+    const questionRound = duelState.currentQuestion.round;
+    const questionTime = questionReceivedTimeRef.current;
+    const questionQid = duelState.currentQuestion.qid;
+    const roomCode = duelState.roomCode;
+    
+    // Set up multiple timeouts for progressive checking
+    // First check at 10 seconds (for very fast answers)
+    const quickCheck = setTimeout(() => {
+      setDuelState(prev => {
+        if (prev.currentQuestion?.round === questionRound && !prev.showResult && !prev.isFinished && prev.waitingForOpponent) {
+          console.log(`⏱️ Quick check: Round ${questionRound} - answer submitted, waiting for result...`);
+        }
+        return prev;
+      });
+    }, 10000);
+    
+    // Second check at 30 seconds (should have result by now if answer was submitted)
+    const mediumCheck = setTimeout(() => {
+      setDuelState(prev => {
+        if (prev.currentQuestion?.round === questionRound && !prev.showResult && !prev.isFinished && prev.waitingForOpponent) {
+          console.warn(`⚠️ Medium check: Round ${questionRound} - still waiting for result after 30s, answer was submitted`);
+        }
+        return prev;
+      });
+    }, 30000);
+    
+    // Final check at 65 seconds - request result if missing
+    const resultTimeout = setTimeout(() => {
+      // Check if we still have this question and no result has been shown
+      setDuelState(prev => {
+        if (prev.currentQuestion?.round === questionRound && !prev.showResult && !prev.isFinished) {
+          console.error(`⚠️ TIMEOUT: No result received for round ${questionRound} (qid: ${questionQid}) after 65 seconds!`);
+          console.error('This suggests the WebSocket message was lost or connection dropped.');
+          console.error('Current WebSocket state:', wsRef.current?.readyState);
+          console.error('Question received at:', questionTime, 'Current time:', Date.now());
+          console.error('Connection ID:', (wsRef.current as any)?.connectionId);
+          console.error('WebSocket URL:', wsRef.current?.url);
+          console.error('Room code:', roomCode);
+          
+          // Request the missing result from the backend
+          if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+            try {
+              console.log(`📤 Requesting missing result for round ${questionRound} from backend...`);
+              const requestMessage = {
+                type: 'duel:requestResult',
+                payload: {
+                  roomCode: roomCode || prev.roomCode,
+                  round: questionRound,
+                  qid: questionQid
+                }
+              };
+              console.log('📤 Request message:', requestMessage);
+              wsRef.current.send(JSON.stringify(requestMessage));
+              console.log('✅ Result request sent to backend');
+            } catch (err) {
+              console.error('❌ Failed to request result:', err);
+            }
+          } else {
+            console.error('❌ WebSocket not open, cannot request result. State:', wsRef.current?.readyState);
+          }
+          
+          return prev;
+        }
+        return prev;
+      });
+    }, 65000); // 60s question time + 5s buffer
+    
+    return () => {
+      clearTimeout(quickCheck);
+      clearTimeout(mediumCheck);
+      clearTimeout(resultTimeout);
+    };
+  }, [duelState.currentQuestion?.round, duelState.showResult, duelState.isFinished, duelState.roomCode, duelState.waitingForOpponent]);
 
   // Handle duelStartMessage when it's passed from Home component
   useEffect(() => {
@@ -151,13 +255,16 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
 
   const handleWebSocketMessage = (message: any) => {
     const { type, payload } = message;
-    // console.log('🎯 DuelArena handling message:', type, payload);
+    const processTime = Date.now();
+    console.log(`🔄 [${processTime}] DuelArena handling message:`, type, payload?.round ? `round ${payload.round}` : '', payload?.qid ? `qid: ${payload.qid?.substring(0, 20)}...` : '');
 
     switch (type) {
       case 'duel:start':
         console.log('🎯 Duel started with payload:', payload);
         console.log('🎯 Setting playerIndex to:', payload.playerIndex || 0);
-        setDuelState(prev => ({
+        setDuelState(prev => {
+          currentRoundRef.current = 0; // Reset round ref
+          return {
           ...prev,
           roomCode: payload.roomCode,
           subject: payload.subject || 'Mixed Questions',
@@ -166,7 +273,8 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
           playerIndex: payload.playerIndex || 0, // Store which player we are (0 or 1)
           isFinished: false,
           generatingQuestion: true // Show loading while waiting for first question
-        }));
+          };
+        });
         break;
 
       case 'duel:question':
@@ -178,7 +286,60 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         console.log('🎯 Payload scores field:', payload.scores);
         console.log('🎯 Payload scores type:', typeof payload.scores);
         console.log('🎯 Payload scores is array:', Array.isArray(payload.scores));
+        // Use functional update to get current state (not stale closure)
+        setDuelState(prev => {
+          console.log('🎯 Current state - round:', prev.round, 'currentQuestion round:', prev.currentQuestion?.round, 'result round:', payload.round);
+          console.log('🎯 Round refs - lastQuestionRound:', lastQuestionRoundRef.current, 'currentRound:', currentRoundRef.current);
+          
+          // CRITICAL: Check multiple conditions to handle race conditions:
+          // 1. Check state (might be stale due to React batching)
+          // 2. Check refs (always up-to-date)
+          // 3. Allow result if it's for the same round as last question OR current round
+          const questionRound = prev.currentQuestion?.round;
+          const lastQuestionRound = lastQuestionRoundRef.current;
+          const currentRound = currentRoundRef.current;
+          
+          // If result is for a future round (ahead of what we've seen), queue it
+          if (payload.round > Math.max(questionRound || 0, lastQuestionRound, currentRound)) {
+            console.log(`⏳ Result for round ${payload.round} is ahead of current state (question: ${questionRound}, lastQ: ${lastQuestionRound}, current: ${currentRound}) - queuing it`);
+            pendingResultsRef.current.set(payload.round, payload);
+            // Set a timeout to process it if question doesn't arrive (safety net)
+            setTimeout(() => {
+              if (pendingResultsRef.current.has(payload.round)) {
+                console.log(`⚠️ Processing queued result for round ${payload.round} after timeout`);
+                pendingResultsRef.current.delete(payload.round);
         handleQuestionResult(payload);
+              }
+            }, 10000); // 10 second safety timeout (longer to account for network delays)
+            return prev;
+          }
+          
+          // If result is for a past round, ignore it (stale)
+          if (payload.round < Math.max(questionRound || 0, lastQuestionRound, currentRound)) {
+            console.log(`⚠️ Ignoring stale result for round ${payload.round} (current: ${Math.max(questionRound || 0, lastQuestionRound, currentRound)})`);
+            return prev;
+          }
+          
+          // Result is for current/expected round - process it
+          // Use refs to verify (they're always current, unlike state which might be batched)
+          if (payload.round === lastQuestionRound || payload.round === currentRound || payload.round === questionRound) {
+            console.log(`✅ Result for round ${payload.round} matches expected round - processing immediately`);
+            setTimeout(() => handleQuestionResult(payload), 0);
+            return prev; // Don't update here, handleQuestionResult will
+          }
+          
+          // Fallback: if we're not sure, queue it but with a shorter timeout
+          console.log(`⏳ Result for round ${payload.round} - uncertain state, queuing with short timeout`);
+          pendingResultsRef.current.set(payload.round, payload);
+          setTimeout(() => {
+            if (pendingResultsRef.current.has(payload.round)) {
+              console.log(`⚠️ Processing uncertain result for round ${payload.round} after short timeout`);
+              pendingResultsRef.current.delete(payload.round);
+              handleQuestionResult(payload);
+            }
+          }, 2000); // 2 second timeout for uncertain cases
+          return prev;
+        });
         break;
 
       case 'duel:end':
@@ -191,31 +352,95 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         break;
 
       case 'leaderboard:update':
-        // Ignore leaderboard updates in duel view
+        // Ignore leaderboard updates in duel view (but log for debugging)
+        console.log(`📊 Leaderboard update received during duel (ignored)`);
+        break;
+      
+      case 'duel:error':
+        // Handle error messages from backend
+        console.error('❌ Duel error received from backend:', payload);
+        if (payload?.error === 'Result not available') {
+          console.error('⚠️ Backend does not have the requested result - this is a critical issue');
+        }
         break;
 
       default:
-        console.log('Unknown message type:', type);
+        console.log(`⚠️ Unknown message type: ${type}`, message);
     }
   };
 
   const handleNewQuestion = (questionData: QuestionData) => {
+    const receiveTime = Date.now();
     console.log('📥 Received question data:', {
       round: questionData.round,
       qid: questionData.qid,
-      subject: questionData.subject,
+      subject: (questionData as any).subject,
       stemLength: questionData.stem?.length || 0,
-      choicesCount: questionData.choices?.length || 0
+      choicesCount: questionData.choices?.length || 0,
+      timestamp: receiveTime
     });
     
     // Track when question was received to prevent premature result display
-    questionReceivedTimeRef.current = Date.now();
+    questionReceivedTimeRef.current = receiveTime;
+    lastQuestionRoundRef.current = questionData.round;
+    currentRoundRef.current = questionData.round; // Update current round ref
+    console.log(`⏰ Question round ${questionData.round} timestamp set: ${receiveTime}`);
     
     // Get time limit in seconds (handle both timeLimitSec and timeLimit fields)
     const timeLimitSeconds = (questionData as any).timeLimitSec || Math.floor((questionData.timeLimit || 60000) / 1000);
     
     // Clear any stale state and force fresh question display
-    setDuelState(prev => ({
+    // CRITICAL: Always set showResult to false when new question arrives
+    setDuelState(prev => {
+      console.log(`🔄 Setting question state for round ${questionData.round}, clearing showResult`);
+      
+      // CRITICAL: Cancel any pending transition timeouts from previous results
+      // This prevents old timeouts from clearing the new question
+      if (resultTransitionTimeoutRef.current) {
+        clearTimeout(resultTransitionTimeoutRef.current);
+        resultTransitionTimeoutRef.current = undefined;
+      }
+      if (transitionClearTimeoutRef.current) {
+        clearTimeout(transitionClearTimeoutRef.current);
+        transitionClearTimeoutRef.current = undefined;
+      }
+      
+      // CRITICAL: If we're moving to a new round but were waiting for a result on the previous round,
+      // check if we need to request that missing result
+      const previousRound = prev.currentQuestion?.round;
+      if (previousRound && previousRound < questionData.round && prev.waitingForOpponent && !prev.showResult) {
+        console.warn(`⚠️ Moving to round ${questionData.round} but never received result for round ${previousRound} - requesting it now`);
+        const previousQid = prev.currentQuestion?.qid;
+        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && prev.roomCode) {
+          try {
+            wsRef.current.send(JSON.stringify({
+              type: 'duel:requestResult',
+              payload: {
+                roomCode: prev.roomCode,
+                round: previousRound,
+                qid: previousQid
+              }
+            }));
+            console.log(`📤 Requested missing result for round ${previousRound} when moving to next round`);
+          } catch (err) {
+            console.error('❌ Failed to request missing result:', err);
+          }
+        }
+      }
+      
+      // Check if we have a pending result for this round
+      const pendingResult = pendingResultsRef.current.get(questionData.round);
+      if (pendingResult) {
+        console.log(`📬 Found pending result for round ${questionData.round}, will process after state update`);
+        pendingResultsRef.current.delete(questionData.round);
+        // Process the pending result after state is set
+        setTimeout(() => {
+          console.log(`🔄 Processing pending result for round ${questionData.round}`);
+          handleQuestionResult(pendingResult);
+        }, 100); // Small delay to ensure state is updated
+      }
+      
+      return {
       ...prev,
       currentQuestion: {
         ...questionData,
@@ -227,14 +452,15 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
       round: questionData.round,
       timeLeft: timeLimitSeconds, // Use calculated time limit
       selectedAnswer: undefined,
-      showResult: false,
-      showTransition: false, // Clear transition state when question arrives
+        showResult: false, // CRITICAL: Always clear result when new question arrives
+        showTransition: false, // Clear transition state when question arrives
       waitingForOpponent: false,
       showHint: false,
       showTrainingBanner: false,
       generatingQuestion: false, // Clear loading state when question arrives
       questionStartTime: Date.now() // Track when question started for accurate timing
-    }));
+      };
+    });
 
     // Use deadlineTs if available, otherwise calculate based on time limit
     const deadline = questionData.deadlineTs || (Date.now() + timeLimitSeconds * 1000);
@@ -243,46 +469,99 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   };
 
   const handleQuestionResult = (resultData: any) => {
-    console.log('🎯 handleQuestionResult called with:', resultData);
-    
-    // Check if result arrived too quickly after question (within 1000ms)
-    // This prevents results from hiding questions that just arrived
-    const timeSinceQuestion = Date.now() - questionReceivedTimeRef.current;
-    const MIN_QUESTION_DISPLAY_TIME = 1000; // 1 second minimum display time
-    const currentQuestionRound = duelState.currentQuestion?.round || duelState.round;
+    const resultTime = Date.now();
     const resultRound = resultData.round;
+    const timeSinceQuestion = resultTime - questionReceivedTimeRef.current;
+    const MIN_QUESTION_DISPLAY_TIME = 2000; // 2 second minimum display time
     
-    // Delay if: result arrived too quickly AND it's for the same round as current question
-    const shouldDelayResult = timeSinceQuestion < MIN_QUESTION_DISPLAY_TIME && 
-                             currentQuestionRound === resultRound &&
-                             questionReceivedTimeRef.current > 0;
-    
-    if (shouldDelayResult) {
-      const delayTime = MIN_QUESTION_DISPLAY_TIME - timeSinceQuestion;
-      console.log(`⏳ Result for round ${resultRound} arrived ${timeSinceQuestion}ms after question - delaying display by ${delayTime}ms to ensure question is shown first`);
-      // Delay showing result to ensure question is displayed first
-      setTimeout(() => {
-        processQuestionResult(resultData);
-      }, delayTime);
-      return;
-    }
-    
-    processQuestionResult(resultData);
+    // Use refs for delay check (they're always up-to-date, unlike state)
+    // Also check state using functional update to see current values
+    setDuelState(prev => {
+      console.log('🎯 handleQuestionResult called:', {
+        round: resultRound,
+        qid: resultData.qid,
+        timestamp: resultTime,
+        timeSinceQuestion,
+        lastQuestionRound: lastQuestionRoundRef.current,
+        questionTimestamp: questionReceivedTimeRef.current,
+        currentStateRound: prev.round,
+        currentQuestionRound: prev.currentQuestion?.round
+      });
+      
+      // Always ensure question is visible first - delay result if needed
+      // Use refs for round check (always current) and state for question existence
+      const shouldDelayResult = timeSinceQuestion < MIN_QUESTION_DISPLAY_TIME && 
+                               lastQuestionRoundRef.current === resultRound &&
+                               questionReceivedTimeRef.current > 0 &&
+                               prev.currentQuestion?.round === resultRound;
+      
+      if (shouldDelayResult) {
+        const delayTime = MIN_QUESTION_DISPLAY_TIME - timeSinceQuestion;
+        console.log(`⏳ DELAYING result for round ${resultRound}: arrived ${timeSinceQuestion}ms after question - will show in ${delayTime}ms`);
+        // Delay showing result to ensure question is displayed first
+        setTimeout(() => {
+          console.log(`✅ Processing delayed result for round ${resultRound}`);
+          processQuestionResult(resultData);
+        }, delayTime);
+        return prev; // Don't update state yet
+      }
+      
+      console.log(`✅ Processing result immediately for round ${resultRound} (${timeSinceQuestion}ms after question)`);
+      // Process immediately - will update state in processQuestionResult
+      setTimeout(() => processQuestionResult(resultData), 0);
+      return prev; // Don't update here, processQuestionResult will
+    });
   };
   
   const processQuestionResult = (resultData: any) => {
-    // Calculate correctness from current state (before update)
-    const currentSelectedAnswer = duelState.selectedAnswer;
+    // Use ref for round check (always up-to-date)
+    const currentRound = currentRoundRef.current;
+    console.log(`🔄 processQuestionResult called for round ${resultData.round}, current round (ref): ${currentRound}`);
+    
+    // Check if this result is for a round that's already passed (stale result)
+    if (resultData.round < currentRound) {
+      console.log(`⚠️ Ignoring stale result for round ${resultData.round} (current round: ${currentRound})`);
+      return;
+    }
+    
+    // Get selected answer - try multiple sources
+    // 1. First try the ref (always accurate, even if state was cleared)
+    let currentSelectedAnswer: number | undefined = submittedAnswersRef.current.get(resultData.round);
+    
+    // 2. If not in ref, try state
+    if (currentSelectedAnswer === undefined) {
+      setDuelState(prev => {
+        currentSelectedAnswer = prev.selectedAnswer;
+        return prev; // Don't update yet
+      });
+    }
+    
+    // 3. If still undefined, try to get it from the result data itself
+    if (currentSelectedAnswer === undefined && resultData.results) {
+      const playerResult = resultData.results.find((r: any) => r.playerId === 0);
+      if (playerResult && playerResult.choice !== undefined && playerResult.choice !== -1) {
+        currentSelectedAnswer = playerResult.choice;
+        console.log(`🔍 Recovered selectedAnswer from result data: ${currentSelectedAnswer}`);
+      }
+    }
+    
+    // Clean up the ref entry after using it
+    if (currentSelectedAnswer !== undefined) {
+      submittedAnswersRef.current.delete(resultData.round);
+    }
+    
     const isCorrect = currentSelectedAnswer === resultData.correctIndex;
+    
+    console.log(`✅ Processing result for round ${resultData.round}: isCorrect=${isCorrect}, selectedAnswer=${currentSelectedAnswer}, correctIndex=${resultData.correctIndex}`);
     
     // Track streak for achievements (outside of state update to avoid React warning)
     // Use setTimeout to defer to avoid render-phase updates
     setTimeout(() => {
-      if (isCorrect) {
-        incrementStreak();
-      } else {
-        resetStreak();
-      }
+    if (isCorrect) {
+      incrementStreak();
+    } else {
+      resetStreak();
+    }
     }, 0);
     
     // Now update state with result
@@ -290,53 +569,78 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
       // Check opponent's answer from results array
       const opponentResult = resultData.results?.find((r: any) => r.playerId === 1) || resultData.results?.[1];
       const opponentCorrect = opponentResult?.correct || (opponentResult?.choice === resultData.correctIndex);
-      
-      // Use progress data from server if available, otherwise use defaults
-      const progressData = resultData.progressResult || {};
-      const xpGained = progressData.xpGained || (isCorrect ? 12 : 3);
-      const masteryChange = progressData.masteryDelta || (isCorrect ? 0.5 : -0.25);
-      
-      // Extract subject and subtopic from server response or question
+    
+    // Use progress data from server if available, otherwise use defaults
+    const progressData = resultData.progressResult || {};
+    const xpGained = progressData.xpGained || (isCorrect ? 12 : 3);
+    const masteryChange = progressData.masteryDelta || (isCorrect ? 0.5 : -0.25);
+    
+    // Extract subject and subtopic from server response or question
       const subject = progressData.subject || resultData.subject || prev.subject || 'Law';
-      const subtopic = progressData.subtopic || resultData.subtopic || 'General';
-      
-      // Calculate HP damage (20 damage per wrong answer)
-      const userHPChange = isCorrect ? 0 : -20;
-      const opponentHPChange = opponentCorrect ? 0 : -20;
-      
+    const subtopic = progressData.subtopic || resultData.subtopic || 'General';
+    
+    // Calculate HP damage (20 damage per wrong answer)
+    const userHPChange = isCorrect ? 0 : -20;
+    const opponentHPChange = opponentCorrect ? 0 : -20;
+    
       const newScores = resultData.scores || [0, 0];
       console.log('🎯 Updating scores from', prev.scores, 'to', newScores);
       console.log('🎯 PlayerIndex:', prev.playerIndex, 'Human score:', newScores[prev.playerIndex || 0]);
       
       // Announce result for screen reader
       setTimeout(() => {
-        announceForScreenReader(
-          isCorrect 
+    announceForScreenReader(
+      isCorrect 
             ? `Correct! You gained ${xpGained} XP. ${subject}/${subtopic} mastery ${masteryChange > 0 ? 'increased' : 'decreased'} by ${Math.abs(masteryChange)}%. Current score: ${newScores[0]} to ${newScores[1]}.`
             : `Incorrect. The correct answer was ${String.fromCharCode(65 + resultData.correctIndex)}. Current score: ${newScores[0]} to ${newScores[1]}.`
-        );
+    );
       }, 0);
-      
-      // Hide feedback chip after delay
-      setTimeout(() => {
+    
+    // Hide feedback chip after delay
+    setTimeout(() => {
         setDuelState(prevState => ({ ...prevState, showFeedbackChip: false }));
-      }, 3500); // Match the chip display duration
+    }, 3500); // Match the chip display duration
+    
+    // Show transition state before next question
+    // CRITICAL: Store the round number to prevent clearing if a new question has arrived
+    const resultRound = resultData.round;
+    
+    // Clear any existing transition timeouts from previous results
+    if (resultTransitionTimeoutRef.current) {
+      clearTimeout(resultTransitionTimeoutRef.current);
+    }
+    if (transitionClearTimeoutRef.current) {
+      clearTimeout(transitionClearTimeoutRef.current);
+    }
+    
+    resultTransitionTimeoutRef.current = setTimeout(() => {
+        setDuelState(prevState => {
+          // Only clear if we're still showing the result for the same round
+          // If a new question has arrived (round has advanced), don't clear it!
+          if (prevState.round === resultRound && prevState.showResult && !prevState.currentQuestion) {
+            return {
+              ...prevState,
+              showResult: false,
+              showTransition: true,
+              currentQuestion: undefined,
+              selectedAnswer: undefined
+            };
+          }
+          // New question already arrived, just clear transition flag if needed
+          return prevState;
+        });
       
-      // Show transition state before next question
-      setTimeout(() => {
-        setDuelState(prevState => ({
-          ...prevState,
-          showResult: false,
-          showTransition: true,
-          currentQuestion: undefined,
-          selectedAnswer: undefined
-        }));
-        
-        // Clear transition after a brief moment
-        setTimeout(() => {
-          setDuelState(prevState => ({ ...prevState, showTransition: false }));
-        }, 1500);
-      }, 3000); // Wait 3 seconds before transitioning
+      // Clear transition after a brief moment
+      transitionClearTimeoutRef.current = setTimeout(() => {
+          setDuelState(prevState => {
+            // Only clear transition if we're still in transition for this round
+            if (prevState.showTransition && prevState.round === resultRound && !prevState.currentQuestion) {
+              return { ...prevState, showTransition: false };
+            }
+            return prevState;
+          });
+      }, 1500);
+    }, 3000); // Wait 3 seconds before transitioning
       
       return {
         ...prev,
@@ -354,12 +658,20 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
           subtopic,
           masteryChange
         },
-        // Keep currentQuestion visible even when showing result
-        // Only clear it if it's a different round
+        // CRITICAL: Always keep currentQuestion visible when showing result for the same round
+        // This ensures the question text stays visible even when result screen appears
         currentQuestion: (prev.currentQuestion?.round === resultData.round) 
           ? prev.currentQuestion 
-          : undefined
+          : prev.currentQuestion, // Keep question even if round doesn't match (defensive)
+        // Ensure round is updated to match the result
+        round: Math.max(prev.round, resultData.round)
       };
+    });
+    
+    // Update round ref after state update
+    setDuelState(prev => {
+      currentRoundRef.current = prev.round;
+      return prev;
     });
   };
 
@@ -423,21 +735,26 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
 
       if (remaining === 0) {
         clearInterval(timerRef.current!);
-        // Auto-submit if no answer selected
+        // Auto-submit if no answer selected or selected but not submitted
         setDuelState(prev => {
-          if (prev.selectedAnswer === undefined) {
-            // Auto-submit no answer
+          if (!prev.waitingForOpponent) {
+            // Auto-submit (either no answer or selected but not submitted)
+            const choiceToSubmit = prev.selectedAnswer !== undefined ? prev.selectedAnswer : -1;
             if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
               wsRef.current.send(JSON.stringify({
                 type: 'duel:answer',
                 payload: {
                   roomCode: prev.roomCode,
-                  choice: -1,
+                  choice: choiceToSubmit,
                   timeMs: 60000
                 }
               }));
             }
-            return { ...prev, selectedAnswer: -1, waitingForOpponent: true };
+            return { 
+              ...prev, 
+              selectedAnswer: choiceToSubmit, 
+              waitingForOpponent: true 
+            };
           }
           return prev;
         });
@@ -446,7 +763,21 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
-    if (duelState.selectedAnswer !== undefined || duelState.timeLeft === 0) return;
+    // Only allow selection if no answer has been submitted yet
+    if (duelState.selectedAnswer !== undefined || duelState.timeLeft === 0 || duelState.waitingForOpponent) return;
+
+    // Just highlight the selected answer, don't submit yet
+    setDuelState(prev => ({
+      ...prev,
+      selectedAnswer: answerIndex
+    }));
+
+    announceForScreenReader(`Answer ${String.fromCharCode(65 + answerIndex)} selected. Press Submit to confirm.`);
+  };
+
+  const handleSubmitAnswer = () => {
+    // Only allow submission if an answer is selected and not already submitted
+    if (duelState.selectedAnswer === undefined || duelState.waitingForOpponent || duelState.timeLeft === 0) return;
 
     // Calculate actual response time from when question started
     const responseTimeMs = Date.now() - ((duelState as any).questionStartTime || Date.now());
@@ -454,7 +785,6 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
     // Trigger battle animation
     setDuelState(prev => ({
       ...prev,
-      selectedAnswer: answerIndex,
       waitingForOpponent: true,
       showAnswerAnimation: true
     }));
@@ -465,25 +795,68 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
     }, 600);
 
     // Send answer to server
-    // console.log('🔍 WebSocket state:', wsRef.current?.readyState, 'WebSocket object:', wsRef.current);
+    console.log('📤 Submitting answer to server:', {
+      choice: duelState.selectedAnswer,
+      timeMs: Math.min(responseTimeMs, 60000),
+      roomCode: duelState.roomCode,
+      currentRound: currentRoundRef.current
+    });
+    
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       const answerMessage = {
         type: 'duel:answer',
         payload: {
           roomCode: duelState.roomCode,
-          choice: answerIndex,
+          choice: duelState.selectedAnswer,
           timeMs: Math.min(responseTimeMs, 60000) // Cap at 60 seconds
         }
       };
-      // console.log('🎯 Sending duel:answer message:', answerMessage);
-      // console.log('🎯 WebSocket URL:', wsRef.current.url);
-      // console.log('🎯 Current duelState.roomCode:', duelState.roomCode);
       wsRef.current.send(JSON.stringify(answerMessage));
+      console.log('✅ Answer submitted successfully');
+      
+      // Store the submitted answer in a ref so we can retrieve it even if state changes
+      const submittedRound = currentRoundRef.current;
+      const submittedChoice = duelState.selectedAnswer;
+      if (submittedRound && submittedChoice !== undefined) {
+        submittedAnswersRef.current.set(submittedRound, submittedChoice);
+        console.log(`💾 Stored submitted answer for round ${submittedRound}: ${submittedChoice}`);
+      }
+      
+      // Set up a safety check: if we don't receive result within 15 seconds of submitting, request it
+      const currentRound = currentRoundRef.current;
+      const questionQid = duelState.currentQuestion?.qid;
+      setTimeout(() => {
+        setDuelState(prev => {
+          // If we're still waiting for this round's result, request it
+          if (prev.waitingForOpponent && 
+              prev.currentQuestion?.round === currentRound && 
+              !prev.showResult && 
+              !prev.isFinished) {
+            console.warn(`⚠️ No result received 15s after submitting answer for round ${currentRound} - requesting...`);
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+              try {
+                wsRef.current.send(JSON.stringify({
+                  type: 'duel:requestResult',
+                  payload: {
+                    roomCode: prev.roomCode,
+                    round: currentRound,
+                    qid: questionQid
+                  }
+                }));
+                console.log('📤 Early result request sent');
+              } catch (err) {
+                console.error('❌ Failed to send early result request:', err);
+              }
+            }
+          }
+          return prev;
+        });
+      }, 15000); // 15 seconds after answer submission
     } else {
-      // console.log('❌ WebSocket not ready, cannot send answer. State:', wsRef.current?.readyState);
+      console.error('❌ WebSocket not ready, cannot send answer. State:', wsRef.current?.readyState);
     }
 
-    announceForScreenReader(`Answer ${String.fromCharCode(65 + answerIndex)} selected. Waiting for opponent.`);
+    announceForScreenReader(`Answer ${String.fromCharCode(65 + (duelState.selectedAnswer || 0))} submitted. Waiting for opponent.`);
   };
 
   const handleHintRequest = () => {
@@ -715,7 +1088,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
           </div>
         )}
 
-        {/* Question */}
+        {/* Question - Always show if we have a current question, even if result is showing */}
         {duelState.currentQuestion && !duelState.generatingQuestion && !duelState.showTransition && (
           <div className="question-reveal mb-8">
             <div className="bg-panel-2 border border-white/10 rounded-xl p-4 sm:p-6">
@@ -745,18 +1118,25 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         
         {/* Answer Choices */}
         {duelState.currentQuestion && !duelState.showResult && !duelState.generatingQuestion && !duelState.showTransition && (
-          <div className="grid grid-cols-1 gap-3 mb-6">
+          <>
+            <div className="grid grid-cols-1 gap-3 mb-4">
             {duelState.currentQuestion.choices.map((choice, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(index)}
-                disabled={duelState.selectedAnswer !== undefined}
-                className={`w-full text-left p-4 rounded-xl border border-white/10 hover:border-arcane hover:bg-arcane/5 transition-all min-h-[60px] bg-transparent flex items-start ${
-                  duelState.selectedAnswer === index ? 'border-arcane bg-arcane/10' : ''
-                } ${duelState.selectedAnswer !== undefined ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                  disabled={duelState.waitingForOpponent || duelState.timeLeft === 0}
+                  className={`w-full text-left p-4 rounded-xl border transition-all min-h-[60px] bg-transparent flex items-start ${
+                    duelState.selectedAnswer === index 
+                      ? 'border-arcane bg-arcane/10 shadow-lg shadow-arcane/20' 
+                      : 'border-white/10 hover:border-arcane hover:bg-arcane/5'
+                  } ${duelState.waitingForOpponent || duelState.timeLeft === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 data-testid={`answer-choice-${index}`}
               >
-                <span className="w-8 h-8 bg-arcane/20 text-arcane rounded-lg font-bold flex items-center justify-center text-sm flex-shrink-0">
+                  <span className={`w-8 h-8 rounded-lg font-bold flex items-center justify-center text-sm flex-shrink-0 ${
+                    duelState.selectedAnswer === index 
+                      ? 'bg-arcane text-white' 
+                      : 'bg-arcane/20 text-arcane'
+                  }`}>
                   {String.fromCharCode(65 + index)}
                 </span>
                  <span className="ml-4 text-sm leading-relaxed flex-1 break-words">
@@ -764,7 +1144,21 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
                  </span>
               </button>
             ))}
+            </div>
+            
+            {/* Submit Button */}
+            {duelState.selectedAnswer !== undefined && !duelState.waitingForOpponent && duelState.timeLeft > 0 && (
+              <div className="mb-6 flex justify-center">
+                <button
+                  onClick={handleSubmitAnswer}
+                  className="px-8 py-3 bg-arcane hover:bg-arcane/90 text-white font-bold rounded-xl shadow-lg shadow-arcane/30 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  disabled={duelState.waitingForOpponent || duelState.timeLeft === 0}
+                >
+                  Submit Answer
+                </button>
           </div>
+            )}
+          </>
         )}
 
         {/* Result Display */}
