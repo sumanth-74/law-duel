@@ -76,6 +76,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
 
   const timerRef = useRef<NodeJS.Timeout>();
   const wsRef = useRef<WebSocket>();
+  const questionReceivedTimeRef = useRef<number>(0); // Track when question was received
 
   useEffect(() => {
     if (!isVisible) return;
@@ -199,7 +200,16 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
   };
 
   const handleNewQuestion = (questionData: QuestionData) => {
-        // console.log('Received question data:', questionData);
+    console.log('📥 Received question data:', {
+      round: questionData.round,
+      qid: questionData.qid,
+      subject: questionData.subject,
+      stemLength: questionData.stem?.length || 0,
+      choicesCount: questionData.choices?.length || 0
+    });
+    
+    // Track when question was received to prevent premature result display
+    questionReceivedTimeRef.current = Date.now();
     
     // Get time limit in seconds (handle both timeLimitSec and timeLimit fields)
     const timeLimitSeconds = (questionData as any).timeLimitSec || Math.floor((questionData.timeLimit || 60000) / 1000);
@@ -218,6 +228,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
       timeLeft: timeLimitSeconds, // Use calculated time limit
       selectedAnswer: undefined,
       showResult: false,
+      showTransition: false, // Clear transition state when question arrives
       waitingForOpponent: false,
       showHint: false,
       showTrainingBanner: false,
@@ -233,33 +244,100 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
 
   const handleQuestionResult = (resultData: any) => {
     console.log('🎯 handleQuestionResult called with:', resultData);
-    const isCorrect = duelState.selectedAnswer === resultData.correctIndex;
-    const opponentCorrect = resultData.opponentAnswer === resultData.correctIndex;
     
-    // Track streak for achievements
-    if (isCorrect) {
-      incrementStreak();
-    } else {
-      resetStreak();
+    // Check if result arrived too quickly after question (within 1000ms)
+    // This prevents results from hiding questions that just arrived
+    const timeSinceQuestion = Date.now() - questionReceivedTimeRef.current;
+    const MIN_QUESTION_DISPLAY_TIME = 1000; // 1 second minimum display time
+    const currentQuestionRound = duelState.currentQuestion?.round || duelState.round;
+    const resultRound = resultData.round;
+    
+    // Delay if: result arrived too quickly AND it's for the same round as current question
+    const shouldDelayResult = timeSinceQuestion < MIN_QUESTION_DISPLAY_TIME && 
+                             currentQuestionRound === resultRound &&
+                             questionReceivedTimeRef.current > 0;
+    
+    if (shouldDelayResult) {
+      const delayTime = MIN_QUESTION_DISPLAY_TIME - timeSinceQuestion;
+      console.log(`⏳ Result for round ${resultRound} arrived ${timeSinceQuestion}ms after question - delaying display by ${delayTime}ms to ensure question is shown first`);
+      // Delay showing result to ensure question is displayed first
+      setTimeout(() => {
+        processQuestionResult(resultData);
+      }, delayTime);
+      return;
     }
     
-    // Use progress data from server if available, otherwise use defaults
-    const progressData = resultData.progressResult || {};
-    const xpGained = progressData.xpGained || (isCorrect ? 12 : 3);
-    const masteryChange = progressData.masteryDelta || (isCorrect ? 0.5 : -0.25);
+    processQuestionResult(resultData);
+  };
+  
+  const processQuestionResult = (resultData: any) => {
+    // Calculate correctness from current state (before update)
+    const currentSelectedAnswer = duelState.selectedAnswer;
+    const isCorrect = currentSelectedAnswer === resultData.correctIndex;
     
-    // Extract subject and subtopic from server response or question
-    const subject = progressData.subject || resultData.subject || duelState.subject || 'Law';
-    const subtopic = progressData.subtopic || resultData.subtopic || 'General';
+    // Track streak for achievements (outside of state update to avoid React warning)
+    // Use setTimeout to defer to avoid render-phase updates
+    setTimeout(() => {
+      if (isCorrect) {
+        incrementStreak();
+      } else {
+        resetStreak();
+      }
+    }, 0);
     
-    // Calculate HP damage (20 damage per wrong answer)
-    const userHPChange = isCorrect ? 0 : -20;
-    const opponentHPChange = opponentCorrect ? 0 : -20;
-    
+    // Now update state with result
     setDuelState(prev => {
+      // Check opponent's answer from results array
+      const opponentResult = resultData.results?.find((r: any) => r.playerId === 1) || resultData.results?.[1];
+      const opponentCorrect = opponentResult?.correct || (opponentResult?.choice === resultData.correctIndex);
+      
+      // Use progress data from server if available, otherwise use defaults
+      const progressData = resultData.progressResult || {};
+      const xpGained = progressData.xpGained || (isCorrect ? 12 : 3);
+      const masteryChange = progressData.masteryDelta || (isCorrect ? 0.5 : -0.25);
+      
+      // Extract subject and subtopic from server response or question
+      const subject = progressData.subject || resultData.subject || prev.subject || 'Law';
+      const subtopic = progressData.subtopic || resultData.subtopic || 'General';
+      
+      // Calculate HP damage (20 damage per wrong answer)
+      const userHPChange = isCorrect ? 0 : -20;
+      const opponentHPChange = opponentCorrect ? 0 : -20;
+      
       const newScores = resultData.scores || [0, 0];
       console.log('🎯 Updating scores from', prev.scores, 'to', newScores);
       console.log('🎯 PlayerIndex:', prev.playerIndex, 'Human score:', newScores[prev.playerIndex || 0]);
+      
+      // Announce result for screen reader
+      setTimeout(() => {
+        announceForScreenReader(
+          isCorrect 
+            ? `Correct! You gained ${xpGained} XP. ${subject}/${subtopic} mastery ${masteryChange > 0 ? 'increased' : 'decreased'} by ${Math.abs(masteryChange)}%. Current score: ${newScores[0]} to ${newScores[1]}.`
+            : `Incorrect. The correct answer was ${String.fromCharCode(65 + resultData.correctIndex)}. Current score: ${newScores[0]} to ${newScores[1]}.`
+        );
+      }, 0);
+      
+      // Hide feedback chip after delay
+      setTimeout(() => {
+        setDuelState(prevState => ({ ...prevState, showFeedbackChip: false }));
+      }, 3500); // Match the chip display duration
+      
+      // Show transition state before next question
+      setTimeout(() => {
+        setDuelState(prevState => ({
+          ...prevState,
+          showResult: false,
+          showTransition: true,
+          currentQuestion: undefined,
+          selectedAnswer: undefined
+        }));
+        
+        // Clear transition after a brief moment
+        setTimeout(() => {
+          setDuelState(prevState => ({ ...prevState, showTransition: false }));
+        }, 1500);
+      }, 3000); // Wait 3 seconds before transitioning
+      
       return {
         ...prev,
         showResult: true,
@@ -275,36 +353,14 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
           subject,
           subtopic,
           masteryChange
-        }
+        },
+        // Keep currentQuestion visible even when showing result
+        // Only clear it if it's a different round
+        currentQuestion: (prev.currentQuestion?.round === resultData.round) 
+          ? prev.currentQuestion 
+          : undefined
       };
     });
-
-    announceForScreenReader(
-      isCorrect 
-        ? `Correct! You gained ${xpGained} XP. ${subject}/${subtopic} mastery ${masteryChange > 0 ? 'increased' : 'decreased'} by ${Math.abs(masteryChange)}%. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
-        : `Incorrect. The correct answer was ${String.fromCharCode(65 + resultData.correctIndex)}. Current score: ${resultData.scores[0]} to ${resultData.scores[1]}.`
-    );
-    
-    // Hide feedback chip after delay
-    setTimeout(() => {
-      setDuelState(prev => ({ ...prev, showFeedbackChip: false }));
-    }, 3500); // Match the chip display duration
-    
-    // Show transition state before next question
-    setTimeout(() => {
-      setDuelState(prev => ({
-        ...prev,
-        showResult: false,
-        showTransition: true,
-        currentQuestion: undefined,
-        selectedAnswer: undefined
-      }));
-      
-      // Clear transition after a brief moment
-      setTimeout(() => {
-        setDuelState(prev => ({ ...prev, showTransition: false }));
-      }, 1500);
-    }, 3000); // Wait 3 seconds before transitioning
   };
 
   const handleDuelFinished = async (finishedData: any) => {
@@ -660,7 +716,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         )}
 
         {/* Question */}
-        {duelState.currentQuestion && !duelState.generatingQuestion && (
+        {duelState.currentQuestion && !duelState.generatingQuestion && !duelState.showTransition && (
           <div className="question-reveal mb-8">
             <div className="bg-panel-2 border border-white/10 rounded-xl p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-2">
@@ -688,7 +744,7 @@ export function DuelArena({ user, opponent, isVisible, websocket, duelStartMessa
         )}
         
         {/* Answer Choices */}
-        {duelState.currentQuestion && !duelState.showResult && !duelState.generatingQuestion && (
+        {duelState.currentQuestion && !duelState.showResult && !duelState.generatingQuestion && !duelState.showTransition && (
           <div className="grid grid-cols-1 gap-3 mb-6">
             {duelState.currentQuestion.choices.map((choice, index) => (
               <button

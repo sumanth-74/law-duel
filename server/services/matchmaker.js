@@ -628,7 +628,17 @@ async function runDuelWithBot(wss, roomCode, humanWs, bot, subject) {
       };
 
       if (humanWs.readyState === 1) {
+        console.log(`📤 Sending question for Round ${round} to client:`, {
+          qid: questionData.qid,
+          round: questionData.round,
+          subject: questionData.subject,
+          stemLength: questionData.stem?.length || 0,
+          choicesCount: questionData.choices?.length || 0
+        });
         humanWs.send(JSON.stringify({ type: 'duel:question', payload: questionData }));
+        console.log(`✅ Question sent successfully for Round ${round}`);
+      } else {
+        console.log(`❌ Cannot send question for Round ${round} - WebSocket not ready (state: ${humanWs.readyState})`);
       }
 
       // Wait for human answer and get bot decision
