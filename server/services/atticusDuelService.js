@@ -22,14 +22,18 @@ class AtticusDuelService {
     }
 
     // Check if user has a cooldown from previous loss
+    // CRITICAL: Only prevent challenging Atticus if they're in cooldown
+    // If lives are 0, they MUST challenge Atticus (no cooldown check should block this)
     const lastDuel = await storage.getUserLastAtticusDuel(userId);
     if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
-      const hoursSinceLoss = (Date.now() - new Date(lastDuel.startedAt).getTime()) / (1000 * 60 * 60);
-      if (hoursSinceLoss < 3) {
-        // TEMPORARILY DISABLED FOR TESTING - Remove this comment when done testing
-        console.log('⚠️ Cooldown check temporarily disabled for testing');
-        // const hoursRemaining = Math.ceil(3 - hoursSinceLoss);
-        // throw new Error(`You must wait ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} before challenging Atticus again`);
+      const lossTimestamp = lastDuel.completedAt || lastDuel.startedAt;
+      if (lossTimestamp) {
+        const hoursSinceLoss = (Date.now() - new Date(lossTimestamp).getTime()) / (1000 * 60 * 60);
+        if (hoursSinceLoss < 3) {
+          const hoursRemaining = Math.ceil(3 - hoursSinceLoss);
+          const minutesRemaining = Math.ceil((3 - hoursSinceLoss) * 60) % 60;
+          throw new Error(`You must wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''}${minutesRemaining > 0 ? ` and ${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''}` : ''} before challenging Atticus again after your last defeat.`);
+        }
       }
     }
 
@@ -349,6 +353,9 @@ class AtticusDuelService {
   }
 
   // Get current duel status
+  // CRITICAL: This is the single source of truth for cooldowns
+  // Only returns cooldown if user LOST to Atticus (not just if lives are 0)
+  // If lives are 0 but no Atticus duel exists, user can challenge Atticus (no cooldown)
   async getDuelStatus(userId) {
     const activeDuel = await storage.getUserActiveAtticusDuel(userId);
     const lastDuel = await storage.getUserLastAtticusDuel(userId);
@@ -356,34 +363,35 @@ class AtticusDuelService {
     if (activeDuel) {
       return {
         inDuel: true,
-        duel: activeDuel
+        duel: activeDuel,
+        canChallenge: false // Can't challenge while in an active duel
       };
     }
     
-    if (lastDuel && lastDuel.result === 'loss' && !lastDuel.revived) {
-      const timeSinceLoss = Date.now() - new Date(lastDuel.completedAt || lastDuel.startedAt).getTime();
-      const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-      const timeRemainingMs = totalCooldownMs - timeSinceLoss;
-      
-      if (timeRemainingMs > 0) {
-        // Still in cooldown - calculate accurate remaining time
-        const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
-        const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
-        
-        console.log(`🔍 Time calculation debug for user ${userId}:`);
-        console.log(`  - Time since loss: ${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`);
-        console.log(`  - Time remaining: ${(timeRemainingMs / (1000 * 60 * 60)).toFixed(2)} hours`);
-        console.log(`  - Hours remaining: ${hoursRemaining}, Minutes remaining: ${minutesRemaining}`);
-        
-        return {
-          inDuel: false,
-          canChallenge: false,
-          cooldownHours: hoursRemaining,
-          cooldownMinutes: minutesRemaining,
-          message: `You must wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''} before lives are restored`
-        };
-      } else {
-        // Cooldown finished - auto-restore lives
+    // CRITICAL: Check if user has a challenge with lives = 0 and lostAllLivesAt set
+    // If so, check if the last duel was for THIS challenge
+    // If not, allow challenging Atticus (no cooldown)
+    const { soloChallengeService } = await import('./soloChallengeService.js');
+    const currentChallenge = await soloChallengeService.getTodaysChallenge(userId);
+    const hasCurrentLoss = currentChallenge && currentChallenge.livesRemaining === 0 && currentChallenge.lostAllLivesAt;
+    
+    // Only check cooldown if:
+    // 1. User LOST to Atticus (lastDuel.result === 'loss' && !revived)
+    // 2. AND the last duel was for the CURRENT challenge (same challengeId)
+    // 3. OR there's no current challenge with lives lost (old cooldown from previous session)
+    const lastDuelIsForCurrentChallenge = lastDuel && hasCurrentLoss && lastDuel.challengeId === currentChallenge.id;
+    const shouldCheckCooldown = lastDuel && 
+                                lastDuel.result === 'loss' && 
+                                !lastDuel.revived &&
+                                (lastDuelIsForCurrentChallenge || !hasCurrentLoss);
+    
+    if (shouldCheckCooldown) {
+      // CRITICAL: Use completedAt if available, otherwise use startedAt
+      // But validate the timestamp to ensure it's reasonable
+      const lossTimestamp = lastDuel.completedAt || lastDuel.startedAt;
+      if (!lossTimestamp) {
+        // No timestamp available - this is an invalid state, auto-restore
+        console.warn(`⚠️ Invalid duel state for user ${userId}: no completedAt or startedAt, auto-restoring lives`);
         await this.autoRestoreLives(userId);
         return {
           inDuel: false,
@@ -391,11 +399,81 @@ class AtticusDuelService {
           message: 'Lives automatically restored! You can play again.'
         };
       }
+      
+      const lossTime = new Date(lossTimestamp).getTime();
+      const now = Date.now();
+      
+      // Validate timestamp is not in the future (shouldn't happen, but safety check)
+      if (lossTime > now) {
+        console.warn(`⚠️ Invalid timestamp for user ${userId}: loss time is in the future, using current time`);
+        const correctedLossTime = now - (3 * 60 * 60 * 1000); // Assume cooldown just started
+        const timeSinceLoss = now - correctedLossTime;
+        const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+        const timeRemainingMs = totalCooldownMs - timeSinceLoss;
+        
+        if (timeRemainingMs > 0) {
+          const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
+          const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
+          
+          return {
+            inDuel: false,
+            canChallenge: false,
+            cooldownHours: hoursRemaining,
+            cooldownMinutes: minutesRemaining,
+            message: `You must wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''} before lives are restored`
+          };
+        } else {
+          await this.autoRestoreLives(userId);
+          return {
+            inDuel: false,
+            canChallenge: true,
+            message: 'Lives automatically restored! You can play again.'
+          };
+        }
+      }
+      
+      const timeSinceLoss = now - lossTime;
+      const totalCooldownMs = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+      const timeRemainingMs = totalCooldownMs - timeSinceLoss;
+      
+      // CRITICAL: If it's been more than 3 hours (or negative time remaining), auto-restore
+      // This handles edge cases where completedAt might be null and startedAt is old
+      if (timeRemainingMs <= 0 || timeSinceLoss >= totalCooldownMs) {
+        // Cooldown finished - auto-restore lives
+        console.log(`⏰ Cooldown expired for user ${userId} (${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours since loss), auto-restoring lives`);
+        await this.autoRestoreLives(userId);
+        return {
+          inDuel: false,
+          canChallenge: true,
+          message: 'Lives automatically restored! You can play again.'
+        };
+      }
+      
+      // Still in cooldown - calculate accurate remaining time
+      const hoursRemaining = Math.floor(timeRemainingMs / (1000 * 60 * 60));
+      const minutesRemaining = Math.floor((timeRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
+      
+      console.log(`🔍 Time calculation debug for user ${userId}:`);
+      console.log(`  - Loss timestamp: ${lossTimestamp}`);
+      console.log(`  - Time since loss: ${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`);
+      console.log(`  - Time remaining: ${(timeRemainingMs / (1000 * 60 * 60)).toFixed(2)} hours`);
+      console.log(`  - Hours remaining: ${hoursRemaining}, Minutes remaining: ${minutesRemaining}`);
+      
+      return {
+        inDuel: false,
+        canChallenge: false,
+        cooldownHours: hoursRemaining,
+        cooldownMinutes: minutesRemaining,
+        message: `You must wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} and ${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''} before lives are restored`
+      };
     }
     
+    // No cooldown - user can challenge Atticus
+    // If lives are 0, they must challenge Atticus (no cooldown until they lose)
     return {
       inDuel: false,
-      canChallenge: true
+      canChallenge: true,
+      message: hasCurrentLoss ? 'All lives lost! Challenge Atticus to restore them.' : undefined
     };
   }
   

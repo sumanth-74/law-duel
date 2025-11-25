@@ -80,6 +80,8 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
   
   // Check Atticus cooldown status
   const [atticusCooldown, setAtticusCooldown] = useState<{
+    inDuel?: boolean;
+    duel?: any;
     canChallenge: boolean;
     cooldownHours?: number;
     cooldownMinutes?: number;
@@ -111,7 +113,11 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       });
       if (response.ok) {
         const status = await response.json();
-        // No more daily completion check - lives are handled by Atticus system
+        // If there's an active challenge, load it
+        if (status.livesRemaining !== undefined && status.livesRemaining >= 0) {
+          // Challenge exists, but we don't have full challenge data here
+          // The challenge will be loaded when user starts playing
+        }
       }
     } catch (error) {
       // User hasn't started challenge yet, stay in setup
@@ -394,28 +400,68 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
             </ul>
           </div>
 
-          {/* Atticus Cooldown Warning */}
-          {atticusCooldown && !atticusCooldown.canChallenge && (
-            <div className="p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-center mb-4">
-              <div className="text-red-300 font-semibold mb-2">⏰ Atticus Cooldown Active</div>
-              <div className="text-red-400 text-sm">
-                {atticusCooldown.cooldownHours !== undefined && atticusCooldown.cooldownMinutes !== undefined ? (
-                  `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours !== 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes} minute${atticusCooldown.cooldownMinutes !== 1 ? 's' : ''}`
-                ) : (
-                  'Lives will be automatically restored in 3 hours'
-                )}
-              </div>
-              <div className="text-red-300 text-xs mt-2">
-                After losing to Atticus, you must wait for automatic life restoration
-              </div>
-            </div>
+          {/* Atticus Status Messages */}
+          {atticusCooldown && (
+            <>
+              {/* Active Duel Message - User must complete Atticus duel */}
+              {atticusCooldown.inDuel && (
+                <div className="p-4 bg-purple-900/30 border border-purple-500/50 rounded-lg text-center mb-4">
+                  <div className="text-purple-300 font-semibold mb-2">⚔️ Active Atticus Duel</div>
+                  <div className="text-purple-400 text-sm mb-3">
+                    You have an active duel with Atticus! Complete it to restore your lives.
+                  </div>
+                  <Button
+                    onClick={async () => {
+                      // Use the challengeId from the active Atticus duel
+                      const challengeId = atticusCooldown.duel?.challengeId;
+                      if (challengeId && onLivesLost) {
+                        onLivesLost({ id: challengeId, livesRemaining: 0 });
+                      } else {
+                        toast({
+                          title: "Error",
+                          description: "Unable to find challenge. Please try starting a new challenge.",
+                          variant: "destructive"
+                        });
+                      }
+                    }}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                    size="lg"
+                  >
+                    Continue Atticus Duel
+                  </Button>
+                  <div className="text-purple-300 text-xs mt-2">
+                    All lives lost - complete the duel to restore them
+                  </div>
+                </div>
+              )}
+              
+              {/* Cooldown Message - Only show if NOT in duel and can't challenge (lost to Atticus) */}
+              {!atticusCooldown.inDuel && !atticusCooldown.canChallenge && (
+                <div className="p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-center mb-4">
+                  <div className="text-red-300 font-semibold mb-2">⏰ Atticus Cooldown Active</div>
+                  <div className="text-red-400 text-sm">
+                    {atticusCooldown.cooldownHours !== undefined && atticusCooldown.cooldownMinutes !== undefined ? (
+                      `Lives will be automatically restored in ${atticusCooldown.cooldownHours} hour${atticusCooldown.cooldownHours !== 1 ? 's' : ''} and ${atticusCooldown.cooldownMinutes} minute${atticusCooldown.cooldownMinutes !== 1 ? 's' : ''}`
+                    ) : atticusCooldown.message ? (
+                      atticusCooldown.message
+                    ) : (
+                      'Lives will be automatically restored in 3 hours'
+                    )}
+                  </div>
+                  <div className="text-red-300 text-xs mt-2">
+                    After losing to Atticus, you must wait for automatic life restoration
+                  </div>
+                </div>
+              )}
+              
+            </>
           )}
           
           <Button 
             onClick={startSoloChallenge} 
             className="w-full bg-arcane hover:bg-arcane/80"
             size="lg"
-            disabled={generatingQuestion || (atticusCooldown ? !atticusCooldown.canChallenge : false)}
+            disabled={generatingQuestion || (atticusCooldown ? (atticusCooldown.inDuel || !atticusCooldown.canChallenge) : false)}
             data-testid="button-start-challenge"
           >
             {generatingQuestion ? 'Generating Challenge...' : 'Start Solo Challenge'}

@@ -733,8 +733,20 @@ export default function Home() {
                 if (response.ok) {
                   const status = await response.json();
                   
+                  // If user has an active duel, allow them to continue it
+                  if (status.inDuel) {
+                    setCurrentChallengeId(challenge.id);
+                    setShowAtticusDuel(true);
+                    toast({
+                      title: "Continuing Atticus Duel",
+                      description: "Complete your active duel with Atticus to restore your lives!",
+                      variant: "default"
+                    });
+                    return;
+                  }
+                  
+                  // If no active duel but can't challenge (cooldown), show error
                   if (status.canChallenge === false) {
-                    // User is in cooldown period
                     toast({
                       title: "Cooldown Active",
                       description: status.message || "You must wait before challenging Atticus again.",

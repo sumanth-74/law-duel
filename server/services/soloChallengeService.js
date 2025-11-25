@@ -13,18 +13,27 @@ class SoloChallengeService {
 
   // Start a new solo challenge
   async startChallenge(userId, subject, questionType = 'bar-exam') {
-    // Check if user has exhausted their lives and is in cooldown
+    // Check if user has exhausted their lives - they MUST play Atticus
     const existingChallenge = await this.getTodaysChallenge(userId);
     
     if (existingChallenge && existingChallenge.livesRemaining === 0) {
-      // Check if 3 hours have passed since they lost all lives (changed from 24 hours)
-      const lostAllLivesAt = new Date(existingChallenge.lostAllLivesAt || existingChallenge.startedAt);
-      const hoursSince = (Date.now() - lostAllLivesAt.getTime()) / (1000 * 60 * 60);
+      // Check Atticus status - this is the single source of truth for cooldowns
+      const { atticusDuelService } = await import('./atticusDuelService.js');
+      const atticusStatus = await atticusDuelService.getDuelStatus(userId);
       
-      if (hoursSince < 3) { // Changed from 24 to 3 hours
-        const hoursRemaining = Math.ceil(3 - hoursSince);
-        throw new Error(`All lives lost! Come back in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''} or challenge Atticus to restore them!`);
+      if (atticusStatus.inDuel) {
+        // User has an active Atticus duel - they must complete it first
+        throw new Error('You have an active Atticus duel! Complete it to restore your lives.');
       }
+      
+      if (!atticusStatus.canChallenge) {
+        // User is in cooldown after losing to Atticus - show cooldown message
+        throw new Error(atticusStatus.message || 'You must wait before starting a new challenge. Atticus defeated you recently.');
+      }
+      
+      // Lives are 0 but no active duel and no cooldown
+      // This means they haven't challenged Atticus yet - they MUST do so
+      throw new Error('All lives lost! You must challenge Atticus the Purple Wizard Cat to restore them before starting a new challenge.');
     }
 
     const challengeId = `solo_${userId}_${Date.now()}`;
@@ -359,6 +368,7 @@ class SoloChallengeService {
     // No lives left - they need to play Atticus or wait for auto-restore
     return { 
       canPlay: false,
+      livesRemaining: 0, // Include livesRemaining in response
       message: 'No lives remaining. Play Atticus to restore them or wait for auto-restore.'
     };
   }

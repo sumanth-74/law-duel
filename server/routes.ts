@@ -1075,7 +1075,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Clear cooldown for testing (mark as revived)
   app.post('/api/atticus/clear-cooldown/:userId', requireAuth, async (req: any, res) => {
     try {
-      const { userId } = req.params;
+      let { userId } = req.params;
+      
+      // If userId looks like a username (not a UUID), try to find the user by username
+      if (!userId.includes('-') && userId.length < 36) {
+        // Likely a username, try to find user
+        const user = await storage.getUserByUsername(userId);
+        if (user) {
+          userId = user.id;
+          console.log(`🔍 Found user by username: ${req.params.userId} -> ${userId}`);
+        } else {
+          return res.status(404).json({ 
+            message: `User not found: ${req.params.userId}`,
+            searchedAs: 'username'
+          });
+        }
+      }
       
       // Get user's last duel
       const lastDuel = await storage.getUserLastAtticusDuel(userId);
@@ -1087,7 +1102,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      if (lastDuel.result === 'loss' && !lastDuel.revived) {
+      console.log(`🔍 Last duel for user ${userId}:`, {
+        id: lastDuel.id,
+        result: lastDuel.result,
+        revived: lastDuel.revived,
+        completedAt: lastDuel.completedAt,
+        startedAt: lastDuel.startedAt
+      });
+      
+      // Check if cooldown should be cleared:
+      // 1. Loss and not revived (normal case)
+      // 2. Loss and it's been more than 3 hours (stuck cooldown)
+      const isLoss = lastDuel.result === 'loss';
+      const notRevived = !lastDuel.revived;
+      const lossTime = lastDuel.completedAt || lastDuel.startedAt;
+      const timeSinceLoss = lossTime ? Date.now() - new Date(lossTime).getTime() : 0;
+      const isStuck = timeSinceLoss > (3 * 60 * 60 * 1000); // More than 3 hours
+      
+      if (isLoss && (notRevived || isStuck)) {
         // Mark as revived to clear cooldown
         await storage.updateAtticusDuel(lastDuel.id, {
           revived: true,
@@ -1098,12 +1130,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const { soloChallengeService } = await import("./services/soloChallengeService.js");
         await soloChallengeService.restoreLives(userId);
         
-        console.log(`🧹 Manually cleared cooldown for user ${userId}`);
-      res.json({
+        console.log(`🧹 Manually cleared cooldown for user ${userId}${isStuck ? ' (was stuck)' : ''}`);
+        res.json({
           success: true, 
           message: 'Cooldown cleared and lives restored',
           userId,
-          duelId: lastDuel.id
+          duelId: lastDuel.id,
+          wasStuck: isStuck,
+          timeSinceLoss: `${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours`
         });
       } else {
         res.json({ 
@@ -1111,7 +1145,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: 'No active cooldown to clear',
           userId,
           lastDuelResult: lastDuel.result,
-          alreadyRevived: lastDuel.revived
+          alreadyRevived: lastDuel.revived,
+          timeSinceLoss: lossTime ? `${(timeSinceLoss / (1000 * 60 * 60)).toFixed(2)} hours` : 'unknown'
         });
       }
     } catch (error: any) {
