@@ -179,6 +179,11 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
     setTimeToAnswer(answerTime);
 
     setIsSubmitting(true);
+    
+    // Create an AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     try {
       const response = await fetch('/api/solo-challenge/answer', {
         method: 'POST',
@@ -189,11 +194,14 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
           timeToAnswer: answerTime
         }),
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
+        credentials: 'include',
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({ message: 'Failed to submit answer' }));
         throw new Error(error.message || 'Failed to submit answer');
       }
 
@@ -226,11 +234,25 @@ export default function BotPractice({ onBack, onLivesLost }: BotPracticeProps) {
       }
 
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to submit answer",
-        variant: "destructive"
-      });
+      clearTimeout(timeoutId);
+      
+      // Handle abort/timeout specifically
+      if (error.name === 'AbortError' || error.message?.includes('aborted')) {
+        toast({
+          title: "Request Timeout",
+          description: "The answer submission took too long. Please try again.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to submit answer",
+          variant: "destructive"
+        });
+      }
+      
+      // Log error for debugging
+      console.error('Error submitting answer:', error);
     } finally {
       setIsSubmitting(false);
     }

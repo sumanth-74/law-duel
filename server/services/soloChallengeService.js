@@ -123,79 +123,108 @@ class SoloChallengeService {
     }
 
     // Record comprehensive stats using statsService
-    try {
-      // Map short subject names to full names for statsService
-      const subjectMap = {
-        'Civ Pro': 'Civil Procedure',
-        'Con Law': 'Constitutional Law', 
-        'Crim': 'Criminal Law/Procedure',
-        'Property': 'Real Property',
-        'Torts': 'Torts',
-        'Contracts': 'Contracts',
-        'Evidence': 'Evidence'
-      };
-      const fullSubjectName = subjectMap[challenge.subject] || challenge.subject;
-      
-      const { statsService } = await import('./statsService.js');
-      const statsResult = await statsService.recordQuestionAttempt(
-        challenge.userId,
-        question.qid || question.id,
-        fullSubjectName,
-        answerIndex,
-        question.correctIndex || question.correctAnswer,
-        isCorrect,
-        timeToAnswer * 1000, // Convert to milliseconds
-        `difficulty_${challenge.difficulty}`,
-        challengeId // Use challengeId as matchId for solo challenges
-      );
-      console.log(`📊 Solo Challenge Stats Updated:`, {
-        userId: challenge.userId,
-        subject: fullSubjectName,
-        isCorrect,
-        xpGained: statsResult.xpGained,
-        levelUp: statsResult.levelUp,
-        masteryUp: statsResult.masteryUp
-      });
-    } catch (error) {
-      console.error('Failed to record question attempt in stats system:', error);
-    }
+    // CRITICAL: Don't await this - run in background to avoid blocking response
+    // Use Promise.race with timeout to ensure it doesn't hang
+    const statsPromise = (async () => {
+      try {
+        // Map short subject names to full names for statsService
+        const subjectMap = {
+          'Civ Pro': 'Civil Procedure',
+          'Con Law': 'Constitutional Law', 
+          'Crim': 'Criminal Law/Procedure',
+          'Property': 'Real Property',
+          'Torts': 'Torts',
+          'Contracts': 'Contracts',
+          'Evidence': 'Evidence'
+        };
+        const fullSubjectName = subjectMap[challenge.subject] || challenge.subject;
+        
+        const { statsService } = await import('./statsService.js');
+        const statsResult = await statsService.recordQuestionAttempt(
+          challenge.userId,
+          question.qid || question.id,
+          fullSubjectName,
+          answerIndex,
+          question.correctIndex || question.correctAnswer,
+          isCorrect,
+          timeToAnswer * 1000, // Convert to milliseconds
+          `difficulty_${challenge.difficulty}`,
+          challengeId // Use challengeId as matchId for solo challenges
+        );
+        console.log(`📊 Solo Challenge Stats Updated:`, {
+          userId: challenge.userId,
+          subject: fullSubjectName,
+          isCorrect,
+          xpGained: statsResult.xpGained,
+          levelUp: statsResult.levelUp,
+          masteryUp: statsResult.masteryUp
+        });
+      } catch (error) {
+        console.error('Failed to record question attempt in stats system:', error);
+      }
+    })();
+    
+    // Set a timeout for stats processing - don't wait more than 5 seconds
+    Promise.race([
+      statsPromise,
+      new Promise(resolve => setTimeout(() => {
+        console.warn('⚠️ Stats processing for solo challenge taking too long, continuing...');
+        resolve();
+      }, 5000))
+    ]).catch(err => {
+      console.error('Stats processing error (non-blocking):', err);
+    });
 
     // Record subtopic progress using subtopicProgressService
-    try {
-      console.log(`📝 Solo Challenge - Calling subtopicProgressService.recordAttempt with:`, {
-        userId: challenge.userId,
-        subject: challenge.subject,
-        stemLength: question.stem?.length || 0,
-        explanationLength: question.explanation?.length || 0,
-        isCorrect,
-        difficulty: `difficulty_${challenge.difficulty}`,
-        challengeId,
-        questionId: question.qid || question.id
-      });
-      
-      const { subtopicProgressService } = await import('./subtopicProgressService.ts');
-      const subtopicResult = await subtopicProgressService.recordAttempt(
-        challenge.userId,
-        challenge.subject,
-        question.stem || '',
-        question.explanation || '',
-        isCorrect,
-        `difficulty_${challenge.difficulty}`,
-        timeToAnswer * 1000, // Convert to milliseconds
-        challengeId,
-        question.qid || question.id
-      );
-      
-      console.log(`📝 Solo Challenge - subtopicProgressService.recordAttempt returned:`, subtopicResult ? {
-        subject: subtopicResult.subject,
-        subtopic: subtopicResult.subtopic,
-        proficiencyBefore: subtopicResult.before,
-        proficiencyAfter: subtopicResult.after
-      } : null);
-      
-    } catch (error) {
-      console.error('Failed to record subtopic progress in solo challenge:', error);
-    }
+    // CRITICAL: Don't await this - run in background to avoid blocking response
+    const subtopicPromise = (async () => {
+      try {
+        console.log(`📝 Solo Challenge - Calling subtopicProgressService.recordAttempt with:`, {
+          userId: challenge.userId,
+          subject: challenge.subject,
+          stemLength: question.stem?.length || 0,
+          explanationLength: question.explanation?.length || 0,
+          isCorrect,
+          difficulty: `difficulty_${challenge.difficulty}`,
+          challengeId,
+          questionId: question.qid || question.id
+        });
+        
+        const { subtopicProgressService } = await import('./subtopicProgressService.ts');
+        const subtopicResult = await subtopicProgressService.recordAttempt(
+          challenge.userId,
+          challenge.subject,
+          question.stem || '',
+          question.explanation || '',
+          isCorrect,
+          `difficulty_${challenge.difficulty}`,
+          timeToAnswer * 1000, // Convert to milliseconds
+          challengeId,
+          question.qid || question.id
+        );
+        
+        console.log(`📝 Solo Challenge - subtopicProgressService.recordAttempt returned:`, subtopicResult ? {
+          subject: subtopicResult.subject,
+          subtopic: subtopicResult.subtopic,
+          proficiencyBefore: subtopicResult.before,
+          proficiencyAfter: subtopicResult.after
+        } : null);
+        
+      } catch (error) {
+        console.error('Failed to record subtopic progress in solo challenge:', error);
+      }
+    })();
+    
+    // Set a timeout for subtopic processing - don't wait more than 5 seconds
+    Promise.race([
+      subtopicPromise,
+      new Promise(resolve => setTimeout(() => {
+        console.warn('⚠️ Subtopic processing for solo challenge taking too long, continuing...');
+        resolve();
+      }, 5000))
+    ]).catch(err => {
+      console.error('Subtopic processing error (non-blocking):', err);
+    });
 
     const newLivesRemaining = Math.max(0, challenge.livesRemaining - livesLost);
     const newScore = challenge.score + pointsEarned;

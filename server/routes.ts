@@ -848,11 +848,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Submit answer to solo challenge
   app.post('/api/solo-challenge/answer', requireAuth, async (req: any, res) => {
+    // Set a timeout to ensure we always respond
+    const timeout = setTimeout(() => {
+      if (!res.headersSent) {
+        console.error('⚠️ Solo challenge answer submission timeout - sending error response');
+        res.status(504).json({ message: 'Request timeout - answer submission took too long' });
+      }
+    }, 25000); // 25 second timeout (5s before frontend timeout)
+    
     try {
       const { challengeId, questionId, userAnswer, timeToAnswer } = req.body;
       const userId = req.session.userId;
       
       if (challengeId === undefined || questionId === undefined || userAnswer === undefined) {
+        clearTimeout(timeout);
         return res.status(400).json({ message: "challengeId, questionId, and userAnswer are required" });
       }
 
@@ -860,12 +869,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await soloChallengeService.submitAnswer(challengeId, userAnswer, timeToAnswer || 0);
       
       // Record daily activity for streak tracking (solo mode counts!)
-      await storage.recordDailyActivity(userId);
+      // Don't await this - let it run in background to avoid blocking response
+      storage.recordDailyActivity(userId).catch(err => {
+        console.error('Failed to record daily activity (non-blocking):', err);
+      });
       
+      clearTimeout(timeout);
       res.json(result);
     } catch (error: any) {
+      clearTimeout(timeout);
       console.error("Error submitting solo challenge answer:", error);
-      res.status(400).json({ message: error.message });
+      if (!res.headersSent) {
+        res.status(400).json({ message: error.message || 'Failed to submit answer' });
+      }
     }
   });
 
